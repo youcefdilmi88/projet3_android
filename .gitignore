@@ -12,4 +12,4 @@ server/key.json
 **/.DS_Store
 **/*.lock
 coverage
-/*/node_modules
+node_modules
