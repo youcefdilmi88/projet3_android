@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
@@ -19,7 +19,7 @@ describe('ToolsColorComponent', () => {
   });
   dialogRefSpyObj.componentInstance = { body: '' };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const spyToolsColor = jasmine.createSpyObj('ToolsColorService', ['switchColor', 'setPrimaryColor', 'setSecondaryColor']);
     const spyDrawingService = jasmine.createSpyObj('DrawingService', ['setDrawingColor']);
     TestBed.configureTestingModule({

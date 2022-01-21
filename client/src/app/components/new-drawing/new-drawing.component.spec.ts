@@ -1,6 +1,6 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { CUSTOM_ELEMENTS_SCHEMA, Renderer2 } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ describe('NewDrawingComponent', () => {
   let drawingServiceSpy: jasmine.SpyObj<DrawingService>;
   let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<NewDrawingAlertComponent>>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     dialogRefSpyObj = jasmine.createSpyObj({
       afterClosed: of({}),
       afterOpened: of({}),

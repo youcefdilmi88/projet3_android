@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForwaitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModules } from 'src/app/app-material.module';
@@ -10,7 +10,7 @@ describe('BucketFillToolParameterComponent', () => {
   let component: BucketFillToolParameterComponent;
   let fixture: ComponentFixture<BucketFillToolParameterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForwaitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [BucketFillToolParameterComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

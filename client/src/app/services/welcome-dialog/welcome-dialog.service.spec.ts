@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakewaitForAsync, TestBed, tick } from '@angular/core/testing';
 import { WelcomeDialogService } from './welcome-dialog.service';
 
 describe('WelcomeDialogService', () => {
@@ -26,7 +26,7 @@ describe('WelcomeDialogService', () => {
     expect(service.shouldWelcomeMessageBeShown).not.toBeTruthy();
   });
 
-  it('should call subscribe change value', fakeAsync(() => {
+  it('should call subscribe change value', fakewaitForAsync(() => {
     const service: WelcomeDialogService = TestBed.get(WelcomeDialogService);
     service.form.setValue({ messageActivated: 'false' });
     tick(20);

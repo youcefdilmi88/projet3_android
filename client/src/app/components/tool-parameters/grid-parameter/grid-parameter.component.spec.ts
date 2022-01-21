@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleChange, MatButtonToggleModule, MatCheckboxChange } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,7 +11,7 @@ describe('GridParameterComponent', () => {
   let fixture: ComponentFixture<GridParameterComponent>;
   let gridService: { parameters: FormGroup };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const mockGridService = {
       parameters: new FormGroup({
         sizeCell: new FormControl(100),
@@ -96,7 +96,7 @@ describe('GridParameterComponent', () => {
     expect(component.activateMagnetism.value).toEqual(false);
   });
 
-  it('should return the activateGrid form', async () => {
+  it('should return the activateGrid form', waitForAsync () => {
     const form = gridService.parameters.get('activateGrid') as FormControl;
     form.patchValue(false);
     expect(component.activateGrid.value).toEqual(false);

@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakewaitForAsync, TestBed, tick } from '@angular/core/testing';
 import { DrawingService } from '../../drawing/drawing.service';
 import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
@@ -48,7 +48,7 @@ describe('SprayToolService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should create spray on pressed ', fakeAsync(() => {
+  it('should create spray on pressed ', fakewaitForAsync(() => {
     offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 4, y: 4 });
     service.parameters.patchValue({ emissionPerSecond: 4 });
     service.parameters.patchValue({ circleRadius: 6 });
@@ -71,7 +71,7 @@ describe('SprayToolService', () => {
 
   }));
 
-  it('should create spray onPressed if bouton is 2', fakeAsync(() => {
+  it('should create spray onPressed if bouton is 2', fakewaitForAsync(() => {
     offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 4, y: 4 });
     /// appel de la fonction onPresssed avec le bouton 2
     const mouseEvent = new MouseEvent('mousedown', { button: 2 });
@@ -81,7 +81,7 @@ describe('SprayToolService', () => {
     expect(sprayCommand).toBeDefined();
   }));
 
-  it('should change mouseOffset onMove', fakeAsync(() => {
+  it('should change mouseOffset onMove', fakewaitForAsync(() => {
     offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 4, y: 4 });
     const mouseMove = new MouseEvent('mousemove');
     service.onMove(mouseMove);
@@ -90,7 +90,7 @@ describe('SprayToolService', () => {
     expect(service['offset']).toEqual({ x: 4, y: 4 });
   }));
 
-  it('should do nothing ', fakeAsync(() => {
+  it('should do nothing ', fakewaitForAsync(() => {
     service.pickupTool();
     expect(service.onRelease(new MouseEvent('mouseup', { button: 0 }))).toBeUndefined();
     expect(service.onKeyDown(new KeyboardEvent('keydown'))).toBeUndefined();
@@ -98,7 +98,7 @@ describe('SprayToolService', () => {
     const moveEvent = new MouseEvent('mousemove', { movementX: 2, movementY: 2 });
     expect(service.onMove(moveEvent)).toBeUndefined();
   }));
-  it('should do nothing ', fakeAsync(() => {
+  it('should do nothing ', fakewaitForAsync(() => {
     service.dropTool();
     expect(service.onRelease(new MouseEvent('mouseup', { button: 0 }))).toBeUndefined();
     expect(service.onKeyDown(new KeyboardEvent('keydown'))).toBeUndefined();
@@ -107,7 +107,7 @@ describe('SprayToolService', () => {
     expect(service.onMove(moveEvent)).toBeUndefined();
   }));
 
-  it('should not create spray because bouton is 1 ', fakeAsync(() => {
+  it('should not create spray because bouton is 1 ', fakewaitForAsync(() => {
     offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 4, y: 4 });
     const mouseEvent = new MouseEvent('mousedown', { button: 1 });
     service.onPressed(mouseEvent);
@@ -116,7 +116,7 @@ describe('SprayToolService', () => {
 
   }));
 
-  it('should not create spray because form control is not valid', fakeAsync(() => {
+  it('should not create spray because form control is not valid', fakewaitForAsync(() => {
     offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 4, y: 4 });
     service.parameters.patchValue({ emissionPerSecond: 0 });
     service.onPressed(new MouseEvent('mousedown', { button: 0 }));

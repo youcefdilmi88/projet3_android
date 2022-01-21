@@ -59,7 +59,7 @@ describe('PipetteToolService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should do nothing if the click is not left or right', async () => {
+    it('should do nothing if the click is not left or right', waitForAsync () => {
 
         const event = new MouseEvent('mousedown', { button: 1 });
         await service.onPressed(event);
@@ -67,14 +67,14 @@ describe('PipetteToolService', () => {
         expect(colorToolServiceSpy.setSecondaryColor).not.toHaveBeenCalled();
     });
 
-    it('should set the primary color', async () => {
+    it('should set the primary color', waitForAsync () => {
         const event = new MouseEvent('onpress', { button: 0 });
         offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 1, y: 1 });
         await service.onPressed(event);
         expect(colorToolServiceSpy.setPrimaryColor).toHaveBeenCalledWith({ r: 199, g: 139, b: 50 }, 0.5);
     });
 
-    it('should not set the primary color if outside of drawing', async () => {
+    it('should not set the primary color if outside of drawing', waitForAsync () => {
         const event = new MouseEvent('onpress', { button: 0 });
         offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: -1, y: -1 });
         await service.onPressed(event);
@@ -82,7 +82,7 @@ describe('PipetteToolService', () => {
         expect(colorToolServiceSpy.setSecondaryColor).not.toHaveBeenCalled();
     });
 
-    it('should set the secondary color', async () => {
+    it('should set the secondary color', waitForAsync () => {
         const event = new MouseEvent('onpress', { button: 2 });
         offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 4, y: 4 });
         await service.onPressed(event);

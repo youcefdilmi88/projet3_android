@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MaterialModules } from 'src/app/app-material.module';
 import { ToolsService } from 'src/app/services/tools/tools.service';
 import { WorkspaceComponent } from './workspace.component';
@@ -9,7 +9,7 @@ describe('WorkspaceComponent', () => {
   let fixture: ComponentFixture<WorkspaceComponent>;
   let toolServiceSpy: jasmine.SpyObj<ToolsService>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const spyTool = jasmine.createSpyObj('ToolsService', ['onPressed', 'onRelease', 'onMove']);
 
     TestBed.configureTestingModule({

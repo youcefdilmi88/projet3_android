@@ -12,7 +12,7 @@ describe('ExportService', () => {
   let service: ExportService;
   let drawingServiceMock: { id: string, width: number, height: number, color: RGB, alpha: number, drawing: SVGElement, saved: boolean };
   let gridServiceSpy: jasmine.SpyObj<GridService>;
-  beforeEach(async () => {
+  beforeEach(waitForAsync () => {
     const svgEl: SVGElement = document.createElementNS('svg', 'svg') as SVGElement;
     let spyGridService = jasmine.createSpyObj('GridService', ['showGrid', 'hideGrid']);
     const spyColorTransformer = jasmine.createSpyObj('ColorTransformerService', ['rgb2hex']);
@@ -46,7 +46,7 @@ describe('ExportService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  it('#exportAsSvg should call asSvg function from svgSaver', async () => {
+  it('#exportAsSvg should call asSvg function from svgSaver', waitForAsync () => {
     const spy = spyOn(service, 'triggerDownload');
     await service.exportAsSVG();
     expect(spy).toHaveBeenCalled();
@@ -106,7 +106,7 @@ describe('ExportService', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('#asImage should create a canvas, load an image, then call triggerDownload', async () => {
+  it('#asImage should create a canvas, load an image, then call triggerDownload', waitForAsync () => {
     const HTMLElements: any = {};
 
     const newElement = document.createElement('canvas');
@@ -125,7 +125,7 @@ describe('ExportService', () => {
 
   });
 
-  it('#asBMP should create a canvas,load an image, then call triggerDownload', async () => {
+  it('#asBMP should create a canvas,load an image, then call triggerDownload', waitForAsync () => {
     const HTMLElements: any = {};
 
     const newElement = document.createElement('canvas');

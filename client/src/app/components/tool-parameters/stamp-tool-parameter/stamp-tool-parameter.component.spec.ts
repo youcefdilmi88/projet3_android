@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material';
@@ -12,7 +12,7 @@ describe('StampToolParameterComponent', () => {
   let fixture: ComponentFixture<StampToolParameterComponent>;
   let etampeService: StampToolService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [StampToolParameterComponent],
       imports: [ReactiveFormsModule,

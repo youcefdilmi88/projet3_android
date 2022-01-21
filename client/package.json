@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "ng serve --open",
-    "electron": "ng build --base-href ./ && electron .",
+    "start:electron": "ng build --base-href ./ && electron .",
     "build": "ng build",
     "build:electron": "ng build --prod && electron-packager . --asar=true --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite --out=./build",
     "deploy": "ng build",

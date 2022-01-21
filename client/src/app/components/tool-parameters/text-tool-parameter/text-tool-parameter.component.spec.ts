@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModules } from 'src/app/app-material.module';
@@ -15,7 +15,7 @@ describe('TextToolParameterComponent', () => {
   let fixture: ComponentFixture<TextToolParameterComponent>;
   let textToolServiceSpy: jasmine.SpyObj<TextToolService>;
   const rendererSpy = jasmine.createSpyObj('Renderer2', ['createElement', 'setProperty', 'setAttribute', 'appendChild', 'setStyle']);
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const fontSize = new FormControl(5);
     const textAlignment = new FormControl('start');
     const textStyle = new FormControl('normal');
@@ -51,15 +51,15 @@ describe('TextToolParameterComponent', () => {
     component.ngOnInit();
   });
 
-  it('should create component', async(() => {
+  it('should create component', waitForAsync(() => {
     expect(component).toBeTruthy();
   }));
 
-  it('should return the tool name', async(() => {
+  it('should return the tool name', waitForAsync(() => {
     expect(component.toolName).toEqual(textToolServiceSpy.toolName);
   }));
 
-  it('should return the police size value', async(() => {
+  it('should return the police size value', waitForAsync(() => {
     const formPoliceSize = textToolServiceSpy.parameters.get('fontSize') as FormControl;
     formPoliceSize.patchValue(6);
     expect(component.policeSize).toEqual(6);

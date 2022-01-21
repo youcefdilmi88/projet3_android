@@ -15,13 +15,13 @@ describe('Testing tag.service', () => {
     const mongoDbConnectionServiceStub: MongoDbConnectionService = new MongoDbConnectionService('test');
     let tagService: TagService;
 
-    before(async () => {
+    before(waitForAsync () => {
         await dbHelper.start();
         stub(mongoDbConnectionServiceStub, 'getMongoDatabase').returns(dbHelper.db as Db);
         stub(timestampService, 'log').callsFake((message: string) => { return; });
     });
 
-    after(async () => {
+    after(waitForAsync () => {
         await dbHelper.cleanup();
         await dbHelper.stop();
     });
@@ -31,14 +31,14 @@ describe('Testing tag.service', () => {
         done();
     });
 
-    it('should return all tags', async () => {
+    it('should return all tags', waitForAsync () => {
         dbHelper.createDoc(TAG_COLLECTION, { name: 'tag', numberOfUses: 1 });
         const tags: Tag[] = await tagService.getAllTags();
         expect(tags.length).to.be.greaterThan(0);
 
     });
 
-    it('should return error to all tags', async () => {
+    it('should return error to all tags', waitForAsync () => {
         await dbHelper.cleanup();
         try {
             await tagService.getAllTags();

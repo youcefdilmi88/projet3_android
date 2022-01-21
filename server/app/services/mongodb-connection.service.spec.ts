@@ -5,7 +5,7 @@ import { MongoDbConnectionService } from './mongodb-connection.service';
 describe('Testing mongodb-connnection.service', () => {
 
     let mongoService: MongoDbConnectionService;
-    before(async () => {
+    before(waitForAsync () => {
         mongoService = new MongoDbConnectionService('test');
         await mongoService.openConnectionWithMongoServer();
     });
@@ -19,7 +19,7 @@ describe('Testing mongodb-connnection.service', () => {
         expect(monogoClient);
     });
 
-    it('#closeConnectionWithMongoServer should close mongoClient', async () => {
+    it('#closeConnectionWithMongoServer should close mongoClient', waitForAsync () => {
         await mongoService.closeConnectionWithMongoServer();
         try {
             mongoService.getMongoClient();
@@ -29,7 +29,7 @@ describe('Testing mongodb-connnection.service', () => {
         }
     });
 
-    it('#openConnectionWithMongoServer should connect mongoClient', async () => {
+    it('#openConnectionWithMongoServer should connect mongoClient', waitForAsync () => {
         await mongoService.closeConnectionWithMongoServer();
         await mongoService.openConnectionWithMongoServer();
         expect(mongoService.getMongoClient());

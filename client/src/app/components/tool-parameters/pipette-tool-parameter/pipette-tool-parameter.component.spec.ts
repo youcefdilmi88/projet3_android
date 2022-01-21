@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PipetteToolService } from 'src/app/services/tools/pipette-tool/pipette-tool.service';
 import { PipetteToolParameterComponent } from './pipette-tool-parameter.component';
 
@@ -6,7 +6,7 @@ describe('PipetteToolParameterComponent', () => {
   let component: PipetteToolParameterComponent;
   let fixture: ComponentFixture<PipetteToolParameterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PipetteToolParameterComponent ],
       providers: [

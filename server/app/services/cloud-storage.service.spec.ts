@@ -49,21 +49,21 @@ describe('Testing cloud-storage.service', () => {
         done();
     });
 
-    it('#fileExist should return if a file exist', async () => {
+    it('#fileExist should return if a file exist', waitForAsync () => {
         const s = stub(fileLink, 'exists');
         await cloudStorageService.fileExist('test');
         expect(s.callCount).to.greaterThan(0);
         s.restore();
     });
 
-    it('#fileDelete should delete file in the cloud', async () => {
+    it('#fileDelete should delete file in the cloud', waitForAsync () => {
         const s = stub(fileLink, 'delete');
         await cloudStorageService.deleteFile('test');
         expect(s.callCount).to.greaterThan(0);
         s.restore();
     });
 
-    it('should fail if file is null', async () => {
+    it('should fail if file is null', waitForAsync () => {
         try {
             await cloudStorageService.uploadFile(null);
             fail();
@@ -72,7 +72,7 @@ describe('Testing cloud-storage.service', () => {
         }
     });
 
-    it('should fail if buffer is incorrect', async () => {
+    it('should fail if buffer is incorrect', waitForAsync () => {
         const file: Express.Multer.File = {
             fieldname: 'test',
             mimetype: '',

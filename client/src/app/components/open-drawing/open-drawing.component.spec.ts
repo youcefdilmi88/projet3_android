@@ -1,15 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForwaitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MatAutocompleteSelectedEvent,
-  MatChipInputEvent,
-  MatDialog,
-  MatDialogRef,
-  MatOption,
-  MatTableDataSource
-} from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatTableDataSource } from '@angular/material/table';
+// import { MatOption } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MomentModule } from 'ngx-moment';
 import { of } from 'rxjs';
@@ -41,7 +38,7 @@ describe('OpenDrawingComponent', () => {
   });
   dialogRefSpyObj.componentInstance = { body: '' };
 
-  beforeEach(async(() => {
+  beforeEach(waitForwaitForAsync(() => {
     const spyRenderer = jasmine.createSpyObj('Renderer2',
       ['createElement', 'setProperty', 'setAttribute', 'appendChild', 'setStyle', 'removeChild']);
     const spyDrawingService = jasmine.createSpyObj('DrawingService', ['newDrawing', 'addDrawingObjectList', 'openDrawing']);
@@ -162,10 +159,10 @@ describe('OpenDrawingComponent', () => {
     expect(component.dataSource.filter).toBe('mockTag');
   });
   it('#selected should select clickedTag, reset tagInput and update datasource.filter', () => {
-    const autoCompleteoption: jasmine.SpyObj<MatOption> = jasmine.createSpyObj('MatOption', ['viewValue']);
+    // const autoCompleteoption: jasmine.SpyObj<MatOption> = jasmine.createSpyObj('MatOption', ['viewValue']);
     const autoCompleteEvent: jasmine.SpyObj<MatAutocompleteSelectedEvent> = jasmine.createSpyObj('MatAutocompleteSelectedEvent',
       ['option']);
-    autoCompleteEvent.option = autoCompleteoption;
+    // autoCompleteEvent.option = autoCompleteoption;
     component.tagInput.nativeElement.value = 'defaultValue';
     openDrawingServiceSpy.selectedTags = ['mockTag'];
 
@@ -181,7 +178,7 @@ describe('OpenDrawingComponent', () => {
     expect(openDrawingServiceSpy.handleFile).toHaveBeenCalled();
   });
 
-  it('#deleteDrawing should call deleteDrawing from openDrawingService with good index', async () => {
+  it('#deleteDrawing should call deleteDrawing from openDrawingService with good index', waitForAsync () => {
     const mouseEvent = new MouseEvent('mousedown');
     openDrawingServiceSpy.deleteDrawing.and.returnValue(new Promise<boolean>((resolve) => { resolve(true); }));
     const data = component.dataSource.data;
@@ -191,7 +188,7 @@ describe('OpenDrawingComponent', () => {
     expect(component.drawingPreview).not.toEqual(data);
   });
 
-  it('#deleteDrawing should call deleteDrawing from openDrawingService', async () => {
+  it('#deleteDrawing should call deleteDrawing from openDrawingService', waitForAsync () => {
     const mouseEvent = new MouseEvent('mousedown');
     openDrawingServiceSpy.deleteDrawing.and.returnValue(new Promise<boolean>((resolve) => { resolve(true); }));
     expect(component.drawingPreview).toEqual(component.dataSource.data);
@@ -199,7 +196,7 @@ describe('OpenDrawingComponent', () => {
     expect(component.drawingPreview).toEqual(component.dataSource.data);
   });
 
-  it('#deleteDrawing should call deleteDrawing from drawing request service', async () => {
+  it('#deleteDrawing should call deleteDrawing from drawing request service', waitForAsync () => {
     const mouseEvent = new MouseEvent('mousedown');
     openDrawingServiceSpy.deleteDrawing.and.returnValue(new Promise<boolean>((resolve) => { resolve(false); }));
     expect(component.drawingPreview).toEqual(component.dataSource.data);

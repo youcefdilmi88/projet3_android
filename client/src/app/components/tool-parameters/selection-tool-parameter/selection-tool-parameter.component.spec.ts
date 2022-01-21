@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CopyPasteToolService } from 'src/app/services/tools/copy-paste-tool/copy-paste-tool.service';
 import { DeletingToolService } from 'src/app/services/tools/selection-tool/delete-command/delete-tool.service';
@@ -13,7 +13,7 @@ describe('SelectionToolParameterComponent', () => {
   let copyPasteServiceSpy: jasmine.SpyObj<CopyPasteToolService>;
   let deletingServiceSpy: jasmine.SpyObj<DeletingToolService>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const spyCopyPaste = jasmine.createSpyObj('CopyPasteToolService', ['copy', 'cut', 'paste', 'duplicate', 'hasClipboardObject']);
     const spyDeleting = jasmine.createSpyObj('DeletingToolService', ['deleteSelection']);
     let spySelection = jasmine.createSpyObj('SelectionToolService', ['selectAll', 'hasSelection']);

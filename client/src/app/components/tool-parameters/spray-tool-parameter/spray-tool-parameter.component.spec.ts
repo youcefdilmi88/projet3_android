@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModules } from 'src/app/app-material.module';
@@ -11,7 +11,7 @@ describe('SprayToolParameterComponent', () => {
   let fixture: ComponentFixture<SprayToolParameterComponent>;
   let sprayToolService: SprayToolService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SprayToolParameterComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

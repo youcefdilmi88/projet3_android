@@ -22,7 +22,7 @@ describe('Testing drawing.service', () => {
     let drawingService: DrawingService;
     const testFolder = 'test/';
 
-    before(async () => {
+    before(waitForAsync () => {
         await dbHelper.start();
         csStub = stub(cloudStorage);
         csStub.uploadFile.returns(new Promise((resolve) => { resolve(['path', 'name']); }));
@@ -33,7 +33,7 @@ describe('Testing drawing.service', () => {
         tagServiceStub = new TagService(mongoDbConnectionServiceStub, timestampService);
     });
 
-    after(async () => {
+    after(waitForAsync () => {
         await dbHelper.cleanup();
         await dbHelper.stop();
     });
@@ -96,7 +96,7 @@ describe('Testing drawing.service', () => {
         });
     });
 
-    it('#setDrawing should failed with bad file', async () => {
+    it('#setDrawing should failed with bad file', waitForAsync () => {
         csStub.uploadFile.rejects('error');
         const buf = Buffer.from('<Buffer 3c 73 76 67 21 78 >', 'utf8');
         const file: Express.Multer.File = {
@@ -135,7 +135,7 @@ describe('Testing drawing.service', () => {
         drawingService.setDrawing([], 'test3', file).then(() => { done(); }, () => { fail(); });
     });
 
-    it('#setDrawing should be able to handle when a drawing is not inserted', async () => {
+    it('#setDrawing should be able to handle when a drawing is not inserted', waitForAsync () => {
         const drawingCollection = (dbHelper.db as Db).collection(DRAWING_COLLECTION);
         const s = stub(drawingService, 'drawingCollection').get(() => {
             return {
@@ -164,7 +164,7 @@ describe('Testing drawing.service', () => {
         s.restore();
     });
 
-    it('#setDrawing should be able to handle when a tag is not update', async () => {
+    it('#setDrawing should be able to handle when a tag is not update', waitForAsync () => {
         const tagCollection = (dbHelper.db as Db).collection(TAG_COLLECTION);
         const s = stub(tagServiceStub, 'tagCollection').get(() => {
             return {
@@ -197,7 +197,7 @@ describe('Testing drawing.service', () => {
         s.restore();
     });
 
-    it('#setDrawing should be able to handle when a tag is not update', async () => {
+    it('#setDrawing should be able to handle when a tag is not update', waitForAsync () => {
         const tagCollection = (dbHelper.db as Db).collection(TAG_COLLECTION);
         const s = stub(tagServiceStub, 'tagCollection').get(() => {
             return {
@@ -272,7 +272,7 @@ describe('Testing drawing.service', () => {
         });
     });
 
-    it('#deleteDrawing should handle the update fail of the tag', async () => {
+    it('#deleteDrawing should handle the update fail of the tag', waitForAsync () => {
         const buf = Buffer.from('<Buffer 3c 73 76 67 21 78 >', 'utf8');
         const file: Express.Multer.File = {
             fieldname: testFolder + 'test2',
@@ -309,7 +309,7 @@ describe('Testing drawing.service', () => {
         s.restore();
     });
 
-    it('#deleteDrawing should handle the findOneAndDelete fail of the tag', async () => {
+    it('#deleteDrawing should handle the findOneAndDelete fail of the tag', waitForAsync () => {
         const buf = Buffer.from('<Buffer 3c 73 76 67 21 78 >', 'utf8');
         const file: Express.Multer.File = {
             fieldname: testFolder + 'test2',
@@ -346,7 +346,7 @@ describe('Testing drawing.service', () => {
         s.restore();
     });
 
-    it('#deleteDrawing should handle the deleteOne fail for the drawings', async () => {
+    it('#deleteDrawing should handle the deleteOne fail for the drawings', waitForAsync () => {
         const buf = Buffer.from('<Buffer 3c 73 76 67 21 78 >', 'utf8');
         const file: Express.Multer.File = {
             fieldname: testFolder + 'test2',
@@ -377,7 +377,7 @@ describe('Testing drawing.service', () => {
         s.restore();
     });
 
-    it('#deleteDrawing should handle when no tag is found', async () => {
+    it('#deleteDrawing should handle when no tag is found', waitForAsync () => {
         const buf = Buffer.from('<Buffer 3c 73 76 67 21 78 >', 'utf8');
         const file: Express.Multer.File = {
             fieldname: testFolder + 'test2',

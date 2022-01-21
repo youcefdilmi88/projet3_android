@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { PolygonToolService } from 'src/app/services/tools/polygon-tool/polygon-tool.service';
@@ -10,7 +10,7 @@ describe('PolygonToolParameterComponent', () => {
   let fixture: ComponentFixture<PolygonToolParameterComponent>;
   let polygonToolService: PolygonToolService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [PolygonToolParameterComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

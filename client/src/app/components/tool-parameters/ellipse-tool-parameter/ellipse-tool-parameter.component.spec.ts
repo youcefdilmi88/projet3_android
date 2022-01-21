@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ToolEllipseService } from 'src/app/services/tools/tool-ellipse/tool-ellipse.service';
@@ -10,7 +10,7 @@ describe('RectangleToolParameterComponent', () => {
   let fixture: ComponentFixture<EllipseToolParameterComponent>;
   let ellipseToolService: ToolEllipseService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [EllipseToolParameterComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

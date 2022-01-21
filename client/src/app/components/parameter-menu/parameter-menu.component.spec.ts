@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, SimpleChange } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForwaitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModules } from 'src/app/app-material.module';
@@ -18,7 +18,7 @@ describe('ParameterMenuComponent', () => {
   let fixture: ComponentFixture<ParameterMenuComponent>;
   let parameterComponentService: ParameterComponentService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForwaitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ParameterMenuComponent, ParameterDirective, MockComponent,

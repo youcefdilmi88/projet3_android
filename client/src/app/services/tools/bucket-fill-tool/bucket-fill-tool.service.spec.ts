@@ -2,7 +2,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CommandInvokerService } from '../../command-invoker/command-invoker.service';
 import { DrawingService } from '../../drawing/drawing.service';
@@ -55,11 +55,11 @@ describe('BucketFillToolService', () => {
                 { provide: GridService, useValue: spyGridService },
             ],
         });
-        drawingServiceSpy = TestBed.get(DrawingService);
-        commandInvokerSpy = TestBed.get(CommandInvokerService);
-        gridServiceSpy = TestBed.get(GridService);
+        drawingServiceSpy = TestBed.inject(DrawingService);
+        commandInvokerSpy = TestBed.inject(CommandInvokerService);
+        gridServiceSpy = TestBed.inject(GridService);
 
-        const rendererProvider: RendererProviderService = TestBed.get(RendererProviderService);
+        const rendererProvider: RendererProviderService = TestBed.inject(RendererProviderService);
         drawingServiceSpy.drawing = rendererProvider.renderer.createElement('svg', 'svg');
         const rect: SVGRectElement = rendererProvider.renderer.createElement('rect', 'svg');
         rendererProvider.renderer.setAttribute(drawingServiceSpy.drawing, 'width', '5');
@@ -71,7 +71,7 @@ describe('BucketFillToolService', () => {
         rendererProvider.renderer.appendChild(drawingServiceSpy.drawing, rect);
         drawingServiceSpy.width = 5;
         drawingServiceSpy.height = 5;
-        offsetManagerServiceSpy = TestBed.get(OffsetManagerService);
+        offsetManagerServiceSpy = TestBed.inject(OffsetManagerService);
         drawingServiceSpy.addObject.and.returnValue(1);
 
     });
@@ -81,7 +81,7 @@ describe('BucketFillToolService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#onPressed should call algorithm', async () => {
+    it('#onPressed should call algorithm', waitForAsync () => {
         const service: BucketFillToolService = TestBed.get(BucketFillToolService);
         offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 1, y: 1 });
         await service.onPressed(new MouseEvent('mousedown', { button: 0 }));
@@ -90,8 +90,8 @@ describe('BucketFillToolService', () => {
     });
 
     it('#onPressed should call algorithm of same color', () => {
-        const service: BucketFillToolService = TestBed.get(BucketFillToolService);
-        const toolsColorService = TestBed.get(ToolsColorService);
+        const service: BucketFillToolService = TestBed.inject(BucketFillToolService);
+        const toolsColorService = TestBed.inject(ToolsColorService);
         offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 1, y: 1 });
         toolsColorService.primaryColor = { r: 0, g: 0, b: 0 };
         service.onPressed(new MouseEvent('mousedown', { button: 2 }));
@@ -99,7 +99,7 @@ describe('BucketFillToolService', () => {
     });
 
     it('should do nothing', () => {
-        const service: BucketFillToolService = TestBed.get(BucketFillToolService);
+        const service: BucketFillToolService = TestBed.inject(BucketFillToolService);
         service.onRelease({} as MouseEvent);
         service.onMove({} as MouseEvent);
         service.onKeyUp({} as KeyboardEvent);
@@ -109,12 +109,12 @@ describe('BucketFillToolService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#onPressed should disable then reenable the grid if grid is active', async () => {
+    it('#onPressed should disable then reenable the grid if grid is active', waitForAsync () => {
         gridServiceSpy.activateGrid = new FormControl(true);
         const spyHideGrid = spyOn(gridServiceSpy.activateGrid, 'setValue');
 
         offsetManagerServiceSpy.offsetFromMouseEvent.and.returnValue({ x: 1, y: 1 });
-        const service: BucketFillToolService = TestBed.get(BucketFillToolService);
+        const service: BucketFillToolService = TestBed.inject(BucketFillToolService);
 
         await service.onPressed(new MouseEvent('mousedown', { button: 0 }));
         expect(spyHideGrid).toHaveBeenCalledWith(false);
@@ -122,7 +122,7 @@ describe('BucketFillToolService', () => {
 
     });
 
-    it('#onPressed should not enable the grid if grid is not active prior to onPressed', async () => {
+    it('#onPressed should not enable the grid if grid is not active prior to onPressed', waitForAsync () => {
         gridServiceSpy.activateGrid = new FormControl(false);
         const spyHideGrid = spyOn(gridServiceSpy.activateGrid, 'setValue');
 
