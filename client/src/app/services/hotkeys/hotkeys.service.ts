@@ -46,7 +46,6 @@ export class HotkeysService {
     this.subscribeToHotkeys();
 
     this.toolSelectorList.set(EmitReturn.PENCIL, ToolIdConstants.PENCIL_ID);
-    this.toolSelectorList.set(EmitReturn.BRUSH, ToolIdConstants.BRUSH_ID);
     this.toolSelectorList.set(EmitReturn.APPLICATEUR, ToolIdConstants.APPLIER_ID);
     this.toolSelectorList.set(EmitReturn.RECTANGLE, ToolIdConstants.RECTANGLE_ID);
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);

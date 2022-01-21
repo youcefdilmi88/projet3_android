@@ -20,17 +20,6 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         height: 'height',
     },
 
-    brush: {
-        primaryColor: 'stroke',
-        primaryOpacity: 'stroke-opacity',
-        secondaryColor: 'none',
-        secondaryOpacity: 'none',
-        x: 'x',
-        y: 'y',
-        width: 'width',
-        height: 'height',
-    },
-
     line: {
         primaryColor: 'stroke',
         primaryOpacity: 'stroke-opacity',
@@ -84,16 +73,6 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         y: 'none',
         width: 'none',
         height: 'none',
-    },
-    texture: {
-        primaryColor: 'fill',
-        primaryOpacity: 'fill-opacity',
-        secondaryColor: 'none',
-        secondaryOpacity: 'none',
-        x: 'x',
-        y: 'y',
-        width: 'width',
-        height: 'height',
     },
     spray: {
         primaryColor: 'fill',

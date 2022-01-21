@@ -31,16 +31,7 @@ export class ColorApplierCommand implements ICommand {
         if (!propertyMap) {
             return;
         }
-        const actualValue = this.svgElement.style.getPropertyValue(propertyMap.primaryColor as string);
 
-        /// Texture situation
-        if (actualValue.startsWith('url')) {
-            const textureElement = document.getElementById(actualValue.replace('url("#', '').replace('")', '')) as SVGElement | null;
-            if (!textureElement) {
-                return;
-            }
-            this.svgElement = textureElement as SVGElement;
-        }
         const svgPropertyRecord: Record<string, string> = OBJECT_ATTRIBUTE_STRUCTURE[
             this.svgElement.getAttribute('name') ? this.svgElement.getAttribute('name') as string : 'rectangle'
         ] as Record<string, string>;

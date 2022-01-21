@@ -77,7 +77,6 @@ export const enum EmitReturn {
     EXPORT_DRAWING = 'exportDrawing',
 
     PENCIL = 'pencil',
-    BRUSH = 'brush',
     APPLICATEUR = 'applicateur',
     BUCKET_FILL = 'bucket',
     PIPETTE = 'pipette',

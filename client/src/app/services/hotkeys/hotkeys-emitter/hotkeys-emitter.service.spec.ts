@@ -36,18 +36,6 @@ describe('HotkeysEmitterService', () => {
     expect(eventEmited).toBe(EmitReturn.UNDO);
   });
 
-  it('should emit with no special key', () => {
-    let eventEmited = '';
-
-    const service: HotkeysEmitterService = new HotkeysEmitterService();
-    service.hotkeyEmitter.subscribe((event: string) => { eventEmited = event; });
-
-    const keyBoardEvent = new KeyboardEvent('keydown', { code: 'KeyW', ctrlKey: false, shiftKey: false });
-
-    service.handleKeyboardEvent(keyBoardEvent);
-
-    expect(eventEmited).toBe(EmitReturn.BRUSH);
-  });
 
   it('should not emit with unknownkey', () => {
     let eventEmited = '';

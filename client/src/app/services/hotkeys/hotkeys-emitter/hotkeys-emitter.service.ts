@@ -39,7 +39,6 @@ export class HotkeysEmitterService {
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.g, EmitReturn.OPEN_DRAWING);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.e, EmitReturn.EXPORT_DRAWING);
     this.hotkeyTranslationMap.set(KeyCodes.c, EmitReturn.PENCIL);
-    this.hotkeyTranslationMap.set(KeyCodes.w, EmitReturn.BRUSH);
     this.hotkeyTranslationMap.set(KeyCodes.y, EmitReturn.PEN);
     this.hotkeyTranslationMap.set(KeyCodes.b1, EmitReturn.RECTANGLE);
     this.hotkeyTranslationMap.set(KeyCodes.np1, EmitReturn.RECTANGLE);

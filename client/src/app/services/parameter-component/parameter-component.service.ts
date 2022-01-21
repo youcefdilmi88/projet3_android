@@ -1,7 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { ControlMenuComponent } from 'src/app/components/control-menu/control-menu.component';
 import { ApplierToolParameterComponent } from 'src/app/components/tool-parameters/applier-tool-parameter/applier-tool-parameter.component';
-import { BrushToolParameterComponent } from 'src/app/components/tool-parameters/brush-tool-parameter/brush-tool-parameter.component';
 import { BucketFillToolParameterComponent } from 'src/app/components/tool-parameters/bucket-fill-tool-parameter/bucket-fill-tool-parameter.component';
 import { EllipseToolParameterComponent } from 'src/app/components/tool-parameters/ellipse-tool-parameter/ellipse-tool-parameter.component';
 import { EraserToolParameterComponent } from 'src/app/components/tool-parameters/eraser-tool-parameter/eraser-tool-parameter.component';
@@ -28,7 +27,6 @@ export class ParameterComponentService {
       SelectionToolParameterComponent,
       EraserToolParameterComponent,
       PencilToolParameterComponent,
-      BrushToolParameterComponent,
       PenToolParameterComponent,
       RectangleToolParameterComponent,
       EllipseToolParameterComponent,
