@@ -103,18 +103,6 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         width: 'width',
         height: 'height',
     },
-    // La plume a 2 elements de couleur primaire
-    feather: {
-        primaryColor: 'fill',
-        primaryColor2: 'stroke',
-        primaryOpacity: 'opacity',
-        secondaryColor: 'none',
-        secondaryOpacity: 'none',
-        x: 'x',
-        y: 'y',
-        width: 'width',
-        height: 'height',
-    },
     spray: {
         primaryColor: 'fill',
         primaryOpacity: 'fill-opacity',

@@ -10,7 +10,6 @@ export class ColorApplierCommand implements ICommand {
     private previousColor: string;
     private previousAlpha: string;
     private colorAtribute: string;
-    private additionalFeatherAttribute: string;
     private alphaAtribute: string;
 
     constructor(
@@ -49,9 +48,7 @@ export class ColorApplierCommand implements ICommand {
         this.alphaAtribute = svgPropertyRecord[alphaString] as string;
         this.previousColor = this.svgElement.style.getPropertyValue(this.colorAtribute);
         this.previousAlpha = this.svgElement.style.getPropertyValue(this.alphaAtribute);
-        if (this.svgElement.getAttribute('name') === 'feather') {
-            this.additionalFeatherAttribute = svgPropertyRecord.primaryColor2;
-        }
+
     }
 
     undo(): void {
@@ -63,10 +60,7 @@ export class ColorApplierCommand implements ICommand {
 
     private changeColor(color: string, alpha: string): void {
         this.renderer.setStyle(this.svgElement, this.colorAtribute, color);
-        if (this.additionalFeatherAttribute) {
-            this.renderer.setStyle(this.svgElement, this.additionalFeatherAttribute, color);
 
-        }
         this.renderer.setStyle(this.svgElement, this.alphaAtribute, alpha);
         const markerID: string | null = this.svgElement.getAttribute('marker-mid');
         if (markerID) {

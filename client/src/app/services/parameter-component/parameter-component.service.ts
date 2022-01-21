@@ -5,7 +5,6 @@ import { BrushToolParameterComponent } from 'src/app/components/tool-parameters/
 import { BucketFillToolParameterComponent } from 'src/app/components/tool-parameters/bucket-fill-tool-parameter/bucket-fill-tool-parameter.component';
 import { EllipseToolParameterComponent } from 'src/app/components/tool-parameters/ellipse-tool-parameter/ellipse-tool-parameter.component';
 import { EraserToolParameterComponent } from 'src/app/components/tool-parameters/eraser-tool-parameter/eraser-tool-parameter.component';
-import { FeatherToolParameterComponent } from 'src/app/components/tool-parameters/feather-tool-parameter/feather-tool-parameter.component';
 import { GridParameterComponent } from 'src/app/components/tool-parameters/grid-parameter/grid-parameter.component';
 import { LineToolParameterComponent } from 'src/app/components/tool-parameters/line-tool-parameter/line-tool-parameter.component';
 import { PenToolParameterComponent } from 'src/app/components/tool-parameters/pen-tool-parameter/pen-tool-parameter.component';
@@ -31,7 +30,6 @@ export class ParameterComponentService {
       EraserToolParameterComponent,
       PencilToolParameterComponent,
       BrushToolParameterComponent,
-      FeatherToolParameterComponent,
       PenToolParameterComponent,
       RectangleToolParameterComponent,
       EllipseToolParameterComponent,

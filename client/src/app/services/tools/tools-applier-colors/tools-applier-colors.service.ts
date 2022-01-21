@@ -29,7 +29,7 @@ export class ToolsApplierColorsService implements Tools {
   /// À l'appuis d'un clique de souris, on récupère l'objet cliqué et on modifie sa couleur
   onPressed(event: MouseEvent): void {
     let target = event.target as SVGElement;
-    if (target.getAttribute('name') === 'pen' || target.tagName === 'tspan' || target.getAttribute('name') === 'feather' ||
+    if (target.getAttribute('name') === 'pen' || target.tagName === 'tspan' ||
     target.getAttribute('name') === 'spray') {
       target = target.parentNode as SVGElement;
     }

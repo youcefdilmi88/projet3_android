@@ -5,7 +5,6 @@ import { DrawingService } from '../drawing/drawing.service';
 import { BrushToolService } from './brush-tool/brush-tool.service';
 import { BucketFillToolService } from './bucket-fill-tool/bucket-fill-tool.service';
 import { EraserToolService } from './eraser-tool/eraser-tool.service';
-import { FeatherToolService } from './feather-tool/feather-tool.service';
 import { Tools } from '../../interfaces/tools.interface';
 import { LineToolService } from './line-tool/line-tool.service';
 import { PenToolService } from './pen-tool/pen-tool.service';
@@ -47,7 +46,6 @@ export class ToolsService {
     private eraserTool: EraserToolService,
     private textTool: TextToolService,
     private penTool: PenToolService,
-    private featherTool: FeatherToolService,
     private fillerTool: BucketFillToolService,
     private sprayTool: SprayToolService,
 
@@ -74,8 +72,6 @@ export class ToolsService {
     this.tools.set(this.eraserTool.id, this.eraserTool);
     this.tools.set(this.sprayTool.id, this.sprayTool);
     this.tools.set(this.fillerTool.id, this.fillerTool);
-
-    this.tools.set(this.featherTool.id, this.featherTool);
 
   }
 

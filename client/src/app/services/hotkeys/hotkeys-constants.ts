@@ -90,7 +90,6 @@ export const enum EmitReturn {
     ERASER = 'eraser',
     TEXT = 'text',
     SPRAY = 'spray',
-    FEATHER = 'feather',
 
     COPY = 'copy',
     PASTE = 'paste',

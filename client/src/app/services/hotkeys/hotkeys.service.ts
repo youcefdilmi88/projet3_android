@@ -59,8 +59,6 @@ export class HotkeysService {
     this.toolSelectorList.set(EmitReturn.TEXT, ToolIdConstants.TEXT_ID);
     this.toolSelectorList.set(EmitReturn.SPRAY, ToolIdConstants.SPRAY_ID);
     this.toolSelectorList.set(EmitReturn.BUCKET_FILL, ToolIdConstants.FILLER_ID);
-    this.toolSelectorList.set(EmitReturn.FEATHER, ToolIdConstants.FEATHER_ID);
-
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
       this.hotkeysEnablerService.canClick = false;

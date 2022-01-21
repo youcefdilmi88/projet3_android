@@ -8,7 +8,6 @@ import { BrushToolParameterComponent } from './brush-tool-parameter/brush-tool-p
 import { BucketFillToolParameterComponent } from './bucket-fill-tool-parameter/bucket-fill-tool-parameter.component';
 import { EllipseToolParameterComponent } from './ellipse-tool-parameter/ellipse-tool-parameter.component';
 import { EraserToolParameterComponent } from './eraser-tool-parameter/eraser-tool-parameter.component';
-import { FeatherToolParameterComponent } from './feather-tool-parameter/feather-tool-parameter.component';
 import { GridParameterComponent } from './grid-parameter/grid-parameter.component';
 import { LineToolParameterComponent } from './line-tool-parameter/line-tool-parameter.component';
 import { PenToolParameterComponent } from './pen-tool-parameter/pen-tool-parameter.component';
@@ -37,7 +36,6 @@ import { TextToolParameterComponent } from './text-tool-parameter/text-tool-para
         EraserToolParameterComponent,
         TextToolParameterComponent,
         PenToolParameterComponent,
-        FeatherToolParameterComponent,
         BucketFillToolParameterComponent,
         SprayToolParameterComponent,
     ],
