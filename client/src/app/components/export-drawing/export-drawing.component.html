@@ -8,12 +8,12 @@
             <div>
                 <mat-label>Nom du fichier</mat-label>
             </div>
-            <mat-radio-group [(ngModel)]="selection" #radioGroup="matRadioGroup">
+            <!-- <mat-radio-group [(ngModel)]="selection" #radioGroup="matRadioGroup"> -->
 
                 <mat-radio-button *ngFor="let option of exportOptions" [value]="option">{{option}}
                 </mat-radio-button>
       
-            </mat-radio-group>
+            <!-- </mat-radio-group> -->
         </div>
     </div>
 
@@ -26,7 +26,8 @@
 
 </div>
     <div mat-dialog-actions align="end" >
+        
     <button mat-raised-button color=primary (click)="export()"
-        [disabled]="isExportButtonEnabled">Exporter</button>
+        [disabled]="true">Exporter</button>
     <button mat-raised-button color="accent" (click)="close()">Annuler</button>
 </div>
