@@ -1,9 +1,12 @@
 {
   "name": "client",
   "version": "1.0.0",
+  "main": "main.js",
   "scripts": {
     "start": "ng serve --open",
+    "electron": "ng build --base-href ./ && electron .",
     "build": "ng build",
+    "build:electron": "ng build --prod && electron-packager . --asar=true --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite --out=./build",
     "deploy": "ng build",
     "watch": "ng build --watch --configuration development",
     "format": "prettier --config ../.prettierrc.yaml --ignore-path ../.prettierignore --write \"src/**/*\"",
@@ -48,6 +51,8 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
+    "electron": "^16.0.7",
+    "electron-packager": "^15.4.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
