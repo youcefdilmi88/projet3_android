@@ -27,6 +27,8 @@ import { WorkspaceComponent } from './components/workspace/workspace.component';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { ToolParameterModule } from './components/tool-parameters/tool-parameter.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+
 
 
 
@@ -67,6 +69,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         ToolParameterModule,
         MomentModule,
         MatDialogModule,
+        MatButtonToggleModule,
     ],
     exports: [],
     providers: [

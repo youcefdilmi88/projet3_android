@@ -2,7 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { Point } from 'src/app/model/point.model';
 import { DrawingService } from '../../drawing/drawing.service';
-import { Feather } from './feather-model';
+import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +10,11 @@ import { Feather } from './feather-model';
 export class FeatherCommand implements ICommand {
   private feather: SVGGElement | null = null;
   private currentPath: SVGPathElement|null = null;
+  private featherAttributes: Pencil;
 
   constructor(
     readonly renderer: Renderer2,
     private drawingService: DrawingService,
-    private featherAttributes: Feather,
   ) { }
 /// Creation de l'objet de la plume et ajout de l'objet au dessin
   execute(): void {

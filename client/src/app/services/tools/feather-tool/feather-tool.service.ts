@@ -87,8 +87,7 @@ export class FeatherToolService implements Tools {
           rotationAngle: this.rotationAngle.value,
         };
 
-        this.featherCommand = new FeatherCommand(this.rendererService.renderer, this.drawingService,
-          this.feather);
+        this.featherCommand = new FeatherCommand(this.rendererService.renderer, this.drawingService);
         this.featherCommand.execute();
         this.updatePath(event);
 

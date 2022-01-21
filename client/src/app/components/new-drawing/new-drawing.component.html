@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Nouveau Dessin</h1>
 
-<form [formGroup]="form" (ngSubmit)="onAccept(form.value)">
+<form [formGroup]="form" (ngSubmit)="onAccept()">
     <div mat-dialog-content>
         <app-new-drawing-form [sizeForm]="sizeForm">
         </app-new-drawing-form>

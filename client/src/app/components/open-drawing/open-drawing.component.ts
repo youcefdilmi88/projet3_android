@@ -100,7 +100,7 @@ export class OpenDrawingComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.openDrawingService.selectedDrawing;
   }
 
-  isOneWeekOld(date: number) {
+  isOneWeekOld(date: Date): boolean {
     return Math.round(new Date().getTime() - new Date(date).getTime()) > ONE_WEEK_NUMERIC_VALUE;
   }
 

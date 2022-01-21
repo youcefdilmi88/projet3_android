@@ -1,15 +1,46 @@
-#ignoring .vscode folder but we keep some files for debuging
-/.vscode/chrome
-/.vs/
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# Keep the package-lock.json !
-!client/package-lock.json
-!server/package-lock.json
-server/key.json
-**/key.json
-**/package-lock.json
+# compiled output
+/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
 
-**/.DS_Store
-**/*.lock
-coverage
-node_modules
+# dependencies
+/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+!package-lock.json
+
+# System Files
+.DS_Store
+Thumbs.db
