@@ -88,7 +88,6 @@ export const enum EmitReturn {
     SELECTION = 'selection',
     PEN = 'pen',
     ERASER = 'eraser',
-    TEXT = 'text',
     SPRAY = 'spray',
 
     COPY = 'copy',

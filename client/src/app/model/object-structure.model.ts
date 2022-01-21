@@ -1,12 +1,4 @@
 export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> = {
-    text: {
-        primaryColor: 'fill',
-        primaryOpacity: 'fill-opacity',
-        secondaryColor: 'none',
-        secondaryOpacity: 'none',
-        x: 'x',
-        y: 'y',
-    },
     pencil: {
         primaryColor: 'stroke',
         primaryOpacity: 'opacity',

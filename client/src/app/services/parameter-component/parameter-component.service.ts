@@ -15,7 +15,6 @@ import { RectangleToolParameterComponent } from 'src/app/components/tool-paramet
 import { SelectionToolParameterComponent } from 'src/app/components/tool-parameters/selection-tool-parameter/selection-tool-parameter.component';
 import { SprayToolParameterComponent } from 'src/app/components/tool-parameters/spray-tool-parameter/spray-tool-parameter.component';
 import { StampToolParameterComponent } from 'src/app/components/tool-parameters/stamp-tool-parameter/stamp-tool-parameter.component';
-import { TextToolParameterComponent } from 'src/app/components/tool-parameters/text-tool-parameter/text-tool-parameter.component';
 
 /// Classe permettant d'offrir dyamiquement des component selon un index
 @Injectable({
@@ -37,7 +36,6 @@ export class ParameterComponentService {
       LineToolParameterComponent,
       StampToolParameterComponent,
       SprayToolParameterComponent,
-      TextToolParameterComponent,
       ApplierToolParameterComponent,
       BucketFillToolParameterComponent,
       PipetteToolParameterComponent,

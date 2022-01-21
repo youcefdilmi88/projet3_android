@@ -14,7 +14,6 @@ import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
 import { SprayToolService } from './spray-tool/spray-tool.service';
 import { StampToolService } from './stamp-tool/stamp-tool.service';
-import { TextToolService } from './text-tool/text-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
 import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
@@ -44,7 +43,6 @@ export class ToolsService {
     private lineTool: LineToolService,
     private selectionTool: SelectionToolService,
     private eraserTool: EraserToolService,
-    private textTool: TextToolService,
     private penTool: PenToolService,
     private fillerTool: BucketFillToolService,
     private sprayTool: SprayToolService,
@@ -67,7 +65,6 @@ export class ToolsService {
     this.tools.set(this.colorApplicator.id, this.colorApplicator);
     this.tools.set(this.etampeService.id, this.etampeService);
     this.tools.set(this.selectionTool.id, this.selectionTool);
-    this.tools.set(this.textTool.id, this.textTool);
     this.tools.set(this.penTool.id, this.penTool);
     this.tools.set(this.eraserTool.id, this.eraserTool);
     this.tools.set(this.sprayTool.id, this.sprayTool);
@@ -152,7 +149,7 @@ export class ToolsService {
           return;
         }
         if (this.isPressed || tool.id === ToolIdConstants.LINE_ID
-          || tool.id === ToolIdConstants.TEXT_ID || tool.id === ToolIdConstants.SELECTION_ID) {
+          || tool.id === ToolIdConstants.SELECTION_ID) {
           tool.onKeyDown(event);
         }
       }
@@ -165,7 +162,7 @@ export class ToolsService {
           return;
         }
         if (this.isPressed || tool.id === ToolIdConstants.LINE_ID
-          || tool.id === ToolIdConstants.TEXT_ID || tool.id === ToolIdConstants.SELECTION_ID) {
+          ||  tool.id === ToolIdConstants.SELECTION_ID) {
           tool.onKeyUp(event);
         }
       }

@@ -6,7 +6,6 @@ export const INITIAL_CELL_SIZE = 100;
 export const INITIAL_TRANSPARENCE = 1;
 export const INITIAL_MIN_STROKE_WIDTH = 1;
 export const INITIAL_MAX_STROKE_WIDTH = 8;
-export const INITIAL_TEXT_SIZE = 14;
 
 export const RIGHT_CLICK = 2;
 export const LEFT_CLICK = 0;

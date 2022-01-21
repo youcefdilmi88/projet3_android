@@ -10,7 +10,6 @@ export class ToolIdConstants {
     static readonly LINE_ID: number = 9;
     static readonly STAMP_ID: number = 10;
     static readonly SPRAY_ID: number = 11;
-    static readonly TEXT_ID = 12;
     static readonly APPLIER_ID: number = 13;
     static readonly FILLER_ID: number = 14;
     static readonly PIPETTE_ID: number = 15;

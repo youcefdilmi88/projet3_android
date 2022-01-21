@@ -18,7 +18,6 @@ import { RectangleToolParameterComponent } from './rectangle-tool-parameter/rect
 import { SelectionToolParameterComponent } from './selection-tool-parameter/selection-tool-parameter.component';
 import { SprayToolParameterComponent } from './spray-tool-parameter/spray-tool-parameter.component';
 import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-parameter.component';
-import { TextToolParameterComponent } from './text-tool-parameter/text-tool-parameter.component';
 
 @NgModule({
     declarations: [
@@ -34,7 +33,6 @@ import { TextToolParameterComponent } from './text-tool-parameter/text-tool-para
         LineToolParameterComponent,
         SelectionToolParameterComponent,
         EraserToolParameterComponent,
-        TextToolParameterComponent,
         PenToolParameterComponent,
         BucketFillToolParameterComponent,
         SprayToolParameterComponent,
