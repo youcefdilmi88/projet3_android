@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { CommandInvokerService } from 'src/app/services/command-invoker/command-invoker.service';
 import { DrawingService } from '../drawing/drawing.service';
-import { BucketFillToolService } from './bucket-fill-tool/bucket-fill-tool.service';
 import { EraserToolService } from './eraser-tool/eraser-tool.service';
 import { Tools } from '../../interfaces/tools.interface';
 import { LineToolService } from './line-tool/line-tool.service';
@@ -39,7 +38,6 @@ export class ToolsService {
     private selectionTool: SelectionToolService,
     private eraserTool: EraserToolService,
     private penTool: PenToolService,
-    private fillerTool: BucketFillToolService,
 
     private commandInvoker: CommandInvokerService,
   ) {
@@ -59,7 +57,6 @@ export class ToolsService {
     this.tools.set(this.selectionTool.id, this.selectionTool);
     this.tools.set(this.penTool.id, this.penTool);
     this.tools.set(this.eraserTool.id, this.eraserTool);
-    this.tools.set(this.fillerTool.id, this.fillerTool);
 
   }
 

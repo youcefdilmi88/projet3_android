@@ -6,10 +6,8 @@ import { ICommand } from 'src/app/interfaces/command.interface';
 import { Point } from 'src/app/model/point.model';
 import { DrawingService } from '../../drawing/drawing.service';
 import { KeyCodes } from '../../hotkeys/hotkeys-constants';
-import { MagnetismService } from '../../magnetism/magnetism.service';
 import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
-import { GridService } from '../grid-tool/grid.service';
 import { Tools } from '../../../interfaces/tools.interface';
 import { ToolIdConstants } from '../tool-id-constants';
 import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
@@ -36,7 +34,6 @@ export class SelectionToolService implements Tools {
     { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
     { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
   ];
-  private elementCenterPoint: Point;
   private ctrlPoints: SVGRectElement[] = [];
   private ctrlG: SVGGElement;
   private rectSelection: SVGPolygonElement;
@@ -50,14 +47,11 @@ export class SelectionToolService implements Tools {
   private tmpY: number;
   private wasMoved = false;
   private isIn = false;
-  private firstMovementMagnetism: boolean;
 
   constructor(
     private drawingService: DrawingService,
     private offsetManager: OffsetManagerService,
     private rendererService: RendererProviderService,
-    private gridService: GridService,
-    private magnetismService: MagnetismService,
     private selectionTransformService: SelectionTransformService,
   ) {
     this.setRectInversement();
@@ -75,7 +69,6 @@ export class SelectionToolService implements Tools {
       const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
       this.tmpX = offset.x;
       this.tmpY = offset.y;
-      this.firstMovementMagnetism = true;
       let target = event.target as SVGElement;
       if (this.ctrlPoints.includes(target as SVGRectElement)) {
         this.selectionTransformService.createCommand(
@@ -200,23 +193,7 @@ export class SelectionToolService implements Tools {
           if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.TRANSLATE) {
             this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
           }
-          if (this.gridService.activateMagnetism.value) {
-            let anchorPointX = 0;
-            let anchorPointY = 0;
-            if (this.gridService.anchorPointMagnetism.value > this.pointsList.length) {
-              anchorPointX = this.elementCenterPoint.x;
-              anchorPointY = this.elementCenterPoint.y;
-            } else {
-              anchorPointX = this.pointsList[(this.gridService.anchorPointMagnetism.value - 1)].x;
-              anchorPointY = this.pointsList[(this.gridService.anchorPointMagnetism.value - 1)].y;
-            }
-            const movementOfMagnetism = this.magnetismService.
-              movementMagnetism(event, anchorPointX, anchorPointY, this.firstMovementMagnetism);
-            this.firstMovementMagnetism = false;
-            this.selectionTransformService.translate(movementOfMagnetism.movementX, movementOfMagnetism.movementY);
-          } else {
-            this.selectionTransformService.translate(event.movementX, event.movementY);
-          }
+          this.selectionTransformService.translate(event.movementX, event.movementY);
           this.setSelection();
         } else {
           this.setSizeOfSelectionArea(offset.x, offset.y, this.rectSelection);
@@ -319,7 +296,6 @@ export class SelectionToolService implements Tools {
       this.pointsList[5].x = recX + width / 2; this.pointsList[5].y = recY + height;
       this.pointsList[6].x = recX; this.pointsList[6].y = recY + height;
       this.pointsList[7].x = recX; this.pointsList[7].y = recY + height / 2;
-      this.elementCenterPoint = { x: (recX + width / 2), y: (recY + height / 2) };
       this.rendererService.renderer.setAttribute(rectUsing, 'points', this.pointsToString());
       for (let i = 0; i < 8; i++) {
         this.rendererService.renderer.setAttribute(this.ctrlPoints[i], 'x', `${this.pointsList[i].x + 0.5 - this.pointsSideLength / 2}`);
@@ -464,7 +440,6 @@ export class SelectionToolService implements Tools {
       this.pointsList[5].x = x + width / 2; this.pointsList[5].y = y + height;
       this.pointsList[6].x = x; this.pointsList[6].y = y + height;
       this.pointsList[7].x = x; this.pointsList[7].y = y + height / 2;
-      this.elementCenterPoint = { x: (x + width / 2), y: (y + height / 2) };
 
       this.rendererService.renderer.setAttribute(this.rectSelection, 'points', this.pointsToString());
       for (let i = 0; i < 8; i++) {

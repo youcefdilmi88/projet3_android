@@ -25,5 +25,4 @@ export const CONFIG_API_DEF: ApiEndpoint = {
 export const CLOUD_CONSTANT = {
     CLOUD_PROJECT_ID: 'projet2-e16',
     CLOUD_API_KEY_FILE_LOCATION: 'key.json',
-    CLOUD_BUCKET_URL: 'gs://projet2-e16.appspot.com',
 };

@@ -5,11 +5,9 @@ import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { CommandInvokerService } from '../command-invoker/command-invoker.service';
-import { MagnetismService } from '../magnetism/magnetism.service';
 import { OpenDrawingDialogService } from '../open-drawing-dialog/open-drawing-dialog.service';
 import { SaveDrawingDialogService } from '../save-drawing-dialog/save-drawing-dialog.service';
 import { CopyPasteToolService } from '../tools/copy-paste-tool/copy-paste-tool.service';
-import { GridService } from '../tools/grid-tool/grid.service';
 import { DeletingToolService } from '../tools/selection-tool/delete-command/delete-tool.service';
 import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
 import { ToolsService } from '../tools/tools.service';
@@ -25,8 +23,6 @@ describe('HotkeysService', () => {
   let selectionToolServiceSpy: jasmine.SpyObj<SelectionToolService>;
 
   let toolsServiceSpy: jasmine.SpyObj<ToolsService>;
-  let gridServiceSpy: jasmine.SpyObj<GridService>;
-  let magnetismServiceSpy: jasmine.SpyObj<MagnetismService>;
 
   let dialogSpy: jasmine.Spy;
   const dialogRefSpyObj = jasmine.createSpyObj({
@@ -40,8 +36,6 @@ describe('HotkeysService', () => {
   beforeEach(() => {
     let hotkeysEmitterServiceSpy = jasmine.createSpyObj('HotkeysEmitterService', ['handleKeyboardEvent']);
     const toolsSpy = jasmine.createSpyObj('ToolsService', ['selectTool']);
-    const gridSpy = jasmine.createSpyObj('GridService', ['showGrid', 'hideGrid', 'changeGridSize', 'toggleGrid']);
-    const magnetismSpy = jasmine.createSpyObj('MagnetismService', ['toggleMagnetism']);
     const saveSpy = jasmine.createSpyObj('SaveDrawingDialogService', ['openDialog']);
     const copyPasteSpy = jasmine.createSpyObj('CopyPasteToolService', ['copy', 'cut', 'paste', 'duplicate']);
     const selectionSpy = jasmine.createSpyObj('SelectionToolService', ['selectAll']);
@@ -58,8 +52,6 @@ describe('HotkeysService', () => {
       providers: [
         { provide: HotkeysEmitterService, useValue: hotkeysEmitterServiceSpy },
         { provide: ToolsService, useValue: toolsSpy },
-        { provide: GridService, useValue: gridSpy },
-        { provide: MagnetismService, useValue: magnetismSpy },
         { provide: MatDialogRef, useValue: dialogRefSpyObj },
         { provide: SaveDrawingDialogService, useValue: saveSpy },
         { provide: CommandInvokerService, useValue: jasmine.createSpyObj('CommandInvokerSpy', ['undo', 'redo']) },
@@ -71,8 +63,6 @@ describe('HotkeysService', () => {
     });
     hotkeyEmitterServiceSpy = TestBed.get(HotkeysEmitterService);
     toolsServiceSpy = TestBed.get(ToolsService);
-    gridServiceSpy = TestBed.get(GridService);
-    magnetismServiceSpy = TestBed.get(MagnetismService);
     commandInvokerSpy = TestBed.get(CommandInvokerService);
     copyPasteServiceSpy = TestBed.get(CopyPasteToolService);
     deletingToolServiceSpy = TestBed.get(DeletingToolService);
@@ -112,34 +102,6 @@ describe('HotkeysService', () => {
     hotkeyEmitterServiceSpy.hotkeyEmitter.emit(EmitReturn.SELECTALL);
 
     expect(toolsServiceSpy.selectTool).not.toHaveBeenCalled();
-  });
-
-  it('should affect grid', () => {
-    const service: HotkeysService = TestBed.get(HotkeysService);
-    service.hotkeysListener();
-    gridServiceSpy.sizeCell = new FormControl();
-    gridServiceSpy.sizeCell.setValue(1);
-
-    hotkeyEmitterServiceSpy.hotkeyEmitter.emit(EmitReturn.CONTROL_GRID);
-    expect(gridServiceSpy.toggleGrid).toHaveBeenCalled();
-
-    hotkeyEmitterServiceSpy.hotkeyEmitter.emit(EmitReturn.CONTROL_MAGNETISM);
-    expect(magnetismServiceSpy.toggleMagnetism).toHaveBeenCalled();
-
-    hotkeyEmitterServiceSpy.hotkeyEmitter.emit(EmitReturn.ADD5_GRID);
-    expect(gridServiceSpy.changeGridSize).toHaveBeenCalled();
-
-    hotkeyEmitterServiceSpy.hotkeyEmitter.emit(EmitReturn.SUB5_GRID);
-    expect(gridServiceSpy.changeGridSize).toHaveBeenCalled();
-  });
-
-  it('should not affect grid', () => {
-    const service: HotkeysService = TestBed.get(HotkeysService);
-    service.hotkeysListener();
-
-    hotkeyEmitterServiceSpy.hotkeyEmitter.emit(EmitReturn.SELECTALL);
-    expect(gridServiceSpy.toggleGrid).not.toHaveBeenCalled();
-    expect(gridServiceSpy.changeGridSize).not.toHaveBeenCalled();
   });
 
   it('should open a dialog', () => {

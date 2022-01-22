@@ -7,7 +7,6 @@ import { DEFAULT_RGB_COLOR } from 'src/app/model/rgb.model';
 import { DEFAULT_ALPHA } from 'src/app/model/rgba.model';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { NewDrawingService } from 'src/app/services/new-drawing/new-drawing.service';
-import { GridService } from 'src/app/services/tools/grid-tool/grid.service';
 import { NewDrawingAlertComponent } from './new-drawing-alert/new-drawing-alert.component';
 
 const ONE_SECOND = 1000;
@@ -29,7 +28,6 @@ export class NewDrawingComponent implements OnInit {
     private drawingService: DrawingService,
     private dialog: MatDialog,
     private colorPickerService: ColorPickerService,
-    private gridService: GridService,
   ) { }
 
   /// Créer un nouveau form avec les dimensions et la couleur
@@ -67,7 +65,6 @@ export class NewDrawingComponent implements OnInit {
 
   /// Cree un nouveau dessin
   private newDrawing() {
-    this.gridService.activateGrid.setValue(false);
     this.drawingService.isCreated = true;
     const size: { width: number, height: number } = this.newDrawingService.sizeGroup.value;
     this.drawingService.newDrawing(

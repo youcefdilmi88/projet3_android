@@ -78,7 +78,6 @@ export const enum EmitReturn {
 
     PENCIL = 'pencil',
     APPLICATEUR = 'applicateur',
-    BUCKET_FILL = 'bucket',
     RECTANGLE = 'rectangle',
     ELLIPSE = 'ellipse',
     POLYGON = 'polygon',
@@ -93,11 +92,6 @@ export const enum EmitReturn {
     DUPLICATE = 'duplicate',
     DELETE = 'delete',
     SELECTALL = 'selectall',
-
-    CONTROL_GRID = 'controlGrid',
-    CONTROL_MAGNETISM = 'controlMagnetism',
-    ADD5_GRID = 'add5Grid',
-    SUB5_GRID = 'sub5Grid',
 
     UNDO = 'undo',
     REDO = 'redo',

@@ -4,9 +4,7 @@ import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { CommandInvokerService } from '../command-invoker/command-invoker.service';
 import { DrawingService } from '../drawing/drawing.service';
-import { BucketFillToolService } from './bucket-fill-tool/bucket-fill-tool.service';
 import { EraserToolService } from './eraser-tool/eraser-tool.service';
-import { GridService } from './grid-tool/grid.service';
 import { Tools } from '../../interfaces/tools.interface';
 import { LineToolService } from './line-tool/line-tool.service';
 import { PencilToolService } from './pencil-tool/pencil-tool.service';
@@ -43,7 +41,6 @@ describe('ToolsService', () => {
     const spySelection = jasmine.createSpyObj('SelectionToolService', ['removeSelection', 'dropTool', 'pickupTool']);
     const invokerSpy = jasmine.createSpyObj('CommandInvokerService', ['addCommand', 'undo', 'redo', 'commandCallEmitter']);
     const drawingSpy = jasmine.createSpyObj('DrawingService', ['']);
-    const spyBucketFill = jasmine.createSpyObj('BucketFillToolService', ['']);
     const spyEraser = jasmine.createSpyObj('EraserToolService', ['']);
 
     TestBed.configureTestingModule({
@@ -54,12 +51,10 @@ describe('ToolsService', () => {
         { provide: ToolRectangleService, useValue: spyRect },
         { provide: ToolEllipseService, useValue: spyEllipse },
         { provide: StampToolService, useValue: spyEtampe },
-        { provide: GridService, useValue: spyGrid },
         { provide: PolygonToolService, useValue: spyPoly },
         { provide: LineToolService, useValue: spyLine },
         { provide: SelectionToolService, useValue: spySelection },
         { provide: DrawingService, useValue: drawingSpy },
-        { provide: BucketFillToolService, useValue: spyBucketFill },
         {provide: EraserToolService, useValue: spyEraser},
       ],
     });

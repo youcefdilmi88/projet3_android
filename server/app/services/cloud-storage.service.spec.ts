@@ -1,4 +1,4 @@
-import { Bucket, Storage } from '@google-cloud/storage';
+import { Storage } from '@google-cloud/storage';
 import { fail } from 'assert';
 import { expect } from 'chai';
 import { stub } from 'sinon';
@@ -25,20 +25,10 @@ describe('Testing cloud-storage.service', () => {
             return new Promise<void>((resolve) => { resolve(); });
         },
     };
-    const bucket = {
-        name: 'test-bucket',
-        getFiles: (a: any) => { return; },
-        file: (a: any) => fileLink,
-    };
-    const storage = {
-        bucket: (a: any) => bucket,
-    };
 
     beforeEach(() => {
         cloudStorageService = new CloudStorageService(new TimestampLogService());
-        // Permet de faire le retrait des capacité cloud
-        // tslint:disable-next-line: no-string-literal
-        cloudStorageService['bucket'] = bucket as unknown as Bucket;
+
         // Permet de faire le retrait des capacité cloud
         // tslint:disable-next-line: no-string-literal
         cloudStorageService['storage'] = storage as unknown as Storage;

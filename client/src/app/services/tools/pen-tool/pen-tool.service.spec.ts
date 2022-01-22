@@ -5,7 +5,6 @@ import { DrawingService } from '../../drawing/drawing.service';
 import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
 import { ToolsColorService } from '../../tools-color/tools-color.service';
-import { GridService } from '../grid-tool/grid.service';
 import { PenCommand } from './pen-command';
 import { PenToolService } from './pen-tool.service';
 
@@ -16,8 +15,7 @@ describe('PenToolService', () => {
 
   beforeEach(() => {
     rendererSpy = jasmine.createSpyObj('Renderer2', ['createElement', 'setProperty', 'setAttribute', 'appendChild', 'setStyle']);
-    const spyOffset = jasmine.createSpyObj('OffsetManagerService', ['offsetFromMouseEvent', 'movementMagnetism']);
-    const spyGrid = jasmine.createSpyObj('GridService', ['activateMagnetism']);
+    const spyOffset = jasmine.createSpyObj('OffsetManagerService', ['offsetFromMouseEvent']);
     let spyDrawingService = jasmine.createSpyObj('DrawingService', ['addObject', 'removeObject']);
     spyDrawingService = {
       ...spyDrawingService,
@@ -25,7 +23,6 @@ describe('PenToolService', () => {
     };
     TestBed.configureTestingModule({
       providers: [RendererProviderService,
-        { provide: GridService, useValue: spyGrid },
         { provide: DrawingService, useValue: spyDrawingService },
         { provide: OffsetManagerService, useValue: spyOffset },
         {

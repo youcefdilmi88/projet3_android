@@ -19,13 +19,7 @@ export class HotkeysEmitterService {
 
   constructor() {
     this.hotkeyTranslationMap = new Map<string, EmitReturn>();
-    this.hotkeyTranslationMap.set(KeyCodes.g, EmitReturn.CONTROL_GRID);
-    this.hotkeyTranslationMap.set(KeyCodes.m, EmitReturn.CONTROL_MAGNETISM);
-    this.hotkeyTranslationMap.set(KeyCodes.addNP, EmitReturn.ADD5_GRID);
-    this.hotkeyTranslationMap.set(SHIFT + KeyCodes.equal, EmitReturn.ADD5_GRID);
     this.hotkeyTranslationMap.set(KeyCodes.delete, EmitReturn.DELETE);
-    this.hotkeyTranslationMap.set(KeyCodes.minus, EmitReturn.SUB5_GRID);
-    this.hotkeyTranslationMap.set(KeyCodes.minusNP, EmitReturn.SUB5_GRID);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.x, EmitReturn.CUT);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.c, EmitReturn.COPY);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.v, EmitReturn.PASTE);
@@ -49,7 +43,6 @@ export class HotkeysEmitterService {
     this.hotkeyTranslationMap.set(KeyCodes.r, EmitReturn.APPLICATEUR);
     this.hotkeyTranslationMap.set(KeyCodes.l, EmitReturn.LINE);
     this.hotkeyTranslationMap.set(KeyCodes.e, EmitReturn.ERASER);
-    this.hotkeyTranslationMap.set(KeyCodes.b, EmitReturn.BUCKET_FILL);
     this.hotkeyTranslationMap.set(KeyCodes.s, EmitReturn.SELECTION);
   }
   /// Emet le enum de la fonction de travail associer au hotkey

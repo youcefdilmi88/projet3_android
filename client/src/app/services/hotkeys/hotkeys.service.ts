@@ -3,12 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewDrawingComponent } from 'src/app/components/new-drawing/new-drawing.component';
 import { CommandInvokerService } from 'src/app/services/command-invoker/command-invoker.service';
 import { ExportDialogService } from '../export-dialog/export-dialog.service';
-import { MagnetismService } from '../magnetism/magnetism.service';
 import { OpenDrawingDialogService } from '../open-drawing-dialog/open-drawing-dialog.service';
 import { SaveDrawingDialogService } from '../save-drawing-dialog/save-drawing-dialog.service';
 import { SidenavService } from '../sidenav/sidenav.service';
 import { CopyPasteToolService } from '../tools/copy-paste-tool/copy-paste-tool.service';
-import { GridService } from '../tools/grid-tool/grid.service';
 import { DeletingToolService } from '../tools/selection-tool/delete-command/delete-tool.service';
 import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
 import { ToolIdConstants } from '../tools/tool-id-constants';
@@ -29,8 +27,6 @@ export class HotkeysService {
     private dialog: MatDialog,
     private sideNavService: SidenavService,
     private toolsService: ToolsService,
-    private gridService: GridService,
-    private magnetismService: MagnetismService,
     private saveDrawingDialogService: SaveDrawingDialogService,
     private exportDialogService: ExportDialogService,
     private copyPasteService: CopyPasteToolService,
@@ -54,7 +50,6 @@ export class HotkeysService {
     this.toolSelectorList.set(EmitReturn.PEN, ToolIdConstants.PEN_ID);
     this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
     this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
-    this.toolSelectorList.set(EmitReturn.BUCKET_FILL, ToolIdConstants.FILLER_ID);
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
       this.hotkeysEnablerService.canClick = false;
@@ -81,24 +76,7 @@ export class HotkeysService {
         this.sideNavService.isControlMenu = false;
         this.toolsService.selectTool(toolId);
       } else {
-        let size: number;
         switch (value) {
-          case EmitReturn.CONTROL_GRID:
-            this.gridService.toggleGrid();
-            break;
-          case EmitReturn.CONTROL_MAGNETISM:
-            this.magnetismService.toggleMagnetism();
-            break;
-          case EmitReturn.ADD5_GRID:
-            size = this.gridService.sizeCell.value;
-            this.gridService.sizeCell.setValue(size - size % 5 + 5);
-            this.gridService.changeGridSize();
-            break;
-          case EmitReturn.SUB5_GRID:
-            size = this.gridService.sizeCell.value;
-            this.gridService.sizeCell.setValue(size % 5 ? size + (5 - size % 5) - 5 : size - 5);
-            this.gridService.changeGridSize();
-            break;
           case EmitReturn.NEW_DRAWING:
             this.dialog.open(NewDrawingComponent, {});
             break;
