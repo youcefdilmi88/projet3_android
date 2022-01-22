@@ -51,8 +51,4 @@ export class SidenavComponent {
     this.sideNavService.openControlMenu();
   }
 
-  /// Ouvre le menu de la grille
-  openGridMenu(): void {
-    this.sideNavService.openGridMenu();
-  }
 }

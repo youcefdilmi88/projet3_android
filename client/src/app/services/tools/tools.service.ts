@@ -5,7 +5,6 @@ import { DrawingService } from '../drawing/drawing.service';
 import { EraserToolService } from './eraser-tool/eraser-tool.service';
 import { Tools } from '../../interfaces/tools.interface';
 import { LineToolService } from './line-tool/line-tool.service';
-import { PenToolService } from './pen-tool/pen-tool.service';
 import { PencilToolService } from './pencil-tool/pencil-tool.service';
 import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
@@ -37,7 +36,6 @@ export class ToolsService {
     private lineTool: LineToolService,
     private selectionTool: SelectionToolService,
     private eraserTool: EraserToolService,
-    private penTool: PenToolService,
 
     private commandInvoker: CommandInvokerService,
   ) {
@@ -55,9 +53,7 @@ export class ToolsService {
     this.tools.set(this.colorApplicator.id, this.colorApplicator);
     this.tools.set(this.etampeService.id, this.etampeService);
     this.tools.set(this.selectionTool.id, this.selectionTool);
-    this.tools.set(this.penTool.id, this.penTool);
     this.tools.set(this.eraserTool.id, this.eraserTool);
-
   }
 
   /// Selectionner un outil avec son id

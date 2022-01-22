@@ -9,16 +9,6 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         width: 'width',
         height: 'height',
     },
-    pen: {
-        primaryColor: 'stroke',
-        primaryOpacity: 'opacity',
-        secondaryColor: 'none',
-        secondaryOpacity: 'none',
-        x: 'x',
-        y: 'y',
-        width: 'width',
-        height: 'height',
-    },
 
     line: {
         primaryColor: 'stroke',

@@ -83,7 +83,6 @@ export const enum EmitReturn {
     POLYGON = 'polygon',
     LINE = 'line',
     SELECTION = 'selection',
-    PEN = 'pen',
     ERASER = 'eraser',
 
     COPY = 'copy',

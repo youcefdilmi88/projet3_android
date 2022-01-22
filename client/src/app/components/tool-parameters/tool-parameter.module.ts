@@ -7,7 +7,6 @@ import { ApplierToolParameterComponent } from './applier-tool-parameter/applier-
 import { EllipseToolParameterComponent } from './ellipse-tool-parameter/ellipse-tool-parameter.component';
 import { EraserToolParameterComponent } from './eraser-tool-parameter/eraser-tool-parameter.component';
 import { LineToolParameterComponent } from './line-tool-parameter/line-tool-parameter.component';
-import { PenToolParameterComponent } from './pen-tool-parameter/pen-tool-parameter.component';
 import { PencilToolParameterComponent } from './pencil-tool-parameter/pencil-tool-parameter.component';
 import { PolygonToolParameterComponent } from './polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from './rectangle-tool-parameter/rectangle-tool-parameter.component';
@@ -25,7 +24,6 @@ import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-p
         LineToolParameterComponent,
         SelectionToolParameterComponent,
         EraserToolParameterComponent,
-        PenToolParameterComponent,
     ],
     imports: [
         CommonModule,
@@ -36,4 +34,5 @@ import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-p
     ],
     exports: []
 })
-export class ToolParameterModule { }
+export class 
+ToolParameterModule { }

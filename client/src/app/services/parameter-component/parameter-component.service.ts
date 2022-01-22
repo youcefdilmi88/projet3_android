@@ -4,7 +4,6 @@ import { ApplierToolParameterComponent } from 'src/app/components/tool-parameter
 import { EllipseToolParameterComponent } from 'src/app/components/tool-parameters/ellipse-tool-parameter/ellipse-tool-parameter.component';
 import { EraserToolParameterComponent } from 'src/app/components/tool-parameters/eraser-tool-parameter/eraser-tool-parameter.component';
 import { LineToolParameterComponent } from 'src/app/components/tool-parameters/line-tool-parameter/line-tool-parameter.component';
-import { PenToolParameterComponent } from 'src/app/components/tool-parameters/pen-tool-parameter/pen-tool-parameter.component';
 import { PencilToolParameterComponent } from 'src/app/components/tool-parameters/pencil-tool-parameter/pencil-tool-parameter.component';
 import { PolygonToolParameterComponent } from 'src/app/components/tool-parameters/polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from 'src/app/components/tool-parameters/rectangle-tool-parameter/rectangle-tool-parameter.component';
@@ -23,7 +22,6 @@ export class ParameterComponentService {
       SelectionToolParameterComponent,
       EraserToolParameterComponent,
       PencilToolParameterComponent,
-      PenToolParameterComponent,
       RectangleToolParameterComponent,
       EllipseToolParameterComponent,
       PolygonToolParameterComponent,

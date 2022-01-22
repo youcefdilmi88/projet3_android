@@ -39,6 +39,7 @@ export class ParameterMenuComponent implements OnChanges {
   }
   /// Fait appel a loadComponent si le id selectionner change
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.selectId);
     if (changes.selectId) {
       this.loadComponent();
     }
