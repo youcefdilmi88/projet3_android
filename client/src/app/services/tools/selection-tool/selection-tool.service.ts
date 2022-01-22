@@ -84,7 +84,7 @@ export class SelectionToolService implements Tools {
         return;
       }
 
-      if (target.getAttribute('name') === 'pen' || target.getAttribute('name') === 'stamp' || target.getAttribute('name') === 'spray') {
+      if (target.getAttribute('name') === 'pen' || target.getAttribute('name') === 'stamp') {
         target = target.parentNode as SVGElement;
       }
       const obj = this.drawingService.getObject(Number(target.id));

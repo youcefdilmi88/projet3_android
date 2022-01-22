@@ -12,7 +12,6 @@ import { PipetteToolParameterComponent } from 'src/app/components/tool-parameter
 import { PolygonToolParameterComponent } from 'src/app/components/tool-parameters/polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from 'src/app/components/tool-parameters/rectangle-tool-parameter/rectangle-tool-parameter.component';
 import { SelectionToolParameterComponent } from 'src/app/components/tool-parameters/selection-tool-parameter/selection-tool-parameter.component';
-import { SprayToolParameterComponent } from 'src/app/components/tool-parameters/spray-tool-parameter/spray-tool-parameter.component';
 import { StampToolParameterComponent } from 'src/app/components/tool-parameters/stamp-tool-parameter/stamp-tool-parameter.component';
 
 /// Classe permettant d'offrir dyamiquement des component selon un index
@@ -33,7 +32,6 @@ export class ParameterComponentService {
       PolygonToolParameterComponent,
       LineToolParameterComponent,
       StampToolParameterComponent,
-      SprayToolParameterComponent,
       ApplierToolParameterComponent,
       BucketFillToolParameterComponent,
       PipetteToolParameterComponent,

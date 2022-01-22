@@ -11,7 +11,6 @@ import { PencilToolService } from './pencil-tool/pencil-tool.service';
 import { PipetteToolService } from './pipette-tool/pipette-tool.service';
 import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
-import { SprayToolService } from './spray-tool/spray-tool.service';
 import { StampToolService } from './stamp-tool/stamp-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
@@ -43,7 +42,6 @@ export class ToolsService {
     private eraserTool: EraserToolService,
     private penTool: PenToolService,
     private fillerTool: BucketFillToolService,
-    private sprayTool: SprayToolService,
 
     private commandInvoker: CommandInvokerService,
   ) {
@@ -64,7 +62,6 @@ export class ToolsService {
     this.tools.set(this.selectionTool.id, this.selectionTool);
     this.tools.set(this.penTool.id, this.penTool);
     this.tools.set(this.eraserTool.id, this.eraserTool);
-    this.tools.set(this.sprayTool.id, this.sprayTool);
     this.tools.set(this.fillerTool.id, this.fillerTool);
 
   }

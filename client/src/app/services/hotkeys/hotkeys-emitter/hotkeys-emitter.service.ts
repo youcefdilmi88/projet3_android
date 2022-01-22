@@ -52,7 +52,6 @@ export class HotkeysEmitterService {
     this.hotkeyTranslationMap.set(KeyCodes.b, EmitReturn.BUCKET_FILL);
     this.hotkeyTranslationMap.set(KeyCodes.i, EmitReturn.PIPETTE);
     this.hotkeyTranslationMap.set(KeyCodes.s, EmitReturn.SELECTION);
-    this.hotkeyTranslationMap.set(KeyCodes.a, EmitReturn.SPRAY);
   }
   /// Emet le enum de la fonction de travail associer au hotkey
   handleKeyboardEvent(event: KeyboardEvent): string | void {

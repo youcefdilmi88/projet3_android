@@ -15,7 +15,6 @@ import { PipetteToolParameterComponent } from './pipette-tool-parameter/pipette-
 import { PolygonToolParameterComponent } from './polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from './rectangle-tool-parameter/rectangle-tool-parameter.component';
 import { SelectionToolParameterComponent } from './selection-tool-parameter/selection-tool-parameter.component';
-import { SprayToolParameterComponent } from './spray-tool-parameter/spray-tool-parameter.component';
 import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-parameter.component';
 
 @NgModule({
@@ -33,7 +32,6 @@ import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-p
         EraserToolParameterComponent,
         PenToolParameterComponent,
         BucketFillToolParameterComponent,
-        SprayToolParameterComponent,
     ],
     imports: [
         CommonModule,

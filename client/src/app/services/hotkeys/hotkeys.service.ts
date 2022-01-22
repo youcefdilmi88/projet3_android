@@ -55,7 +55,6 @@ export class HotkeysService {
     this.toolSelectorList.set(EmitReturn.PEN, ToolIdConstants.PEN_ID);
     this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
     this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
-    this.toolSelectorList.set(EmitReturn.SPRAY, ToolIdConstants.SPRAY_ID);
     this.toolSelectorList.set(EmitReturn.BUCKET_FILL, ToolIdConstants.FILLER_ID);
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
