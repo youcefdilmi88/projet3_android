@@ -12,7 +12,6 @@ import { StampToolService } from './stamp-tool/stamp-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
 import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
-import { ToolsApplierColorsService } from './tools-applier-colors/tools-applier-colors.service';
 
 /// Service permettant de gérer l'outil présent selon son ID
 /// Appelle les bonnes fonctions d'évenement souris selon l'outil selectionner
@@ -28,7 +27,6 @@ export class ToolsService {
   constructor(
     private drawingService: DrawingService,
     private pencilTool: PencilToolService,
-    private colorApplicator: ToolsApplierColorsService,
     private rectangleTool: ToolRectangleService,
     private ellipseTool: ToolEllipseService,
     private etampeService: StampToolService,
@@ -50,7 +48,6 @@ export class ToolsService {
     this.tools.set(this.ellipseTool.id, this.ellipseTool);
     this.tools.set(this.polygonService.id, this.polygonService);
     this.tools.set(this.lineTool.id, this.lineTool);
-    this.tools.set(this.colorApplicator.id, this.colorApplicator);
     this.tools.set(this.etampeService.id, this.etampeService);
     this.tools.set(this.selectionTool.id, this.selectionTool);
     this.tools.set(this.eraserTool.id, this.eraserTool);

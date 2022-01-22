@@ -14,7 +14,6 @@ import { StampToolService } from './stamp-tool/stamp-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
 import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
-import { ToolsApplierColorsService } from './tools-applier-colors/tools-applier-colors.service';
 import { ToolsService } from './tools.service';
 
 describe('ToolsService', () => {
@@ -35,7 +34,6 @@ describe('ToolsService', () => {
     const spyRect = jasmine.createSpyObj('ToolRectangleService', ['']);
     const spyEllipse = jasmine.createSpyObj('ToolEllipseService', ['']);
     const spyEtampe = jasmine.createSpyObj('EtampeToolService', ['']);
-    const spyGrid = jasmine.createSpyObj('GridService', ['']);
     const spyPoly = jasmine.createSpyObj('PolygonToolService', ['']);
     const spyLine = jasmine.createSpyObj('LineToolService', ['dropTool', 'pickupTool']);
     const spySelection = jasmine.createSpyObj('SelectionToolService', ['removeSelection', 'dropTool', 'pickupTool']);
@@ -47,7 +45,6 @@ describe('ToolsService', () => {
       providers: [
         { provide: CommandInvokerService, useValue: invokerSpy },
         { provide: PencilToolService, useValue: spyPencil },
-        { provide: ToolsApplierColorsService, useValue: spyApplier },
         { provide: ToolRectangleService, useValue: spyRect },
         { provide: ToolEllipseService, useValue: spyEllipse },
         { provide: StampToolService, useValue: spyEtampe },

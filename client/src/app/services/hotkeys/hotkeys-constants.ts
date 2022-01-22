@@ -77,7 +77,6 @@ export const enum EmitReturn {
     EXPORT_DRAWING = 'exportDrawing',
 
     PENCIL = 'pencil',
-    APPLICATEUR = 'applicateur',
     RECTANGLE = 'rectangle',
     ELLIPSE = 'ellipse',
     POLYGON = 'polygon',

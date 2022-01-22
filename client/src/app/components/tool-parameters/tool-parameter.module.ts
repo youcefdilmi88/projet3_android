@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MaterialModules } from '../../app-material.module';
-import { ApplierToolParameterComponent } from './applier-tool-parameter/applier-tool-parameter.component';
 import { EllipseToolParameterComponent } from './ellipse-tool-parameter/ellipse-tool-parameter.component';
 import { EraserToolParameterComponent } from './eraser-tool-parameter/eraser-tool-parameter.component';
 import { LineToolParameterComponent } from './line-tool-parameter/line-tool-parameter.component';
@@ -17,7 +16,6 @@ import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-p
     declarations: [
         PencilToolParameterComponent,
         RectangleToolParameterComponent,
-        ApplierToolParameterComponent,
         EllipseToolParameterComponent,
         StampToolParameterComponent,
         PolygonToolParameterComponent,
