@@ -50,7 +50,6 @@ export class HotkeysEmitterService {
     this.hotkeyTranslationMap.set(KeyCodes.l, EmitReturn.LINE);
     this.hotkeyTranslationMap.set(KeyCodes.e, EmitReturn.ERASER);
     this.hotkeyTranslationMap.set(KeyCodes.b, EmitReturn.BUCKET_FILL);
-    this.hotkeyTranslationMap.set(KeyCodes.i, EmitReturn.PIPETTE);
     this.hotkeyTranslationMap.set(KeyCodes.s, EmitReturn.SELECTION);
   }
   /// Emet le enum de la fonction de travail associer au hotkey

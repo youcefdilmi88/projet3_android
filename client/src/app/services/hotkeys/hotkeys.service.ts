@@ -50,7 +50,6 @@ export class HotkeysService {
     this.toolSelectorList.set(EmitReturn.RECTANGLE, ToolIdConstants.RECTANGLE_ID);
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);
     this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
-    this.toolSelectorList.set(EmitReturn.PIPETTE, ToolIdConstants.PIPETTE_ID);
     this.toolSelectorList.set(EmitReturn.SELECTION, ToolIdConstants.SELECTION_ID);
     this.toolSelectorList.set(EmitReturn.PEN, ToolIdConstants.PEN_ID);
     this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);

@@ -79,7 +79,6 @@ export const enum EmitReturn {
     PENCIL = 'pencil',
     APPLICATEUR = 'applicateur',
     BUCKET_FILL = 'bucket',
-    PIPETTE = 'pipette',
     RECTANGLE = 'rectangle',
     ELLIPSE = 'ellipse',
     POLYGON = 'polygon',

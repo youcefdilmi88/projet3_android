@@ -8,7 +8,6 @@ import { GridParameterComponent } from 'src/app/components/tool-parameters/grid-
 import { LineToolParameterComponent } from 'src/app/components/tool-parameters/line-tool-parameter/line-tool-parameter.component';
 import { PenToolParameterComponent } from 'src/app/components/tool-parameters/pen-tool-parameter/pen-tool-parameter.component';
 import { PencilToolParameterComponent } from 'src/app/components/tool-parameters/pencil-tool-parameter/pencil-tool-parameter.component';
-import { PipetteToolParameterComponent } from 'src/app/components/tool-parameters/pipette-tool-parameter/pipette-tool-parameter.component';
 import { PolygonToolParameterComponent } from 'src/app/components/tool-parameters/polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from 'src/app/components/tool-parameters/rectangle-tool-parameter/rectangle-tool-parameter.component';
 import { SelectionToolParameterComponent } from 'src/app/components/tool-parameters/selection-tool-parameter/selection-tool-parameter.component';
@@ -34,7 +33,6 @@ export class ParameterComponentService {
       StampToolParameterComponent,
       ApplierToolParameterComponent,
       BucketFillToolParameterComponent,
-      PipetteToolParameterComponent,
     );
     // Le push se fait par la suite pour s'assurer qu'il s'agit de la derniere classe
     this.parameterComponentList.push(GridParameterComponent);
