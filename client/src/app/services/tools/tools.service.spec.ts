@@ -10,7 +10,6 @@ import { LineToolService } from './line-tool/line-tool.service';
 import { PencilToolService } from './pencil-tool/pencil-tool.service';
 import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
-import { StampToolService } from './stamp-tool/stamp-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
 import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
@@ -30,10 +29,8 @@ describe('ToolsService', () => {
       onKeyDown() { return; }, onKeyUp() { return; }, pickupTool() { return; }, dropTool() { return; },
     };
     const spyPencil = jasmine.createSpyObj('PencilToolService', ['onKeyDown', 'onKeyUp', 'onPressed', 'dropTool', 'pickupTool']);
-    const spyApplier = jasmine.createSpyObj('ToolsApplierColorsService', ['']);
     const spyRect = jasmine.createSpyObj('ToolRectangleService', ['']);
     const spyEllipse = jasmine.createSpyObj('ToolEllipseService', ['']);
-    const spyEtampe = jasmine.createSpyObj('EtampeToolService', ['']);
     const spyPoly = jasmine.createSpyObj('PolygonToolService', ['']);
     const spyLine = jasmine.createSpyObj('LineToolService', ['dropTool', 'pickupTool']);
     const spySelection = jasmine.createSpyObj('SelectionToolService', ['removeSelection', 'dropTool', 'pickupTool']);
@@ -47,7 +44,6 @@ describe('ToolsService', () => {
         { provide: PencilToolService, useValue: spyPencil },
         { provide: ToolRectangleService, useValue: spyRect },
         { provide: ToolEllipseService, useValue: spyEllipse },
-        { provide: StampToolService, useValue: spyEtampe },
         { provide: PolygonToolService, useValue: spyPoly },
         { provide: LineToolService, useValue: spyLine },
         { provide: SelectionToolService, useValue: spySelection },

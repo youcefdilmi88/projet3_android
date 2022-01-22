@@ -10,14 +10,12 @@ import { PencilToolParameterComponent } from './pencil-tool-parameter/pencil-too
 import { PolygonToolParameterComponent } from './polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from './rectangle-tool-parameter/rectangle-tool-parameter.component';
 import { SelectionToolParameterComponent } from './selection-tool-parameter/selection-tool-parameter.component';
-import { StampToolParameterComponent } from './stamp-tool-parameter/stamp-tool-parameter.component';
 
 @NgModule({
     declarations: [
         PencilToolParameterComponent,
         RectangleToolParameterComponent,
         EllipseToolParameterComponent,
-        StampToolParameterComponent,
         PolygonToolParameterComponent,
         LineToolParameterComponent,
         SelectionToolParameterComponent,

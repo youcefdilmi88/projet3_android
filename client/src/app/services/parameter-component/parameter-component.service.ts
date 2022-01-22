@@ -7,7 +7,6 @@ import { PencilToolParameterComponent } from 'src/app/components/tool-parameters
 import { PolygonToolParameterComponent } from 'src/app/components/tool-parameters/polygon-tool-parameter/polygon-tool-parameter.component';
 import { RectangleToolParameterComponent } from 'src/app/components/tool-parameters/rectangle-tool-parameter/rectangle-tool-parameter.component';
 import { SelectionToolParameterComponent } from 'src/app/components/tool-parameters/selection-tool-parameter/selection-tool-parameter.component';
-import { StampToolParameterComponent } from 'src/app/components/tool-parameters/stamp-tool-parameter/stamp-tool-parameter.component';
 
 /// Classe permettant d'offrir dyamiquement des component selon un index
 @Injectable({
@@ -25,7 +24,6 @@ export class ParameterComponentService {
       EllipseToolParameterComponent,
       PolygonToolParameterComponent,
       LineToolParameterComponent,
-      StampToolParameterComponent,
     );
     // Le push se fait par la suite pour s'assurer qu'il s'agit de la derniere classe
     this.parameterComponentList.push(ControlMenuComponent);

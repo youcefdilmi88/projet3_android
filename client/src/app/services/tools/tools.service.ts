@@ -8,7 +8,6 @@ import { LineToolService } from './line-tool/line-tool.service';
 import { PencilToolService } from './pencil-tool/pencil-tool.service';
 import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
-import { StampToolService } from './stamp-tool/stamp-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
 import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
@@ -29,7 +28,6 @@ export class ToolsService {
     private pencilTool: PencilToolService,
     private rectangleTool: ToolRectangleService,
     private ellipseTool: ToolEllipseService,
-    private etampeService: StampToolService,
     private polygonService: PolygonToolService,
     private lineTool: LineToolService,
     private selectionTool: SelectionToolService,
@@ -48,7 +46,6 @@ export class ToolsService {
     this.tools.set(this.ellipseTool.id, this.ellipseTool);
     this.tools.set(this.polygonService.id, this.polygonService);
     this.tools.set(this.lineTool.id, this.lineTool);
-    this.tools.set(this.etampeService.id, this.etampeService);
     this.tools.set(this.selectionTool.id, this.selectionTool);
     this.tools.set(this.eraserTool.id, this.eraserTool);
   }
