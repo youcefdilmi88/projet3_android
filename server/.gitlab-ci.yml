@@ -3,5 +3,5 @@ heroku:
  only:
  - master
  script:
- - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/<Your heroku app name>.git
+ - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/projet3-3990-207.git
  - git push -f heroku master
