@@ -1,28 +1,31 @@
-image: node:latest
+# Node docker image on which this would be run
+image: node:8.10.0
 
-before_script:
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - install
+  - deploy_production
+
+# Job 1:
+install:
+  only:
+    - master
+  stage: install
+  script:
+    - npm install
+
+# Job 2:
+# Deploy to staging
+Production:
+  image: ruby:latest
+  only:
+    - master
+  stage: deploy_production
+  script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-
-stages:
-    - staging
-    - production
-
-staging:
-    type: deploy
-    stage: staging
-    image: ruby:latest
-    script:
-        - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY
-    only:
-        - staging
-
-production:
-    type: deploy
-    stage: production
-    image: ruby:latest
-    script:
-        - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY
-    only:
-        - master
+    - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY
