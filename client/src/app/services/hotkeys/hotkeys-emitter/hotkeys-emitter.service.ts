@@ -26,8 +26,6 @@ export class HotkeysEmitterService {
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.d, EmitReturn.DUPLICATE);
     this.hotkeyTranslationMap.set(KeyCodes.delete, EmitReturn.DELETE);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.a, EmitReturn.SELECTALL);
-    this.hotkeyTranslationMap.set(CTRL + KeyCodes.z, EmitReturn.UNDO);
-    this.hotkeyTranslationMap.set(CTRL + SHIFT + KeyCodes.z, EmitReturn.REDO);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.o, EmitReturn.NEW_DRAWING);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.s, EmitReturn.SAVE_DRAWING);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.g, EmitReturn.OPEN_DRAWING);

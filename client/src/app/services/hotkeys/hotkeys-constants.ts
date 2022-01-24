@@ -91,6 +91,4 @@ export const enum EmitReturn {
     DELETE = 'delete',
     SELECTALL = 'selectall',
 
-    UNDO = 'undo',
-    REDO = 'redo',
 }

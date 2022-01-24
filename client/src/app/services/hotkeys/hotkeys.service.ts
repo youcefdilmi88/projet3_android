@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewDrawingComponent } from 'src/app/components/new-drawing/new-drawing.component';
-import { CommandInvokerService } from 'src/app/services/command-invoker/command-invoker.service';
 import { ExportDialogService } from '../export-dialog/export-dialog.service';
 import { OpenDrawingDialogService } from '../open-drawing-dialog/open-drawing-dialog.service';
 import { SaveDrawingDialogService } from '../save-drawing-dialog/save-drawing-dialog.service';
@@ -32,7 +31,6 @@ export class HotkeysService {
     private copyPasteService: CopyPasteToolService,
     private selectionTool: SelectionToolService,
     private deletingTool: DeletingToolService,
-    private commandInvoker: CommandInvokerService,
     private openDrawingService: OpenDrawingDialogService,
 
     private hotkeysEmitterService: HotkeysEmitterService,
@@ -103,12 +101,6 @@ export class HotkeysService {
             break;
           case EmitReturn.SELECTALL:
             this.selectionTool.selectAll();
-            break;
-          case EmitReturn.UNDO:
-            this.commandInvoker.undo();
-            break;
-          case EmitReturn.REDO:
-            this.commandInvoker.redo();
             break;
           default:
             console.log('Warning : Hotkey callBack not implemented !');
