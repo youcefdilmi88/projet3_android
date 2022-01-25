@@ -27,7 +27,6 @@ export class SelectionToolService implements Tools {
   private hasSelectedItems = false;
   private isAlt = false;
   private isShift = false;
-  private shiftChanged = false;
 
   private pointsSideLength = 10;
   private pointsList: Point[] = [
@@ -57,8 +56,6 @@ export class SelectionToolService implements Tools {
     this.setRectInversement();
     this.setRectSelection();
     this.setCtrlPoints();
-
-    this.rotationAction = this.rotationAction.bind(this);
   }
 
   /// Quand le bouton gauche de la sourie est enfoncé, soit on selectionne un objet, soit on debute une zone de selection
@@ -85,7 +82,6 @@ export class SelectionToolService implements Tools {
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
           this.isIn = true;
-          this.setMouseWheelEvent();
           if (!this.selectionTransformService.hasCommand()) {
             this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
           }
@@ -96,7 +92,6 @@ export class SelectionToolService implements Tools {
           });
           this.removeSelection();
           if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
-            this.setMouseWheelEvent();
             this.objects.push(obj);
             this.setSelection();
             this.isIn = true;
@@ -156,7 +151,6 @@ export class SelectionToolService implements Tools {
 
       this.firstInvObj = null;
       this.isIn = false;
-      this.shiftChanged = false;
       let returnRectangleCommand;
       if (this.wasMoved) {
         if (this.selectionTransformService.hasCommand()) {
@@ -164,12 +158,9 @@ export class SelectionToolService implements Tools {
           this.selectionTransformService.endCommand();
         }
         this.wasMoved = false;
-
-        this.endRotation();
         return returnRectangleCommand;
       }
 
-      this.endRotation();
       this.selectionTransformService.endCommand();
     }
   }
@@ -210,9 +201,6 @@ export class SelectionToolService implements Tools {
     }
     if (!this.isShift) {
       this.isShift = event.code === KeyCodes.shiftR || event.code === KeyCodes.shiftL;
-      if (this.isShift) {
-        this.shiftChanged = true;
-      }
     }
 
     this.wasMoved = true;
@@ -237,9 +225,6 @@ export class SelectionToolService implements Tools {
     }
     if (this.isShift) {
       this.isShift = !(event.code === KeyCodes.shiftR || event.code === KeyCodes.shiftL);
-      if (!this.isShift) {
-        this.shiftChanged = true;
-      }
     }
 
     this.wasMoved = true;
@@ -525,31 +510,6 @@ export class SelectionToolService implements Tools {
     this.rendererService.renderer.setAttribute(this.rectInversement, 'x', '0');
     this.rendererService.renderer.setAttribute(this.rectInversement, 'y', '0');
     this.rendererService.renderer.setAttribute(this.rectInversement, 'pointer-events', 'none');
-  }
-
-  private setMouseWheelEvent(): void {
-    window.addEventListener('wheel', this.rotationAction);
-  }
-
-  private rotationAction(event: WheelEvent): void {
-    if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.ROTATE || this.shiftChanged) {
-      this.selectionTransformService.createCommand(SelectionCommandConstants.ROTATE, this.rectSelection, this.objects);
-      this.shiftChanged = false;
-    }
-    if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.ROTATE) {
-      event.preventDefault();
-      this.wasMoved = true;
-
-      this.selectionTransformService.rotate(event.deltaY > 0 ? 1 : -1, this.rectSelection);
-
-      if (this.isShift) {
-        this.setSelection();
-      }
-    }
-  }
-
-  private endRotation(): void {
-    window.removeEventListener('wheel', this.rotationAction);
   }
 
   /// Retourne la liste d'objets selectionne.
