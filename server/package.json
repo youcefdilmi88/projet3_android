@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
-  "engines" : { "node" : "12.16.1" } ,
+  "engines": {
+    "node": "12.16.1"
+  },
   "scripts": {
     "postinstall": "ts-node",
     "start": "ts-node index.ts",
@@ -31,4 +33,4 @@
     "bufferutil": "^4.0.3",
     "utf-8-validate": "^5.0.5"
   }
-} 
+}
