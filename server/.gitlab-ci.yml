@@ -12,7 +12,7 @@ cache:
 
 stages:
   - install
-  - staging
+  - deploy_production
 
 # Job 1:
 install:
@@ -28,7 +28,7 @@ Production:
   image: ruby:latest
   only:
     - staging     # to change to main
-  stage: staging  
+  stage: deploy_production
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
