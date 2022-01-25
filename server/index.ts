@@ -6,7 +6,7 @@ import userData from './userData';
 
 const app = express();
 
-app.set('PORT', 3000);
+app.set('PORT', process.env.PORT);
 
 app.use('', sampleRouter)
 app.use('',userData)
@@ -29,7 +29,7 @@ io.on("connection",(socket)=>{
     })
 })
 
-server.listen(app.get('PORT'), () => {
+server.listen(process.env.PORT, () => {
     console.log(`Server is running localhost:${app.get('PORT')}`);
 });
 
