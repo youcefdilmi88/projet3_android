@@ -6,7 +6,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 /// Service permettant au sidenav de bien interagir avec les hotkeys et de bien gerer
 /// sa selection d'outil. Vérifie aussi s'il s'agit du menu fichier ou d'outil
-const ID_CONTROL_MENU = 17;
+const ID_CONTROL_MENU = 7;
 
 @Injectable({
   providedIn: 'root',
