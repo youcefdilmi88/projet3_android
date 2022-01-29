@@ -15,9 +15,12 @@ const MONGO_HOST =`mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.g3
 
 mongoose.connect(MONGO_HOST).then(()=>{
     console.log("connected");
-}).catch((error)=>{
+}).catch((error:Error)=>{
     console.log(error)
 })
+
+app.use(express.json());
+
 
 app.use((req, res, next) => {   // must be here to make http request work without access problems
     res.header('Access-Control-Allow-Origin', '*');
