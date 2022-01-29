@@ -4,7 +4,7 @@ import { AfterViewInit, Component, ViewChild} from '@angular/core';
 
 
 
-//import { io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'app-chattest',
@@ -32,18 +32,18 @@ export class ChattestComponent implements AfterViewInit {
      console.log("string to send "+text);
      this.userDataCall();
   
-    
-      
-    
-/*
-    const socket=io('http://localhost:8080/')
+
+    const socket=io('http://localhost:8080/', {
+      reconnectionAttempts: 2,
+      transports : ['websocket'],
+    })
 
     socket.on("connection",()=>{
       console.log("connected")
     })
     socket.open()
     socket.emit("msg",text)
-    */
+
   }
 
 
