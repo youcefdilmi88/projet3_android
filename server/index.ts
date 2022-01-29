@@ -27,6 +27,11 @@ io.on("connection",(socket)=>{
         console.log("second socket received");
         io.emit("room2",data);
     })
+
+    socket.on("chat", (message)=>{
+        console.log("Jai recu le caliss de message");
+        io.emit("room3", message);
+    }) 
 })
 
 server.listen(process.env.PORT, () => {
