@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import messageSchema from './entite'
 
 const router = express.Router();
 
@@ -12,6 +13,14 @@ const userData=(req: Request, res: Response, next: NextFunction)=>{
 }
 
 const print=(req:Request,res:Response,next:NextFunction)=>{
+    console.log(req.body);
+    let user=req.body.user;
+    let msg=req.body.msg;
+
+    const message=new messageSchema({sender:user,content:msg})
+
+    message.save();
+
     console.log("request received")
     return res.json(
     {data:"MSG GET RECEIVED"}
@@ -19,6 +28,6 @@ const print=(req:Request,res:Response,next:NextFunction)=>{
 }
 
 router.get('/userData',userData)
-router.get('/userData/msg',print)
+router.post('/userData/msg',print)
 
 export=router;

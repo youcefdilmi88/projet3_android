@@ -4,7 +4,7 @@ import { AfterViewInit, Component, ViewChild} from '@angular/core';
 
 
 
-//import { io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'app-chattest',
@@ -14,8 +14,8 @@ import { AfterViewInit, Component, ViewChild} from '@angular/core';
 export class ChattestComponent implements AfterViewInit {
 
   @ViewChild('chatinput') chatinput:HTMLElement;
-  private readonly BASE_URL: string = "http://localhost:8080/";
-  //"http://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
 
 
@@ -32,18 +32,18 @@ export class ChattestComponent implements AfterViewInit {
      console.log("string to send "+text);
      this.userDataCall();
   
-    
-      
-     /*
 
-    const socket=io('http://localhost:8080/')
+    const socket=io('http://localhost:8080/', {
+      reconnectionAttempts: 2,
+      transports : ['websocket'],
+    })
 
     socket.on("connection",()=>{
       console.log("connected")
     })
     socket.open()
     socket.emit("msg",text)
-    */
+
   }
 
 
@@ -51,7 +51,7 @@ export class ChattestComponent implements AfterViewInit {
   public userDataCall() {
     let link=this.BASE_URL+"userData/msg";
 
-    this.http.get<any>(link).subscribe((data: any) => {
+    this.http.post<any>(link,{msg:"sjdakjsd",user:"admin"}).subscribe((data: any) => {
       console.log(data);
     });
 
