@@ -28,6 +28,7 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 import { ToolParameterModule } from './components/tool-parameters/tool-parameter.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { ChattestComponent } from './components/chattest/chattest.component';
 
 
 
@@ -55,6 +56,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         ErrorMessageComponent,
         AlertMessageComponent,
         ExportDrawingComponent,
+        ChattestComponent,
     ],
     imports: [
         BrowserModule,
