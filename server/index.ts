@@ -3,10 +3,21 @@ import http from 'http';
 import { Server } from 'socket.io';
 import sampleRouter from './ping'
 import userData from './userData';
+import  mongoose  from 'mongoose';
 
 const app = express();
 
 app.set('PORT', process.env.PORT ||8080);
+
+const MONGO_USERNAME = "projet3";
+const MONGO_PASSWORD = "projet123";
+const MONGO_HOST =`mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.g3voj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+
+mongoose.connect(MONGO_HOST).then(()=>{
+    console.log("connected");
+}).catch((error)=>{
+    console.log(error)
+})
 
 app.use((req, res, next) => {   // must be here to make http request work without access problems
     res.header('Access-Control-Allow-Origin', '*');
