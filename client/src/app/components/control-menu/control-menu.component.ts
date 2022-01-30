@@ -65,6 +65,7 @@ export class ControlMenuComponent {
   openOpenDrawing(): void {
     this.openDrawingService.openDialog();
   }
+  
   openExportMenu(): void {
     this.exportDialogService.openDialog();
   }

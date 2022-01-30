@@ -3,6 +3,8 @@ import { SidenavService } from 'src/app/services/sidenav/sidenav.service';
 import { Tools } from 'src/app/interfaces/tools.interface';
 import { ToolsService } from 'src/app/services/tools/tools.service';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { NewDrawingComponent } from '../../components/new-drawing/new-drawing.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sidenav',
@@ -12,7 +14,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 export class SidenavComponent {
 
-  constructor(private sideNavService: SidenavService, private toolService: ToolsService) { }
+  constructor(private dialog: MatDialog, private sideNavService: SidenavService, private toolService: ToolsService) { }
 
   get currentToolId(): number {
     return this.toolService.selectedToolId;
@@ -29,6 +31,10 @@ export class SidenavComponent {
   /// Choisit un parametre
   get selectedParameter(): number {
     return this.sideNavService.selectedParameter;
+  }
+
+  openNewDrawing(): void {
+    this.dialog.open(NewDrawingComponent, {});
   }
 
   /// Ouvre le sidenav
