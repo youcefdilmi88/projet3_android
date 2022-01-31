@@ -32,8 +32,8 @@ export class ChattestComponent implements AfterViewInit {
       transports : ['websocket'],
     })
 
-    this.socket.on("connected",()=>{
-      console.log("connected");
+    this.socket.on("connected",(data)=>{
+      console.log(data);
     })
 
     this.socket.emit("connection", );
