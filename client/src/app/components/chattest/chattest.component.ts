@@ -1,10 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-
 import { AfterViewInit, Component, ViewChild} from '@angular/core';
-
-
-
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 @Component({
   selector: 'app-chattest',
@@ -14,10 +10,11 @@ import { io } from 'socket.io-client';
 export class ChattestComponent implements AfterViewInit {
 
   @ViewChild('chatinput') chatinput:HTMLElement;
-  private readonly BASE_URL: string ="http://localhost:8080/";
-  //"https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string =//"http://localhost:8080/";
+  "https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
 
+  socket:Socket;
 
   constructor(private http: HttpClient) { }
   ngAfterViewInit(): void {
@@ -25,28 +22,40 @@ export class ChattestComponent implements AfterViewInit {
   }
 
   ngAfterInit() {
-    console.log("chat page !")
+    console.log("chat page !");
   }
 
-  sendchatinput(text:String) {
-     console.log("string to send "+text);
-     this.userDataCall();
-  
-
-    const socket=io('http://localhost:8080/', {
+  connectSocket() {
+    //this.socket=io('http://localhost:8080/', {
+    this.socket=io('https://projet3-3990-207.herokuapp.com/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
     })
 
-    socket.on("connection",()=>{
-      console.log("connected")
+    this.socket.on("connected",()=>{
+      console.log("connected");
     })
-    socket.open()
-    socket.emit("msg",text)
 
+    this.socket.emit("connection", );
+    this.socket.on("room1", (data)=>{
+      console.log(data);
+    });
+
+    this.socket.on("ROOM_CREATED", (data)=>{
+      console.log(data);
+    });
   }
 
+  sendchatinput(text:String) {
+    console.log("string to send "+text);
+    //this.userDataCall();
 
+    this.socket.emit("msg",text);
+  }
+
+  createRoom(roomName: string) {
+    this.socket.emit("CREATE_ROOM", {roomName});
+  }
 
   public userDataCall() {
     let link=this.BASE_URL+"userData/msg";
@@ -54,9 +63,6 @@ export class ChattestComponent implements AfterViewInit {
     this.http.post<any>(link,{msg:"sjdakjsd",user:"admin"}).subscribe((data: any) => {
       console.log(data);
     });
-
-    
-  
   }
 
   

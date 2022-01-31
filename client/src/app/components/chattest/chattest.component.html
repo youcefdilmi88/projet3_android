@@ -1,10 +1,13 @@
 
   <div>Chat</div>
   <div>
-  <textarea #chatinput>
-
-  </textarea>
+    <button (click)="connectSocket()">Connect</button>
+  </div>
+  <div>
+  <textarea #chatinput></textarea>
   <button (click)="sendchatinput(chatinput.value)">SEND</button>
+    <textarea #createroom></textarea>
+    <button (click)="createRoom(createroom.value)">Create Room</button>
   </div>
   
   

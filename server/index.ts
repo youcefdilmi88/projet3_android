@@ -7,7 +7,7 @@ import  mongoose  from 'mongoose';
 
 const app = express();
 
-app.set('PORT', process.env.PORT ||8080);
+app.set('PORT', process.env.PORT /*||8080*/);
 
 const MONGO_USERNAME = "projet3";
 const MONGO_PASSWORD = "projet123";
@@ -34,8 +34,14 @@ app.use('',userData)
 const server = http.createServer(app); // server for http
 const io = new Server(server); // subclass server for socket
 
+let rooms = new Map<string, {name: string}>();
+
 io.on("connection",(socket)=>{
     console.log(socket.id+" is connected");
+
+    socket.on("connection",()=>{
+        io.emit("connected", `welcome user ` + socket.id);
+    })
 
     socket.on("msg",(data)=>{    // listen for event named random with data
         console.log(data);        
@@ -49,12 +55,15 @@ io.on("connection",(socket)=>{
     })
 
     /*************test chat *******************/
-    socket.on("join_room",({username,room})=>{
-       //const user={socket.id}
+    socket.on("CREATE_ROOM",({roomName})=>{
+        console.log(`${roomName}`);
+        rooms.set(socket.id, roomName);
+        socket.join(roomName);
+        io.to(roomName).emit("ROOM_CREATED", `welcome to room ` + `${roomName}`);
     });
 })
 
-server.listen(process.env.PORT || 8080, () => {
+server.listen(process.env.PORT /*|| 8080*/, () => {
     console.log(`Server is running localhost:${app.get('PORT')}`);
 });
 
