@@ -9,7 +9,7 @@ import messageService from './Services/messageService';
 
 const app = express();
 
-app.set('PORT', process.env.PORT ||8080);
+app.set('PORT', process.env.PORT /*||8080*/);
 
 /*
 const MONGO_USERNAME = "projet3";
@@ -72,7 +72,7 @@ io.on("connection",(socket)=>{
     });
 })
 
-server.listen(process.env.PORT || 8080, () => {
+server.listen(process.env.PORT /*|| 8080*/, () => {
     console.log(`Server is running localhost:${app.get('PORT')}`);
 });
 
