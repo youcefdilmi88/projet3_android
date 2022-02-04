@@ -47,7 +47,7 @@ export class ChattestComponent implements AfterViewInit {
   }
 
   sendchatinput(text:String) {
-    console.log("string to send "+text);
+    //console.log("string to send "+text);
     //this.userDataCall();
 
     this.socket.emit("msg",text);

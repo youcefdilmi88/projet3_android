@@ -3,8 +3,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { HotkeysService } from 'src/app/services/hotkeys/hotkeys.service';
 import { WelcomeDialogService } from 'src/app/services/welcome-dialog/welcome-dialog.service';
-import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
+//import { NewDrawingComponent } from '../new-drawing/new-drawing.component'; A REMETTRE
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
+import { ChattestComponent } from '../chattest/chattest.component';
 
 @Component({
   selector: 'app-root',
@@ -32,11 +33,12 @@ export class AppComponent implements OnInit, OnDestroy {
       panelClass: 'filter-popup',
       autoFocus: false,
       disableClose: true,
-      maxHeight: 500,
-      maxWidth: 500,
+      maxHeight: 1920,
+      maxWidth: 1080,
     });
     this.welcomeDialogSub = this.welcomeDialogRef.afterClosed().subscribe(() => {
-      this.dialog.open(NewDrawingComponent);
+      this.dialog.open(ChattestComponent); //CHAT
+      //this.dialog.open(NewDrawingComponent); //A REMETTRE
     });
   }
 

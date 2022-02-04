@@ -6,6 +6,7 @@ import { WelcomeDialogService } from 'src/app/services/welcome-dialog/welcome-di
 import { WelcomeMessage } from '../../../../../../common/communication/message';
 import { IndexService } from '../../../services/index/index.service';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
+import { io, Socket } from 'socket.io-client';
 
 export const DIALOG_PROPERTIES = {
   hasBackdrop: true,
@@ -24,6 +25,7 @@ export const DIALOG_PROPERTIES = {
 export class WelcomeDialogComponent implements OnInit {
   welcomeMessage = new BehaviorSubject<WelcomeMessage>({ body: '', end: '' });
   form: FormGroup;
+  socket: Socket;
   constructor(
     public dialog: MatDialog,
     private welcomeService: WelcomeDialogService,
@@ -51,6 +53,15 @@ export class WelcomeDialogComponent implements OnInit {
   }
   /// fonction closeClick qui permet de fermer le premier mat dialog du message de bienvenue
   closeClick(): void {
+    this.socket=io('https://projet3-3990-207.herokuapp.com/', {
+      reconnectionAttempts: 2,
+      transports : ['websocket'],
+    })
+
+    this.socket.on("connected",(data)=>{
+      console.log(data);
+    })
+
     this.dialogRef.close();
   }
 }
