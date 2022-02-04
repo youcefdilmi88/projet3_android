@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import messageSchema from './entite'
+import messageSchema from './Entities/Message'
 
 const router = express.Router();
 
@@ -18,7 +18,6 @@ const print=(req:Request,res:Response,next:NextFunction)=>{
     let msg=req.body.msg;
 
     const message=new messageSchema({sender:user,content:msg})
-
     message.save();
 
     console.log("request received")

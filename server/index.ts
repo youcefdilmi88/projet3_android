@@ -3,12 +3,14 @@ import http from 'http';
 import { Server } from 'socket.io';
 import sampleRouter from './ping'
 import userData from './userData';
-import  mongoose  from 'mongoose';
+import userController from './Controllers/userController';
+
 
 const app = express();
 
-app.set('PORT', process.env.PORT /*||8080*/);
+app.set('PORT', process.env.PORT ||8080);
 
+/*
 const MONGO_USERNAME = "projet3";
 const MONGO_PASSWORD = "projet123";
 const MONGO_HOST =`mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.g3voj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
@@ -18,6 +20,7 @@ mongoose.connect(MONGO_HOST).then(()=>{
 }).catch((error:Error)=>{
     console.log(error)
 })
+*/
 
 app.use(express.json());
 
@@ -30,6 +33,11 @@ app.use((req, res, next) => {   // must be here to make http request work withou
   
 app.use('', sampleRouter)
 app.use('',userData)
+
+/*********User ***********/
+app.use('/user',userController);
+
+
 
 const server = http.createServer(app); // server for http
 const io = new Server(server); // subclass server for socket
@@ -63,7 +71,7 @@ io.on("connection",(socket)=>{
     });
 })
 
-server.listen(process.env.PORT /*|| 8080*/, () => {
+server.listen(process.env.PORT || 8080, () => {
     console.log(`Server is running localhost:${app.get('PORT')}`);
 });
 
