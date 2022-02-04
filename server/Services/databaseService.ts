@@ -1,5 +1,7 @@
 import  mongoose  from 'mongoose';
+import MessageSchema from '../Entities/MessageSchema';
 import UserSchema from '../Entities/UserSchema';
+import { Message } from '../Interface/Message';
 import { User } from '../Interface/User';
 
 const MONGO_USERNAME = "projet3";
@@ -23,6 +25,12 @@ class DatabaseService {
     async getAllUsers() {
         return await UserSchema.find({}).then((data)=>{
            return data as Array<User>;
+        })
+    }
+
+    async getRoomMessages() {
+        return await MessageSchema.find({}).then((data)=>{
+            return data as Array<Message>;
         })
     }
 }

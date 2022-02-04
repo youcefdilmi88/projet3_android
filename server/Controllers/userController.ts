@@ -9,7 +9,7 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
 
        if(userService.getUsers().has(req.body.useremail)) {
            return res.json(404);
-       }
+       } 
       
         const salt=await bcrypt.genSalt();
         const hashedPassword=await bcrypt.hash(req.body.password,salt);
@@ -22,9 +22,9 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
 }
 
 const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
+    console.log(req.body.useremail)
+    const user=userService.getUser(req.body.useremail as String) as User;
     
-    const user=userService.getUser(req.body.useremail) as User;
-    console.log(user);
     if(user==null) {
         return res.status(400).json({message:'Cannot find user'});
     }

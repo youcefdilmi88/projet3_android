@@ -1,20 +1,21 @@
 import mongoose from 'mongoose'
+import { Message } from '../Interface/Message';
 
-interface Message {
-  content:String,
-  sender:String,
-}
 
 const messageSchema = new mongoose.Schema({
-    content: {
+    time:{
+        type:Date,
+        requires:true,
+        unique:true,
+    },
+    userEmail: {
         type: String,
         required: true,
     },
-    sender: {
+    message: {
         type: String,
         required: true,
-    }
-
+    },
 });
 
 export=mongoose.model<Message>('messageSchema',messageSchema);

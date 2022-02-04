@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import messageSchema from './Entities/Message'
+import messageSchema from './Entities/MessageSchema'
 
 const router = express.Router();
 

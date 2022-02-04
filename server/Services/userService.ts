@@ -11,6 +11,7 @@ class UserService {
    private users=new Map<String,User>();
 
    async getAllUsers(){
+    this.users.clear();
      await databaseService.getAllUsers().then((users)=>{
          users.forEach((user)=>{
              this.users.set(user.useremail,user);
@@ -20,17 +21,21 @@ class UserService {
 
    async createUser(email:String,pass:String,nickName:String) {
       const user=new UserSchema({useremail:email,password:pass,nickname:nickName});
-      await user.save().then().catch((error)=>{
-          console.log(error);
-      });
+      console.log(user.password);
+      await user.save();
+      this.getAllUsers();
    }
 
    getUsers():Map<String,User> {
        return this.users;
    }
 
-   getUser(useremail:String):User | undefined {
-         return this.users.get(useremail);
+   getUser(useremail:String) {
+        if(this.users.has(useremail)) {
+          console.log(this.users.get(useremail));
+          return this.users.get(useremail);
+        }
+        return null;
    }
 
 

@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import sampleRouter from './ping'
 import userData from './userData';
 import userController from './Controllers/userController';
+import messageService from './Services/messageService';
 
 
 const app = express();
@@ -49,11 +50,11 @@ io.on("connection",(socket)=>{
 
     socket.on("connection",()=>{
         io.emit("connected", `welcome user ` + socket.id);
+        io.emit("connected",messageService.getMessages());
     })
 
     socket.on("msg",(data)=>{    // listen for event named random with data
-        console.log(data);        
-        console.log("first socket received");
+        messageService.createMessage(data.time,data.userEmail,data.msg);  
         io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
     })
     
