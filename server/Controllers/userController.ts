@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
-import bcrypt from 'bcrypt';
 import userService from '../Services/userService';
 import { User } from '../Interface/User';
+
+let bcrypt=require("bcryptjs");
 
 const router = express.Router();
 
