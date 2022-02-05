@@ -30,6 +30,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { AppRoutingModule } from './components/app-routing.module';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { AppRoutingModule } from './components/app-routing.module';
         AlertMessageComponent,
         ExportDrawingComponent,
         MainPageComponent,
+        ChatComponent,
     ],
     imports: [
         BrowserModule,
