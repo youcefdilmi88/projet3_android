@@ -33,6 +33,7 @@ export class SidenavComponent {
     return this.sideNavService.selectedParameter;
   }
 
+  // Reinitialisation du dessin
   openNewDrawing(): void {
     this.dialog.open(NewDrawingComponent, {});
   }

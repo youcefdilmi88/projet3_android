@@ -28,8 +28,8 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 import { ToolParameterModule } from './components/tool-parameters/tool-parameter.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-
-
+import { MainPageComponent } from './components/main-page/main-page.component';
+import { AppRoutingModule } from './components/app-routing.module';
 
 
 @NgModule({
@@ -55,6 +55,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         ErrorMessageComponent,
         AlertMessageComponent,
         ExportDrawingComponent,
+        MainPageComponent,
     ],
     imports: [
         BrowserModule,
@@ -70,6 +71,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         MomentModule,
         MatDialogModule,
         MatButtonToggleModule,
+        AppRoutingModule,
     ],
     exports: [],
     providers: [
