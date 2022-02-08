@@ -42,7 +42,7 @@ export class NewAccountComponent implements OnInit {
       return false;
     }
     else {
-      this.router.navigate(['/', 'main']);
+      this.router.navigate([""]);
 
       let link=this.BASE_URL+"user/createUser";
 
@@ -57,6 +57,6 @@ export class NewAccountComponent implements OnInit {
   }
 
   cancelClick(): void {
-    this.router.navigate(['/', 'main']);
+    this.router.navigate([""]);
   }
 }
