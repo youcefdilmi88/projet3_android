@@ -1,3 +1,4 @@
+
 import MessageSchema from "../Entities/MessageSchema";
 import { Message } from "../Interface/Message";
 import databaseService from "./databaseService";
@@ -8,7 +9,7 @@ class MessageService {
     } 
     private messages:Array<Message>=[];
 
-    getMessages() {
+    getMessages():Array<Message> {
         return this.messages;
     }
 
@@ -16,17 +17,20 @@ class MessageService {
       this.messages=[];
       await databaseService.getRoomMessages().then((messages)=>{
           messages.forEach((message)=>{
-              this.messages.push(message);
+              this.messages.push(message as Message);
           })
-        
       });
     }
  
     async createMessage(currentTime:Number,text:String,useremail:String) {
-       const message=new MessageSchema({time:currentTime,userEmail:useremail,message:text});
+       try {
+       const message=new MessageSchema({time:currentTime,useremail:useremail,message:text});
        await message.save();
-
        this.getAllRoomMessages();
+       }
+       catch(error) {
+         console.log(error);
+       }
     }
     
  

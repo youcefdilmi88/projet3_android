@@ -23,7 +23,7 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     }
     try {
       if(await bcrypt.compare(req.body.password,user.password as string)) {
-        return res.status(200).json({message:"success"});
+        return res.status(200).json({message:"success",useremail:user.useremail,nickname:user.nickname});
       }
       else {
         return res.status(404).json({message:"password does not match"});
@@ -34,7 +34,16 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     }
 }
 
-router.post('/createUser',createUser);
+const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
+    if(userService.getUsersInRoom()) {
+        userService.removeUserFromRoom(req.body.socketId);
+        return res.status(200).json({message:"user logged out !"})
+    }
+    return res.status(400).json({message:"user not found !"});
+}
+
+router.post('/registerUser',createUser);
 router.post('/loginUser',loginUser);
+router.post('/logoutUser',logoutUser);
 
 export=router;

@@ -1,6 +1,6 @@
 export interface Message {
-    time:number,
-    userEmail:String,
+    time:Number,
+    useremail:String,
     message:String,
     // room
 }

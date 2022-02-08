@@ -4,11 +4,11 @@ import { Message } from '../Interface/Message';
 
 const messageSchema = new mongoose.Schema({
     time:{
-        type:Date,
+        type:Number,
         requires:true,
         unique:true,
     },
-    userEmail: {
+    useremail: {
         type: String,
         required: true,
     },

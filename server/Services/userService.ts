@@ -9,6 +9,7 @@ class UserService {
    } 
 
    private users=new Map<String,User>();
+   private roomUsers=new Map<String,String>();
 
    async getAllUsers(){
     this.users.clear();
@@ -38,6 +39,17 @@ class UserService {
         return null;
    }
 
+   getUsersInRoom():Map<String,String> {
+       return this.roomUsers;
+   }
+
+   addUserToRoom(id:String,useremail:String) {
+       this.roomUsers.set(id,useremail);
+   }
+
+   removeUserFromRoom(id:String) {
+       this.roomUsers.delete(id);
+   }
 
 
 }
