@@ -15,19 +15,23 @@
                     <div class="pseudo">
                         <mat-form-field class="input" floatLabel="always">
                             <mat-label>Pseudo</mat-label>
-                            <input matInput>
+                            <input matInput id="email" type="text" name="email" required [(ngModel)]="email">
                         </mat-form-field> 
                     </div>
 
                     <div class="pass">    
                         <mat-form-field class="input" floatLabel="always">
                             <mat-label>Mot de Pass</mat-label>
-                            <input matInput>
+                            <input matInput id="password" type="password" name="password" required [(ngModel)]="password">
                         </mat-form-field> 
                     </div>
 
-                    <button mat-raised-button routerLink="register">Créer un compte</button>
-                    <button mat-raised-button routerLink="chat">Rejoindre le chat</button>
+                    <div>
+                        <p id="error">Vous ne pouvez pas mettre des champs vides fack head.</p>
+                    </div>
+
+                    <button mat-raised-button (click)="registerClick()">Créer un compte</button>
+                    <button mat-raised-button (click)="closeClick()">Rejoindre le chat</button>
 
                 </div>
             </div>

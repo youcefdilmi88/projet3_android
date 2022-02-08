@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild} from '@angular/core';
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import { DatePipe } from '@angular/common';
+import { SocketService } from '@app/services/socket/socket.service';
 
 
 @Component({
@@ -9,54 +10,29 @@ import { DatePipe } from '@angular/common';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
+
 export class ChatComponent implements AfterViewInit {
 
   @ViewChild('chatinput') chatinput:HTMLElement;
   private readonly BASE_URL: string =//"http://localhost:8080/";
   "https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
+  
+  @ViewChild('my-message') chatzone: HTMLElement;
 
   socket:Socket;
 
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService
+    ) { }
 
-  constructor(private http: HttpClient) { }
   ngAfterViewInit(): void {
     throw new Error('Method not implemented.');
   }
 
-
   ngAfterInit() {
     console.log("chat page !");
-    this.connectSocket();
-  }
-
-  connectSocket() {
-    console.log("reeeeeeeee");
-    //this.socket=io('http://localhost:8080/', {
-    this.socket=io('https://projet3-3990-207.herokuapp.com/', {
-      reconnectionAttempts: 2,
-      transports : ['websocket'],
-    })
-
-    this.socket.on("connected",(data)=>{
-      console.log(data);
-    })
-
-    this.socket.emit("connection", );
-    this.socket.on("room1", (data)=>{
-      var html = 
-      '<div class= "message-box my-message-box">' +
-      '<div class="message my-message"> ' + "id " + data.id + " time " + data.time + " mesg " + data.mesg + ' </div>' +
-      '<div class="seperator"></div>'
-      '</div>';
-
-      document.getElementById("message-area")!.innerHTML += `${html}`;
-      console.log(data);
-    });
-
-    this.socket.on("ROOM_CREATED", (data)=>{
-      console.log(data);
-    });
   }
 
   sendchatinput(text:String) {
@@ -66,7 +42,18 @@ export class ChatComponent implements AfterViewInit {
     const datepipe: DatePipe = new DatePipe('en-US')
     let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss')
 
-    this.socket.emit("msg", {id: this.socket.id, time: formattedDate, mesg: text});
+    this.socketService.getSocket().emit("msg", {id: this.socketService.getSocket().id, time: formattedDate, mesg: text});
+
+    this.socketService.getSocket().on("room1", (data)=>{
+      var html = 
+      '<div class= "message-box my-message-box">' +
+      '<div class="message my-message"> ' + "id " + data.id + " time " + data.time + ' </div>' +
+      '<div class="seperator"></div>' + " mesg " + data.mesg
+      '</div>';
+
+      document.getElementById("message-area")!.innerHTML += `${html}`;
+      console.log(data);
+    });
   }
 
   createRoom(roomName: string) {
@@ -80,6 +67,4 @@ export class ChatComponent implements AfterViewInit {
       console.log(data);
     });
   }
-
-
 }

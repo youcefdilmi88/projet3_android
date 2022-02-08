@@ -7,7 +7,7 @@ import { NewAccountComponent } from './new-account/new-account.component';
 
 const routes: Routes = [
   {
-    path: '', component: MainPageComponent
+    path: 'main', component: MainPageComponent
   },
   {
     path: 'chat', component: ChatComponent
