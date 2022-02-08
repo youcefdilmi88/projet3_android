@@ -3,18 +3,23 @@
     <body>
 
         <div class="title">
-            <h1 id="title">Colorimage</h1>
+            <h1 id="title">Créer un compte</h1>
         </div>
 
         <div class="outer">
             <div class="middle">
                 <div class="inner">
 
-                    <h1 id="color">Colorimage</h1>
-
                     <div class="pseudo">
                         <mat-form-field class="input" floatLabel="always">
                             <mat-label>Pseudo</mat-label>
+                            <input matInput>
+                        </mat-form-field> 
+                    </div>
+
+                    <div class="email">    
+                        <mat-form-field class="input" floatLabel="always">
+                            <mat-label>Adresse courriel</mat-label>
                             <input matInput>
                         </mat-form-field> 
                     </div>
@@ -26,8 +31,15 @@
                         </mat-form-field> 
                     </div>
 
-                    <button mat-raised-button routerLink="register">Créer un compte</button>
-                    <button mat-raised-button routerLink="chat">Rejoindre le chat</button>
+                    <div class="pass">    
+                        <mat-form-field class="input" floatLabel="always">
+                            <mat-label>Mot de Pass</mat-label>
+                            <input matInput>
+                        </mat-form-field> 
+                    </div>
+
+                    <button mat-raised-button routerLink="">Annuler</button>
+                    <button mat-raised-button routerLink="">Confirmer</button>
 
                 </div>
             </div>

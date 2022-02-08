@@ -8,17 +8,11 @@
 }
 
 // .container {
-//     // margin: auto;
-//     // text-align: center;
-//     // border: 3px solid green;
-//     // height: 500px;
-//     // vertical-align: middle;
-//     // line-height: 500px; 
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     flex-wrap: wrap;
-//     height: 100vh;
+//     margin: auto;
+//     text-align: center;
+//     height: 500px;
+//     vertical-align: middle;
+//     line-height: 500px;  
 // }
 
 .outer {
@@ -42,12 +36,13 @@
     /* Whatever width you want */
 }
 
-#color {
-    font-size: 50px;
-    height: 50px;
+.pseudo {
+    position: relative;
+    display: block;
+    height: 60px;
 }
 
-.pseudo {
+.email {
     position: relative;
     display: block;
     height: 60px;

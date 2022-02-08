@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ChatComponent } from './chat/chat.component';
 import { MainPageComponent } from './main-page/main-page.component';
+import { NewAccountComponent } from './new-account/new-account.component';
 
 const routes: Routes = [
   {
@@ -10,6 +11,9 @@ const routes: Routes = [
   },
   {
     path: 'chat', component: ChatComponent
+  },
+  {
+    path: 'register', component: NewAccountComponent
   }
 ];
 
