@@ -36,8 +36,8 @@ let rooms = new Map<string, {name: string}>();
 io.on("connection",(socket)=>{
     console.log(socket.id+" is connected");
  
-    socket.on("connection",(data)=>{
-        io.emit("connected", `welcome user ` + data.nickname); 
+    socket.on("connection",()=>{
+        io.emit("connected", `welcome user ` + socket.id); 
     })
 
     socket.on("msg",async (data)=>{    // listen for event named random with data
