@@ -16,7 +16,21 @@ body {
 	font-family: 'Roboto', sans-serif;
 	font-size: 16px;
 	background: var(--light-color);
-	margin: 20px;
+	overflow: hidden;
+}
+
+.title {
+    background-color: #592bc7;
+    color: azure;
+}
+
+#title {
+    margin-left: 50px;
+}
+
+textarea {
+	resize: none;
+	width: 90%
 }
 
 ul {
@@ -39,54 +53,33 @@ a {
 /* Chat Page */
 
 .chat-container {
-	max-width: 1100px;
 	background: #fff;
-	margin: 30px auto;
 	overflow: hidden;
-}
-
-.chat-header {
-	background: var(--dark-color-a);
-	color: #fff;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	padding: 15px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+	height: 95%;
 }
 
 .chat-main {
-	display: grid;
-	grid-template-columns: 1fr 3fr;
+	// display: grid;
+	// grid-template-columns: 1fr 3fr;
+	border-style: solid;
+	width: 100%;
+	height: 90%
 }
 
-.chat-sidebar {
-	background: var(--dark-color-b);
-	color: #fff;
-	padding: 20px 20px 60px;
-	overflow-y: scroll;
+.child {
+	display: inline-block;
 }
 
-.chat-sidebar h2 {
-	font-size: 20px;
-	background: rgba(0, 0, 0, 0.1);
-	padding: 10px;
-	margin-bottom: 20px;
-}
+// .seperator {
+// 	color: #592bc7;
+// }
 
-.chat-sidebar h3 {
-	margin-bottom: 15px;
-}
-
-.chat-sidebar ul li {
-	padding: 10px 0;
-}
 
 .chat-messages {
 	padding: 30px;
-	max-height: 500px;
-	overflow-y: scroll;
+	height: 90%;
+	width: 100%;
+	overflow-y: auto;
 }
 
 .chat-messages .message {
@@ -105,7 +98,7 @@ a {
 }
 
 .chat-messages .message .meta span {
-	color: #777;
+	// color: #777;
 }
 
 .chat-form-container {
@@ -123,6 +116,17 @@ a {
 	height: 40px;
 	flex: 1;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /* Join Page */
 .join-container {
