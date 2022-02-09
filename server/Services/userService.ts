@@ -26,7 +26,9 @@ class UserService {
    async createUser(email:String,pass:String,nickName:String) {
       const user=new UserSchema({useremail:email,password:pass,nickname:nickName});
       console.log(user.password);
-      await user.save();
+      await user.save().catch((e:any)=>{
+        console.log(e);
+      });
       this.getAllUsers();
    }
 

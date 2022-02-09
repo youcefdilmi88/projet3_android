@@ -19,7 +19,9 @@ class MessageService {
           messages.forEach((message)=>{
               this.messages.push(message as Message);
           })
-      });
+      }).catch((e:any)=>{
+        console.log(e);
+     });
     }
  
     async createMessage(currentTime:Number,text:String,useremail:String) {
