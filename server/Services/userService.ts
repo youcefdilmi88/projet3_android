@@ -2,6 +2,7 @@
 import { User } from '../Interface/User';
 import UserSchema from '../Entities/UserSchema';
 import databaseService from './databaseService';
+import { Error } from 'mongoose';
 
 class UserService {
    constructor() {
@@ -17,6 +18,8 @@ class UserService {
          users.forEach((user)=>{
              this.users.set(user.useremail,user);
          })
+     }).catch((e:any)=>{
+        console.log(e);
      });
    }
 

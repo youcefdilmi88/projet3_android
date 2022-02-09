@@ -6,6 +6,7 @@ import userData from './userData';
 import userController from './Controllers/userController';
 import messageService from './Services/messageService';
 import chatMessageController from './Controllers/chatMessageController';
+import { User } from './Interface/User';
 
 
 const app = express();
@@ -32,10 +33,12 @@ const server = http.createServer(app); // server for http
 const io = new Server(server); // subclass server for socket
 
 let rooms = new Map<string, {name: string}>();
+let connectedUsers=new Map<string,User>();
 
 io.on("connection",(socket)=>{
-    console.log(socket.id+" is connected");
- 
+    let user: any = socket.handshake.query.user;
+    connectedUsers.set(socket.id,user);
+
     socket.on("connection",()=>{
         io.emit("connected", `welcome user ` + socket.id); 
     })
@@ -48,6 +51,10 @@ io.on("connection",(socket)=>{
     
     socket.on("react",(data)=>{
         io.emit("room2",data);
+    })
+
+    socket.on("disconnect",()=>{
+        connectedUsers.delete(socket.id);
     })
 
     /*************test chat *******************/
