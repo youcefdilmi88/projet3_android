@@ -26,7 +26,7 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
         return res.status(200).json({message:"success",useremail:user.useremail,nickname:user.nickname});
       }
       else {
-        return res.status(404).json({message:"password does not match"});
+        return res.status(404).json({message:"password does not match",useremail:user.useremail,nickname:user.nickname});
       }
     }
     catch {
