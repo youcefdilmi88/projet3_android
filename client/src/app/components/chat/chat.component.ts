@@ -39,16 +39,16 @@ export class ChatComponent implements AfterViewInit {
     console.log("string to send "+text);
     const currentTime = Date.now();
 
-    const datepipe: DatePipe = new DatePipe('en-US')
-    let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss')
-
-    this.socketService.getSocket().emit("msg", {id: this.socketService.getSocket().id, time: formattedDate, mesg: text});
+    this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});
 
     this.socketService.getSocket().on("room1", (data)=>{
+      const datepipe: DatePipe = new DatePipe('en-US')
+      let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss')
+
       var html = 
       '<div class= "message-box my-message-box">' +
-      '<div class="message my-message"> ' + "id " + data.id + " time " + data.time + ' </div>' +
-      '<div class="seperator"></div>' + " mesg " + data.mesg
+      '<div class="message my-message"> ' + "id " + data.useremail + " time " + formattedDate + ' </div>' +
+      '<div class="seperator"></div>' + " mesg " + data.message
       '</div>';
 
       document.getElementById("message-area")!.innerHTML += `${html}`;

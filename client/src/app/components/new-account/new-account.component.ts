@@ -44,7 +44,7 @@ export class NewAccountComponent implements OnInit {
     else {
       this.router.navigate([""]);
 
-      let link=this.BASE_URL+"user/createUser";
+      let link=this.BASE_URL+"user/registerUser";
 
       let email = (<HTMLInputElement>document.getElementById("mail")).value;
       let username = (<HTMLInputElement>document.getElementById("name")).value;
