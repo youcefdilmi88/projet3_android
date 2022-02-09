@@ -34,7 +34,7 @@ export class ChatComponent implements AfterViewInit {
 
       let length = Object.keys(data).length;
 
-      for(var i = 1; i <= length; i++) {
+      for(var i = 0; i <= length; i++) {
         const datepipe: DatePipe = new DatePipe('en-US');
         let formattedDate = datepipe.transform(data[i].time, 'dd-MMM-YYYY HH:mm:ss') as string;
         this.message.push(formattedDate);
