@@ -2,7 +2,7 @@
 import { User } from '../Interface/User';
 import UserSchema from '../Entities/UserSchema';
 import databaseService from './databaseService';
-import { Error } from 'mongoose';
+
 
 class UserService {
    constructor() {
