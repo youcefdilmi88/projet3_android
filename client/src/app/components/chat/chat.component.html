@@ -21,16 +21,9 @@
         </ul>
       </div>
       <div class="chat-messages">
-					<div class="message-area" id="message-area">
-            <div class= "message-box others-message-box">
-              <div class="message others-message"></div>
-              <div class="seperator"></div>
-            </div>
-
-            <div class= "message-box my-message-box">
-              <div class="message my-message"></div>
-              <div class="seperator"></div>
-            </div>
+					<div class="message-area" id="message-area" *ngFor="let msg of this.message">
+            {{ msg }}
+            <div class="seperator"></div>
 
 						<!---<p class="meta">Brad <span>9:12pm</span></p>
 						<p class="text">

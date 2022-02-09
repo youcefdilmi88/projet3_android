@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +13,7 @@ export class SocketService {
   constructor() { }
 
   initSocket(): void {
+    console.log("socket initiation");
     this.socket=io('https://projet3-3990-207.herokuapp.com/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
@@ -19,10 +21,10 @@ export class SocketService {
     this.socket.on("connected",(data)=>{
       console.log(data);
     })
-    this.socket.emit("connection", );
-    this.socket.on("room1", (data)=>{
+    this.socket.emit("connection", "");
+    /*this.socket.on("room1", (data)=>{
       console.log(data);
-    });
+    });*/
   }
 
   getSocket() {

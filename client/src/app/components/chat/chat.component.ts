@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ViewChild} from '@angular/core';
-import { Socket } from 'socket.io-client';
-import { DatePipe } from '@angular/common';
+import { AfterViewInit, Component } from '@angular/core';
+//import { Socket } from 'socket.io-client';
+//import { DatePipe } from '@angular/common';
 import { SocketService } from '@app/services/socket/socket.service';
 
 
@@ -12,15 +12,13 @@ import { SocketService } from '@app/services/socket/socket.service';
 })
 
 export class ChatComponent implements AfterViewInit {
-
-  @ViewChild('chatinput') chatinput:HTMLElement;
   private readonly BASE_URL: string =//"http://localhost:8080/";
   "https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
-  
-  @ViewChild('my-message') chatzone: HTMLElement;
 
-  socket:Socket;
+  //socket:Socket;
+  public message = new Array<string>();
+  public time = new Array<string>();
 
   constructor(
     private http: HttpClient,
@@ -28,7 +26,17 @@ export class ChatComponent implements AfterViewInit {
     ) { }
 
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    this.socketService.getSocket().on("room1", (data)=>{
+      /*const currentTime = Date.now();
+      const datepipe: DatePipe = new DatePipe('en-US');
+      let formattedDate = datepipe.transform(data.time, 'dd-MMM-YYYY HH:mm:ss');*/
+
+      this.message.push(data.time);
+      this.message.push(data.message);
+      console.log("BRUH");
+      console.log(data.message);
+      console.log(this.socketService.getSocket().id);
+    });
   }
 
   ngAfterInit() {
@@ -36,28 +44,31 @@ export class ChatComponent implements AfterViewInit {
   }
 
   sendchatinput(text:String) {
-    console.log("string to send "+text);
     const currentTime = Date.now();
 
-    const datepipe: DatePipe = new DatePipe('en-US')
-    let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss')
+    this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});
+     //console.log("string to send "+text);
+     //const currentTime = Date.now();
 
-    this.socketService.getSocket().emit("msg", {id: this.socketService.getSocket().id, time: formattedDate, mesg: text});
 
-    this.socketService.getSocket().on("room1", (data)=>{
-      var html = 
+     //this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});
+    //console.log("string to send "+text);
+    /*const currentTime = Date.now();
+
+    this.socketService.getSocket().on("room1", (data)=>{*/
+      //const datepipe: DatePipe = new DatePipe('en-US');
+      //let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss');
+      /*var html = 
       '<div class= "message-box my-message-box">' +
-      '<div class="message my-message"> ' + "id " + data.id + " time " + data.time + ' </div>' +
-      '<div class="seperator"></div>' + " mesg " + data.mesg
-      '</div>';
+      '<div class="message my-message"> ' + "id " + data.useremail + " time " + formattedDate + ' </div>' +
+      '<div class="seperator"></div>' + " mesg " + data.message
+      '</div>';*/
 
-      document.getElementById("message-area")!.innerHTML += `${html}`;
-      console.log(data);
+      //document.getElementById("message-area")!.innerHTML += `${html}`;
+      /*console.log(data.message);
+      console.log(this.socketService.getSocket().id);
     });
-  }
-
-  createRoom(roomName: string) {
-    this.socket.emit("CREATE_ROOM", {roomName});
+    this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});*/
   }
 
   public userDataCall() {

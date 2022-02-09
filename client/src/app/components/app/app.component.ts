@@ -11,6 +11,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss'],
   templateUrl: './app.component.html',
 })
+
 export class AppComponent implements OnInit, OnDestroy {
 
   // welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
