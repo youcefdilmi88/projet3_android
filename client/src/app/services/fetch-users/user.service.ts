@@ -8,7 +8,8 @@ import { Injectable } from '@angular/core';
 export class UserService {
   //private onlineUser:Map<string, string> = new Map();
   //private userSocketId = new Map<string, string>();
-  private username: string;
+  //private user: any = { email: "test", socketId: "" };
+  private user: string = "test";
 
 constructor() { }
 
@@ -46,11 +47,33 @@ constructor() { }
     return email;
   }*/
 
-  setTempUsername(username: string) {
+  /*setTempUser(userEmail: string, userSocket: string): void {
+    this.user.email = userEmail;
+    this.user.socketId = userSocket;
+  }
+
+  getTempUser(): any {
+    return this.user;
+  }
+
+  setTempUserEmail(userName: string): void {
+    this.user.email = userName;
+  }*/
+
+  getTempUserEmail(): string {
+    return this.user;
+    console.log("get temp");
+  }
+
+  /*getTempUserSocketId(): any {
+    return this.user.socketId;
+  }*/
+
+  /*setTempUsername(username: string) {
     this.username = username;
   }
 
   getTempUsername() {
     return this.username;
-  }
+  }*/
 }

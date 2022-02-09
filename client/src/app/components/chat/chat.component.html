@@ -15,7 +15,7 @@
     
     <main class="chat-main">
       <!-- <div class="test"></div>> -->
-      <div class="chat-messages">
+      <div class="chat-messages" #scrollMe [scrollTop]="scrollMe.scrollHeight">
 					<div class="message-area" id="message-area" *ngFor="let msg of this.message">
             {{ msg }}
             <div class="seperator"></div>

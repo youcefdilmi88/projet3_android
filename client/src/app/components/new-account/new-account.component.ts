@@ -38,7 +38,7 @@ export class NewAccountComponent implements OnInit {
     }
     else if (this.pass != this.passRepeat) {
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Les mots de passes ne correspondent pas dumbass.";
+      document.getElementById("error")!.innerHTML = "Les mots de passes ne correspondent pas.";
       return false;
     }
     else {

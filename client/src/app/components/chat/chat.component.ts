@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component } from '@angular/core';
 //import { UserService } from '@app/services/fetch-users/user.service';
 //import { Socket } from 'socket.io-client';
-//import { DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { SocketService } from '@app/services/socket/socket.service';
 
 
@@ -28,11 +28,26 @@ export class ChatComponent implements AfterViewInit {
     ) { }
 
   ngAfterViewInit(): void {
-    this.socketService.getSocket().on("room1", (data)=>{
-      /*const currentTime = Date.now();
+    
+    let link=this.BASE_URL+"message/getRoomMessages";  
+    this.http.get<any>(link).subscribe((data: any) => {
+
+      let length = Object.keys(data).length;
+
+      for(var i = 1; i <= length; i++) {
+        const datepipe: DatePipe = new DatePipe('en-US');
+        let formattedDate = datepipe.transform(data[i].time, 'dd-MMM-YYYY HH:mm:ss') as string;
+        this.message.push(formattedDate);
+        this.message.push(data[i].useremail);
+        this.message.push(data[i].message);
+      }
+    });
+
+    this.socketService.getSocket().on("room1", (data)=>{   
+      //const currentTime = Date.now();
       const datepipe: DatePipe = new DatePipe('en-US');
-      let formattedDate = datepipe.transform(data.time, 'dd-MMM-YYYY HH:mm:ss');*/
-      this.message.push(data.time);
+      let formattedDate = datepipe.transform(data.time, 'dd-MMM-YYYY HH:mm:ss') as string;
+      this.message.push(formattedDate);
       this.message.push(data.useremail);
       this.message.push(data.message);
       console.log("BRUH");
@@ -54,29 +69,6 @@ export class ChatComponent implements AfterViewInit {
     //let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss');
 
     this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});
-    //this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.userService.fetchUserNicknameBySocketId(this.socketService.getSocket().id), message: text});
-     //console.log("string to send "+text);
-     //const currentTime = Date.now();
-
-
-     //this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});
-    //console.log("string to send "+text);
-    /*const currentTime = Date.now();
-
-    this.socketService.getSocket().on("room1", (data)=>{*/
-      //const datepipe: DatePipe = new DatePipe('en-US');
-      //let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss');
-      /*var html = 
-      '<div class= "message-box my-message-box">' +
-      '<div class="message my-message"> ' + "id " + data.useremail + " time " + formattedDate + ' </div>' +
-      '<div class="seperator"></div>' + " mesg " + data.message
-      '</div>';*/
-
-      //document.getElementById("message-area")!.innerHTML += `${html}`;
-      /*console.log(data.message);
-      console.log(this.socketService.getSocket().id);
-    });
-    this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});*/
   }
 
   public userDataCall() {

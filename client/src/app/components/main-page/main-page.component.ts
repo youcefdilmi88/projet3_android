@@ -3,7 +3,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-//import { UserService } from '@app/services/fetch-users/user.service';
+import { UserService } from '@app/services/fetch-users/user.service';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private socketService: SocketService,
-    //private userService: UserService,
+    private userService: UserService,
     private http: HttpClient,
     private router: Router
   ) { }
@@ -48,6 +48,7 @@ export class MainPageComponent implements OnInit {
           console.log("yehaaa");
           this.router.navigate(['/', 'chat']);
           this.socketService.initSocket();
+          console.log(this.userService.getTempUserEmail());
           //this.userService.addUserSocketId(this.socketService.getSocket().id, data.useremail);
         }   
       });
