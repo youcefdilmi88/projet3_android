@@ -3,6 +3,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+//import { UserService } from '@app/services/fetch-users/user.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private socketService: SocketService,
+    //private userService: UserService,
     private http: HttpClient,
     private router: Router
   ) { }
@@ -39,16 +41,16 @@ export class MainPageComponent implements OnInit {
       let link=this.BASE_URL+"user/loginUser";
 
       this.http.post<any>(link,{useremail:this.email, password:this.password}).subscribe((data: any) => {
+        console.log(data.message);
         if (data.message == "success") {
+          //this.userService.addUser(data.useremail, data.nickname);
+          console.log(data.nickname);
           console.log("yehaaa");
-        }
-        else {
-          console.log("POUReE");
-        }
+          this.router.navigate(['/', 'chat']);
+          this.socketService.initSocket();
+          //this.userService.addUserSocketId(this.socketService.getSocket().id, data.useremail);
+        }   
       });
-
-      this.router.navigate(['/', 'chat']);
-      this.socketService.initSocket();
     }
   }
 

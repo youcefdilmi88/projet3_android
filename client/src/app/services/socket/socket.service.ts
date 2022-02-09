@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+//import { UserService } from '@app/services/fetch-users/user.service';
 
 
 @Injectable({
@@ -9,6 +10,7 @@ import { io, Socket } from 'socket.io-client';
 export class SocketService {
 
   private socket: Socket;
+  //private userService: UserService;
 
   constructor() { }
 
@@ -17,6 +19,7 @@ export class SocketService {
     this.socket=io('https://projet3-3990-207.herokuapp.com/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
+      //query : { user: this.userService.getTempUsername() }
     })
     this.socket.on("connected",(data)=>{
       console.log(data);
