@@ -68,7 +68,7 @@ export class ChatComponent implements AfterViewInit {
     const currentTime = Date.now();
     //const datepipe: DatePipe = new DatePipe('en-US');
     //let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss');
-    const msg= {time: currentTime, useremail: this.socketService.getSocket().id, message: text}
+    const msg= {time: currentTime, useremail: this.socketService.getSocket().id, message: text.trim()}
 
     this.socketService.getSocket().emit("msg",JSON.stringify(msg));
   }
