@@ -33,7 +33,7 @@ export class ChatComponent implements AfterViewInit {
     this.http.get<any>(link).subscribe((data: any) => {
 
       let length = Object.keys(data).length;
-
+   
       for(var i = 0; i <= length; i++) {
         const datepipe: DatePipe = new DatePipe('en-US');
         let formattedDate = datepipe.transform(data[i].time, 'dd-MMM-YYYY HH:mm:ss') as string;
@@ -45,16 +45,17 @@ export class ChatComponent implements AfterViewInit {
 
     this.socketService.getSocket().on("room1", (data)=>{   
       //const currentTime = Date.now();
+      let msg=JSON.parse(data)
       const datepipe: DatePipe = new DatePipe('en-US');
-      let formattedDate = datepipe.transform(data.time, 'dd-MMM-YYYY HH:mm:ss') as string;
+      let formattedDate = datepipe.transform(msg.time, 'dd-MMM-YYYY HH:mm:ss') as string;
       this.message.push(formattedDate);
-      this.message.push(data.useremail);
-      this.message.push(data.message);
+      this.message.push(msg.useremail);
+      this.message.push(msg.message);
       console.log("BRUH");
       console.log(data);
-      console.log(data.message + "component message");
-      console.log(data.useremail + "component email");
-      console.log(data.time + "component time");
+      console.log(msg.message + "component message");
+      console.log(msg.useremail + "component email");
+      console.log(msg.time + "component time");
       console.log(this.socketService.getSocket().id);
     });
   }
@@ -67,8 +68,9 @@ export class ChatComponent implements AfterViewInit {
     const currentTime = Date.now();
     //const datepipe: DatePipe = new DatePipe('en-US');
     //let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss');
+    const msg= {time: currentTime, useremail: this.socketService.getSocket().id, message: text}
 
-    this.socketService.getSocket().emit("msg", {time: currentTime, useremail: this.socketService.getSocket().id, message: text});
+    this.socketService.getSocket().emit("msg",JSON.stringify(msg));
   }
 
   public userDataCall() {
