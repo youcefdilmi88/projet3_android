@@ -40,7 +40,7 @@ io.on("connection",(socket)=>{
     */
 
     socket.on("connection",(data)=>{
-        data=JSON.parse(data);
+        data=parseObject(data);
         let mail=data.useremail;
         if(userService.getConnectedUsers().has(mail)) {
           console.log("USER FAILED")
@@ -52,7 +52,7 @@ io.on("connection",(socket)=>{
         } 
     })
 
-    /*
+
     function parseObject(arg: any): Object {
         if ((!!arg) && arg.constructor === Object) {
             return arg
@@ -64,10 +64,10 @@ io.on("connection",(socket)=>{
             }
         }
     }
-    */
+    
      
     socket.on("msg",async (data)=> {    // listen for event named random with data
-        data = JSON.parse(data);
+        data = parseObject(data);
         console.log(data);
         await messageService.createMessage(data.time,data.useremail,data.message);  
         io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
