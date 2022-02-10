@@ -18,6 +18,7 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
 
 const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     const user=userService.getUser(req.body.useremail as String) as User;
+    console.log(userService.getConnectedUsers().has(user.useremail as string))
     if(user==null) {
         return res.status(400).json({message:'Cannot find user'});
     }
