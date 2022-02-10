@@ -41,7 +41,8 @@ io.on("connection",(socket)=>{
 
     socket.on("connection",(data)=>{
         data=parseObject(data);
-        let mail:string=data.useremail as string;
+        const mail:string=data.useremail as string;
+        console.log(mail);
         userService.getConnectedUsers().set(mail,socket.id);
         io.to(socket.id).emit("connected", `welcome user ` + `${mail}`);
     })
