@@ -24,8 +24,14 @@ body {
     color: azure;
 }
 
+
 #title {
     margin-left: 50px;
+	display: inline-block;
+}
+
+#logout {
+	float: right;
 }
 
 textarea {
@@ -74,6 +80,9 @@ a {
 // 	color: #592bc7;
 // }
 
+.message-area {
+	//border-style: solid;
+}
 
 .chat-messages {
 	padding: 30px;
