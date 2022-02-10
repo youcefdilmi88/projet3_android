@@ -24,16 +24,18 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     if(userService.getConnectedUsers().has(user.useremail as string)) {
         return res.json({message:"user already connected"})
     }
-    try {
-      if(await bcrypt.compare(req.body.password,user.password as string)) {
-        return res.status(200).json({message:"success",useremail:user.useremail,nickname:user.nickname});
+    else {
+      try {
+        if(await bcrypt.compare(req.body.password,user.password as string)) {
+          return res.status(200).json({message:"success",useremail:user.useremail,nickname:user.nickname});
+        }
+        else {
+          return res.status(404).json({message:"password does not match",useremail:user.useremail,nickname:user.nickname});
+        }
       }
-      else {
-        return res.status(404).json({message:"password does not match",useremail:user.useremail,nickname:user.nickname});
+      catch {
+        return res.json(404);
       }
-    }
-    catch {
-       return res.json(404);
     }
 }
 
