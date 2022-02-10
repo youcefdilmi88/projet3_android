@@ -9,8 +9,10 @@ class UserService {
       this.getAllUsers();
    } 
 
-   private users=new Map<String,User>();
+   private users=new Map<String,User>(); // all users in database
    private roomUsers=new Map<String,String>();
+
+   public connectedUsers=new Map<string,string>();
 
    async getAllUsers(){
     this.users.clear();
@@ -55,6 +57,12 @@ class UserService {
    removeUserFromRoom(id:String) {
        this.roomUsers.delete(id);
    }
+
+   /********** connected users **************/
+   getConnectedUsers():Map<string,string> {
+       return this.connectedUsers;
+   }
+
 
 
 }

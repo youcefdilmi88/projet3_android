@@ -6,12 +6,11 @@ import userData from './userData';
 import userController from './Controllers/userController';
 import messageService from './Services/messageService';
 import chatMessageController from './Controllers/chatMessageController';
-import { User } from './Interface/User';
-
+import userService from './Services/userService';
 
 const app = express();
 
-app.set('PORT', process.env.PORT /*||8080*/);
+app.set('PORT', process.env.PORT ||8080);
 
 app.use(express.json());
 
@@ -33,18 +32,52 @@ const server = http.createServer(app); // server for http
 const io = new Server(server); // subclass server for socket
 
 let rooms = new Map<string, {name: string}>();
-let connectedUsers=new Map<string,User>();
 
 io.on("connection",(socket)=>{
+    /*
     let user: any = socket.handshake.query.user;
     connectedUsers.set(socket.id,user);
+    */
+
+    /*
+    socket.on("connection",(data)=>{
+        let mail=data.useremail;
+        if(userService.getConnectedUsers().has(mail)) {
+          console.log("USER FAILED")
+          io.to(socket.id).emit("connected",`USER FAILED`);
+        }
+        else {
+          userService.getConnectedUsers().set(mail,socket.id);
+          io.to(socket.id).emit("connected", `welcome user ` + mail);
+        } 
+    })
+    */
 
     socket.on("connection",()=>{
         io.emit("connected", `welcome user ` + socket.id); 
     })
 
+    /*
     socket.on("msg",async (data)=>{    // listen for event named random with data
-        console.log(data)
+        let msg=JSON.parse(data);
+        await messageService.createMessage(data.time,data.useremail,data.message);  
+        io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
+    })
+    */
+    function parseObject(arg: any): Object {
+        if ((!!arg) && arg.constructor === Object) {
+            return arg
+        } else {
+            try {
+                return JSON.parse(arg);
+            } catch(E){
+                return {};
+            }
+        }
+    }
+     
+    socket.on("msg",async (data)=> {    // listen for event named random with data
+        data = parseObject(data)
         await messageService.createMessage(data.time,data.useremail,data.message);  
         io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
     })
@@ -54,7 +87,7 @@ io.on("connection",(socket)=>{
     })
 
     socket.on("disconnect",()=>{
-        connectedUsers.delete(socket.id);
+        userService.getConnectedUsers().delete(socket.id);
     })
 
     /*************test chat *******************/
@@ -66,7 +99,7 @@ io.on("connection",(socket)=>{
     });
 })
 
-server.listen(process.env.PORT /*|| 8080*/, () => {
+server.listen(process.env.PORT || 8080, () => {
     console.log(`Server is running localhost:${app.get('PORT')}`);
 });
 
