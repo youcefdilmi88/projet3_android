@@ -47,9 +47,11 @@ export class ChatComponent implements AfterViewInit {
       //const currentTime = Date.now();
       const datepipe: DatePipe = new DatePipe('en-US');
       let formattedDate = datepipe.transform(data.time, 'dd-MMM-YYYY HH:mm:ss') as string;
-      this.message.push(formattedDate);
-      this.message.push(data.useremail);
-      this.message.push(data.message);
+      if (data.message != "") {
+        this.message.push(formattedDate);
+        this.message.push(data.useremail);
+        this.message.push(data.message);
+      }
       console.log("BRUH");
       console.log(data);
       console.log(data.message + "component message");

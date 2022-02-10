@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>ChatCord App</title>
 </head>
 <body>
@@ -41,7 +42,8 @@
     
     <div class="chat-form-container">
       <textarea #chatinput class="child" maxlength ="500"></textarea>
-      <button (click)="sendchatinput(chatinput.value)" class="child">Envoyé</button>
+      <!--<button (click)="sendchatinput(chatinput.value)" class="child">Envoyé</button>-->
+      <button (click)="sendchatinput(chatinput.value)" class="btn"><i class="fa fa-send" style="font-size:50px"></i></button>
     </div>
   </div>
 
