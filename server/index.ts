@@ -41,7 +41,7 @@ io.on("connection",(socket)=>{
 
     socket.on("connection",(data)=>{
         data=parseObject(data);
-        let mail=data.useremail;
+        let mail:string=data.useremail as string;
         if(userService.getConnectedUsers().has(mail)) {
           console.log("USER FAILED")
           io.to(socket.id).emit("connected",`USER FAILED`);
