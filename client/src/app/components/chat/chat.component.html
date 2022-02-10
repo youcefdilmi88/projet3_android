@@ -19,16 +19,7 @@
       <!-- <div class="test"></div>> -->
       <div class="chat-messages" #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y:auto">
 					<div class="message-area" id="message-area" *ngFor="let msg of this.message">
-            <div class="1">
               {{ msg }}
-            </div>
-            <div class="2">
-              {{ msg }}
-            </div>
-            <div class="3">
-              {{ msg }}
-            </div>
-            <!-- {{ msg }} -->
             <div class="seperator"></div>
 					</div>
       </div>
