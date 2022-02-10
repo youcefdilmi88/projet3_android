@@ -39,8 +39,8 @@ io.on("connection",(socket)=>{
     connectedUsers.set(socket.id,user);
     */
 
-    /*
     socket.on("connection",(data)=>{
+        data=JSON.parse(data);
         let mail=data.useremail;
         if(userService.getConnectedUsers().has(mail)) {
           console.log("USER FAILED")
@@ -51,19 +51,7 @@ io.on("connection",(socket)=>{
           io.to(socket.id).emit("connected", `welcome user ` + mail);
         } 
     })
-    */
 
-    socket.on("connection",()=>{
-        io.emit("connected", `welcome user ` + socket.id); 
-    })
-
-    /*
-    socket.on("msg",async (data)=>{    // listen for event named random with data
-        let msg=JSON.parse(data);
-        await messageService.createMessage(data.time,data.useremail,data.message);  
-        io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
-    })
-    */
     /*
     function parseObject(arg: any): Object {
         if ((!!arg) && arg.constructor === Object) {
