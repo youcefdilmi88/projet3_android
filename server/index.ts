@@ -64,6 +64,7 @@ io.on("connection",(socket)=>{
         io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
     })
     */
+    /*
     function parseObject(arg: any): Object {
         if ((!!arg) && arg.constructor === Object) {
             return arg
@@ -75,9 +76,11 @@ io.on("connection",(socket)=>{
             }
         }
     }
+    */
      
     socket.on("msg",async (data)=> {    // listen for event named random with data
-        data = parseObject(data)
+        data = JSON.parse(data);
+        console.log(data);
         await messageService.createMessage(data.time,data.useremail,data.message);  
         io.emit("room1",data);  // send msg to all listener listening to room1 the right side json
     })
