@@ -4,44 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <title>ChatCord App</title>
+  <title>Chat</title>
 </head>
 <body>
   
   <div class="title">
-    <h1 id="title">Chat</h1>
+    <h1 id="title">Chat</h1><button (click)="logout()" class = "btn" routerLink = "">Quitter le chat</button>
   </div>
 
   <div class="chat-container">
     
     <main class="chat-main">
       <!-- <div class="test"></div>> -->
-      <div class="chat-messages" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+      <div class="chat-messages" #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y:auto">
 					<div class="message-area" id="message-area" *ngFor="let msg of this.message">
             {{ msg }}
             <div class="seperator"></div>
 
-					<!--<div class="message-area" id="message-area">
-
-            <div class= "message-box others-message-box">
-              <div class="message others-message"></div>
-              <div class="seperator"></div>
-            </div>
-
-            <div class= "message-box my-message-box">
-              <div class="message my-message"></div>
-              <div class="seperator"></div>
-            </div>
-
-					</div>-->
-					<!-- <div class="message">-->
 					</div>
       </div>
     </main>
-
     
     <div class="chat-form-container">
-      <textarea #chatinput class="child" maxlength ="500"></textarea>
+      <textarea #chatinput class="child" maxlength ="500" required></textarea>
       <!--<button (click)="sendchatinput(chatinput.value)" class="child">Envoyé</button>-->
       <button (click)="sendchatinput(chatinput.value)" class="btn"><i class="fa fa-send" style="font-size:50px"></i></button>
     </div>

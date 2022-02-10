@@ -10,6 +10,8 @@ import { io, Socket } from 'socket.io-client';
 export class SocketService {
 
   private socket: Socket;
+  public useremail: string;
+  public isConnected: boolean;
   //private userService: UserService;
 
   constructor() { }
@@ -22,9 +24,19 @@ export class SocketService {
       //query : { user: this.userService.getTempUserEmail() }
     })
     this.socket.on("connected",(data)=>{
+      /*if (`${ data }` != "USER FAILED") {
+        console.log("socket service");
+        this.isConnected = true;
+      }
+      else {
+        console.log("socket service");
+        this.isConnected = false;
+      }*/
       console.log(data);
     })
-    this.socket.emit("connection", "");
+    //this.socket.emit("connection", );
+    const user = { useremail: this.useremail };
+    this.socket.emit("connection", JSON.stringify(user));
     /*this.socket.on("room1", (data)=>{
       console.log(data);
     });*/

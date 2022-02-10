@@ -3,7 +3,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { UserService } from '@app/services/fetch-users/user.service';
+import { catchError } from 'rxjs/operators';
 
 
 @Component({
@@ -20,7 +20,6 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private socketService: SocketService,
-    private userService: UserService,
     private http: HttpClient,
     private router: Router
   ) { }
@@ -30,28 +29,49 @@ export class MainPageComponent implements OnInit {
 
   password: string;
   email: string;
+  conditionValid: boolean;
 
   closeClick(): void {
+
     if (this.email == "" || this.email == null ||
         this.password == "" || this.password == null) {
 
       document.getElementById("error")!.style.visibility= "visible";
     }
     else {
-      let link=this.BASE_URL+"user/loginUser";
+      let link = this.BASE_URL + "user/loginUser";
 
-      this.http.post<any>(link,{useremail:this.email, password:this.password}).subscribe((data: any) => {
-        console.log(data.message);
+      this.http.post<any>(link, { useremail:this.email, password:this.password }).pipe(
+        catchError(async (err) => console.log("error catched" + err))
+      ).subscribe((data: any) => {
+        console.log("message");
+        console.log(data);
         if (data.message == "success") {
-          //this.userService.addUser(data.useremail, data.nickname);
-          console.log(data.nickname);
-          console.log("yehaaa");
-          this.router.navigate(['/', 'chat']);
           this.socketService.initSocket();
-          console.log(this.userService.getTempUserEmail());
-          //this.userService.addUserSocketId(this.socketService.getSocket().id, data.useremail);
-        }   
+          this.socketService.useremail = this.email;
+          this.conditionValid = true;
+          console.log("first bool");
+          console.log(this.conditionValid);
+          console.log("second bool");
+          console.log(this.socketService.isConnected);
+
+          this.router.navigate(['/', 'chat']);
+          console.log("both conditions gucci");
+          console.log("yehaaa");
+          return;
+
+          /*if (this.socketService.isConnected == true && this.conditionValid == true) {
+            this.router.navigate(['/', 'chat']);
+            console.log("both conditions gucci");
+            console.log("yehaaa");
+          }*/
+        }
+        /*else {
+          //this.conditionValid = false;
+        }*/
       });
+      document.getElementById("error")!.style.visibility= "visible";
+      document.getElementById("error")!.innerHTML = "Invalides mot de passe ou courriel.";
     }
   }
 
