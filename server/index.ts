@@ -49,7 +49,7 @@ io.on("connection",(socket)=>{
         else {
           userService.getConnectedUsers().set(mail,socket.id);
           console.log(mail);
-          io.to(socket.id).emit("connected", `welcome user ` + mail);
+          io.to(socket.id).emit("connected", `welcome user ` + `${mail}`);
         } 
     })
 
