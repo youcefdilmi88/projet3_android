@@ -35,8 +35,10 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
-    if(userService.getUsersInRoom()) {
-        userService.removeUserFromRoom(req.body.socketId);
+    let email=req.body.email;
+    if(userService.getConnectedUsers().has(email)) {
+        // userService.removeUserFromRoom(req.body.socketId);
+        userService.getConnectedUsers().delete(email);
         return res.status(200).json({message:"user logged out !"})
     }
     return res.status(400).json({message:"user not found !"});
