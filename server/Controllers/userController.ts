@@ -21,6 +21,9 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     if(user==null) {
         return res.status(400).json({message:'Cannot find user'});
     }
+    if(userService.getConnectedUsers().has(user.useremail as string)) {
+        return res.json({message:"user already connected"})
+    }
     try {
       if(await bcrypt.compare(req.body.password,user.password as string)) {
         return res.status(200).json({message:"success",useremail:user.useremail,nickname:user.nickname});
