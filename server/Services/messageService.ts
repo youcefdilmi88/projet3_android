@@ -24,7 +24,7 @@ class MessageService {
      });
     }
  
-    async createMessage(currentTime:Number,text:String,useremail:String) {
+    async createMessage(currentTime:Number,useremail:String,text:String) {
        try {
        const message=new MessageSchema({time:currentTime,useremail:useremail,message:text});
        await message.save();
