@@ -38,6 +38,7 @@ export class ChatComponent implements AfterViewInit {
         this.message.push(formattedDate);
         this.message.push(data[i].useremail);
         this.message.push(data[i].message);
+        this.message.push("\n");
       }
     });
 
@@ -47,6 +48,7 @@ export class ChatComponent implements AfterViewInit {
       this.message.push(formattedDate);
       this.message.push(data.useremail);
       this.message.push(data.message);
+      this.message.push("\n");
       console.log("BRUH");
       console.log(data);
       console.log(data.message + "component message");
