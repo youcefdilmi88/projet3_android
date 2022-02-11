@@ -37,6 +37,8 @@ export class MainPageComponent implements OnInit {
         this.password == "" || this.password == null) {
 
       document.getElementById("error")!.style.visibility= "visible";
+      document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
+      return;
     }
     else {
       let link = this.BASE_URL + "user/loginUser";
@@ -47,8 +49,8 @@ export class MainPageComponent implements OnInit {
         console.log("message");
         console.log(data);
         if (data.message == "success") {
-          this.socketService.initSocket();
           this.socketService.useremail = this.email;
+          this.socketService.initSocket();
           this.conditionValid = true;
           console.log("first bool");
           console.log(this.conditionValid);
@@ -65,6 +67,12 @@ export class MainPageComponent implements OnInit {
             console.log("both conditions gucci");
             console.log("yehaaa");
           }*/
+        }
+        if (data.message == "user already connected") {
+          console.log("deja connecté");
+          document.getElementById("error")!.style.visibility= "visible";
+          document.getElementById("error")!.innerHTML = "Compte déjà connecté.";
+          return;
         }
         /*else {
           //this.conditionValid = false;
