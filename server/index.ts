@@ -65,7 +65,7 @@ io.on("connection",(socket)=>{
         data = parseObject(data);
         console.log(data);
         await messageService.createMessage(data.time,data.useremail,data.message);  
-        io.broadcast.emit("room1",data);  // send msg to all listener listening to room1 the right side json
+        socket.broadcast.emit("room1",data);  // send msg to all listener listening to room1 the right side json
     })
     
     socket.on("react",(data)=>{
