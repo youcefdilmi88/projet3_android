@@ -18,6 +18,7 @@ export class ChatComponent implements AfterViewInit {
   //"http://localhost:8080/";
 
   public message = new Array<string>();
+  public others = new Array<string>();
   public time = new Array<string>();
 
   constructor(
@@ -25,8 +26,7 @@ export class ChatComponent implements AfterViewInit {
     private socketService: SocketService,
     ) { }
 
-  ngAfterViewInit(): void {
-    
+  ngAfterViewInit(): void {   
     let link=this.BASE_URL+"message/getRoomMessages";  
     this.http.get<any>(link).subscribe((data: any) => {
 
@@ -35,26 +35,42 @@ export class ChatComponent implements AfterViewInit {
       for(var i = 0; i <= length; i++) {
         const datepipe: DatePipe = new DatePipe('en-US');
         let formattedDate = datepipe.transform(data[i].time, 'dd-MMM-YYYY HH:mm:ss') as string;
-        this.message.push(formattedDate);
-        this.message.push(data[i].useremail);
-        this.message.push(data[i].message);
-        this.message.push("\n");
+
+        if (this.socketService.useremail == data[i].useremail) {
+          this.message.push(formattedDate);
+          this.message.push(data[i].useremail);
+          this.message.push(data[i].message.replace(/(\r\n|\n|\r)/gm, ""));
+          this.message.push("\n");
+          this.others.push("");
+          this.others.push("");
+          this.others.push("");
+          this.others.push("\n");
+        }
+
+        if (this.socketService.useremail != data[i].useremail) {
+          this.others.push(formattedDate);
+          this.others.push(data[i].useremail);
+          this.others.push(data[i].message.replace(/(\r\n|\n|\r)/gm, ""));
+          this.others.push("\n");
+          this.message.push("");
+          this.message.push("");
+          this.message.push("");
+          this.message.push("\n");
+        }
       }
     });
 
     this.socketService.getSocket().on("room1", (data)=>{   
       const datepipe: DatePipe = new DatePipe('en-US');
       let formattedDate = datepipe.transform(data.time, 'dd-MMM-YYYY HH:mm:ss') as string;
-      this.message.push(formattedDate);
-      this.message.push(data.useremail);
-      this.message.push(data.message);
+      this.others.push(formattedDate);
+      this.others.push(data.useremail);
+      this.others.push(data.message.replace(/(\r\n|\n|\r)/gm, ""));
+      this.others.push("\n");
+      this.message.push("");
+      this.message.push("");
+      this.message.push("");
       this.message.push("\n");
-      console.log("BRUH");
-      console.log(data);
-      console.log(data.message + "component message");
-      console.log(data.useremail + "component email");
-      console.log(data.time + "component time");
-      console.log(this.socketService.getSocket().id);
     });
   }
 
@@ -66,13 +82,22 @@ export class ChatComponent implements AfterViewInit {
     const currentTime = Date.now();
 
     if (text.trim().length != 0) {
-      console.log("courriel:");
-      console.log(this.socketService.useremail);
       const msg = { time: currentTime, useremail: this.socketService.useremail, message: text.trim() }
+      const datepipe: DatePipe = new DatePipe('en-US');
+      let formattedDate = datepipe.transform(currentTime, 'dd-MMM-YYYY HH:mm:ss') as string;
+      this.message.push(formattedDate);
+      this.message.push(this.socketService.useremail);
+      this.message.push(text.toString().trim().replace(/(\r\n|\n|\r)/gm, ""));
+      this.message.push("\n");
+      this.others.push("");
+      this.others.push("");
+      this.others.push("");
+      this.others.push("\n");
 
       this.socketService.getSocket().emit("msg",JSON.stringify(msg));
       this.input.nativeElement.value = ' ';
     }
+
     if (text.trim().length == 0) {
       this.input.nativeElement.value = ' ';
     }
@@ -92,7 +117,7 @@ export class ChatComponent implements AfterViewInit {
     this.http.post<any>(link,{ useremail: this.socketService.useremail }).pipe(
       catchError(async (err) => console.log("error catched" + err))
     ).subscribe((data: any) => {
-      console.log(data.message);
+
       if (data.message == "logout") {
         console.log("sayonara");
       }   

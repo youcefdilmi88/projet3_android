@@ -10,7 +10,7 @@
   
   <div class="title">
     <h1 id="title">Chat</h1>
-    <button (click)="logout()" class = "btn" id="logout" routerLink = "">Quitter le chat</button>
+    <button (click)="logout()" class = "btn" id="logout" routerLink = "">Déconnexion</button>
   </div>
 
   <div class="chat-container">
@@ -20,8 +20,12 @@
       <div class="chat-messages" #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y:auto">
 					<div class="message-area" id="message-area" *ngFor="let msg of this.message">
               {{ msg }}
-            <div class="seperator"></div>
 					</div>
+          <div class="right">
+            <div class="message-others" id="message-others" *ngFor="let msg of this.others" style="text-align:right">
+              {{ msg }}
+          </div>
+        </div>
       </div>
     </main>
     

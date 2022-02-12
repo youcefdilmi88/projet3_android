@@ -10,8 +10,9 @@ const {
   function initWindow() {
     appWindow = new BrowserWindow({
       // fullscreen: true,
-      height: 800,
-      width: 1000,
+      height: 1920,
+      width: 1080,
+      resizable: false,
       webPreferences: {
         nodeIntegration: true
       }

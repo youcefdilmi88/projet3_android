@@ -32,7 +32,6 @@ export class MainPageComponent implements OnInit {
   conditionValid: boolean;
 
   closeClick(): void {
-
     if (this.email == "" || this.email == null ||
         this.password == "" || this.password == null) {
 
@@ -40,36 +39,22 @@ export class MainPageComponent implements OnInit {
       document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
       return;
     }
+
     else {
       let link = this.BASE_URL + "user/loginUser";
 
       this.http.post<any>(link, { useremail:this.email, password:this.password }).pipe(
         catchError(async (err) => console.log("error catched" + err))
       ).subscribe((data: any) => {
-        console.log("message");
-        console.log(data);
         if (data.message == "success") {
           this.socketService.useremail = this.email;
           this.socketService.initSocket();
           this.conditionValid = true;
-          console.log("first bool");
-          console.log(this.conditionValid);
-          console.log("second bool");
-          console.log(this.socketService.isConnected);
-
           this.router.navigate(['/', 'chat']);
-          console.log("both conditions gucci");
-          console.log("yehaaa");
           return;
-
-          /*if (this.socketService.isConnected == true && this.conditionValid == true) {
-            this.router.navigate(['/', 'chat']);
-            console.log("both conditions gucci");
-            console.log("yehaaa");
-          }*/
         }
+
         if (data.message == "user already connected") {
-          console.log("deja connecté");
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = "Compte déjà connecté.";
           return;
@@ -78,6 +63,7 @@ export class MainPageComponent implements OnInit {
           //this.conditionValid = false;
         }*/
       });
+      
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = "Invalides mot de passe ou courriel.";
     }

@@ -12,6 +12,8 @@
     "format": "prettier --config ../.prettierrc.yaml --ignore-path ../.prettierignore --write \"src/**/*\"",
     "test": "ng test",
     "coverage": "ng test --code-coverage --sourceMap=true",
+    "electron": "electron .",
+    "electron-build": "ng build --prod",
     "lint": "ng lint --format stylish",
     "lint:fix": "npm run lint -- --fix"
   },
@@ -51,7 +53,7 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
-    "electron": "^16.0.7",
+    "electron": "^16.0.8",
     "electron-packager": "^15.4.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
