@@ -56,6 +56,7 @@
 .pass {
     position: relative;
     display: block;
+    margin-top: 12px;
     height: 70px;
 }
 
@@ -71,7 +72,7 @@ button {
 }
 
 body {
-    background-color: #b6d1db;
+    background-color: #F5F5F5;
     overflow: hidden;
 }
 
@@ -79,3 +80,7 @@ body {
     visibility: hidden;
     color: red;
 }
+
+// .mat-form-field-appearance-outline .mat-form-field-outline {
+//     color: rgba(255,255,255,0.6);
+//  }

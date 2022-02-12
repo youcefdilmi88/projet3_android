@@ -34,12 +34,13 @@ export class NewAccountComponent implements OnInit {
         this.mail == "" || this.mail == null) {
 
       document.getElementById("error")!.style.visibility= "visible";
+      document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
       return false;
     }
 
     else if (this.pass != this.passRepeat) {
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Les mots de passes ne correspondent pas.";
+      document.getElementById("error")!.innerHTML = "Les mots de passes ne correspondent pas";
       return false;
     }
     

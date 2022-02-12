@@ -11,35 +11,35 @@
                 <div class="inner">
 
                     <div class="pseudo">
-                        <mat-form-field class="input" floatLabel="always">
+                        <mat-form-field class="input" floatLabel="always" appearance="outline">
                             <mat-label>Pseudo</mat-label>
                             <input matInput id="name" type="text" name="username" required required [(ngModel)]="name">
                         </mat-form-field> 
                     </div>
 
                     <div class="email">    
-                        <mat-form-field class="input" floatLabel="always">
+                        <mat-form-field class="input" floatLabel="always" appearance="outline">
                             <mat-label>Adresse courriel</mat-label>
                             <input matInput id="mail" type="text" name="email" required required [(ngModel)]="mail">
                         </mat-form-field> 
                     </div>
 
                     <div class="pass">    
-                        <mat-form-field class="input" floatLabel="always">
-                            <mat-label>Mot de Pass</mat-label>
+                        <mat-form-field class="input" floatLabel="always" appearance="outline">
+                            <mat-label>Mot de Passe</mat-label>
                             <input matInput id="pass" type="password" name="password" required required [(ngModel)]="pass">
                         </mat-form-field> 
                     </div>
 
                     <div class="pass">    
-                        <mat-form-field id="myForm" class="input" floatLabel="always"> 
-                            <mat-label>Répéter Mot de Pass</mat-label>
+                        <mat-form-field id="myForm" class="input" floatLabel="always" appearance="outline"> 
+                            <mat-label>Répéter Mot de Passe</mat-label>
                             <input matInput id="passRepeat" type="password" name="passrepeat" required [(ngModel)]="passRepeat">
                         </mat-form-field> 
                     </div>
 
                     <div>
-                        <p id="error">Vous ne pouvez pas mettre des champs vides.</p>
+                        <p id="error">Vous ne pouvez pas mettre des champs vides</p>
                     </div>
 
                     <button mat-raised-button (click)="cancelClick()">Annuler</button>

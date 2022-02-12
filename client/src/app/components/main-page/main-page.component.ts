@@ -56,7 +56,7 @@ export class MainPageComponent implements OnInit {
 
         if (data.message == "user already connected") {
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Compte déjà connecté.";
+          document.getElementById("error")!.innerHTML = "Ce compte est déjà connecté";
           return;
         }
         /*else {
@@ -65,7 +65,7 @@ export class MainPageComponent implements OnInit {
       });
       
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Invalides mot de passe ou courriel.";
+      document.getElementById("error")!.innerHTML = "Email ou mot de passe invalide";
     }
   }
 
