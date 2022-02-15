@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { AvatarComponent } from '@app/components/avatar/avatar.component';
 
 
 @Component({
@@ -15,6 +17,7 @@ export class NewAccountComponent implements OnInit {
   "https://projet3-3990-207.herokuapp.com/";
 
   constructor(
+    public dialog: MatDialog,
     private http: HttpClient,
     private router: Router
   ) { }
@@ -62,4 +65,9 @@ export class NewAccountComponent implements OnInit {
   cancelClick(): void {
     this.router.navigate([""]);
   }
+
+  openAvatar(): void {
+    this.dialog.open(AvatarComponent, { disableClose: true });
+  }
+
 }
