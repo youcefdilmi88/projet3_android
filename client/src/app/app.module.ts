@@ -32,6 +32,7 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { AppRoutingModule } from './components/app-routing.module';
 import { ChatComponent } from './components/chat/chat.component';
 import { NewAccountComponent } from './components/new-account/new-account.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { NewAccountComponent } from './components/new-account/new-account.compon
         MainPageComponent,
         ChatComponent,
         NewAccountComponent,
+        AvatarComponent,
     ],
     imports: [
         BrowserModule,
