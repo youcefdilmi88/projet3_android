@@ -81,7 +81,9 @@ export class ChatComponent implements AfterViewInit {
   sendchatinput(text:String) {
     const currentTime = Date.now();
 
-    if (text.trim().length != 0) {
+    if (text.trim() != '') {
+      console.log("lenght");
+      console.log(text.length);
       const msg = { time: currentTime, useremail: this.socketService.useremail, message: text.trim() }
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(currentTime, 'dd-MM-yyyy HH:mm:ss') as string;
@@ -101,6 +103,7 @@ export class ChatComponent implements AfterViewInit {
     if (text.trim().length == 0) {
       this.input.nativeElement.value = ' ';
     }
+    this.input.nativeElement.focus();
   }
 
   public userDataCall() {

@@ -47,7 +47,7 @@ export class MainPageComponent implements OnInit {
         catchError(async (err) => console.log("error catched" + err))
       ).subscribe((data: any) => {
         if (data.message == "success") {
-          this.socketService.useremail = this.email;
+          this.socketService.useremail = data.nickname;
           this.socketService.initSocket();
           this.conditionValid = true;
           this.router.navigate(['/', 'chat']);

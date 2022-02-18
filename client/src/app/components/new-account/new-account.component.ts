@@ -45,7 +45,6 @@ export class NewAccountComponent implements OnInit {
     }
     
     else {
-      this.router.navigate([""]);
 
       let link=this.BASE_URL+"user/registerUser";
 
@@ -54,6 +53,14 @@ export class NewAccountComponent implements OnInit {
       let pass = (<HTMLInputElement>document.getElementById("pass")).value;
       this.http.post<any>(link,{useremail: email, password: pass, nickname: username}).subscribe((data: any) => {
         console.log(data);
+        if (data == 404) {
+          console.log("404");
+          document.getElementById("error")!.style.visibility= "visible";
+          document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
+        }
+        else if (data == 200) {
+          this.router.navigate([""]);
+        }
       });
       return true;
     }
