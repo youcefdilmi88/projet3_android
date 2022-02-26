@@ -26,7 +26,8 @@
     "socketio-auth": "^0.1.1",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.2",
-    "uuid-v4": "^0.1.0"
+    "uuid-v4": "^0.1.0",
+    "dotenv": "^10.0.0"
   },
   "devDependencies": {
     "dotenv": "^10.0.0"
