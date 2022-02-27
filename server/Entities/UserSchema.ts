@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import {User} from '../Interface/User';
+import {UserInterface} from '../Interface/User';
 
 
 const userSchema = new mongoose.Schema({
@@ -8,10 +8,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique:true,
     },
-    password: {
-        type: String,
-        required: true,
-    },
     nickname: {
         type:String,
         require: true,
@@ -19,4 +15,4 @@ const userSchema = new mongoose.Schema({
 
 });
 
-export=mongoose.model<User>('userSchema',userSchema);
+export=mongoose.model<UserInterface>('userSchema',userSchema);

@@ -1,25 +1,25 @@
 export class User {
     private useremail:String;
-    private username:String;
+    private nickname:String;
 
-    constructor(useremail:String,username:string) {
+    constructor(useremail:String,username:String) {
         this.useremail=useremail;
-        this.username=username;
+        this.nickname=username;
     }
 
     getUseremail():String {
         return this.useremail;
     }
 
-    getUsername():String {
-        return this.username;
+    getUserNickname():String {
+        return this.nickname;
     }
 
     setUseremail(useremail:String):void {
         this.useremail=useremail;
     }
 
-    setUsername(name:String):void {
-        this.username=name;
+    setUserNickname(name:String):void {
+        this.nickname=name;
     }
 }
