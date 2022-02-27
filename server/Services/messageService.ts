@@ -47,21 +47,10 @@ class MessageService {
     disconnect(socket:Socket) {
       socket.on("DISCONNECT",(data)=>{
         data=this.parseObject(data);
-        let email:string=data.useremail as string;
-
-        console.log("before");
-        userService.getConnectedUsers().forEach((v,k)=>{
-          console.log("key:"+k+""+" value:"+v);
-        })
-        console.log("");
-
+        let email:string=data.useremail as string;    
         userService.getConnectedUsers().delete(email);
-        socket.emit("DISCONNECT",{message:"logout"});
-
-        console.log("after");
-        userService.getConnectedUsers().forEach((v,k)=>{
-          console.log("key:"+k+""+" value:"+v);
-        })
+        socket.emit("DISCONNECT",{message:"success"});
+        console.log('user '+email+" just logged out !");
       });
     }
 

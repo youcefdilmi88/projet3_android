@@ -2,7 +2,7 @@ import  mongoose  from 'mongoose';
 import AccountSchema from '../Entities/AccountSchema';
 import MessageSchema from '../Entities/MessageSchema';
 // import UserSchema from '../Entities/UserSchema';
-import { Account } from '../Interface/Account';
+import { AccountInterface } from '../Interface/Account';
 import { Message } from '../Interface/Message';
 
 
@@ -26,7 +26,7 @@ class DatabaseService {
 
     async getAllAccounts() {
         return await AccountSchema.find({}).then((data)=>{
-           return data as Array<Account>;
+           return data as Array<AccountInterface>;
         })
     }
 

@@ -1,5 +1,5 @@
+import { Account } from "../class/Account";
 import AccountSchema from "../Entities/AccountSchema";
-import { Account } from "../Interface/Account";
 import databaseService from "./databaseService";
 
 
@@ -15,7 +15,8 @@ class AccountService {
     this.accounts.clear();
     await databaseService.getAllAccounts().then((accounts)=>{
          accounts.forEach((account)=>{
-             this.accounts.set(account.useremail,account);
+             let accountObj=new Account(account.useremail,account.password,account.nickname)
+             this.accounts.set(account.useremail,accountObj);
          })
     }).catch((e:any)=>{
         console.log(e);

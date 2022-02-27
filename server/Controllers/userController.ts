@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../Services/userService';
 import accountService from '../Services/AccountService';
-import { Account } from '../Interface/Account';
+import { Account } from '../class/Account';
 
 let bcrypt=require("bcryptjs");
 
@@ -26,16 +26,16 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     if(account==null) {
         return res.status(400).json({message:'Cannot find user'});
     }
-    if(userService.getConnectedUsers().has(account.useremail as string)) {
+    if(userService.getConnectedUsers().has(account.getUserEmail() as string)) {
         return res.json({message:"user already connected"})
     }
     else {
       try {
-        if(await bcrypt.compare(req.body.password,account.password as string)) {
-          return res.status(200).json({message:"success",useremail:account.useremail,nickname:account.nickname});
+        if(await bcrypt.compare(req.body.password,account.getUserPassword() as string)) {
+          return res.status(200).json({message:"success",useremail:account.getUserEmail(),nickname:account.getUserNickname()});
         }
         else {
-          return res.status(404).json({message:"password does not match",useremail:account.useremail,nickname:account.nickname});
+          return res.status(404).json({message:"password does not match",useremail:account.getUserEmail(),nickname:account.getUserNickname()});
         }
       }
       catch {
@@ -48,7 +48,7 @@ const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     let useremail=req.body.useremail;
     if(userService.getConnectedUsers().has(useremail)) {
         userService.getConnectedUsers().delete(useremail);
-        return res.status(200).json({message:"logout"})
+        return res.status(200).json({message:"success"})
     }
     return res.status(400).json({message:"user not found !"});
 }

@@ -1,4 +1,4 @@
-export interface Account {
+export interface AccountInterface {
     useremail:String,
     password:String,
     nickname:String

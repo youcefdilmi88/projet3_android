@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import {Account} from '../Interface/Account';
+import {AccountInterface} from '../Interface/Account';
 
 
 const accountSchema = new mongoose.Schema({
@@ -19,4 +19,4 @@ const accountSchema = new mongoose.Schema({
 
 });
 
-export=mongoose.model<Account>('accountSchema',accountSchema);
+export=mongoose.model<AccountInterface>('accountSchema',accountSchema);
