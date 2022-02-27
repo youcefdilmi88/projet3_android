@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { Message } from '../Interface/Message';
+import { MessageInterface } from '../Interface/Message';
 
 
 const messageSchema = new mongoose.Schema({
@@ -8,7 +8,7 @@ const messageSchema = new mongoose.Schema({
         requires:true,
         unique:true,
     },
-    useremail: {
+    nickname: {
         type: String,
         required: true,
     },
@@ -18,4 +18,4 @@ const messageSchema = new mongoose.Schema({
     },
 });
 
-export=mongoose.model<Message>('messageSchema',messageSchema);
+export=mongoose.model<MessageInterface>('messageSchema',messageSchema);

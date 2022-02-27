@@ -3,7 +3,7 @@ import AccountSchema from '../Entities/AccountSchema';
 import MessageSchema from '../Entities/MessageSchema';
 import UserSchema from '../Entities/UserSchema';
 import { AccountInterface } from '../Interface/Account';
-import { Message } from '../Interface/Message';
+import { MessageInterface } from '../Interface/Message';
 import { UserInterface } from '../Interface/User';
 
 
@@ -33,7 +33,7 @@ class DatabaseService {
 
     async getRoomMessages() {
         return await MessageSchema.find({}).then((data)=>{
-            return data as Array<Message>;
+            return data as Array<MessageInterface>;
         })
     }
 

@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../Services/userService';
-import accountService from '../Services/AccountService';
+import accountService from '../Services/accountService';
 import { Account } from '../class/Account';
+
 
 let bcrypt=require("bcryptjs");
 
@@ -11,7 +12,7 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
   req.body.useremail=req.body.useremail as String;
 
     console.log("does account exists ? "+accountService.getAccounts().has(req.body.useremail as String));
-    
+
     if(accountService.getAccounts().has(req.body.useremail)) {
         console.log("user already exists");
         return res.json(404);

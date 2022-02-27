@@ -1,6 +1,6 @@
-export interface Message {
+export interface MessageInterface {
     time:Number,
-    useremail:String,
+    nickname:String,
     message:String,
     // room
 }
