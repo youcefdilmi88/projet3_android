@@ -36,11 +36,11 @@ class MessageService {
     }
 
     sendMessage(socket:Socket) {
-      socket.on("msg",async (data)=> {    // listen for event named random with data
+      socket.on("MSG",async (data)=> {    // listen for event named random with data
         data = this.parseObject(data);
         console.log(data);
         await this.createMessage(data.time,data.useremail,data.message);  
-        socket.broadcast.emit("room1",data);  // send msg to all listener listening to room1 the right side json
+        socket.broadcast.emit("MSG",data);  // send msg to all listener listening to room1 the right side json
       })
     }
 
@@ -56,7 +56,7 @@ class MessageService {
         console.log("");
 
         userService.getConnectedUsers().delete(email);
-        socket.emit("DISCONNECT",{message:"success"});
+        socket.emit("DISCONNECT",{message:"logout"});
 
         console.log("after");
         userService.getConnectedUsers().forEach((v,k)=>{
