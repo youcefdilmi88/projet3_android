@@ -1,42 +1,41 @@
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../Services/userService';
-import { User } from '../Interface/User';
+import accountService from '../Services/AccountService';
+import { Account } from '../Interface/Account';
 
 let bcrypt=require("bcryptjs");
 
 const router = express.Router();
 
 const createUser=async (req:Request,res:Response,next:NextFunction)=>{
-    if(userService.getUsers().has(req.body.useremail)) {
+  req.body.useremail=req.body.useremail as String
+    console.log("does account exists ? "+accountService.getAccounts().has(req.body.useremail as String))
+    if(accountService.getAccounts().has(req.body.useremail)) {
+        console.log("user already exists");
         return res.json(404);
     }    
     const salt=await bcrypt.genSalt();
     const hashedPassword=await bcrypt.hash(req.body.password,salt);
-    userService.createUser(req.body.useremail,hashedPassword,req.body.nickname);
+    accountService.createAccount(req.body.useremail,hashedPassword,req.body.nickname);
     return res.json(200);
 }
 
 const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
-    const user=userService.getUser(req.body.useremail as String) as User;
-    userService.getConnectedUsers().forEach((k,v)=>{
-      console.log("user:")
-      console.log(k,v);
-    })
-    console.log("user is connected ?"+userService.getConnectedUsers().has(user.useremail as string))
+    const account=accountService.getAccount(req.body.useremail as String) as Account;
 
-    if(user==null) {
+    if(account==null) {
         return res.status(400).json({message:'Cannot find user'});
     }
-    if(userService.getConnectedUsers().has(user.useremail as string)) {
+    if(userService.getConnectedUsers().has(account.useremail as string)) {
         return res.json({message:"user already connected"})
     }
     else {
       try {
-        if(await bcrypt.compare(req.body.password,user.password as string)) {
-          return res.status(200).json({message:"success",useremail:user.useremail,nickname:user.nickname});
+        if(await bcrypt.compare(req.body.password,account.password as string)) {
+          return res.status(200).json({message:"success",useremail:account.useremail,nickname:account.nickname});
         }
         else {
-          return res.status(404).json({message:"password does not match",useremail:user.useremail,nickname:user.nickname});
+          return res.status(404).json({message:"password does not match",useremail:account.useremail,nickname:account.nickname});
         }
       }
       catch {
@@ -48,7 +47,6 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
 const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     let useremail=req.body.useremail;
     if(userService.getConnectedUsers().has(useremail)) {
-        // userService.removeUserFromRoom(req.body.socketId);
         userService.getConnectedUsers().delete(useremail);
         return res.status(200).json({message:"logout"})
     }

@@ -22,9 +22,17 @@ class MessageService {
 
     connect():void {
       this.io.on("connection",(socket:Socket)=>{
-        console.log(socket.id+" is connected");
-         this.sendMessage(socket);
+        /***************** add user to connected users *****************/
+        let useremail:string=socket.handshake.query.useremail as string;
+        console.log("query email:"+useremail);
+        userService.getConnectedUsers().set(useremail,socket.id);
+
+        console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
+
+        this.sendMessage(socket);
+        this.disconnect(socket);
       });
+      
     }
 
     sendMessage(socket:Socket) {
@@ -37,8 +45,23 @@ class MessageService {
     }
 
     disconnect(socket:Socket) {
-      socket.on("disconnect",()=>{
-        userService.getConnectedUsers().delete(socket.id);
+      socket.on("DISCONNECT",(data)=>{
+        data=this.parseObject(data);
+        let email:string=data.useremail as string;
+
+        console.log("before");
+        userService.getConnectedUsers().forEach((v,k)=>{
+          console.log("key:"+k+""+" value:"+v);
+        })
+        console.log("");
+
+        userService.getConnectedUsers().delete(email);
+        socket.emit("DISCONNECT",{message:"success"});
+
+        console.log("after");
+        userService.getConnectedUsers().forEach((v,k)=>{
+          console.log("key:"+k+""+" value:"+v);
+        })
       });
     }
 
@@ -74,9 +97,9 @@ class MessageService {
  
     async createMessage(currentTime:Number,useremail:String,text:String) {
        try {
-       const message=new MessageSchema({time:currentTime,useremail:useremail,message:text});
-       await message.save();
-       this.getAllRoomMessages();
+         const message=new MessageSchema({time:currentTime,useremail:useremail,message:text});
+         await message.save();
+         this.getAllRoomMessages();
        }
        catch(error) {
          console.log(error);

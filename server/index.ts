@@ -4,7 +4,7 @@ import sampleRouter from './ping'
 import userData from './userData';
 import userController from './Controllers/userController';
 import chatMessageController from './Controllers/chatMessageController';
-import socketService from './Services/socket.service';
+import socketService from './Services/socketService';
 
 const app = express();
 
