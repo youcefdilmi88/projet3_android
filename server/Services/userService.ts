@@ -33,7 +33,6 @@ class UserService {
    }
 
    /********* rooms ******************/
-
    getUsersInRoom():Map<String,String> {
        return this.roomUsers;
    }
@@ -46,7 +45,7 @@ class UserService {
        this.roomUsers.delete(id);
    }
 
-   /********** users connected to main chat **************/
+   /********** users logged in **************/
    getConnectedUsers():Map<string,string> {
        return this.connectedUsers;
    }

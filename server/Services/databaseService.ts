@@ -1,9 +1,11 @@
 import  mongoose  from 'mongoose';
 import AccountSchema from '../Entities/AccountSchema';
 import MessageSchema from '../Entities/MessageSchema';
+import RoomSchema from '../Entities/RoomSchema';
 import UserSchema from '../Entities/UserSchema';
 import { AccountInterface } from '../Interface/Account';
 import { MessageInterface } from '../Interface/Message';
+import { RoomInterface } from '../Interface/Room';
 import { UserInterface } from '../Interface/User';
 
 
@@ -40,6 +42,12 @@ class DatabaseService {
     async getAllUsers() {
         return await UserSchema.find({}).then((data)=>{
             return data as Array<UserInterface>;
+        })
+    }
+
+    async getAllRooms() {
+        return await RoomSchema.find({}).then((data)=>{
+            return data as Array<RoomInterface>;
         })
     }
 }

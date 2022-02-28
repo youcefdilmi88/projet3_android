@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../Services/userService';
-import accountService from '../Services/accountService';
 import { Account } from '../class/Account';
+import roomService from '../Services/roomService';
+import accountService from '../Services/accountService';
 
 
 let bcrypt=require("bcryptjs");
@@ -35,6 +36,7 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     else {
       try {
         if(await bcrypt.compare(req.body.password,account.getUserPassword() as string)) {
+          roomService.getDefaultRoom().addUserToRoom(account.getUserEmail());
           return res.status(200).json({message:"success",useremail:account.getUserEmail(),nickname:account.getUserNickname()});
         }
         else {
