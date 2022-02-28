@@ -6,6 +6,7 @@ import userController from './Controllers/userController';
 import chatMessageController from './Controllers/chatMessageController';
 import socketService from './Services/socketService';
 
+
 const app = express();
 
 app.set('PORT', process.env.PORT ||8080);
@@ -27,6 +28,7 @@ app.use('/message',chatMessageController);
 
 
 const server = http.createServer(app); // server for http
+
 
 
 socketService.init(server);

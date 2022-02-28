@@ -7,14 +7,16 @@ export class RoomService {
   private rooms=new Map<String,Room>(); // roomName and id
 
   constructor() {
-    this.createDefaultRoom();
     this.loadAllRoom();
   }
 
   createDefaultRoom() {
-    const roomName="DEFAULT";
-    const creator="ADMIN";
-    this.createRoom(roomName,creator);
+    if(this.rooms.has("DEFAULT")==false) {
+      const roomName="DEFAULT";
+      const creator="ADMIN";
+      let members:String[]=[];
+      this.createRoom(roomName,creator,members);
+    }
   }
 
   getDefaultRoom():Room {
@@ -28,12 +30,13 @@ export class RoomService {
         let roomObj=new Room(room.roomName,room.creator);
         this.rooms.set(roomObj.getRoomName(),roomObj);
       })
+      this.createDefaultRoom();
     }).catch((e:any)=>{
         console.log(e);
     });
   }
 
-  async createRoom(name:String,creatorName:String) {
+  async createRoom(name:String,creatorName:String,members:String[]) {
     try {
       const room=new RoomSchema({roomName:name,creator:creatorName});
       await room.save();

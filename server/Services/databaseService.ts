@@ -50,6 +50,10 @@ class DatabaseService {
             return data as Array<RoomInterface>;
         })
     }
+
+    async getRoom() {
+        return await RoomSchema.find({})
+    }
 }
 
 const databaseService=new DatabaseService();
