@@ -24,7 +24,7 @@ class UserService {
     }
 
    getUsers():User[] {
-       console.log("ALL USERS")
+       console.log("ALL USERS");
        this.users.forEach((user)=>{
            console.log(user.getUseremail);
            console.log(user.getUserNickname());

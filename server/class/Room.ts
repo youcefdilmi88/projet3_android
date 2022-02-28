@@ -6,9 +6,10 @@ export class Room {
     creator:String;
     members:String[]=[];
 
-    constructor(roomName:String,creator:String) {
+    constructor(roomName:String,creator:String,members:String[]) {
        this.roomName=roomName;
        this.creator=creator;
+       this.members=members;
     }
 
     getRoomName():String {

@@ -7,14 +7,18 @@ export class RoomService {
   private rooms=new Map<String,Room>(); // roomName and id
 
   constructor() {
-    this.loadAllRoom();
+    console.log("roomservice created");
+    this.createDefaultRoom();
   }
 
-  createDefaultRoom() {
+  /***** main chat room ********/
+  async createDefaultRoom() {
+    await this.loadAllRoom();
     if(this.rooms.has("DEFAULT")==false) {
       const roomName="DEFAULT";
       const creator="ADMIN";
       let members:String[]=[];
+      members.push("admin");
       this.createRoom(roomName,creator,members);
     }
   }
@@ -26,11 +30,12 @@ export class RoomService {
   async loadAllRoom() {
     this.rooms.clear();
     await databaseService.getAllRooms().then((rooms)=>{
+      console.log("room loaded");
       rooms.forEach((room)=>{
-        let roomObj=new Room(room.roomName,room.creator);
+        let roomObj=new Room(room.roomName,room.creator,room.members);
         this.rooms.set(roomObj.getRoomName(),roomObj);
       })
-      this.createDefaultRoom();
+      // this.createDefaultRoom();
     }).catch((e:any)=>{
         console.log(e);
     });
@@ -38,7 +43,7 @@ export class RoomService {
 
   async createRoom(name:String,creatorName:String,members:String[]) {
     try {
-      const room=new RoomSchema({roomName:name,creator:creatorName});
+      const room=new RoomSchema({roomName:name,creator:creatorName,members:members});
       await room.save();
       this.loadAllRoom();
     }
@@ -47,12 +52,11 @@ export class RoomService {
     }
   }
 
-  /*
-  changeRoom(newRoomName:String,previousRoomName:Room):void {
-      
+  getAllRooms():Map<String,Room> {
+    return this.rooms;
   }
-  */
 
+  
 
 }
 

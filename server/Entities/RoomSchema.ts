@@ -13,6 +13,10 @@ const roomSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    members:{
+        type:[String],
+        required:true,
+    }
 });
 
 export=mongoose.model<RoomInterface>('roomSchema',roomSchema);
