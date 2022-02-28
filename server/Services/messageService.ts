@@ -13,6 +13,7 @@ class MessageService {
 
     private messages:Array<Message>=[];
     private io:Server;
+    private roomName:string;
 
     /***************** socket section ****************/
     initChat(server:Server) {
@@ -23,12 +24,18 @@ class MessageService {
     connect():void {
       this.io.on("connection",(socket:Socket)=>{
         /***************** add user to connected users *****************/
-        let useremail:string=socket.handshake.query.useremail as string;
+        let useremail:String=socket.handshake.query.useremail as String;
         console.log("query email:"+useremail);
         userService.getConnectedUsers().set(useremail,socket.id);
-      
-        console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
 
+        userService.getUsers().forEach((user)=>{
+           if(user.getUseremail()==useremail) {
+             this.roomName=user.getCurrentRoom() as string;
+           }
+        });
+        socket.join(this.roomName);
+        console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
+        
         this.sendMessage(socket);
         this.disconnect(socket);
       });
@@ -40,7 +47,7 @@ class MessageService {
         data = this.parseObject(data);
         console.log(data);
         await this.createMessage(data.time,data.nickname,data.message);  
-        socket.broadcast.emit("MSG",data);  // send msg to all listener listening to room1 the right side json
+        socket.broadcast.to(this.roomName).emit("MSG",data);  // send msg to all listener listening to room1 the right side json
       })
     }
 
@@ -48,9 +55,8 @@ class MessageService {
       socket.on("DISCONNECT",(data)=>{
         data=this.parseObject(data);
         let email:string=data.useremail as string;    
-        userService.getConnectedUsers().delete(email);
         socket.emit("DISCONNECT",{message:"success"});
-        console.log('user '+email+" just logged out !");
+        console.log('user '+email+" just disconnected from chat !");
         socket.disconnect();
       });
     }

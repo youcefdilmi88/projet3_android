@@ -7,7 +7,6 @@ export class RoomService {
   private rooms=new Map<String,Room>(); // roomName and id
 
   constructor() {
-    console.log("roomservice created");
     this.createDefaultRoom();
   }
 
@@ -20,6 +19,10 @@ export class RoomService {
       let members:String[]=[];
       members.push("admin");
       this.createRoom(roomName,creator,members);
+      console.log("roomservice created");
+    }
+    else {
+      console.log("DEFAULT room already created");
     }
   }
 
@@ -30,7 +33,6 @@ export class RoomService {
   async loadAllRoom() {
     this.rooms.clear();
     await databaseService.getAllRooms().then((rooms)=>{
-      console.log("room loaded");
       rooms.forEach((room)=>{
         let roomObj=new Room(room.roomName,room.creator,room.members);
         this.rooms.set(roomObj.getRoomName(),roomObj);

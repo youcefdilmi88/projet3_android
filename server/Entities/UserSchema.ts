@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     nickname: {
         type:String,
         require: true,
+    },
+    currentRoom: {
+        type:String,
+        require:true,
     }
 
 });
