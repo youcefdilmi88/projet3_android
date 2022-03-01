@@ -9,7 +9,7 @@ class UserService {
 
    private users:User[]=[];
    private roomUsers=new Map<String,String>();
-   public connectedUsers=new Map<String,String>(); // useremail and socketid
+   public loggedUsers=new Map<String,User>(); // useremail and socketid
 
 
    /********** All users *************/
@@ -17,7 +17,7 @@ class UserService {
        this.users=[];
        await databaseService.getAllUsers().then((users)=>{
            users.forEach((user)=>{
-               let userObj=new User(user.useremail,user.nickname,user.currentRoom);
+               let userObj=new User(user.useremail,user.nickname);
                this.users.push(userObj);
            })
        })
@@ -41,9 +41,11 @@ class UserService {
    }
 
    /********** users logged in **************/
-   getConnectedUsers():Map<String,String> {
-       return this.connectedUsers;
+   getLoggedUsers():Map<String,User> {
+       return this.loggedUsers;
    }
+
+
 
 
 

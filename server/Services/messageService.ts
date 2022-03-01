@@ -2,11 +2,10 @@
 import { Socket,Server } from "socket.io";
 import { Message } from "../class/Message";
 import { Room } from "../class/Room";
-import { User } from "../class/User";
 import MessageSchema from "../Entities/MessageSchema";
 import databaseService from "./databaseService";
 import roomService from "./roomService";
-import userService from "./userService";
+
 
 class MessageService {
 
@@ -29,12 +28,9 @@ class MessageService {
         let useremail:String=socket.handshake.query.useremail as String;
         console.log("query email:"+useremail);
         
-        userService.getConnectedUsers().set(useremail,socket.id);
-        userService.getUsers().forEach((user)=>{
-           if(user.getUseremail()==useremail) {
-             roomService.socketToRoom.set(socket.id,user.getCurrentRoom() as string);
-           }
-        });
+        /***************** set socket id to default room during connection ***************/
+        roomService.setSocketIdAndEmail(socket.id,useremail);
+        roomService.setUserSocketIdAndRoom(socket.id,roomService.getDefaultRoom().getRoomName() as string);
         
         /****************** join current room during connection *****************/
         socket.join(roomService.getRoomNameBySocket(socket.id) as string);
@@ -54,7 +50,7 @@ class MessageService {
         console.log(data);
         console.log('msg sent to current room:'+roomService.socketToRoom.get(socket.id) as string)
         await this.createMessage(data.time,data.nickname,data.message);  
-        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSG",data);  // send msg to all listener listening to room1 the right side json
+        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSG",JSON.stringify(data));  // send msg to all listener listening to room1 the right side json
       })
     }
 
@@ -69,21 +65,23 @@ class MessageService {
         if(roomService.getAllRooms().has(newRoom)) {
           let nextRoom:Room=roomService.getAllRooms().get(newRoom) as Room;
           let previousRoom:Room=roomService.getAllRooms().get(oldRoom) as Room;
-
+          console.log("previous roomname:"+newRoom);
           nextRoom.addUserToRoom(useremail);
-          previousRoom.removeUserFromRoom(useremail);
 
+          previousRoom.removeUserFromRoom(useremail);
+          console.log("ROOM CHANGE:"+newRoom);
           roomService.socketToRoom.delete(socket.id);
-          const userFound:User=userService.getUsers().find((user)=>user.getUseremail()==useremail) as User;
-          userFound.setCurrentRoom(newRoom);
-          roomService.socketToRoom.set(socket.id,userFound.getCurrentRoom() as string);
+
+          roomService.socketToRoom.set(socket.id,newRoom as string);
 
           socket.leave(oldRoom as string);
           socket.join(roomService.socketToRoom.get(socket.id) as string);
-          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINROOM",{message:"success",currentRoomName:newRoom});
+          const res={message:"success",currentRoomName:newRoom};
+          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINROOM",JSON.stringify(res));
         }
         else {
-          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINROOM",{message:"room not found", currentRoomName:oldRoom});
+          const res={message:"room not found", currentRoomName:oldRoom}
+          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINROOM",JSON.stringify(res));
         }
       })
     }
@@ -91,8 +89,9 @@ class MessageService {
     disconnect(socket:Socket) {
       socket.on("DISCONNECT",(data)=>{
         data=this.parseObject(data);
-        let email:string=data.useremail as string;    
-        socket.emit("DISCONNECT",{message:"success"});
+        let email:string=data.useremail as string;
+        const res={message:"success"};    
+        socket.emit("DISCONNECT",JSON.stringify(res));
         console.log('user '+email+" just disconnected from chat !");
         socket.disconnect();
       });

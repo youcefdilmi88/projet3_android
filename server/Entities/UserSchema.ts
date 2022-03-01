@@ -12,10 +12,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         require: true,
     },
-    currentRoom: {
-        type:String,
-        require:true,
-    }
+
 
 });
 

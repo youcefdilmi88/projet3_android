@@ -3,7 +3,8 @@ import userService from '../Services/userService';
 import { Account } from '../class/Account';
 import accountService from '../Services/accountService';
 import { User } from '../class/User';
-//import { UserInterface } from '../Interface/User';
+import roomService from '../Services/roomService';
+
 
 
 let bcrypt=require("bcryptjs");
@@ -32,14 +33,18 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     if(account==null) {
         return res.status(400).json({message:'Cannot find user'});
     }
-    if(userService.getConnectedUsers().has(account.getUserEmail() as string)) {
+    if(userService.getLoggedUsers().has(account.getUserEmail() as string)) {
         return res.json({message:"user already connected"})
     }
     else {
       try {
         if(await bcrypt.compare(req.body.password,account.getUserPassword() as string)) {
           const userFound:User=userService.getUsers().find((user)=>user.getUseremail()==account.getUserEmail()) as User;
-          return res.status(200).json({message:"success",user:userFound});
+          userService.getLoggedUsers().set(userFound.getUseremail(),userFound);
+       
+          let defaultRoomName:String=roomService.getDefaultRoom().getRoomName() as String;
+          console.log(defaultRoomName);
+          return res.status(200).json({message:"success",user:userFound,currentRoom:defaultRoomName});
         }
         else {
           return res.status(404).json({message:"password does not match"});
@@ -54,9 +59,9 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
 const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     let useremail:String=req.body.useremail;
     console.log(useremail+" wants to loggout");
-    console.log("user in map for logout ? "+userService.getConnectedUsers().has(useremail))
-    if(userService.getConnectedUsers().has(useremail)) {
-        userService.getConnectedUsers().delete(useremail);
+    console.log("user in map for logout ? "+userService.getLoggedUsers().has(useremail))
+    if(userService.getLoggedUsers().has(useremail)) {
+        userService.getLoggedUsers().delete(useremail);
         return res.status(200).json({message:"success"})
     }
     return res.status(400).json({message:"user not found !"});

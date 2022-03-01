@@ -2,9 +2,11 @@ import { Room } from "../class/Room";
 import RoomSchema from "../Entities/RoomSchema";
 import databaseService from "./databaseService";
 
+
 export class RoomService {
 
   private rooms=new Map<String,Room>(); // roomName and room
+  public socketidToEmail=new Map<string,String>(); // socketid and useremail
   public socketToRoom=new Map<string,string>(); //socketid and roomName
 
   constructor() {
@@ -58,11 +60,35 @@ export class RoomService {
     return this.rooms;
   }
 
+  /************** set socketId and useremail **********************/
+  setSocketIdAndEmail(socketId:string,email:String) {
+    if(this.socketidToEmail.has(socketId)==false) {
+      this.socketidToEmail.set(socketId,email);
+    }
+  }
+
+  /************** returns useremail using socketId key ************/
+  getUseremailBySocketId(socketId:string) {
+    if(this.socketidToEmail.has(socketId)) {
+      return this.socketidToEmail.get(socketId);
+    }
+    let message:String="useremail not found";
+    return message;
+  }
+
+  /************** set socketId and roomname to map ***************/
+  setUserSocketIdAndRoom(socketId:string,roomName:string) {
+    if(this.socketToRoom.has(socketId)==false) {
+        this.socketToRoom.set(socketId,roomName);
+    }
+  }
+
+  /************** returns the roomname using the socketid key ****************/
   getRoomNameBySocket(socketId:string) {
     if(this.socketToRoom.has(socketId)) {
       return this.socketToRoom.get(socketId);
     }
-    let message:String="socket not found";
+    let message:String="roomname not found";
     return message;
   }
 

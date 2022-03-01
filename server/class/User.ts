@@ -1,12 +1,11 @@
 export class User {
     private useremail:String;
     private nickname:String;
-    private currentRoom:String;
+   
 
-    constructor(useremail:String,username:String,currentRoom:String) {
+    constructor(useremail:String,username:String) {
         this.useremail=useremail;
         this.nickname=username;
-        this.currentRoom=currentRoom;
     }
 
     getUseremail():String {
@@ -17,9 +16,6 @@ export class User {
         return this.nickname;
     }
 
-    getCurrentRoom():String {
-        return this.currentRoom;
-    }
 
     setUseremail(useremail:String):void {
         this.useremail=useremail;
@@ -29,7 +25,4 @@ export class User {
         this.nickname=name;
     }
 
-    setCurrentRoom(roomName:String) {
-        this.currentRoom=roomName;
-    }
 }

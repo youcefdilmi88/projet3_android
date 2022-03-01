@@ -40,12 +40,12 @@ export class ChattestComponent implements AfterViewInit {
     
     this.http.post<any>(link,{useremail:name,password:pass}).subscribe((data: any) => {
       console.log("message:"+data.message);
+      console.log("first:"+data.currentRoom);
       if(data.message=="success") {
         this.getAllRoom();
         this.email=data.user.useremail;
         this.name=data.user.nickname;
-        this.currentRoom=data.user.currentRoom;
-        console.log(this.email,this.name,this.currentRoom);
+        this.currentRoom=data.currentRoom;
         this.connectSocket();
       }
     });
@@ -62,12 +62,13 @@ export class ChattestComponent implements AfterViewInit {
     //this.email=Date.now().toString()+"@hotmail.ca";
 
     this.socket.on("connected",(data)=>{
+      data=JSON.parse(data)
       console.log(data);
     })
 
     this.socket.emit("connection",{useremail:this.email});
     this.socket.on("MSG", (data)=>{
-      console.log(JSON.stringify(data));
+      console.log(data);
     });
 
   }
@@ -78,6 +79,7 @@ export class ChattestComponent implements AfterViewInit {
     console.log(this.email);
 
     this.socket.on("DISCONNECT",(data)=>{
+      data=JSON.parse(data);
       console.log(data);
     });
     this.socket.emit("DISCONNECT",JSON.stringify({useremail:this.email}));
@@ -108,8 +110,6 @@ export class ChattestComponent implements AfterViewInit {
         //button.nodeValue=room.roomName;
         button.addEventListener("click",()=>{
           console.log("event listener:"+button.innerHTML as string);
-       
-          
           this.joinRoom(button.innerHTML as string);
         })
         document.getElementById('rooms')?.appendChild(button);
@@ -122,11 +122,13 @@ export class ChattestComponent implements AfterViewInit {
  joinRoom(roomName:string) {
    console.log(roomName);
    console.log("current room:"+this.currentRoom);
-  this.socket.on("JOINROOM",(data)=>{
+   this.socket.on("JOINROOM",(data)=>{
+    data=JSON.parse(data);
     console.log(data);
     this.currentRoom=data.currentRoomName;
   });
-  this.socket.emit("JOINROOM",{newRoomName:roomName,oldRoomName:this.currentRoom,useremail:this.email});
+  const newRoom={newRoomName:roomName,oldRoomName:this.currentRoom,useremail:this.email};
+  this.socket.emit("JOINROOM",JSON.stringify(newRoom));
  }
 
   createRoom(roomName: string) {
