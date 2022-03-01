@@ -1,3 +1,4 @@
+import { Server, Socket } from "socket.io";
 import { Room } from "../class/Room";
 import RoomSchema from "../Entities/RoomSchema";
 import databaseService from "./databaseService";
@@ -6,12 +7,70 @@ import databaseService from "./databaseService";
 export class RoomService {
 
   private rooms=new Map<String,Room>(); // roomName and room
-  public socketidToEmail=new Map<string,String>(); // socketid and useremail
-  public socketToRoom=new Map<string,string>(); //socketid and roomName
+  private socketidToEmail=new Map<string,String>(); // socketid and useremail
+  private socketToRoom=new Map<string,string>(); //socketid and roomName
+  private io:Server;
 
   constructor() {
     this.createDefaultRoom();
   }
+
+  /*************************** socket section *********************/
+  initRoom(server:Server) {
+    this.io=server;
+    this.connect();
+  }
+
+  connect():void {
+    this.io.on("connection",(socket:Socket)=>{
+      /***************** add user to connected users *****************/
+      let useremail:String=socket.handshake.query.useremail as String;
+      console.log("query email:"+useremail);
+      
+      
+      /****************** join current room during connection *****************/
+      // socket.join(this.getRoomNameBySocket(socket.id) as string);
+      console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
+      
+      this.changeRoom(socket);
+    });
+  }
+
+    changeRoom(socket:Socket) {
+      socket.on("JOINROOM",(data)=>{
+        data=this.parseObject(data);
+
+        let newRoom:String=data.newRoomName as String;
+        let oldRoom:String=data.oldRoomName as String;
+        let useremail:String=data.useremail as String;
+   
+        if(this.getAllRooms().has(newRoom)) {
+          let nextRoom:Room=this.getRoomByName(newRoom) as Room;
+          let previousRoom:Room=this.getRoomByName(oldRoom) as Room;
+          
+          console.log("previous roomname:"+newRoom);
+          
+          nextRoom.addUserToRoom(useremail);
+          previousRoom.removeUserFromRoom(useremail);
+          
+          console.log("ROOM CHANGE:"+newRoom);
+          
+          this.getSocketsRoomNames().delete(socket.id);
+          this.getSocketsRoomNames().set(socket.id,newRoom as string);
+
+          socket.leave(oldRoom as string);
+          socket.join(this.getSocketsRoomNames().get(socket.id) as string);
+          
+          const res={message:"success",currentRoomName:newRoom};
+          this.io.to(this.getSocketsRoomNames().get(socket.id) as string).emit("JOINROOM",JSON.stringify(res));
+        }
+        else {
+          const res={message:"room not found", currentRoomName:oldRoom}
+          this.io.to(this.getSocketsRoomNames().get(socket.id) as string).emit("JOINROOM",JSON.stringify(res));
+        }
+      })
+    }
+  
 
   /***** main chat room ********/
   async createDefaultRoom() {
@@ -83,6 +142,10 @@ export class RoomService {
     }
   }
 
+  getSocketsRoomNames():Map<string,string> {
+    return this.socketToRoom;
+  }
+
   /************** returns the roomname using the socketid key ****************/
   getRoomNameBySocket(socketId:string) {
     if(this.socketToRoom.has(socketId)) {
@@ -92,6 +155,25 @@ export class RoomService {
     return message;
   }
 
+  getRoomByName(name:String) {
+    if(this.rooms.has(name)) {
+      return this.rooms.get(name) as Room;
+    }
+    let message:string="room does not exists";
+    return message;
+  }
+
+  parseObject(arg: any): Object {
+    if ((!!arg) && arg.constructor === Object) {
+        return arg
+    } else {
+        try {
+            return JSON.parse(arg);
+        } catch(E){
+            return {};
+        }
+    }
+  }
   
 
 }

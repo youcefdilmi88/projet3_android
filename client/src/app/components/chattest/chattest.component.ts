@@ -59,8 +59,6 @@ export class ChattestComponent implements AfterViewInit {
       query:{useremail:this.email}
     })
 
-    //this.email=Date.now().toString()+"@hotmail.ca";
-
     this.socket.on("connected",(data)=>{
       data=JSON.parse(data)
       console.log(data);
