@@ -66,7 +66,7 @@ export class ChattestComponent implements AfterViewInit {
     })
 
     this.socket.emit("connection",{useremail:this.email});
-    this.socket.on("MSGED", (data)=>{
+    this.socket.on("MSG", (data)=>{
       console.log(JSON.stringify(data));
     });
 
@@ -122,7 +122,7 @@ export class ChattestComponent implements AfterViewInit {
  joinRoom(roomName:string) {
    console.log(roomName);
    console.log("current room:"+this.currentRoom);
-  this.socket.on("JOINEDROOM",(data)=>{
+  this.socket.on("JOINROOM",(data)=>{
     console.log(data);
     this.currentRoom=data.currentRoomName;
   });

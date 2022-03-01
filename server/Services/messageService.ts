@@ -54,7 +54,7 @@ class MessageService {
         console.log(data);
         console.log('msg sent to current room:'+roomService.socketToRoom.get(socket.id) as string)
         await this.createMessage(data.time,data.nickname,data.message);  
-        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSGED",data);  // send msg to all listener listening to room1 the right side json
+        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSG",data);  // send msg to all listener listening to room1 the right side json
       })
     }
 
@@ -80,10 +80,10 @@ class MessageService {
 
           socket.leave(oldRoom as string);
           socket.join(roomService.socketToRoom.get(socket.id) as string);
-          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINEDROOM",{message:"success",currentRoomName:newRoom});
+          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINROOM",{message:"success",currentRoomName:newRoom});
         }
         else {
-          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINEDROOM",{message:"room not found", currentRoomName:oldRoom});
+          this.io.to(roomService.socketToRoom.get(socket.id) as string).emit("JOINROOM",{message:"room not found", currentRoomName:oldRoom});
         }
       })
     }
