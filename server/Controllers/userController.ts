@@ -2,6 +2,9 @@ import express, { NextFunction, Request, Response } from 'express';
 import userService from '../Services/userService';
 import { Account } from '../class/Account';
 import accountService from '../Services/accountService';
+import { User } from '../class/User';
+//import { UserInterface } from '../Interface/User';
+
 
 let bcrypt=require("bcryptjs");
 
@@ -35,10 +38,11 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     else {
       try {
         if(await bcrypt.compare(req.body.password,account.getUserPassword() as string)) {
-          return res.status(200).json({message:"success",useremail:account.getUserEmail(),nickname:account.getUserNickname()});
+          const userFound:User=userService.getUsers().find((user)=>user.getUseremail()==account.getUserEmail()) as User;
+          return res.status(200).json({message:"success",user:userFound});
         }
         else {
-          return res.status(404).json({message:"password does not match",useremail:account.getUserEmail(),nickname:account.getUserNickname()});
+          return res.status(404).json({message:"password does not match"});
         }
       }
       catch {

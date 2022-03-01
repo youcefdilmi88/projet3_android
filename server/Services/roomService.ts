@@ -4,7 +4,8 @@ import databaseService from "./databaseService";
 
 export class RoomService {
 
-  private rooms=new Map<String,Room>(); // roomName and id
+  private rooms=new Map<String,Room>(); // roomName and room
+  public socketToRoom=new Map<string,string>(); //socketid and roomName
 
   constructor() {
     this.createDefaultRoom();
@@ -34,10 +35,9 @@ export class RoomService {
     this.rooms.clear();
     await databaseService.getAllRooms().then((rooms)=>{
       rooms.forEach((room)=>{
-        let roomObj=new Room(room.roomName,room.creator,room.members);
+        let roomObj:Room=new Room(room.roomName,room.creator,room.members);
         this.rooms.set(roomObj.getRoomName(),roomObj);
       })
-      // this.createDefaultRoom();
     }).catch((e:any)=>{
         console.log(e);
     });
@@ -56,6 +56,14 @@ export class RoomService {
 
   getAllRooms():Map<String,Room> {
     return this.rooms;
+  }
+
+  getRoomNameBySocket(socketId:string) {
+    if(this.socketToRoom.has(socketId)) {
+      return this.socketToRoom.get(socketId);
+    }
+    let message:String="socket not found";
+    return message;
   }
 
   

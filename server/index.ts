@@ -5,6 +5,7 @@ import userData from './userData';
 import userController from './Controllers/userController';
 import chatMessageController from './Controllers/chatMessageController';
 import socketService from './Services/socketService';
+import roomController from './Controllers/roomController';
 
 
 
@@ -26,6 +27,7 @@ app.use('',userData)
 /*********User ***********/
 app.use('/user',userController);
 app.use('/message',chatMessageController);
+app.use('/room',roomController);
 
 
 const server = http.createServer(app); // server for http
