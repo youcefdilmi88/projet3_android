@@ -39,9 +39,9 @@ export class ChatComponent implements AfterViewInit {
         const datepipe: DatePipe = new DatePipe('en-CA');
         let formattedDate = datepipe.transform(data[i].time, 'dd-MM-yyyy HH:mm:ss') as string;
 
-        if (this.socketService.useremail == data[i].useremail) {
+        if (this.socketService.nickname == data[i].nickname) {
           this.others.push(formattedDate);
-          this.others.push(data[i].useremail);
+          this.others.push(data[i].nickname);
           this.others.push(data[i].message.replace(/(\r\n|\n|\r)/gm, " "));
           this.others.push("\n");
           this.message.push("");
@@ -50,9 +50,9 @@ export class ChatComponent implements AfterViewInit {
           this.message.push("\n");
         }
 
-        if (this.socketService.useremail != data[i].useremail) {
+        if (this.socketService.nickname != data[i].nickname) {
           this.message.push(formattedDate);
-          this.message.push(data[i].useremail);
+          this.message.push(data[i].nickname);
           this.message.push(data[i].message.replace(/(\r\n|\n|\r)/gm, " "));
           this.message.push("\n");
           this.others.push("");
@@ -67,7 +67,7 @@ export class ChatComponent implements AfterViewInit {
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(data.time, 'dd-MM-yyyy HH:mm:ss') as string;
       this.message.push(formattedDate);
-      this.message.push(data.useremail);
+      this.message.push(data.nickname);
       this.message.push(data.message.replace(/(\r\n|\n|\r)/gm, " "));
       this.message.push("\n");
       this.others.push("");
@@ -91,11 +91,11 @@ export class ChatComponent implements AfterViewInit {
     if (text.trim() != '') {
       console.log("lenght");
       console.log(text.length);
-      const msg = { time: currentTime, useremail: this.socketService.useremail, message: text.trim() }
+      const msg = { time: currentTime, nickname: this.socketService.nickname, message: text.trim() }
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(currentTime, 'dd-MM-yyyy HH:mm:ss') as string;
       this.others.push(formattedDate);
-      this.others.push(this.socketService.useremail);
+      this.others.push(this.socketService.nickname);
       this.others.push(text.toString().trim().replace(/(\r\n|\n|\r)/gm, " "));
       this.others.push("\n");
       this.message.push("");
@@ -124,11 +124,13 @@ export class ChatComponent implements AfterViewInit {
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
-    this.http.post<any>(link,{ useremail: this.socketService.useremail }).pipe(
+    this.socketService.disconnectSocket();
+
+    this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(
       catchError(async (err) => console.log("error catched" + err))
     ).subscribe((data: any) => {
 
-      if (data.message == "logout") {
+      if (data.message == "success") {
         console.log("sayonara");
       }   
     });

@@ -47,7 +47,10 @@ export class MainPageComponent implements OnInit {
         catchError(async (err) => console.log("error catched" + err))
       ).subscribe((data: any) => {
         if (data.message == "success") {
-          this.socketService.useremail = data.nickname;
+          this.socketService.email = this.email;
+          this.socketService.nickname = data.user.nickname;
+          console.log(this.socketService.email);
+          console.log(this.socketService.nickname);
           this.socketService.initSocket();
           this.conditionValid = true;
           this.router.navigate(['/', 'albums']);

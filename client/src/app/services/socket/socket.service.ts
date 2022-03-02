@@ -10,7 +10,8 @@ import { io, Socket } from 'socket.io-client';
 export class SocketService {
 
   private socket: Socket;
-  public useremail: string;
+  public nickname: string;
+  public email: string;
   public isConnected: boolean;
   //private userService: UserService;
 
@@ -21,26 +22,25 @@ export class SocketService {
     this.socket=io('https://projet3-3990-207.herokuapp.com/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
-      query:{useremail:this.useremail}
-      //query : { user: this.userService.getTempUserEmail() }
+      query:{useremail:this.email}
     })
     this.socket.on("connected",(data)=>{
-      /*if (`${ data }` != "USER FAILED") {
-        console.log("socket service");
-        this.isConnected = true;
-      }
-      else {
-        console.log("socket service");
-        this.isConnected = false;
-      }*/
       console.log(data);
     })
-    //this.socket.emit("connection", );
-    const user = { useremail: this.useremail };
+  
+    const user = { useremail: this.email };
     this.socket.emit("connection", JSON.stringify(user));
-    /*this.socket.on("room1", (data)=>{
+  }
+
+  disconnectSocket() {
+    this.socket.on("DISCONNECT",(data)=>{  // event pour deconnecter le socket d'un user
+      data=JSON.parse(data);  // data={message:"success"}
+      console.log("disconnect");
       console.log(data);
-    });*/
+    });
+
+    const user = { useremail: this.email }
+    this.socket.emit("DISCONNECT",JSON.stringify(user));
   }
 
   getSocket() {
