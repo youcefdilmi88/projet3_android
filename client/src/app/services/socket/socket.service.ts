@@ -21,6 +21,7 @@ export class SocketService {
     this.socket=io('https://projet3-3990-207.herokuapp.com/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
+      query:{useremail:this.useremail}
       //query : { user: this.userService.getTempUserEmail() }
     })
     this.socket.on("connected",(data)=>{

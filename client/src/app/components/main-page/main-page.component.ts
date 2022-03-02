@@ -50,7 +50,7 @@ export class MainPageComponent implements OnInit {
           this.socketService.useremail = data.nickname;
           this.socketService.initSocket();
           this.conditionValid = true;
-          this.router.navigate(['/', 'chat']);
+          this.router.navigate(['/', 'albums']);
           return;
         }
 

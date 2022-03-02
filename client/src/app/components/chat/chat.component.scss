@@ -19,6 +19,11 @@ body {
 	overflow: hidden;
 }
 
+.principal {
+	width: 500px;
+	float: right;
+}
+
 .title {
     background-color: #592bc7;
     color: azure;
@@ -62,6 +67,7 @@ a {
 	background: #fff;
 	overflow: hidden;
 	height: 95%;
+	width: 100%;
 }
 
 .chat-main {

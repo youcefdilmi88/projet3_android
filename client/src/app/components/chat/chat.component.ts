@@ -3,6 +3,8 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
+import { RoomsComponent } from '../rooms/rooms.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -22,6 +24,7 @@ export class ChatComponent implements AfterViewInit {
   public time = new Array<string>();
 
   constructor(
+    public dialog: MatDialog,
     private http: HttpClient,
     private socketService: SocketService,
     ) { }
@@ -60,7 +63,7 @@ export class ChatComponent implements AfterViewInit {
       }
     });
 
-    this.socketService.getSocket().on("room1", (data)=>{   
+    this.socketService.getSocket().on("MSG", (data)=>{   
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(data.time, 'dd-MM-yyyy HH:mm:ss') as string;
       this.message.push(formattedDate);
@@ -76,6 +79,10 @@ export class ChatComponent implements AfterViewInit {
 
   ngAfterInit() {
     console.log("chat page !");
+  }
+
+  changeRoom(): void {
+    this.dialog.open(RoomsComponent, { disableClose: true });
   }
 
   sendchatinput(text:String) {
@@ -96,7 +103,7 @@ export class ChatComponent implements AfterViewInit {
       this.message.push("");
       this.message.push("\n");
 
-      this.socketService.getSocket().emit("msg",JSON.stringify(msg));
+      this.socketService.getSocket().emit("MSG",JSON.stringify(msg));
       this.input.nativeElement.value = ' ';
     }
 

@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 // import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { AlbumsComponent } from './albums/albums.component';
 import { ChatComponent } from './chat/chat.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewAccountComponent } from './new-account/new-account.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,12 @@ const routes: Routes = [
   },
   {
     path: 'register', component: NewAccountComponent
+  },
+  {
+    path: 'albums', component: AlbumsComponent
+  },
+  {
+    path: 'sidenav', component: SidenavComponent
   }
 ];
 

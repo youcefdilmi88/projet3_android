@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="principal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,7 @@
   
   <div class="title">
     <h1 id="title">Chat</h1>
+    <button (click)="changeRoom()">Changer de salle</button>
     <button (click)="logout()" class = "btn" id="logout" routerLink = "">Déconnexion</button>
   </div>
 

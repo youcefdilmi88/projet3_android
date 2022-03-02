@@ -33,6 +33,8 @@ import { AppRoutingModule } from './components/app-routing.module';
 import { ChatComponent } from './components/chat/chat.component';
 import { NewAccountComponent } from './components/new-account/new-account.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
+import { RoomsComponent } from './components/rooms/rooms.component';
+import { AlbumsComponent } from './components/albums/albums.component';
 
 
 @NgModule({
@@ -62,6 +64,8 @@ import { AvatarComponent } from './components/avatar/avatar.component';
         ChatComponent,
         NewAccountComponent,
         AvatarComponent,
+        RoomsComponent,
+        AlbumsComponent,
     ],
     imports: [
         BrowserModule,
