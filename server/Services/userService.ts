@@ -8,8 +8,11 @@ class UserService {
    } 
 
    private users:User[]=[];
+
    private roomUsers=new Map<String,String>();
-   public loggedUsers=new Map<String,User>(); // useremail and socketid
+   public loggedUsers=new Map<String,User>(); // useremail and user
+   private userBySocketId=new Map<string,User>();
+   private socketIdByUser=new Map<User,string>();
 
 
    /********** All users *************/
@@ -25,6 +28,18 @@ class UserService {
 
    getUsers():User[] {
        return this.users;
+   }
+
+   getUsersBySocketId():Map<string,User> {
+       return this.userBySocketId;
+   }
+
+   getSocketIdByUser():Map<User,string> {
+       return this.socketIdByUser;
+   }
+
+   getUserByUseremail(email:String) {
+       return this.users.find((user)=>user.getUseremail()==email);
    }
 
    /********* rooms ******************/

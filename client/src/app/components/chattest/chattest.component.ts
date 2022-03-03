@@ -130,16 +130,23 @@ export class ChattestComponent implements AfterViewInit {
   }
 
  joinRoom(roomName:string) {
+   let link=this.BASE_URL+"room/joinRoom";
    console.log(roomName);
    console.log("current room:"+this.currentRoom);
+
    this.socket.on("JOINROOM",(data)=>{
     data=JSON.parse(data);
     console.log(data);
-    this.currentRoom=data.currentRoomName;
+  });
+  const user={
+    useremail:this.email,
+    nickname:this.name,
+  }
+  const newRoom={newRoomName:roomName,user};
+  this.http.post(link,newRoom).subscribe((data:any)=>{
+    this.currentRoom=roomName;
     this.getAllMessagesByRoomName(this.currentRoom);
   });
-  const newRoom={newRoomName:roomName,oldRoomName:this.currentRoom,useremail:this.email};
-  this.socket.emit("JOINROOM",JSON.stringify(newRoom));
  }
 
   createRoom(roomName: string) {

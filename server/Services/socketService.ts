@@ -16,6 +16,10 @@ class SocketService {
      roomService.initRoom(this.io);
   }
 
+  getIo() {
+     return this.io;
+  }
+
 }
 
 const socketService=new SocketService();

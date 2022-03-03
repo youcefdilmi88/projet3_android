@@ -37,41 +37,16 @@ export class RoomService {
     });
   }
 
-    changeRoom(socket:Socket) {
+  /********************* notify other a dude joined *****************/
+  changeRoom(socket:Socket) {
       socket.on("JOINROOM",(data)=>{
         data=this.parseObject(data);
-
-        let newRoom:String=data.newRoomName as String;
-        let oldRoom:String=data.oldRoomName as String;
+        let roomName:string=data.roomName as string;   
         let useremail:String=data.useremail as String;
-   
-        if(this.getAllRooms().has(newRoom)) {
-          let nextRoom:Room=this.getRoomByName(newRoom) as Room;
-          let previousRoom:Room=this.getRoomByName(oldRoom) as Room;
-          
-          console.log("previous roomname:"+newRoom);
-          
-          nextRoom.addUserToRoom(useremail);
-          previousRoom.removeUserFromRoom(useremail);
-          
-          console.log("ROOM CHANGE:"+newRoom);
-          
-          this.getSocketsRoomNames().delete(socket.id);
-          this.getSocketsRoomNames().set(socket.id,newRoom as string);
-
-          socket.leave(oldRoom as string);
-          socket.join(this.getSocketsRoomNames().get(socket.id) as string);
-          
-          const res={message:"success",currentRoomName:newRoom};
-          this.io.to(this.getSocketsRoomNames().get(socket.id) as string).emit("JOINROOM",JSON.stringify(res));
-        }
-        else {
-          const res={message:"room not found", currentRoomName:oldRoom}
-          this.io.to(this.getSocketsRoomNames().get(socket.id) as string).emit("JOINROOM",JSON.stringify(res));
-        }
+        const message={useremail:useremail,currentRoomName:roomName};
+        socket.to(roomName).emit("JOINROOM",JSON.stringify(message)); 
       })
-    }
-  
+  }
 
   /***** main chat room ********/
   async createDefaultRoom() {

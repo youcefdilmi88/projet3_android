@@ -1,10 +1,12 @@
 
 import { Socket,Server } from "socket.io";
 import { Message } from "../class/Message";
+import { User } from "../class/User";
 import RoomSchema from "../Entities/RoomSchema";
 import { MessageInterface } from "../Interface/Message";
 //import databaseService from "./databaseService";
 import roomService from "./roomService";
+import userService from "./userService";
 
 
 class MessageService {
@@ -33,7 +35,15 @@ class MessageService {
         if(!roomService.getDefaultRoom()) {
           roomService.createDefaultRoom();
         }
+        
+        const user:User=userService.getUserByUseremail(useremail) as User;
+
+        userService.getSocketIdByUser().set(user,socket.id);
+        userService.getUsersBySocketId().set(socket.id,user);
+
         roomService.setUserSocketIdAndRoom(socket.id,roomService.getDefaultRoom().getRoomName() as string);
+        
+
         /****************** join current room during connection *****************/
         socket.join(roomService.getRoomNameBySocket(socket.id) as string);
         console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
@@ -53,7 +63,6 @@ class MessageService {
         let roomName:String=roomService.getRoomNameBySocket(socket.id) as String;
         this.UpdateRoomMessages(roomName,data);
 
-        // await this.createMessage(data.time,data.nickname,data.message);  
         socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSG",JSON.stringify(data));  // send msg to all listener listening to room1 the right side json
       })
     }
