@@ -15,16 +15,21 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
   req.body.useremail=req.body.useremail as String;
 
     console.log("does account exists ? "+accountService.getAccounts().has(req.body.useremail as String));
-
-    if(accountService.getAccounts().has(req.body.useremail)) {
-        console.log("user already exists");
-        return res.json(404);
-    }    
-    const salt=await bcrypt.genSalt();
-    const hashedPassword=await bcrypt.hash(req.body.password,salt);
+    if(req.body.useremail && req.body.password && req.body.nickname) {
+      if(accountService.getAccounts().has(req.body.useremail)) {
+         console.log("user already exists");
+         return res.json(404);
+      }    
+     const salt=await bcrypt.genSalt();
+     const hashedPassword=await bcrypt.hash(req.body.password,salt);
   
-    accountService.createAccount(req.body.useremail,hashedPassword,req.body.nickname);
-    return res.json(200);
+     accountService.createAccount(req.body.useremail,hashedPassword,req.body.nickname);
+     return res.json(200);
+  }
+  else if(!req.body.useremail) {
+    console.log("error undefined email");
+  }
+  return res.json(404);
 }
 
 const loginUser=async(req:Request,res:Response,next:NextFunction)=>{

@@ -13,8 +13,8 @@ export class ChattestComponent implements AfterViewInit {
   @ViewChild('username') username:ElementRef;
   @ViewChild('password') password:ElementRef;
   @ViewChild('chatinput') chatinput:HTMLElement;
-  private readonly BASE_URL: string ="http://localhost:8080/";
-  //"https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string =//"http://localhost:8080/";
+  "https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
 
   socket:Socket;
@@ -153,6 +153,7 @@ export class ChattestComponent implements AfterViewInit {
     let link=this.BASE_URL+"room/createRoom";
     this.http.post<any>(link,{roomName:roomName,creator:this.email}).subscribe((data: any) => {
       this.getAllRoom();
+      console.log(data);
     });
   }
 

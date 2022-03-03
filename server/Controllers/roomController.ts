@@ -53,6 +53,7 @@ const joinRoom=(req:Request,res:Response,next:NextFunction)=>{
 
 
 const createRoom=(req:Request,res:Response,next:NextFunction)=>{
+    console.log(req.body.roomName);
     let roomName:String=req.body.roomName as String;
     let creator:String=req.body.creator as String;
     let members:String[]=[];
