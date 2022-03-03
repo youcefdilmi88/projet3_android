@@ -32,10 +32,10 @@ class AccountService {
     // console.log("default room name:"+roomService.getDefaultRoom().getRoomName())
     const user=new UserSchema({useremail:email,nickname:nickName,currentRoom:roomService.getDefaultRoom().getRoomName()});
 
-    await account.save().catch((e:any)=>{
+    await account.save().catch((e:Error)=>{
       console.log(e);
     });
-    await user.save().catch((e:any)=>{
+    await user.save().catch((e:Error)=>{
       console.log(e);
     });
 
