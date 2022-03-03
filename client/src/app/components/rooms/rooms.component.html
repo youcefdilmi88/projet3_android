@@ -3,6 +3,14 @@
         <h1 id="title">Changer de salle</h1>
     </div>
 
+    <!-- <div class="rooms" id="rooms" *ngFor="let roomName of this.list" style="text-align:right">
+        {{ roomName }}
+    </div> -->
+
+    <button id="roomID" *ngFor="let buttonText of buttonsTexts" (click)="changeRoom()">
+        {{buttonText}}
+    </button>
+
 
     <button mat-raised-button class="cancel" (click)="cancel()">Annuler</button>
 </div>
