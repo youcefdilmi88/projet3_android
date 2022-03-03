@@ -76,7 +76,7 @@ export class RoomService {
         let roomObj:Room=new Room(room.roomName,room.creator,room.members,room.messages);
         this.rooms.set(roomObj.getRoomName(),roomObj);
       })
-    }).catch((e:any)=>{
+    }).catch((e:Error)=>{
         console.log(e);
     });
   }
@@ -85,7 +85,8 @@ export class RoomService {
     try {
       const room=new RoomSchema({roomName:name,creator:creatorName,members:members,messages:messages});
       await room.save();
-      this.loadAllRoom();
+      const roomObj=new Room(name,creatorName,members,messages);
+      this.rooms.set(name,roomObj);
     }
     catch(error) {
       console.log(error);
