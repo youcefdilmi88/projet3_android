@@ -5,6 +5,7 @@ import { AlbumsComponent } from './albums/albums.component';
 import { ChatComponent } from './chat/chat.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewAccountComponent } from './new-account/new-account.component';
+import { RoomsComponent } from './rooms/rooms.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 
 const routes: Routes = [
@@ -21,8 +22,11 @@ const routes: Routes = [
     path: 'albums', component: AlbumsComponent
   },
   {
+    path: 'rooms', component: RoomsComponent
+  },
+  {
     path: 'sidenav', component: SidenavComponent
-  }
+  },
 ];
 
 @NgModule({

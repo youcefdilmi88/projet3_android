@@ -3,8 +3,9 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
-import { RoomsComponent } from '../rooms/rooms.component';
+//import { RoomsComponent } from '../rooms/rooms.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -27,10 +28,11 @@ export class ChatComponent implements AfterViewInit {
     public dialog: MatDialog,
     private http: HttpClient,
     private socketService: SocketService,
+    private router: Router
     ) { }
 
   ngAfterViewInit(): void {   
-    let link=this.BASE_URL+"message/getRoomMessages";  
+    let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     this.http.get<any>(link).subscribe((data: any) => {
 
       let length = Object.keys(data).length;
@@ -48,6 +50,7 @@ export class ChatComponent implements AfterViewInit {
           this.message.push("");
           this.message.push("");
           this.message.push("\n");
+
         }
 
         if (this.socketService.nickname != data[i].nickname) {
@@ -82,7 +85,8 @@ export class ChatComponent implements AfterViewInit {
   }
 
   changeRoom(): void {
-    this.dialog.open(RoomsComponent, { disableClose: true });
+    //this.dialog.open(RoomsComponent, { disableClose: true });
+    this.router.navigate(['/', 'rooms']);
   }
 
   sendchatinput(text:String) {

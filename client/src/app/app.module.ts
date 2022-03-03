@@ -66,6 +66,7 @@ import { AlbumsComponent } from './components/albums/albums.component';
         AvatarComponent,
         RoomsComponent,
         AlbumsComponent,
+        RoomsComponent,
     ],
     imports: [
         BrowserModule,

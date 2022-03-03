@@ -53,6 +53,8 @@ export class MainPageComponent implements OnInit {
           console.log(this.socketService.nickname);
           this.socketService.initSocket();
           this.conditionValid = true;
+          this.socketService.currentRoom = "DEFAULT";
+          this.socketService.joinRoom("DEFAULT");
           this.router.navigate(['/', 'albums']);
           return;
         }

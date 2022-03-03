@@ -7,12 +7,22 @@
         {{ roomName }}
     </div> -->
 
-    <button id="roomID" *ngFor="let buttonText of buttonsTexts" (click)="changeRoom()">
+    <button id="roomID" *ngFor="let buttonText of buttonsTexts" (click)="changeRoom($event.target)">
         {{buttonText}}
     </button>
 
-
+    <button mat-raised-button (click)="create()">Créer une salle</button>
+    <div class="roomForm">
+        <mat-form-field class="input" floatLabel="always" appearance="outline">
+            <mat-label>Nom de salle</mat-label>
+            <input matInput id="room" type="text" name="room" required [(ngModel)]="room">
+        </mat-form-field> 
+    </div>
     <button mat-raised-button class="cancel" (click)="cancel()">Annuler</button>
+
+    <div>
+        <p id="error">Vous etes déjà dans cette salle.</p>
+    </div>
 </div>
 
 

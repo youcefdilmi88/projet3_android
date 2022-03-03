@@ -13,6 +13,7 @@ export class SocketService {
   public nickname: string;
   public email: string;
   public isConnected: boolean;
+  public currentRoom: string;
   //private userService: UserService;
 
   constructor() { }
@@ -41,6 +42,19 @@ export class SocketService {
 
     const user = { useremail: this.email }
     this.socket.emit("DISCONNECT",JSON.stringify(user));
+  }
+
+  joinRoom(room: string) {
+    this.socket.on("JOINROOM",(data)=>{  // evenement pour join un room
+      data=JSON.parse(data);           // OUBLIER PAS DE PARSE direct quand vous recevez 
+      console.log(data);
+      //this.currentRoom = data.currentRoomName;
+    });
+    const newRoom = { newRoomName: room, oldRoomName: this.currentRoom, useremail:this.email};
+    console.log(room);
+    console.log(this.currentRoom);
+    console.log(this.email);
+    this.socket.emit("JOINROOM",JSON.stringify(newRoom)); // OUBLIER PAS DE STRINGIFY avant de emit
   }
 
   getSocket() {
