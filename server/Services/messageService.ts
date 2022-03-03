@@ -1,15 +1,16 @@
 
 import { Socket,Server } from "socket.io";
 import { Message } from "../class/Message";
-import MessageSchema from "../Entities/MessageSchema";
-import databaseService from "./databaseService";
+import RoomSchema from "../Entities/RoomSchema";
+import { MessageInterface } from "../Interface/Message";
+//import databaseService from "./databaseService";
 import roomService from "./roomService";
 
 
 class MessageService {
 
     constructor() {
-      this.loadAllRoomMessages();
+      
     }
 
     private messages:Array<Message>=[];
@@ -29,8 +30,10 @@ class MessageService {
         
         /***************** set socket id to default room during connection ***************/
         roomService.setSocketIdAndEmail(socket.id,useremail);
+        if(!roomService.getDefaultRoom()) {
+          roomService.createDefaultRoom();
+        }
         roomService.setUserSocketIdAndRoom(socket.id,roomService.getDefaultRoom().getRoomName() as string);
-        
         /****************** join current room during connection *****************/
         socket.join(roomService.getRoomNameBySocket(socket.id) as string);
         console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
@@ -46,8 +49,11 @@ class MessageService {
       socket.on("MSG",async (data)=> {    // listen for event named random with data
         data = this.parseObject(data);
         console.log(data);
-        console.log('msg sent to current room:'+roomService.getSocketsRoomNames().get(socket.id) as string)
-        await this.createMessage(data.time,data.nickname,data.message);  
+
+        let roomName:String=roomService.getRoomNameBySocket(socket.id) as String;
+        this.UpdateRoomMessages(roomName,data);
+
+        // await this.createMessage(data.time,data.nickname,data.message);  
         socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSG",JSON.stringify(data));  // send msg to all listener listening to room1 the right side json
       })
     }
@@ -83,31 +89,28 @@ class MessageService {
         return this.messages;
     }
 
-    async loadAllRoomMessages(){
-      this.messages=[];
-      await databaseService.getRoomMessages().then((messages)=>{
-          messages.forEach((message)=>{
-              let messageObj=new Message(message.time,message.nickname,message.message);
-              this.messages.push(messageObj);
-          })
-      }).catch((e:any)=>{
-        console.log(e);
-     });
+    async UpdateRoomMessages(name:String,msg:MessageInterface) {
+      if(roomService.getAllRooms().has(name)) {
+        const messagesUpdate = {
+         $push: {
+           "messages": msg
+         }
+        };
+        try {
+          RoomSchema.findOneAndUpdate({roomName:name},messagesUpdate).then((data)=>{
+            console.log(data?.roomName+" messages updated");
+            roomService.loadAllRoom();
+          }).catch((error)=>{
+            console.log(error);
+          });
+        }
+        catch(error) {
+          console.log(error);
+        }
+      }
     }
  
-    async createMessage(currentTime:Number,name:String,text:String) {
-       try {
-         const message=new MessageSchema({time:currentTime,nickname:name,message:text});
-         await message.save();
-         this.loadAllRoomMessages();
-       }
-       catch(error) {
-         console.log(error);
-       }
-    }
     
- 
-   
  
  
  

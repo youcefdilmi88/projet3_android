@@ -1,3 +1,4 @@
+import { MessageInterface } from "../Interface/Message";
 
 
 
@@ -5,11 +6,13 @@ export class Room {
     roomName:String;
     creator:String;
     members:String[]=[];
+    messages:Array<MessageInterface>;
 
-    constructor(roomName:String,creator:String,members:String[]) {
+    constructor(roomName:String,creator:String,members:String[],messages:MessageInterface[]) {
        this.roomName=roomName;
        this.creator=creator;
        this.members=members;
+       this.messages=messages;
     }
 
     getRoomName():String {
@@ -34,5 +37,13 @@ export class Room {
         if (index > -1) {
             this.members.splice(index, 1); 
         }
+    }
+
+    getRoomMessages():Array<MessageInterface> {
+        return this.messages;
+    }
+
+    addMessageToRoom(message:MessageInterface) {
+        this.messages.push(message);
     }
 }

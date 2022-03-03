@@ -16,6 +16,10 @@ const roomSchema = new mongoose.Schema({
     members:{
         type:[String],
         required:true,
+    },
+    messages:{
+        type:[],
+        required:true,
     }
 });
 

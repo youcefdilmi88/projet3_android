@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { Room } from "../class/Room";
 import RoomSchema from "../Entities/RoomSchema";
+import { MessageInterface } from "../Interface/Message";
 import databaseService from "./databaseService";
 
 
@@ -79,8 +80,9 @@ export class RoomService {
       const roomName="DEFAULT";
       const creator="ADMIN";
       let members:String[]=[];
+      let messages:MessageInterface[]=[];
       members.push("admin");
-      this.createRoom(roomName,creator,members);
+      this.createRoom(roomName,creator,members,messages);
       console.log("roomservice created");
     }
     else {
@@ -96,7 +98,7 @@ export class RoomService {
     this.rooms.clear();
     await databaseService.getAllRooms().then((rooms)=>{
       rooms.forEach((room)=>{
-        let roomObj:Room=new Room(room.roomName,room.creator,room.members);
+        let roomObj:Room=new Room(room.roomName,room.creator,room.members,room.messages);
         this.rooms.set(roomObj.getRoomName(),roomObj);
       })
     }).catch((e:any)=>{
@@ -104,9 +106,9 @@ export class RoomService {
     });
   }
 
-  async createRoom(name:String,creatorName:String,members:String[]) {
+  async createRoom(name:String,creatorName:String,members:String[],messages:MessageInterface[]) {
     try {
-      const room=new RoomSchema({roomName:name,creator:creatorName,members:members});
+      const room=new RoomSchema({roomName:name,creator:creatorName,members:members,messages:messages});
       await room.save();
       this.loadAllRoom();
     }

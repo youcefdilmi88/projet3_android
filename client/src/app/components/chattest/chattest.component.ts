@@ -59,6 +59,8 @@ export class ChattestComponent implements AfterViewInit {
       query:{useremail:this.email}
     })
 
+    this.getAllMessagesByRoomName(this.currentRoom);
+
     this.socket.on("connected",(data)=>{
       data=JSON.parse(data)
       console.log(data);
@@ -69,6 +71,16 @@ export class ChattestComponent implements AfterViewInit {
       console.log(data);
     });
 
+  }
+
+  getAllMessagesByRoomName(name:string) {
+    let link=this.BASE_URL+"message/getRoomMessages/"+`${name}`;
+    this.http.get<any>(link).subscribe((data:any)=>{
+      console.log("MESSAGES IN ROOM "+name);
+      data.forEach((message:any)=>{
+        console.log(message.message);
+      })
+    })
   }
 
   logout() {
@@ -124,6 +136,7 @@ export class ChattestComponent implements AfterViewInit {
     data=JSON.parse(data);
     console.log(data);
     this.currentRoom=data.currentRoomName;
+    this.getAllMessagesByRoomName(this.currentRoom);
   });
   const newRoom={newRoomName:roomName,oldRoomName:this.currentRoom,useremail:this.email};
   this.socket.emit("JOINROOM",JSON.stringify(newRoom));
