@@ -29,3 +29,38 @@
 	border: 0;
 	font-size: 17px;
 }
+
+#roomID {
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.input {
+	float: left;
+	width: 50%;
+}
+
+#createRoom {
+	float: right;
+	width: 50%;
+	height: 60px;
+	margin-top: 5px;
+}
+
+.search {
+	float: left;
+	width: 50%;
+}
+
+.searchRoom {
+	float: right;
+	width: 50%;
+	height: 60px;
+	margin-top: 5px;
+}
+
+.subtext-container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+  }

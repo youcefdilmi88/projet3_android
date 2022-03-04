@@ -52,7 +52,7 @@ export class RoomsComponent implements OnInit {
     if (this.socketService.currentRoom == element.textContent.trim()) {
       document.getElementById("error")!.style.visibility= "visible";
     }
-    else {
+    else { 
       this.socketService.joinRoom(element.textContent.trim());
       this.socketService.currentRoom = element.textContent.trim();
       this.router.navigate(['/', 'sidenav']);
