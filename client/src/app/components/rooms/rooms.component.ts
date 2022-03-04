@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
@@ -16,7 +16,7 @@ import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome
 })
 
 export class RoomsComponent implements OnInit {
-
+  @ViewChild('roomname') input: any;
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
   private readonly BASE_URL: string =//"http://localhost:8080/";
@@ -39,10 +39,8 @@ export class RoomsComponent implements OnInit {
     this.http.get<any>(link).subscribe((data: any) => {
       let length = Object.keys(data).length;
       this.numberOfRooms = length;
-      console.log(data , "CELUI LA");
       for(var i = 1; i <= length; i++) { 
-        this.list.push(data[i].roomName);
-        console.log(data[i].roomName);
+        //this.list.push(data[i].roomName);
         this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
       }
     });
@@ -73,46 +71,34 @@ export class RoomsComponent implements OnInit {
         if(data.message == "success") {
           this.socketService.currentRoom = element.textContent;
         }
-
       });
-
     }
   }
 
-  create() {
+  create(text: string) {
     let link = this.BASE_URL+"room/createRoom";
-
     let link2 = this.BASE_URL+"room/getAllRooms";
 
-    this.http.post<any>(link, { roomName: this.room, creator: this.socketService.email }).subscribe((data: any) => {
-      if (data.message == "success") {
-        console.log(data);
-        console.log("created!");
-        console.log(this.room);
-        console.log(this.socketService.email);
-        
-        this.list = [];
+    if (text.trim() != '') {
+      this.http.post<any>(link, { roomName: this.room, creator: this.socketService.email }).subscribe((data: any) => {
+        if (data.message == "success") {
+          this.http.get<any>(link2).subscribe((data: any) => {
+            let length = Object.keys(data).length; 
+            //this.list.push(data[length-1].roomName);
+            this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}`];
+          });
+          this.input.nativeElement.value = ' ';
+        }
+      });
+    }
 
-        
-        this.http.get<any>(link2).subscribe((data: any) => {
-          let length = Object.keys(data).length;
-    
-          console.log(data);
-          console.log("new room");
-          for(var i = 1; i <= length; i++) { 
-            this.list.push(data[i].roomName);
-            console.log(data[i].roomName , "ICIIIIIIII");
-            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
-          }
-        });
-      }
-    });
-
-
+    if (text.trim().length == 0) {
+      this.input.nativeElement.value = ' ';
+    }
+    this.input.nativeElement.focus();
   }
 
   cancel() {
     this.router.navigate(['/', 'sidenav']);
   }
-
 }

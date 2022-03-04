@@ -25,14 +25,14 @@ export class AlbumsComponent implements OnInit {
   }
 
   newDrawing() {
-    /*this.welcomeDialogRef = this.dialog.open(WelcomeDialogComponent, {
+    this.welcomeDialogRef = this.dialog.open(WelcomeDialogComponent, {
       hasBackdrop: true,
       panelClass: 'filter-popup',
       autoFocus: false,
       disableClose: true,
       maxHeight: 500,
       maxWidth: 500,
-    });*/
+    });
     this.welcomeDialogSub = this.welcomeDialogRef.afterClosed().subscribe(() => {
       this.dialog.open(NewDrawingComponent);
     });

@@ -32,6 +32,7 @@ export class ChatComponent implements AfterViewInit {
     ) { }
 
   ngAfterViewInit(): void {   
+    console.log(this.socketService.currentRoom);
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     this.http.get<any>(link).subscribe((data: any) => {
 

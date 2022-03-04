@@ -66,10 +66,16 @@ export class PencilToolService implements Tools {
 
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
+    let length = this.pencil!.pointsList.length;
+        console.log("POINTS");
+        for(var i = 0; i < length; i++) {
+          console.log(this.pencil!.pointsList[i]);
+        }
+
     this.pencil = null;
     if (this.pencilCommand) {
       const returnPencilCommand = this.pencilCommand;
-      this.pencilCommand = null;
+      this.pencilCommand = null;  
       return returnPencilCommand;
     }
     return;
