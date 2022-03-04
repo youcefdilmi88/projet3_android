@@ -101,4 +101,19 @@ export class RoomsComponent implements OnInit {
   cancel() {
     this.router.navigate(['/', 'sidenav']);
   }
+
+  logout() {
+    let link = this.BASE_URL + "user/logoutUser";
+
+    this.socketService.disconnectSocket();
+
+    this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(
+      catchError(async (err) => console.log("error catched" + err))
+    ).subscribe((data: any) => {
+
+      if (data.message == "success") {
+        console.log("sayonara");
+      }   
+    });
+  }
 }
