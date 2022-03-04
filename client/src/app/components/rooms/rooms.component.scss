@@ -1,6 +1,4 @@
 .wrapper {
-    width: 800px;
-    height: 400px;
     position: relative;
 }
 
@@ -21,4 +19,13 @@
 
 #logout {
 	float: right;
+}
+
+.btn {
+	cursor: pointer;
+	padding: 5px 15px;
+	background: var(--light-color);
+	color: var(--dark-color-a);
+	border: 0;
+	font-size: 17px;
 }

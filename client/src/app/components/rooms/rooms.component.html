@@ -8,7 +8,7 @@
         {{ roomName }}
     </div> -->
 
-    <button id="roomID" *ngFor="let buttonText of buttonsTexts" (click)="changeRoom($event.target)">
+    <button mat-raised-button id="roomID" *ngFor="let buttonText of buttonsTexts" (click)="changeRoom($event.target)">
         {{buttonText}}
     </button>
 
