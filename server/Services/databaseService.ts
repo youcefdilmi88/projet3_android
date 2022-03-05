@@ -52,7 +52,7 @@ class DatabaseService {
     }
 
     async getRoom() {
-        return await RoomSchema.find({})
+        return await RoomSchema.find({});
     }
 }
 

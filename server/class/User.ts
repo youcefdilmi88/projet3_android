@@ -3,9 +3,9 @@ export class User {
     private nickname:String;
    
 
-    constructor(useremail:String,username:String) {
+    constructor(useremail:String,nickname:String) {
         this.useremail=useremail;
-        this.nickname=username;
+        this.nickname=nickname;
     }
 
     getUseremail():String {

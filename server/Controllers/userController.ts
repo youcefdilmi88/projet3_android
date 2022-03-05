@@ -4,6 +4,7 @@ import { Account } from '../class/Account';
 import accountService from '../Services/accountService';
 import { User } from '../class/User';
 import roomService from '../Services/roomService';
+import { HTTPMESSAGE } from '../Constants/httpMessage';
 
 
 
@@ -18,28 +19,33 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
     if(req.body.useremail && req.body.password && req.body.nickname) {
       if(accountService.getAccounts().has(req.body.useremail)) {
          console.log("user already exists");
-         return res.json(404);
+         const message={message:HTTPMESSAGE.FAILED};
+         return res.status(404).json(message);
       }    
      const salt=await bcrypt.genSalt();
      const hashedPassword=await bcrypt.hash(req.body.password,salt);
   
      accountService.createAccount(req.body.useremail,hashedPassword,req.body.nickname);
-     return res.json(200);
+     const message={message:HTTPMESSAGE.SUCCESS};
+     return res.status(200).json(message);
   }
   else if(!req.body.useremail) {
+    const message={message:HTTPMESSAGE.MAILUND};
     console.log("error undefined email");
+    return res.status(404).json(message);
   }
-  return res.json(404);
+  const message={message:HTTPMESSAGE.FAILED};
+  return res.status(404).json(message);
 }
 
 const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
     const account=accountService.getAccount(req.body.useremail as String) as Account;
     console.log(req.body.useremail as String);
     if(account==null) {
-        return res.status(400).json({message:'Cannot find user'});
+        return res.status(400).json({message:HTTPMESSAGE.UNOTFOUND});
     }
     if(userService.getLoggedUsers().has(account.getUserEmail() as string)) {
-        return res.json({message:"user already connected"})
+        return res.status(404).json({message:HTTPMESSAGE.UCONNECTED})
     }
     else {
       try {
@@ -49,14 +55,15 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
        
           let defaultRoomName:String=roomService.getDefaultRoom().getRoomName() as String;
           console.log(defaultRoomName);
-          return res.status(200).json({message:"success",user:userFound,currentRoom:defaultRoomName});
+          return res.status(200).json({message:HTTPMESSAGE.SUCCESS,user:userFound,currentRoom:defaultRoomName});
         }
         else {
-          return res.status(404).json({message:"password does not match"});
+          return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
         }
       }
-      catch {
-        return res.json(404);
+      catch(e) {
+        console.log(e);
+        return res.status(404).json(e);
       }
     }
 }
@@ -67,9 +74,9 @@ const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     console.log("user in map for logout ? "+userService.getLoggedUsers().has(useremail))
     if(userService.getLoggedUsers().has(useremail)) {
         userService.getLoggedUsers().delete(useremail);
-        return res.status(200).json({message:"success"})
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS})
     }
-    return res.status(400).json({message:"user not found !"});
+    return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
 }
 
 router.post('/registerUser',createUser);

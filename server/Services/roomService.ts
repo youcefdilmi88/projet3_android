@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+
 import { Room } from "../class/Room";
 import RoomSchema from "../Entities/RoomSchema";
 import { MessageInterface } from "../Interface/Message";
@@ -10,43 +10,12 @@ export class RoomService {
   private rooms=new Map<String,Room>(); // roomName and room
   private socketidToEmail=new Map<string,String>(); // socketid and useremail
   private socketToRoom=new Map<string,string>(); //socketid and roomName
-  private io:Server;
 
   constructor() {
     this.createDefaultRoom();
   }
 
-  /*************************** socket section *********************/
-  initRoom(server:Server) {
-    this.io=server;
-    this.connect();
-  }
 
-  connect():void {
-    this.io.on("connection",(socket:Socket)=>{
-      /***************** add user to connected users *****************/
-      let useremail:String=socket.handshake.query.useremail as String;
-      console.log("query email:"+useremail);
-      
-      
-      /****************** join current room during connection *****************/
-      // socket.join(this.getRoomNameBySocket(socket.id) as string);
-      console.log("user "+useremail+" with socket id:"+socket.id+" is connected to the chat");
-      
-      this.changeRoom(socket);
-    });
-  }
-
-  /********************* notify other a dude joined *****************/
-  changeRoom(socket:Socket) {
-      socket.on("JOINROOM",(data)=>{
-        data=this.parseObject(data);
-        let roomName:string=data.roomName as string;   
-        let useremail:String=data.useremail as String;
-        const message={useremail:useremail,currentRoomName:roomName};
-        socket.to(roomName).emit("JOINROOM",JSON.stringify(message)); 
-      })
-  }
 
   /***** main chat room ********/
   async createDefaultRoom() {
@@ -85,6 +54,7 @@ export class RoomService {
     try {
       const room=new RoomSchema({roomName:name,creator:creatorName,members:members,messages:messages});
       await room.save();
+      console.log("room saved");
       const roomObj=new Room(name,creatorName,members,messages);
       this.rooms.set(name,roomObj);
     }

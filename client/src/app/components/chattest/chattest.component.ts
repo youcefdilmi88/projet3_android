@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 
 import { io, Socket } from 'socket.io-client';
@@ -13,8 +13,8 @@ export class ChattestComponent implements AfterViewInit {
   @ViewChild('username') username:ElementRef;
   @ViewChild('password') password:ElementRef;
   @ViewChild('chatinput') chatinput:HTMLElement;
-  private readonly BASE_URL: string =//"http://localhost:8080/";
-  "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
 
   socket:Socket;
@@ -48,8 +48,21 @@ export class ChattestComponent implements AfterViewInit {
         this.currentRoom=data.currentRoom;
         this.connectSocket();
       }
-    });
+    },
+    (error:HttpErrorResponse)=>{
+      console.error(error);
+      console.log(error.status);
+      console.log(error.error.message);
+      if(error.message=="password does not match") {
+        this.passFailed();
+      }
+    }
+    );
     
+  }
+
+  passFailed() {
+    console.log("rip password");
   }
 
   connectSocket() {
@@ -95,11 +108,11 @@ export class ChattestComponent implements AfterViewInit {
     this.socket.emit("DISCONNECT",JSON.stringify({useremail:this.email}));
 
     this.http.post<any>(link,{useremail:this.email}).subscribe((data: any) => {
-      console.log(data);
-    });
+      console.log(data.status);
+      console.log(data.message);
+    }
+    );
   }
-
- 
 
   sendchatinput(text:String) {
     console.log("string to send "+text);
@@ -112,20 +125,16 @@ export class ChattestComponent implements AfterViewInit {
     let link:string=this.BASE_URL+"room/getAllRooms";
     this.http.get<any>(link).subscribe((data: any) => {
       data.forEach((room:any)=>{
-
-        console.log( document.getElementById('rooms')?.children)
+        console.log("room name:"+room.roomName);
+      
         let button=document.createElement('BUTTON');
         button.innerHTML=room.roomName;
-        console.log("each room "+room.roomName);
-        //button.nodeValue=room.roomName;
         button.addEventListener("click",()=>{
-          console.log("event listener:"+button.innerHTML as string);
           this.joinRoom(button.innerHTML as string);
         })
         document.getElementById('rooms')?.appendChild(button);
-        
-    
       })
+      console.log("");
     })
   }
 
@@ -136,7 +145,11 @@ export class ChattestComponent implements AfterViewInit {
 
    this.socket.on("JOINROOM",(data)=>{
     data=JSON.parse(data);
-    console.log(data);
+    console.log("SERVER MSG RECEIVED");
+    console.log("room change alert");
+    console.log("email:"+data.useremail);
+    console.log("roomname:"+data.roomName);
+    console.log("");
   });
   const user={
     useremail:this.email,
@@ -150,9 +163,16 @@ export class ChattestComponent implements AfterViewInit {
  }
 
   createRoom(roomName: string) {
+    this.socket.on("CREATEROOM",(data)=>{
+      data=JSON.parse(data);
+      console.log("NEW ROOM !!!!!!");
+      if(data.message=="room created") {
+        console.log("updated rooms");
+        this.getAllRoom();
+      }
+    })
     let link=this.BASE_URL+"room/createRoom";
     this.http.post<any>(link,{roomName:roomName,creator:this.email}).subscribe((data: any) => {
-      this.getAllRoom();
       console.log(data);
     });
   }

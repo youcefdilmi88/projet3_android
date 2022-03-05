@@ -1,4 +1,5 @@
 import { Account } from "../class/Account";
+import { User } from "../class/User";
 import AccountSchema from "../Entities/AccountSchema";
 import UserSchema from "../Entities/UserSchema";
 import databaseService from "./databaseService";
@@ -12,7 +13,7 @@ class AccountService {
     this.loadAllAccount();
   }
 
-  private accounts=new Map<String,Account>(); // all users accounts in database
+  private accounts=new Map<String,Account>(); // all users accounts in database  useremail | account
 
   async loadAllAccount() {
     this.accounts.clear();
@@ -21,7 +22,7 @@ class AccountService {
              let accountObj=new Account(account.useremail,account.password,account.nickname)
              this.accounts.set(account.useremail,accountObj);
          })
-    }).catch((e:any)=>{
+    }).catch((e:Error)=>{
         console.log(e);
     });
 
@@ -29,7 +30,6 @@ class AccountService {
 
    async createAccount(email:String,pass:String,nickName:String) {
     const account=new AccountSchema({useremail:email,password:pass,nickname:nickName});
-    // console.log("default room name:"+roomService.getDefaultRoom().getRoomName())
     const user=new UserSchema({useremail:email,nickname:nickName,currentRoom:roomService.getDefaultRoom().getRoomName()});
 
     await account.save().catch((e:Error)=>{
@@ -39,8 +39,10 @@ class AccountService {
       console.log(e);
     });
 
-    this.loadAllAccount();
-    userService.loadAllUsers();
+    const accountObj=new Account(email,pass,nickName);
+    this.accounts.set(email,accountObj);
+    const userObj=new User(email,nickName);
+    userService.getUsers().push(userObj);
   }
 
   getAccounts():Map<String,Account> {

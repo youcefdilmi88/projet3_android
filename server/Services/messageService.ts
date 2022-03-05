@@ -2,9 +2,9 @@
 import { Socket,Server } from "socket.io";
 import { Message } from "../class/Message";
 import { User } from "../class/User";
+import { SOCKETEVENT } from "../Constants/socketEvent";
 import RoomSchema from "../Entities/RoomSchema";
 import { MessageInterface } from "../Interface/Message";
-//import databaseService from "./databaseService";
 import roomService from "./roomService";
 import userService from "./userService";
 
@@ -41,8 +41,9 @@ class MessageService {
         userService.getSocketIdByUser().set(user,socket.id);
         userService.getUsersBySocketId().set(socket.id,user);
 
-        roomService.setUserSocketIdAndRoom(socket.id,roomService.getDefaultRoom().getRoomName() as string);
-        
+        if(roomService.getDefaultRoom()) {
+           roomService.setUserSocketIdAndRoom(socket.id,roomService.getDefaultRoom().getRoomName() as string);
+        }
 
         /****************** join current room during connection *****************/
         socket.join(roomService.getRoomNameBySocket(socket.id) as string);
@@ -56,24 +57,24 @@ class MessageService {
 
 
     sendMessage(socket:Socket) {
-      socket.on("MSG",async (data)=> {    // listen for event named random with data
+      socket.on(SOCKETEVENT.MESSAGE,async (data)=> {    // listen for event named random with data
         data = this.parseObject(data);
         console.log(data);
 
         let roomName:String=roomService.getRoomNameBySocket(socket.id) as String;
         this.UpdateRoomMessages(roomName,data);
 
-        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit("MSG",JSON.stringify(data));  // send msg to all listener listening to room1 the right side json
+        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit(SOCKETEVENT.MESSAGE,JSON.stringify(data));  // send msg to all listener listening to room1 the right side json
       })
     }
 
   
     disconnect(socket:Socket) {
-      socket.on("DISCONNECT",(data)=>{
+      socket.on(SOCKETEVENT.DISCONNECT,(data)=>{
         data=this.parseObject(data);
         let email:string=data.useremail as string;
         const res={message:"success"};    
-        socket.emit("DISCONNECT",JSON.stringify(res));
+        socket.emit(SOCKETEVENT.DISCONNECT,JSON.stringify(res));
         console.log('user '+email+" just disconnected from chat !");
         socket.disconnect();
       });
