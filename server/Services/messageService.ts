@@ -63,8 +63,8 @@ class MessageService {
 
         let roomName:String=roomService.getRoomNameBySocket(socket.id) as String;
         this.UpdateRoomMessages(roomName,data);
-
-        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit(SOCKETEVENT.MESSAGE,JSON.stringify(data));  // send msg to all listener listening to room1 the right side json
+        const msg={roomName:roomName,msg:data}
+        socket.broadcast.to(roomService.getRoomNameBySocket(socket.id) as string).emit(SOCKETEVENT.MESSAGE,JSON.stringify(msg));  // send msg to all listener listening to room1 the right side json
       })
     }
 
