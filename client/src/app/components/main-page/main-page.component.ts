@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
 import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+// import { catchError } from 'rxjs/operators';
 
 
 @Component({
@@ -39,39 +39,41 @@ export class MainPageComponent implements OnInit {
       document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
       return;
     }
-
-    else {
-      let link = this.BASE_URL + "user/loginUser";
-
-      this.http.post<any>(link, { useremail:this.email, password:this.password }).pipe(
-        catchError(async (err) => console.log("error catched" + err))
-      ).subscribe((data: any) => {
-        if (data.message == "success") {
+    else { 
+      let link=this.BASE_URL+"user/loginUser";
+    
+      this.http.post<any>(link,{useremail:this.email,password:this.password}).subscribe((data: any) => {
+        console.log("message:"+data.message);
+        console.log("first:"+data.currentRoom);
+        if(data.message=="success") {
           this.socketService.email = this.email;
           this.socketService.nickname = data.user.nickname;
-          console.log(this.socketService.email);
-          console.log(this.socketService.nickname);
+          this.socketService.currentRoom=data.currentRoom;
           this.socketService.initSocket();
-          this.conditionValid = true;
-          this.socketService.currentRoom = "DEFAULT";
-          this.socketService.joinRoom("DEFAULT");
           this.router.navigate(['/', 'albums']);
-          return;
         }
-
-        if (data.message == "user already connected") {
+      },
+      (error:HttpErrorResponse)=>{
+        console.error(error);
+        console.log(error.status);
+        console.log(error.error.message);
+        if(error.error.message=="password does not match") {
+          document.getElementById("error")!.style.visibility= "visible";
+          document.getElementById("error")!.innerHTML = "Email ou mot de passe invalide";
+        }
+        else if(error.error.message=="user already connected") {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = "Ce compte est déjà connecté";
           return;
         }
-        /*else {
-          //this.conditionValid = false;
-        }*/
-      });
-      
-      document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Email ou mot de passe invalide";
+        else if(error.error.message=="user not found !") {
+          document.getElementById("error")!.style.visibility= "visible";
+          document.getElementById("error")!.innerHTML = "Ce compte n'existe pas";
+        }
+      }
+      );
     }
+
   }
 
   registerClick(): void {

@@ -17,6 +17,7 @@ import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome
 
 export class RoomsComponent implements OnInit {
   @ViewChild('roomname') input: any;
+  @ViewChild('roomfilter') search: any;
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
   private readonly BASE_URL: string =//"http://localhost:8080/";
@@ -41,7 +42,7 @@ export class RoomsComponent implements OnInit {
       this.numberOfRooms = length;
       for(var i = 1; i <= length; i++) { 
         //this.list.push(data[i].roomName);
-        this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+        this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
       }
     });
   }
@@ -70,19 +71,36 @@ export class RoomsComponent implements OnInit {
     });
   }
 
+  find(text: string) {
+    let link = this.BASE_URL+"room/getAllRooms";
+    this.http.get<any>(link).subscribe((data: any) => {
+      let length = Object.keys(data).length;
+      this.numberOfRooms = length;
+      console.log(text);
+      this.buttonsTexts = [];
+      for(var i = 1; i <= length; i++) { 
+        console.log(data[i].roomName);
+        if (data[i].roomName == text.trim() || data[i].creator == text.trim()) {
+          console.log("GOT IN!");
+          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+        }
+      }
+    });
+  }
+
   create(text: string) {
     let link = this.BASE_URL+"room/createRoom";
     let link2 = this.BASE_URL+"room/getAllRooms";
 
     text.trim();
     if (text.trim() != '') {
-      
+      document.getElementById("error")!.style.visibility= "hidden";
       this.http.post<any>(link, { roomName: this.room, creator: this.socketService.email }).subscribe((data: any) => {
         if (data.message == "success") {
           this.http.get<any>(link2).subscribe((data: any) => {
             let length = Object.keys(data).length; 
             //this.list.push(data[length-1].roomName);
-            this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}`];
+            this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
           });
           this.input.nativeElement.value = ' ';
         }
@@ -91,6 +109,10 @@ export class RoomsComponent implements OnInit {
 
     if (text.trim().length == 0) {
       this.input.nativeElement.value = ' ';
+    }
+    if (text.trim() == "" || text.trim() == null) {
+      document.getElementById("error")!.style.visibility= "visible";
+      document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
     }
     this.input.nativeElement.focus();
   }
