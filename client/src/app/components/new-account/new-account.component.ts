@@ -61,7 +61,8 @@ export class NewAccountComponent implements OnInit {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
         }
-        else if (data == 200) {
+        else if (data.message == "success") {
+          console.log("SUCC");
           this.router.navigate([""]);
         }
       });
