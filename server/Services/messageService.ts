@@ -109,7 +109,7 @@ class MessageService {
         try {
           RoomSchema.findOneAndUpdate({roomName:name},messagesUpdate).then((data)=>{
             console.log(data?.roomName+" messages updated");
-            roomService.loadAllRoom();
+            roomService.getAllRooms().get(name)?.addMessageToRoom(msg);
           }).catch((error)=>{
             console.log(error);
           });
