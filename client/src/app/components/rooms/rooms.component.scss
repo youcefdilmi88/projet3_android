@@ -9,7 +9,7 @@
 
 #title {
     margin-left: 50px;
-	display: inline-block;
+    display: inline-block;
 }
 
 #error {
@@ -18,49 +18,73 @@
 }
 
 #logout {
-	float: right;
+    float: right;
 }
 
 .btn {
-	cursor: pointer;
-	padding: 5px 15px;
-	background: var(--light-color);
-	color: var(--dark-color-a);
-	border: 0;
-	font-size: 17px;
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--light-color);
+    color: var(--dark-color-a);
+    border: 0;
+    font-size: 17px;
+}
+
+.listRoomsText {
+    float: left;
+    width: 50%;
+}
+
+.listRoomsButtons {
+    float: right;
+    width: 50%;
 }
 
 #roomID {
-	width: 100%;
-	margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
 }
 
+#roomIDButton {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.joindre {
+    text-align: left;
+}
+
+.special-word { 
+    color: white; 
+  } 
+
 .input {
-	float: left;
-	width: 50%;
+    float: left;
+    width: 50%;
 }
 
 #createRoom {
-	float: right;
-	width: 50%;
-	height: 60px;
-	margin-top: 5px;
+    float: right;
+    width: 50%;
+    height: 60px;
+    margin-top: 5px;
 }
 
 .search {
-	float: left;
-	width: 50%;
+    float: left;
+    width: 50%;
 }
 
 .searchRoom {
-	float: right;
-	width: 50%;
-	height: 60px;
-	margin-top: 5px;
+    float: right;
+    width: 50%;
+    height: 60px;
+    margin-top: 5px;
 }
 
 .subtext-container {
-	position: relative;
-	display: flex;
-	flex-direction: column;
+    position: relative;
+    display: flex;
+    flex-direction: column;
   }

@@ -28,10 +28,17 @@
 </div>
     </div>
 
-    <div class="listRooms">
-        <button mat-raised-button id="roomID" *ngFor="let buttonText of buttonsTexts" (click)="changeRoom($event.target)">
-            {{buttonText}}
-        </button>
+    <div class="listRooms" *ngFor="let buttonText of buttonsTexts">
+        <div class="listRoomsText">
+            <p id="roomID" >
+                {{buttonText}}
+            </p>
+        </div>
+        <div class="listRoomsButtons">
+            <button mat-raised-button id="roomIDButton" (click)="changeRoom($event.target)" >
+                Joindre <span class='special-word'>{{buttonText}}</span>
+            </button>
+        </div>
     </div>
 
     <div>

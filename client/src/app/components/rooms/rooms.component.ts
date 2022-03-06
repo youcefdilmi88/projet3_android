@@ -42,7 +42,8 @@ export class RoomsComponent implements OnInit {
       this.numberOfRooms = length;
       for(var i = 1; i <= length; i++) { 
         //this.list.push(data[i].roomName);
-        this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+        // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+        this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
       }
     });
   }
@@ -50,8 +51,9 @@ export class RoomsComponent implements OnInit {
   room: string;
 
   changeRoom(element: any): void {
-    this.socketService.joinRoom(element.textContent.trim());
-    this.socketService.currentRoom = element.textContent.trim();
+    this.socketService.joinRoom(element.textContent.trim().slice(8));
+    this.socketService.currentRoom = element.textContent.trim().slice(8);
+    console.log("LOOOK ATTT MEEEE" + element.textContent.trim().slice(8));
     this.router.navigate(['/', 'sidenav']);
 
     let link = this.BASE_URL + "room/joinRoom";
@@ -82,7 +84,8 @@ export class RoomsComponent implements OnInit {
         console.log(data[i].roomName);
         if (data[i].roomName == text.trim() || data[i].creator == text.trim()) {
           console.log("GOT IN!");
-          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+          // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
         }
       }
     });
@@ -100,7 +103,8 @@ export class RoomsComponent implements OnInit {
           this.http.get<any>(link2).subscribe((data: any) => {
             let length = Object.keys(data).length; 
             //this.list.push(data[length-1].roomName);
-            this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
+            // this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
+            this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}`];
           });
           this.input.nativeElement.value = ' ';
         }
