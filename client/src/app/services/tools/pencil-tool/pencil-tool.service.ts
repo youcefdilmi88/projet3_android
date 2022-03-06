@@ -60,6 +60,8 @@ export class PencilToolService implements Tools {
         }
         this.pencilCommand = new PencilCommand(this.rendererService.renderer, this.pencil, this.drawingService);
         this.pencilCommand.execute();
+        console.log("pressed");
+        console.log(this.pencil);
       }
     }
   }
@@ -67,7 +69,7 @@ export class PencilToolService implements Tools {
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
     let length = this.pencil!.pointsList.length;
-        console.log("POINTS");
+        console.log("release");
         for(var i = 0; i < length; i++) {
           console.log(this.pencil!.pointsList[i]);
         }
@@ -84,6 +86,8 @@ export class PencilToolService implements Tools {
   /// Ajout d'un point selon le déplacement de la souris
   onMove(event: MouseEvent): void {
     if (this.pencilCommand) {
+      console.log("move");
+      console.log(this.pencil);
       this.pencilCommand.addPoint(this.offsetManager.offsetFromMouseEvent(event));
     }
   }

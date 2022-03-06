@@ -49,37 +49,34 @@ export class RoomsComponent implements OnInit {
   room: string;
 
   changeRoom(element: any): void {
-    if (this.socketService.currentRoom == element.textContent.trim()) {
-      document.getElementById("error")!.style.visibility= "visible";
+    this.socketService.joinRoom(element.textContent.trim());
+    this.socketService.currentRoom = element.textContent.trim();
+    this.router.navigate(['/', 'sidenav']);
+
+    let link = this.BASE_URL + "room/joinRoom";
+
+    const userObj={
+      useremail:this.socketService.email,
+      nickname:this.socketService.nickname,
     }
-    else {
-      this.socketService.joinRoom(element.textContent.trim());
-      this.socketService.currentRoom = element.textContent.trim();
-      this.router.navigate(['/', 'sidenav']);
 
-      let link = this.BASE_URL + "room/joinRoom";
-
-      const userObj={
-        useremail:this.socketService.email,
-        nickname:this.socketService.nickname,
-      }
-
-      this.http.post<any>(link,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
-        catchError(async (err) => console.log("error catched" + err))
-      ).subscribe((data: any) => {
+    this.http.post<any>(link,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
+      catchError(async (err) => console.log("error catched" + err))
+    ).subscribe((data: any) => {
   
-        if(data.message == "success") {
-          this.socketService.currentRoom = element.textContent;
-        }
-      });
-    }
+      if(data.message == "success") {
+        this.socketService.currentRoom = element.textContent;
+      }
+    });
   }
 
   create(text: string) {
     let link = this.BASE_URL+"room/createRoom";
     let link2 = this.BASE_URL+"room/getAllRooms";
 
+    text.trim();
     if (text.trim() != '') {
+      
       this.http.post<any>(link, { roomName: this.room, creator: this.socketService.email }).subscribe((data: any) => {
         if (data.message == "success") {
           this.http.get<any>(link2).subscribe((data: any) => {
