@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
-import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material';
+import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';

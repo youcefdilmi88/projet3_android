@@ -1,0 +1,88 @@
+.title {
+    background-color: #592bc7;
+    color: azure;
+}
+
+#title {
+    margin-left: 50px;
+    display: inline-block;
+}
+
+#logout {
+	float: right;
+}
+
+.btn {
+	cursor: pointer;
+	padding: 5px 15px;
+	background: var(--light-color);
+	color: var(--dark-color-a);
+	border: 0;
+	font-size: 17px;
+}
+
+.center_me {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+}
+
+.outer {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+  
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+  
+.inner {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    /* Whatever width you want */
+}
+
+#color {
+    font-size: 50px;
+    height: 50px;
+}
+
+.pseudo {
+    position: relative;
+    display: block;
+    height: 60px;
+}
+
+.pass {
+    position: relative;
+    display: block;
+    margin-top: 12px;
+    height: 70px;
+}
+
+mat-label {
+    color: black;
+}
+
+button {
+    width: 150px;
+    margin: 5px;
+    background-color: #592bc7;
+    color:azure;
+}
+
+body {
+    background-color: #F5F5F5;
+    overflow: hidden;
+}
+

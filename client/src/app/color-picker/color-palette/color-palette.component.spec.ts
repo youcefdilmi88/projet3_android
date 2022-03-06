@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { RGB, RGB_MAX_VALUE } from 'src/app/model/rgb.model';
@@ -13,7 +13,7 @@ describe('ColorPaletteComponent', () => {
   let hslFormGroup: FormGroup;
   let rgbTestValue: RGB;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     hslFormGroup = new FormGroup({
       h: new FormControl(20), s: new FormControl(1), l: new FormControl(1),
     });

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+        <div class="title">
+            <h1 id="title">Colorimage</h1>
+        </div>
+
+        <div class="outer">
+            <div class="middle">
+                <div class="inner">
+
+                    <h1 id="color">Connexion</h1>
+
+                    <div class="pseudo">
+                        <mat-form-field class="input" floatLabel="always" appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <input matInput id="email" type="text" name="email" required [(ngModel)]="email">
+                        </mat-form-field> 
+                    </div>
+
+                    <div class="pass">    
+                        <mat-form-field class="input" floatLabel="always" appearance="outline">
+                            <mat-label>Mot de Passe</mat-label>
+                            <input matInput id="password" type="password" name="password" required [(ngModel)]="password">
+                        </mat-form-field> 
+                    </div>
+
+                    <div>
+                        <p id="error">Error</p>
+                    </div>
+
+                    <button mat-raised-button (click)="registerClick()">Créer un compte</button>
+                    <button mat-raised-button (click)="closeClick()">Rejoindre le chat</button>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,90 @@
+.wrapper {
+    position: relative;
+}
+
+.title {
+    background-color: #592bc7;
+    color: azure;
+}
+
+#title {
+    margin-left: 50px;
+    display: inline-block;
+}
+
+#error {
+    visibility: hidden;
+    color: red;
+}
+
+#logout {
+    float: right;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--light-color);
+    color: var(--dark-color-a);
+    border: 0;
+    font-size: 17px;
+}
+
+.listRoomsText {
+    float: left;
+    width: 50%;
+}
+
+.listRoomsButtons {
+    float: right;
+    width: 50%;
+}
+
+#roomID {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#roomIDButton {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.joindre {
+    text-align: left;
+}
+
+.special-word { 
+    color: white; 
+  } 
+
+.input {
+    float: left;
+    width: 50%;
+}
+
+#createRoom {
+    float: right;
+    width: 50%;
+    height: 60px;
+    margin-top: 5px;
+}
+
+.search {
+    float: left;
+    width: 50%;
+}
+
+.searchRoom {
+    float: right;
+    width: 50%;
+    height: 60px;
+    margin-top: 5px;
+}
+
+.subtext-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }

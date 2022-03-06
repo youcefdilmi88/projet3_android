@@ -77,20 +77,12 @@ export const enum EmitReturn {
     EXPORT_DRAWING = 'exportDrawing',
 
     PENCIL = 'pencil',
-    BRUSH = 'brush',
-    APPLICATEUR = 'applicateur',
-    BUCKET_FILL = 'bucket',
-    PIPETTE = 'pipette',
     RECTANGLE = 'rectangle',
     ELLIPSE = 'ellipse',
     POLYGON = 'polygon',
     LINE = 'line',
     SELECTION = 'selection',
-    PEN = 'pen',
     ERASER = 'eraser',
-    TEXT = 'text',
-    SPRAY = 'spray',
-    FEATHER = 'feather',
 
     COPY = 'copy',
     PASTE = 'paste',
@@ -99,11 +91,4 @@ export const enum EmitReturn {
     DELETE = 'delete',
     SELECTALL = 'selectall',
 
-    CONTROL_GRID = 'controlGrid',
-    CONTROL_MAGNETISM = 'controlMagnetism',
-    ADD5_GRID = 'add5Grid',
-    SUB5_GRID = 'sub5Grid',
-
-    UNDO = 'undo',
-    REDO = 'redo',
 }

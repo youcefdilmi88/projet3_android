@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, fakewaitForAsync, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { By } from '@angular/platform-browser';
@@ -31,7 +31,7 @@ describe('DialogComponent', () => {
 
   });
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     welcomeDialogService.form = form;
     TestBed.configureTestingModule({
       imports: [MaterialModules, BrowserAnimationsModule, ReactiveFormsModule, FormsModule],
@@ -59,14 +59,14 @@ describe('DialogComponent', () => {
     expect(mockDialogRef.close).toHaveBeenCalled();
   });
 
-  it('should call openDialog when aide button is clicked', fakeAsync(() => {
+  it('should call openDialog when aide button is clicked', fakewaitForAsync(() => {
     spyOn(component, 'openDialog').and.callThrough();
     const aideButton = fixture.debugElement.query(By.css('button[id=buttonOpen]'));
     aideButton.triggerEventHandler('click', null);
     expect(component.openDialog).toHaveBeenCalled();
   }));
 
-  it('should form equal to my service form', fakeAsync(() => {
+  it('should form equal to my service form', fakewaitForAsync(() => {
     expect(component.form).toEqual(form);
   }));
 });

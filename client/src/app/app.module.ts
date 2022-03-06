@@ -28,9 +28,13 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 import { ToolParameterModule } from './components/tool-parameters/tool-parameter.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import { ChattestComponent } from './components/chattest/chattest.component';
-
-
+import { MainPageComponent } from './components/main-page/main-page.component';
+import { AppRoutingModule } from './components/app-routing.module';
+import { ChatComponent } from './components/chat/chat.component';
+import { NewAccountComponent } from './components/new-account/new-account.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
+import { RoomsComponent } from './components/rooms/rooms.component';
+import { AlbumsComponent } from './components/albums/albums.component';
 
 
 @NgModule({
@@ -56,7 +60,13 @@ import { ChattestComponent } from './components/chattest/chattest.component';
         ErrorMessageComponent,
         AlertMessageComponent,
         ExportDrawingComponent,
-        ChattestComponent,
+        MainPageComponent,
+        ChatComponent,
+        NewAccountComponent,
+        AvatarComponent,
+        RoomsComponent,
+        AlbumsComponent,
+        RoomsComponent,
     ],
     imports: [
         BrowserModule,
@@ -72,6 +82,7 @@ import { ChattestComponent } from './components/chattest/chattest.component';
         MomentModule,
         MatDialogModule,
         MatButtonToggleModule,
+        AppRoutingModule,
     ],
     exports: [],
     providers: [

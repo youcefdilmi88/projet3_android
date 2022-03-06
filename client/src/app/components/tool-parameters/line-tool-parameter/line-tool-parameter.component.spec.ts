@@ -1,6 +1,6 @@
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModules } from 'src/app/app-material.module';
@@ -12,7 +12,7 @@ describe('LineToolParameterComponent', () => {
   let fixture: ComponentFixture<LineToolParameterComponent>;
   let lineToolService: LineToolService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [LineToolParameterComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

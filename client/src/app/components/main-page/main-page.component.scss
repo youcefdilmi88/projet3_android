@@ -1,0 +1,86 @@
+.title {
+    background-color: #592bc7;
+    color: azure;
+}
+
+#title {
+    margin-left: 50px;
+}
+
+// .container {
+//     // margin: auto;
+//     // text-align: center;
+//     // border: 3px solid green;
+//     // height: 500px;
+//     // vertical-align: middle;
+//     // line-height: 500px; 
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-wrap: wrap;
+//     height: 100vh;
+// }
+
+.outer {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+  
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+  
+.inner {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    /* Whatever width you want */
+}
+
+#color {
+    font-size: 50px;
+    height: 50px;
+}
+
+.pseudo {
+    position: relative;
+    display: block;
+    height: 60px;
+}
+
+.pass {
+    position: relative;
+    display: block;
+    margin-top: 12px;
+    height: 70px;
+}
+
+mat-label {
+    color: black;
+}
+
+button {
+    width: 150px;
+    margin: 5px;
+    background-color: #592bc7;
+    color:azure;
+}
+
+body {
+    background-color: #F5F5F5;
+    overflow: hidden;
+}
+
+#error {
+    visibility: hidden;
+    color: red;
+}
+
+// .mat-form-field-appearance-outline .mat-form-field-outline {
+//     color: rgba(255,255,255,0.6);
+//  }

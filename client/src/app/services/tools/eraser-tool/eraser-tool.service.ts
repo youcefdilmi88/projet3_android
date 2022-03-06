@@ -190,7 +190,6 @@ export class EraserToolService implements Tools {
 
   /// Constructeur d'élément indicateur de sélection
   private createDeleteMarkElement(el: SVGElement): SVGElement {
-
     let deleteMark: SVGElement;
     if (el.tagName === 'g' || el.tagName === 'text' || el.tagName === 'image') {
       const elBox = el.getBoundingClientRect();

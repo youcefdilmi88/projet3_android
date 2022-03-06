@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAX_HUE } from 'src/app/model/hsl.model';
 import { ColorPickerService } from '../color-picker.service';
@@ -10,7 +10,7 @@ describe('ColorOpacityComponent', () => {
   let hslFormGroup: FormGroup;
   let h: FormControl;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     h = new FormControl(20);
     hslFormGroup = new FormGroup({
       h, s: new FormControl(1), l: new FormControl(1),

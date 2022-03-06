@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { DrawingService } from '../drawing/drawing.service';
-import { GridService } from '../tools/grid-tool/grid.service';
 import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
 import { SOURCE_KEY } from '../tools/tools-constants';
 import { CanvasToBMP } from '../../classes/canvas-to-bmp';
@@ -11,14 +10,11 @@ import { CanvasToBMP } from '../../classes/canvas-to-bmp';
 export class ExportService {
   constructor(
     private drawingService: DrawingService,
-    private gridService: GridService,
     private selectionService: SelectionToolService,
   ) { }
 
   /// Permet d'exporter un fichier dans le format voulu sous forme de string
   async exportToFormat(format: string) {
-    const isGridActivated = this.gridService.activateGrid.value;
-    this.gridService.activateGrid.setValue(false);
     this.selectionService.hideSelection();
     switch (format) {
       case 'SVG':
@@ -34,8 +30,6 @@ export class ExportService {
         this.asBMP();
     }
     this.selectionService.showSelection();
-
-    this.gridService.activateGrid.setValue(isGridActivated);
   }
 
   // exporter le dessin en tant que SVG

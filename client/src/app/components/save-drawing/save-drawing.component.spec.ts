@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatDialog, MatDialogRef, MatOption } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -41,7 +41,7 @@ describe('SaveDrawingComponent', () => {
         height: 300,
     };
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [SaveDrawingComponent],
             imports: [MaterialModules, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, HttpClientModule],
@@ -90,7 +90,7 @@ describe('SaveDrawingComponent', () => {
         expect(component.tagInput.nativeElement.value).toEqual('');
     });
 
-    it('#save should call save and close if success', async () => {
+    it('#save should call save and close if success', waitForAsync () => {
         const spy = spyOn(component, 'close');
         spySaveDrawingService.save.and.returnValue(new Promise((resolve) => resolve(true)));
         await component.save();
@@ -98,14 +98,14 @@ describe('SaveDrawingComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#save should call save and not close if fail', async () => {
+    it('#save should call save and not close if fail', waitForAsync () => {
         const spy = spyOn(component, 'close');
         spySaveDrawingService.save.and.returnValue(new Promise((resolve) => resolve(false)));
         await component.save();
         expect(spySaveDrawingService.save).toHaveBeenCalled();
         expect(spy).not.toHaveBeenCalled();
     });
-    it('#save should call saveLocally and  close if success', async () => {
+    it('#save should call saveLocally and  close if success', waitForAsync () => {
         const spy = spyOn(component, 'close');
         spySaveDrawingService.saveLocally.and.returnValue(new Promise((resolve) => resolve(true)));
         component.selectedOption = option.saveLocal;
@@ -113,7 +113,7 @@ describe('SaveDrawingComponent', () => {
         expect(spySaveDrawingService.saveLocally).toHaveBeenCalled();
         expect(spy).toHaveBeenCalled();
     });
-    it('#save should call saveLocally and not close if fail', async () => {
+    it('#save should call saveLocally and not close if fail', waitForAsync () => {
         const spy = spyOn(component, 'close');
         spySaveDrawingService.saveLocally.and.returnValue(new Promise((resolve) => resolve(false)));
         component.selectedOption = option.saveLocal;

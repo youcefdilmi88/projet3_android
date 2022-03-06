@@ -9,7 +9,6 @@ import { ErrorMessageService } from '../error-message/error-message.service';
 import { ExportService } from '../export/export.service';
 import { RendererProviderService } from '../renderer-provider/renderer-provider.service';
 import { TagService } from '../tag/tag.service';
-import { GridService } from '../tools/grid-tool/grid.service';
 import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
 import { SOURCE_KEY } from '../tools/tools-constants';
 
@@ -27,7 +26,6 @@ export class SaveDrawingService {
 
   constructor(
     private drawingService: DrawingService,
-    private gridService: GridService,
     private tagService: TagService,
     private saveRequestService: DrawingRequestService,
     private errorMessage: ErrorMessageService,
@@ -99,8 +97,6 @@ export class SaveDrawingService {
     const xmlSerializer = new XMLSerializer();
 
     // soustraire les elements qu'ont ne veut pas sauvegarder
-    const isGridActivated = this.gridService.activateGrid.value;
-    this.gridService.activateGrid.setValue(false);
     this.selectionService.hideSelection();
 
     const svgObject = this.drawingService.drawing;
@@ -113,7 +109,6 @@ export class SaveDrawingService {
     const drawingBlob = new Blob([xmlSerializer.serializeToString(svgObject)], { type: 'image/svg+xml;charset=utf-8' });
 
     // restaurer les elements precedemment soustrait
-    this.gridService.activateGrid.setValue(isGridActivated);
     this.selectionService.showSelection();
     try {
       await this.saveRequestService.addDrawing(drawingBlob, this.nameCtrl.value, this.tags).toPromise();
@@ -129,17 +124,12 @@ export class SaveDrawingService {
   // sauvegarde du dessin en fichier local svg
 
   async saveLocally(): Promise<boolean> {
-    const isGridActivated = this.gridService.activateGrid.value;
-
-    this.gridService.activateGrid.setValue(false);
     try {
       await this.exportService.exportAsSVG();
     } catch {
       this.errorMessage.showError('Test', 'Erreur de sauvegarde de dessin localement');
       return false;
     }
-    this.gridService.activateGrid.setValue(isGridActivated);
-
     return true;
 
   }

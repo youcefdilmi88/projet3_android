@@ -340,13 +340,13 @@ describe('OpenDrawingService', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('#deleteDrawing should show a dialog of confirmation before requesting delete', async () => {
+  it('#deleteDrawing should show a dialog of confirmation before requesting delete', waitForAsync () => {
     drawingRequestServiceSpy.deleteDrawing.and.returnValue(of({ success: true }));
     await service.deleteDrawing(mockDrawing);
     expect(drawingRequestServiceSpy.deleteDrawing).toHaveBeenCalled();
   });
 
-  it('#deleteDrawing should show a dialog of confirmation before requesting delete and not delete', async () => {
+  it('#deleteDrawing should show a dialog of confirmation before requesting delete and not delete', waitForAsync () => {
     dialogRefSpyObj.afterClosed = () => of(false);
     drawingRequestServiceSpy.deleteDrawing.and.returnValue(of({ success: true }));
     await service.deleteDrawing(mockDrawing);

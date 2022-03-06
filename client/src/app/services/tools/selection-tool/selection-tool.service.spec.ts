@@ -2,10 +2,8 @@ import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '../../drawing/drawing.service';
 import { KeyCodes } from '../../hotkeys/hotkeys-constants';
-import { MagnetismService } from '../../magnetism/magnetism.service';
 import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
-import { GridService } from '../grid-tool/grid.service';
 import { SelectionCommandConstants } from './command-type-constant';
 import { SelectionToolService } from './selection-tool.service';
 import { SelectionTransformService } from './selection-transform.service';
@@ -23,8 +21,6 @@ describe('SelectionToolService', () => {
 
     beforeEach(() => {
         const spyOffset = jasmine.createSpyObj('OffsetManagerService', ['offsetFromMouseEvent']);
-        const spyGrid = jasmine.createSpyObj('GridService', ['activateMagnetism']);
-        const spyMagnetism = jasmine.createSpyObj('MagnetismService', ['movementMagnetism']);
         const spySelectionTransform = jasmine.createSpyObj('SelectionTransformService', [
             'createCommand', 'rotate', 'setCtrlPointList', 'getCommandType', 'hasCommand', 'getCommand',
             'setCommandType', 'endCommand', 'setAlt', 'setShift', 'resizeWithLastOffset', 'translate', 'resize',
@@ -47,11 +43,9 @@ describe('SelectionToolService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                { provide: MagnetismService, useValue: spyMagnetism },
                 { provide: DrawingService, useValue: spyDrawingService },
                 { provide: SelectionTransformService, useValue: spySelectionTransform },
                 { provide: OffsetManagerService, useValue: spyOffset },
-                { provide: GridService, useValue: spyGrid },
                 { provide: RendererProviderService, useValue: rendererServiceSpy },
             ],
         });

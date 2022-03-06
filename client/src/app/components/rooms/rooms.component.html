@@ -1,0 +1,51 @@
+<div class="wrapper">
+    <div class="title">
+        <h1 id="title">Changer de salle</h1>
+        <button (click)="logout()" class = "btn" id="logout" routerLink = "">Déconnexion</button>
+    </div>
+
+    <!-- <div class="rooms" id="rooms" *ngFor="let roomName of this.list" style="text-align:right">
+        {{ roomName }}
+    </div> -->
+
+    <div class="subtext-container">
+<div>
+    <mat-form-field class="input" floatLabel="always" appearance="outline">
+        <mat-label>Nom de la nouvelle salle</mat-label>
+        <input #roomname matInput id="room" type="text" name="room" required [(ngModel)]="room">
+    </mat-form-field> 
+ 
+    <button mat-raised-button id="createRoom" (click)="create(roomname.value)">Créer une salle</button>
+</div>
+<div>
+
+    <mat-form-field class="search" floatLabel="always" appearance="outline">
+        <mat-label>Nom de la salle/createur</mat-label>
+        <input #roomfilter (click)="find(roomfilter.value)" matInput id="room" type="text" name="room" required >
+    </mat-form-field> 
+ 
+    <button mat-raised-button class="searchRoom" (click)="find(roomfilter.value)">Trouver une salle</button>
+</div>
+    </div>
+
+    <div class="listRooms" *ngFor="let buttonText of buttonsTexts">
+        <div class="listRoomsText">
+            <p id="roomID" >
+                {{buttonText}}
+            </p>
+        </div>
+        <div class="listRoomsButtons">
+            <button mat-raised-button id="roomIDButton" (click)="changeRoom($event.target)" >
+                Joindre <span class='special-word'>{{buttonText}}</span>
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <p id="error">Error</p>
+    </div>
+    <!-- <button mat-raised-button class="cancel" (click)="cancel()">Annuler</button> -->
+
+</div>
+
+

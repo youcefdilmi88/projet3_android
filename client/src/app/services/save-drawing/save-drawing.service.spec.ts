@@ -154,20 +154,20 @@ describe('SaveDrawingService', () => {
     expect(service.tags).toEqual(['tag1', 'tag2']);
   });
 
-  it('#save should save the drawing if there is no error', async () => {
+  it('#save should save the drawing if there is no error', waitForAsync () => {
     saveRequestSpy.addDrawing.and.returnValue(of({}));
     const res: boolean = await service.save();
     expect(res).toBeTruthy();
   });
 
-  it('#save should not save the drawing if there is an error', async () => {
+  it('#save should not save the drawing if there is an error', waitForAsync () => {
     saveRequestSpy.addDrawing.and.throwError('ERROR');
     const res: boolean = await service.save();
     expect(errorMessageSpy.showError).toHaveBeenCalled();
     expect(res).toBeFalsy();
   });
 
-  it('#save should save the drawing without the grid', async () => {
+  it('#save should save the drawing without the grid', waitForAsync () => {
     gridServiceSpy.activateGrid.setValue(true);
     saveRequestSpy.addDrawing.and.returnValue(of({}));
     const spy = spyOn(gridServiceSpy.activateGrid, 'setValue');
@@ -191,7 +191,7 @@ describe('SaveDrawingService', () => {
     });
     service.tagCtrl.patchValue('tag1');
   });
-  it('#saveLocally should save locally the drawing if there is no error and grid will be hidden and then visible', async () => {
+  it('#saveLocally should save locally the drawing if there is no error and grid will be hidden and then visible', waitForAsync () => {
     exportServiceSpy.exportAsSVG.and.returnValue(new Promise<void>((resolve) => resolve()));
     gridServiceSpy.activateGrid.patchValue(true);
     const spy = spyOn(gridServiceSpy.activateGrid, 'setValue');
@@ -200,7 +200,7 @@ describe('SaveDrawingService', () => {
     expect(res).toBeTruthy();
   });
 
-  it('#saveLocally should save locally the drawing if there is no error but grid will be shown', async () => {
+  it('#saveLocally should save locally the drawing if there is no error but grid will be shown', waitForAsync () => {
     exportServiceSpy.exportAsSVG.and.returnValue(new Promise<void>((resolve) => resolve()));
     gridServiceSpy.activateGrid.patchValue(false);
     const spy = spyOn(gridServiceSpy.activateGrid, 'setValue');
@@ -209,7 +209,7 @@ describe('SaveDrawingService', () => {
     expect(res).toBeTruthy();
   });
 
-  it('#saveLocally should return false is an error', async () => {
+  it('#saveLocally should return false is an error', waitForAsync () => {
     exportServiceSpy.exportAsSVG.and.throwError('ERROR');
     const res: boolean = await service.saveLocally();
     expect(res).not.toBeTruthy();

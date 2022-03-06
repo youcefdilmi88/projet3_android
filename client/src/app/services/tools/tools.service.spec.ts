@@ -4,22 +4,15 @@ import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { CommandInvokerService } from '../command-invoker/command-invoker.service';
 import { DrawingService } from '../drawing/drawing.service';
-import { BrushToolService } from './brush-tool/brush-tool.service';
-import { BucketFillToolService } from './bucket-fill-tool/bucket-fill-tool.service';
 import { EraserToolService } from './eraser-tool/eraser-tool.service';
-import { GridService } from './grid-tool/grid.service';
 import { Tools } from '../../interfaces/tools.interface';
 import { LineToolService } from './line-tool/line-tool.service';
 import { PencilToolService } from './pencil-tool/pencil-tool.service';
-import { PipetteToolService } from './pipette-tool/pipette-tool.service';
 import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
-import { StampToolService } from './stamp-tool/stamp-tool.service';
-import { TextToolService } from './text-tool/text-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
 import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
-import { ToolsApplierColorsService } from './tools-applier-colors/tools-applier-colors.service';
 import { ToolsService } from './tools.service';
 
 describe('ToolsService', () => {
@@ -36,39 +29,25 @@ describe('ToolsService', () => {
       onKeyDown() { return; }, onKeyUp() { return; }, pickupTool() { return; }, dropTool() { return; },
     };
     const spyPencil = jasmine.createSpyObj('PencilToolService', ['onKeyDown', 'onKeyUp', 'onPressed', 'dropTool', 'pickupTool']);
-    const spyBrush = jasmine.createSpyObj('BrushToolService', ['']);
-    const spyApplier = jasmine.createSpyObj('ToolsApplierColorsService', ['']);
     const spyRect = jasmine.createSpyObj('ToolRectangleService', ['']);
     const spyEllipse = jasmine.createSpyObj('ToolEllipseService', ['']);
-    const spyPipette = jasmine.createSpyObj('PipetteToolService', ['']);
-    const spyEtampe = jasmine.createSpyObj('EtampeToolService', ['']);
-    const spyGrid = jasmine.createSpyObj('GridService', ['']);
-    const spyText = jasmine.createSpyObj('TextToolService', ['dropTool', 'pickupTool']);
     const spyPoly = jasmine.createSpyObj('PolygonToolService', ['']);
     const spyLine = jasmine.createSpyObj('LineToolService', ['dropTool', 'pickupTool']);
     const spySelection = jasmine.createSpyObj('SelectionToolService', ['removeSelection', 'dropTool', 'pickupTool']);
     const invokerSpy = jasmine.createSpyObj('CommandInvokerService', ['addCommand', 'undo', 'redo', 'commandCallEmitter']);
     const drawingSpy = jasmine.createSpyObj('DrawingService', ['']);
-    const spyBucketFill = jasmine.createSpyObj('BucketFillToolService', ['']);
     const spyEraser = jasmine.createSpyObj('EraserToolService', ['']);
 
     TestBed.configureTestingModule({
       providers: [
         { provide: CommandInvokerService, useValue: invokerSpy },
         { provide: PencilToolService, useValue: spyPencil },
-        { provide: BrushToolService, useValue: spyBrush },
-        { provide: ToolsApplierColorsService, useValue: spyApplier },
         { provide: ToolRectangleService, useValue: spyRect },
         { provide: ToolEllipseService, useValue: spyEllipse },
-        { provide: PipetteToolService, useValue: spyPipette },
-        { provide: StampToolService, useValue: spyEtampe },
-        { provide: GridService, useValue: spyGrid },
         { provide: PolygonToolService, useValue: spyPoly },
         { provide: LineToolService, useValue: spyLine },
-        { provide: TextToolService, useValue: spyText },
         { provide: SelectionToolService, useValue: spySelection },
         { provide: DrawingService, useValue: drawingSpy },
-        { provide: BucketFillToolService, useValue: spyBucketFill },
         {provide: EraserToolService, useValue: spyEraser},
       ],
     });

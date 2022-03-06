@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,7 +11,7 @@ describe('EraserToolParameterComponent', () => {
   let fixture: ComponentFixture<EraserToolParameterComponent>;
   let eraserToolService: EraserToolService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EraserToolParameterComponent ],
       imports: [ ReactiveFormsModule, BrowserAnimationsModule, MaterialModules ],
