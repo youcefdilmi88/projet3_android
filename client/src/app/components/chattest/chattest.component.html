@@ -1,14 +1,40 @@
 
   <!---
   <div>Chat</div>
+
   <div>
-    <button (click)="connectSocket()">Connect</button>
+    <label for="chat">login:</label>
+    <input type="text" #username>
+    <input type="text" #password>
+    <button (click)="login()">login</button>
   </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
   <div>
-  <textarea #chatinput></textarea>
-  <button (click)="sendchatinput(chatinput.value)">SEND</button>
-    <textarea #createroom></textarea>
-    <button (click)="createRoom(createroom.value)">Create Room</button>
+     <label for="chat">chat input:</label>
+     <textarea id="chat" #chatinput></textarea>
+     <button (click)="sendchatinput(chatinput.value)">SEND</button>
+     &nbsp;
+     &nbsp;
+     <label for="room">room:</label>
+     <textarea id="room" #createroom></textarea>
+     <button (click)="createRoom(createroom.value)">Create Room</button>
+  </div>
+  <br>
+  <br>
+  <div id="rooms" #rooms>
+    rooms
+  </div>
+  <br>
+  <br>
+  <br>
+  <div>
+    <label>logout:</label>
+    <button (click)="logout()">logout</button>
   </div>
   --->
   
