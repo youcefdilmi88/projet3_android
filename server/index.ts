@@ -7,7 +7,6 @@ import chatMessageController from './Controllers/chatMessageController';
 import socketService from './Services/socketService';
 import roomController from './Controllers/roomController';
 
-// test
 
 const app = express();
 
