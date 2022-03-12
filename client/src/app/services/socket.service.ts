@@ -13,7 +13,8 @@ export class SocketService {
 
   initSocket(): void {
     console.log("socket initiation");
-    this.socket=io('https://projet3-3990-207.herokuapp.com/', {
+    this.socket=io(//'https://projet3-3990-207.herokuapp.com/'
+    'http://localhost:8080/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
     })

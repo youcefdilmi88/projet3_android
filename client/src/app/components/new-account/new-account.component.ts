@@ -13,8 +13,8 @@ import { AvatarComponent } from '@app/components/avatar/avatar.component';
 
 export class NewAccountComponent implements OnInit {
 
-  private readonly BASE_URL: string =//"http://localhost:8080/";
-  "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
 
   constructor(
     public dialog: MatDialog,

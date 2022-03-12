@@ -7,6 +7,7 @@ import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
 
 
 @Component({
@@ -17,8 +18,8 @@ import { HttpClient } from '@angular/common/http';
 
 export class AlbumsComponent implements OnInit {
 
-  private readonly BASE_URL: string =//"http://localhost:8080/";
-  "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
 
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
@@ -28,9 +29,11 @@ export class AlbumsComponent implements OnInit {
     private http: HttpClient,
     private socketService: SocketService,
     private hotkeyService: HotkeysService,
+    private pencilService:PencilToolService,
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
+    this.pencilService.setUpPencil();
   }
 
   newDrawing() {

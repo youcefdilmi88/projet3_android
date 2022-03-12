@@ -28,6 +28,7 @@ export class CanvasComponent implements AfterViewInit {
       this.svg = el;
       this.renderer.appendChild(this.canvasDiv.nativeElement, this.svg);
     });
+    
   }
 
   /// la longueur de la zone de dessin

@@ -53,7 +53,8 @@ export class WelcomeDialogComponent implements OnInit {
   }
   /// fonction closeClick qui permet de fermer le premier mat dialog du message de bienvenue
   closeClick(): void {
-    this.socket=io('https://projet3-3990-207.herokuapp.com/', {
+    this.socket=io(//'https://projet3-3990-207.herokuapp.com/', {
+      'http://localhost:8080/', {
       reconnectionAttempts: 2,
       transports : ['websocket'],
     })

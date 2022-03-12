@@ -16,8 +16,8 @@ import { Router } from '@angular/router';
 
 export class ChatComponent implements AfterViewInit {
   @ViewChild('chatinput') input: any;
-  private readonly BASE_URL: string =//"http://localhost:8080/";
-  "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
   //"http://localhost:8080/";
 
   public message = new Array<string>();

@@ -20,8 +20,8 @@ export class RoomsComponent implements OnInit {
   @ViewChild('roomfilter') search: any;
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
-  private readonly BASE_URL: string =//"http://localhost:8080/";
-  "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
 
   public list = new Array<string>(); 
   public numberOfRooms: number ;
@@ -45,6 +45,7 @@ export class RoomsComponent implements OnInit {
         // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
         this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
       }
+      
     });
   }
 

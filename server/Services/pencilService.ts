@@ -26,7 +26,8 @@ export class PencilService {
       data=JSON.parse(data);
       console.log("STARTLINE");
       console.log(data+""+roomService.getRoomNameBySocket(socket.id))
-      socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("STARTLINE",JSON.stringify(data));
+      // socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("STARTLINE",JSON.stringify(data));
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("STARTLINE",JSON.stringify(data));
     })
   }
 
@@ -35,16 +36,17 @@ export class PencilService {
       data=JSON.parse(data);
       console.log("DRAWLINE");
       console.log(data+""+roomService.getRoomNameBySocket(socket.id))
-      socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DRAWLINE",JSON.stringify(data));
+      // socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DRAWLINE",JSON.stringify(data));
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DRAWLINE",JSON.stringify(data));
     })
   }
 
   endLine(socket:Socket) {
-    socket.on("ENDLINE",(data)=>{
-      data=JSON.parse(data);
+    socket.on("ENDLINE",()=>{
       console.log("ENDLINE");
-      console.log(data+""+roomService.getRoomNameBySocket(socket.id))
-      socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",JSON.stringify(data));
+      console.log(roomService.getRoomNameBySocket(socket.id)+" endline")
+      // socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",{});
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",{});
     })
   }
 

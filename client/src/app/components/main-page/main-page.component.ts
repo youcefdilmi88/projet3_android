@@ -14,8 +14,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 export class MainPageComponent implements OnInit {
 
-  private readonly BASE_URL: string =//"http://localhost:8080/";
-  "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string ="http://localhost:8080/";
+  //"https://projet3-3990-207.herokuapp.com/";
   socket:Socket;
 
   constructor(
