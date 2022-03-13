@@ -55,6 +55,7 @@ export class PencilToolService implements Tools {
       console.log(data);
       console.log("STARTLINE");
       this.pencil={
+        id:data.id,
         pointsList:data.pointsList,
         strokeWidth:data.strokeWidth,
         fill:data.fill,
@@ -62,6 +63,7 @@ export class PencilToolService implements Tools {
         fillOpacity:data.fillOpacity,
         strokeOpacity:data.strokeOpacity,
       };
+      console.log("shapeid:",this.pencil.id);
       console.log("renderSVG");
       this.renderSVG();
     });
@@ -130,6 +132,7 @@ export class PencilToolService implements Tools {
         // INITIALISE PENCIL
         //this.pencil
         let pencilObj = {
+          id:"",
           pointsList:[offset],
           strokeWidth: this.strokeWidth.value,
           fill: 'none',

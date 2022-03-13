@@ -1,5 +1,7 @@
 import { Server, Socket } from "socket.io";
 import roomService from "./roomService";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export class PencilService {
 
@@ -24,6 +26,7 @@ export class PencilService {
   startLine(socket:Socket) {
     socket.on("STARTLINE",(data)=>{
       data=JSON.parse(data);
+      data.id=uuidv4();
       console.log("user "+socket.id+" starts drawing");
       console.log("STARTLINE");
       console.log(data+""+roomService.getRoomNameBySocket(socket.id))
