@@ -54,7 +54,6 @@ export class PencilToolService implements Tools {
       data=JSON.parse(data);
       console.log(data);
       console.log("STARTLINE");
-      console.log("data point list:"+data.pointsList[0].x);
       this.pencil={
         pointsList:data.pointsList,
         strokeWidth:data.strokeWidth,
@@ -63,7 +62,7 @@ export class PencilToolService implements Tools {
         fillOpacity:data.fillOpacity,
         strokeOpacity:data.strokeOpacity,
       };
-
+      console.log("renderSVG");
       this.renderSVG();
     });
 
@@ -80,8 +79,10 @@ export class PencilToolService implements Tools {
   }
 
   renderSVG(): void {
+    console.log("GOT RENDERED");
     //FOR A DOT
     if (this.pencil!.pointsList.length <= 1) {
+      console.log("dot");
       this.dot = this.renderer.createElement('circle', 'svg') as SVGCircleElement;
       this.renderer.setAttribute(this.dot, 'cx', this.pencil!.pointsList[0].x.toString() + 'px');
       this.renderer.setAttribute(this.dot, 'cy', this.pencil!.pointsList[0].y.toString() + 'px');
@@ -92,6 +93,7 @@ export class PencilToolService implements Tools {
     }
     //FOR A LINE
     else {
+      console.log("line");
       this.pencil2 = this.renderer.createElement('polyline', 'svg') as SVGPolylineElement;
       this.renderer.setAttribute(this.pencil2, 'points', this.pointString());
       this.renderer.setAttribute(this.pencil2, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
@@ -106,9 +108,9 @@ export class PencilToolService implements Tools {
   private pointString(): string {
     let pointString = "";
     for (const point of this.pencil!.pointsList) {
-        pointString += point.x.toString() + " " + point.y.toString() + "," + " ";
+        pointString += `${point.x} ${point.y},`;
     }
-    return pointString;
+    return pointString.substring(0, pointString.length - 1);
   }
 
   addPointToLine(point: Point): void {
@@ -135,10 +137,7 @@ export class PencilToolService implements Tools {
           fillOpacity: 'none',
           strokeOpacity: 'none',
         };
-
-        console.log("offsetx",offset.x);
-
-        pencilObj.pointsList?.push({x:offset.x as number,y:offset.y as number});
+        //pencilObj.pointsList?.push({x:offset.x as number,y:offset.y as number});
 
         //this.pencil
         pencilObj!.stroke = this.colorTool.primaryColorString;
@@ -164,7 +163,6 @@ export class PencilToolService implements Tools {
   /// Ajout d'un point selon le déplacement de la souris
   onMove(event: MouseEvent): void {
     if(event.button === LEFT_CLICK) {
-     console.log("mouse move point sent");
      this.socketService.getSocket().emit("DRAWLINE",JSON.stringify(this.offsetManager.offsetFromMouseEvent(event)))
     }  
   }
