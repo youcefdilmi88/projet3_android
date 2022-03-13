@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 //import { RoomsComponent } from '../rooms/rooms.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { URL } from '../../../../constants';
 
 
 @Component({
@@ -16,9 +17,7 @@ import { Router } from '@angular/router';
 
 export class ChatComponent implements AfterViewInit {
   @ViewChild('chatinput') input: any;
-  private readonly BASE_URL: string ="http://localhost:8080/";
-  //"https://projet3-3990-207.herokuapp.com/";
-  //"http://localhost:8080/";
+  private readonly BASE_URL: string = URL;
 
   public message = new Array<string>();
   public others = new Array<string>();

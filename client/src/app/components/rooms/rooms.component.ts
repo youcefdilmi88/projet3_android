@@ -7,6 +7,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
+import { URL } from '../../../../constants';
 
 
 @Component({
@@ -20,8 +21,7 @@ export class RoomsComponent implements OnInit {
   @ViewChild('roomfilter') search: any;
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
-  private readonly BASE_URL: string ="http://localhost:8080/";
-  //"https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string = URL;
 
   public list = new Array<string>(); 
   public numberOfRooms: number ;

@@ -8,6 +8,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
+import { URL } from '../../../../constants';
 
 
 @Component({
@@ -18,8 +19,7 @@ import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.s
 
 export class AlbumsComponent implements OnInit {
 
-  private readonly BASE_URL: string ="http://localhost:8080/";
-  //"https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string = URL;
 
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;

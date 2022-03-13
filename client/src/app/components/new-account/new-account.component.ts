@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AvatarComponent } from '@app/components/avatar/avatar.component';
+import { URL } from '../../../../constants';
 
 
 @Component({
@@ -13,8 +14,7 @@ import { AvatarComponent } from '@app/components/avatar/avatar.component';
 
 export class NewAccountComponent implements OnInit {
 
-  private readonly BASE_URL: string ="http://localhost:8080/";
-  //"https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string = URL;
 
   constructor(
     public dialog: MatDialog,

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { URL } from '../../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class SocketService {
   initSocket(): void {
     console.log("socket initiation");
     this.socket=io(//'https://projet3-3990-207.herokuapp.com/'
-    'http://localhost:8080/', {
+    URL, {
       reconnectionAttempts: 2,
       transports : ['websocket'],
     })

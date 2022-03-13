@@ -3,6 +3,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { URL } from '../../../../constants';
 // import { catchError } from 'rxjs/operators';
 
 
@@ -14,7 +15,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 export class MainPageComponent implements OnInit {
 
-  private readonly BASE_URL: string ="http://localhost:8080/";
+  private readonly BASE_URL: string = URL;
   //"https://projet3-3990-207.herokuapp.com/";
   socket:Socket;
 
