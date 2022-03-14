@@ -105,7 +105,7 @@ export class RoomsComponent implements OnInit {
             let length = Object.keys(data).length; 
             //this.list.push(data[length-1].roomName);
             // this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
-            this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}`];
+            this.buttonsTexts = [...this.buttonsTexts, `${data[length - 1].roomName}`];
           });
           this.input.nativeElement.value = ' ';
         }
