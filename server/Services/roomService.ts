@@ -115,9 +115,9 @@ export class RoomService {
     this.socketToRoom.forEach((v,k)=>{
       if(v==name) {
         let socketId:string=k as string;
+        let room:Room=this.getDefaultRoom() as Room;
         this.socketToRoom.delete(k);
-        this.socketToRoom.set(socketId,this.getDefaultRoom().getRoomName() as string);
-        let room:Room=roomService.getDefaultRoom() as Room;
+        this.socketToRoom.set(socketId,room.getRoomName() as string);
         room.addUserToRoom(this.socketidToEmail.get(socketId) as String);
       }
     });
