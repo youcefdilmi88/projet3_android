@@ -85,20 +85,24 @@ const createRoom=(req:Request,res:Response,next:NextFunction)=>{
 const deleteRoom=(req:Request,res:Response,next:NextFunction)=>{
    let roomName:String=req.body.roomName as String;
    console.log("room to delete:"+roomName);
+   if(roomService.getAllRooms().has(roomName)==false) {
+     return res.status(404).json({message:HTTPMESSAGE.FAILED});
+   }
    if(roomName!=roomService.getDefaultRoom().getRoomName()) {
     roomService.deleteRoom(roomName).then(()=>{
         const message={message:"room deleted"};
         socketService.getIo().emit(SOCKETEVENT.ROOMDELETED,JSON.stringify(message));
-        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }).catch((e:Error)=>{
+        console.log(e);
     });
    }
-   return res.status(404).json({message:HTTPMESSAGE.FAILED});
+   return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
   
 }
 
 router.get('/getAllRooms',getRooms);
 router.post('/joinRoom',joinRoom);
 router.post('/createRoom',createRoom);
-router.delete('/deleteRoom',deleteRoom);
+router.post('/deleteRoom',deleteRoom);
 
 export=router;
