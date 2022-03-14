@@ -111,6 +111,34 @@ export class RoomService {
     return message;
   }
 
+  moveUserToDefault(name:String) {
+    this.socketToRoom.forEach((v,k)=>{
+      if(v==name) {
+        let socketId:string=k as string;
+        this.socketToRoom.delete(k);
+        this.socketToRoom.set(socketId,this.getDefaultRoom().getRoomName() as string);
+        let room:Room=roomService.getDefaultRoom() as Room;
+        room.addUserToRoom(this.socketidToEmail.get(socketId) as String);
+      }
+    });
+    
+  }
+
+  async deleteRoom(name:String) {
+    if(this.rooms.has(name)) {
+       try {
+         await RoomSchema.deleteOne({roomName:name}).then((data)=>{
+           console.log(data);
+           this.rooms.delete(name);
+           this.moveUserToDefault(name);
+         });
+       }
+       catch(error) {
+         console.log(error);
+       }
+    }
+  }
+
   parseObject(arg: any): Object {
     if ((!!arg) && arg.constructor === Object) {
         return arg
