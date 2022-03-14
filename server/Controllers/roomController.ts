@@ -84,7 +84,7 @@ const createRoom=(req:Request,res:Response,next:NextFunction)=>{
 
 const deleteRoom=(req:Request,res:Response,next:NextFunction)=>{
    let roomName:String=req.body.roomName as String;
-   console.log(roomName);
+   console.log("room to delete:"+roomName);
    if(roomName!=roomService.getDefaultRoom().getRoomName()) {
     roomService.deleteRoom(roomName).then(()=>{
         const message={message:"room deleted"};
