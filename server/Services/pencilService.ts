@@ -9,7 +9,7 @@ export class PencilService {
 
   private io:Server;
 
-  initChat(server:Server) {
+  initPencil(server:Server) {
     this.io=server;
     this.connect();
   }

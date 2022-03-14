@@ -86,6 +86,7 @@ export class PencilToolService implements Tools {
     if (this.pencil!.pointsList.length <= 1) {
       console.log("dot");
       this.dot = this.renderer.createElement('circle', 'svg') as SVGCircleElement;
+      this.renderer.setAttribute(this.dot,'id',this.pencil?.id as string);
       this.renderer.setAttribute(this.dot, 'cx', this.pencil!.pointsList[0].x.toString() + 'px');
       this.renderer.setAttribute(this.dot, 'cy', this.pencil!.pointsList[0].y.toString() + 'px');
       this.renderer.setAttribute(this.dot, 'r', (this.pencil!.strokeWidth / 2).toString() + 'px');
@@ -97,6 +98,7 @@ export class PencilToolService implements Tools {
     else {
       console.log("line");
       this.pencil2 = this.renderer.createElement('polyline', 'svg') as SVGPolylineElement;
+      this.renderer.setAttribute(this.pencil2,'id',this.pencil?.id as string);
       this.renderer.setAttribute(this.pencil2, 'points', this.pointString());
       this.renderer.setAttribute(this.pencil2, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
       this.renderer.setStyle(this.pencil2, 'fill', this.pencil!.fill);

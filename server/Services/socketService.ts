@@ -13,7 +13,7 @@ class SocketService {
   init(server:http.Server) {
      this.io=new Server(server);
      messageService.initChat(this.io);
-     pencilService.initChat(this.io);
+     pencilService.initPencil(this.io);
   }
 
   getIo():Server {
