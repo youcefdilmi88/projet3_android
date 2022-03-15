@@ -6,6 +6,7 @@ import userController from './Controllers/userController';
 import chatMessageController from './Controllers/chatMessageController';
 import socketService from './Services/socketService';
 import roomController from './Controllers/roomController';
+import drawingController from './Controllers/drawingController';
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('',userData)
 app.use('/user',userController);
 app.use('/message',chatMessageController);
 app.use('/room',roomController);
+app.use('/drawing',drawingController);
 
 
 const server = http.createServer(app); // server for http

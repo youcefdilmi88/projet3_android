@@ -4,7 +4,7 @@ import { BaseShape } from "./BaseShape";
 
 export class Line extends BaseShape {
 
-    points:Point[];
+    pointsList:Point[];
 
     constructor(line:LineInterface) 
     {
@@ -16,14 +16,14 @@ export class Line extends BaseShape {
            line.fillOpacity,
            line.strokeOpacity
        )
-       this.points=line.pointsList;
+       this.pointsList=line.pointsList;
     }
     
     getPoints():Point[] {
-        return this.points;
+        return this.pointsList;
     }
 
     addPoint(point:Point):void {
-        this.points.push(point);
+        this.pointsList.push(point);
     }
 }

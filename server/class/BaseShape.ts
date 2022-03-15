@@ -1,12 +1,26 @@
 export abstract class BaseShape {
+    private id:string;
+    private strokeWidth:number;
+    private fill:string;
+    private stroke:string;
+    private fillOpacity:string;
+    private strokeOpacity:string;
+
     constructor(
-        private id:string,
-        private strokeWidth:number,
-        private fill:string,
-        private stroke:string,
-        private fillOpacity:string,
-        private strokeOpacity:string,
-    ) {}
+        id:string,
+        strokeWidth:number,
+        fill:string,
+        stroke:string,
+        fillOpacity:string,
+        strokeOpacity:string,
+    ) {
+        this.id=id;
+        this.strokeWidth=strokeWidth;
+        this.fill=fill;
+        this.stroke=stroke;
+        this.fillOpacity=fillOpacity;
+        this.strokeOpacity=strokeOpacity;
+    }
     
     getId():string {
         return this.id;
