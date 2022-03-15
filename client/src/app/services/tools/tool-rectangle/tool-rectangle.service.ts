@@ -149,7 +149,7 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
-    this.socketService.getSocket().emit("ENDRECTANGLE",{})
+    this.socketService.getSocket().emit("ENDRECTANGLE",{});
     return;
   }
 
