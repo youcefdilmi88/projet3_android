@@ -1,5 +1,6 @@
 import http from 'http';
 import { Server } from "socket.io";
+import drawingService from './drawingService';
 import messageService from "./messageService";
 import pencilService from './pencilService';
 import rectangleService from './rectangleService';
@@ -16,6 +17,7 @@ class SocketService {
      messageService.initChat(this.io);
      rectangleService.initRectangle(this.io);
      pencilService.initPencil(this.io);
+     drawingService.initDrawing(this.io);
   }
 
   getIo():Server {

@@ -5,4 +5,6 @@ export enum HTTPMESSAGE {
     PASSNOTMATCH="password does not match",
     UCONNECTED="user already connected",
     MAILUND="email undefined",
+    DRAWINGEXIST="drawing already exists",
+    ROOMEXIST="room already exists",
 }
