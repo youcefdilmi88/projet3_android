@@ -1,9 +1,13 @@
 
+import { Socket } from "socket.io";
 import { Room } from "../class/Room";
+import { User } from "../class/User";
+import { SOCKETEVENT } from "../Constants/socketEvent";
 import RoomSchema from "../Entities/RoomSchema";
 import { MessageInterface } from "../Interface/Message";
 import databaseService from "./databaseService";
 import socketService from "./socketService";
+import userService from "./userService";
 
 
 export class RoomService {
@@ -140,6 +144,28 @@ export class RoomService {
          console.log(error);
        }
     }
+  }
+
+  joinRoom(name:String,useremail:String) {
+    let user:User=userService.getUserByUseremail(useremail) as User;
+    let socketId:string=userService.getSocketIdByUser().get(user) as string;
+    let nextRoom:Room=roomService.getRoomByName(name) as Room;
+
+    let socket=socketService.getIo().sockets.sockets.get(socketId);
+       
+    nextRoom.addUserToRoom(useremail);
+
+    if(this.getSocketsRoomNames().has(socket?.id as string)) {
+        this.getSocketsRoomNames().delete(socket?.id as string);
+    }
+    this.getSocketsRoomNames().set(socket?.id as string,nextRoom.getRoomName() as string); // current chat room
+
+    const joinRoomNotification={useremail:useremail,roomName:name};
+
+    socket?.join(nextRoom.getRoomName() as string);
+
+    socketService.getIo().emit(SOCKETEVENT.JOINROOM,JSON.stringify(joinRoomNotification));
+    console.log("ROOM CHANGE:"+nextRoom.getRoomName());
   }
 
   parseObject(arg: any): Object {

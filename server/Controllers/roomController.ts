@@ -24,30 +24,13 @@ const getRooms=(req:Request,res:Response,next:NextFunction)=>{
 const joinRoom=(req:Request,res:Response,next:NextFunction)=>{
     
     let userInterface:UserInterface=req.body.user as UserInterface;
-    let user:User=userService.getUserByUseremail(userInterface.useremail) as User;
-    let socketId:string=userService.getSocketIdByUser().get(user) as string;
-
-    let socket=socketService.getIo().sockets.sockets.get(socketId);
-   
-
     let newRoom:String=req.body.newRoomName as String;
-    let useremail:String=user.getUseremail();
+    let useremail:String=userInterface.useremail as String;
    
     if(roomService.getAllRooms().has(newRoom)) {
-         let nextRoom:Room=roomService.getRoomByName(newRoom) as Room;
-       
-         nextRoom.addUserToRoom(useremail);
-         roomService.getSocketsRoomNames().delete(socket?.id as string);
-         roomService.getSocketsRoomNames().set(socket?.id as string,newRoom as string);
-         const joinRoomNotification={useremail:useremail,roomName:newRoom};
-
-         socket?.join(newRoom as string);
-     
-         socketService.getIo().emit(SOCKETEVENT.JOINROOM,JSON.stringify(joinRoomNotification));
-         console.log("ROOM CHANGE:"+newRoom);
-          
-         const message={message:HTTPMESSAGE.SUCCESS};
-         return res.status(200).json(message);
+        roomService.joinRoom(newRoom,useremail);
+        const message={message:HTTPMESSAGE.SUCCESS};
+        return res.status(200).json(message);
     }
     const message={message:HTTPMESSAGE.FAILED}
     return res.status(404).json(message);

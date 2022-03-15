@@ -6,7 +6,7 @@ import { Line } from "./Line";
 
 
 export class Drawing {
-    private name:String;
+    private drawingName:String;
     private creator:String;
     private elements:BaseShape[];  // shapeId and Shape
     public roomName:String;
@@ -16,7 +16,7 @@ export class Drawing {
     membersBySocketId:Map<string,String>;
 
     constructor(drawing:DrawingInterface) {
-       this.name=drawing.name;
+       this.drawingName=drawing.drawingName;
        this.creator=drawing.creator;
        this.elements=[];
        this.roomName=drawing.roomName;
@@ -35,7 +35,7 @@ export class Drawing {
     }
 
     getName():String {
-        return this.name;
+        return this.drawingName;
     }
 
     getCreator():String {
@@ -50,6 +50,26 @@ export class Drawing {
         return this.elements;
     }
 
+    getElementsInterface():BaseShapeInterface[] {
+       let interfaceInstances:BaseShapeInterface[]=[];
+       this.getElements().forEach((element)=>{
+           if(element instanceof Line) {
+             let elementInterface={  
+               id:element.getId(),
+               strokeWidth:element.getStrokeWidth(),
+               fill:element.getFill(),
+               stroke:element.getStroke(),
+               fillOpacity:element.getFillOpacity(),
+               strokeOpacity:element.getStrokeOpacity(),
+               pointsList:element.getPoints()
+             }
+             interfaceInstances.push(elementInterface);
+           }
+       });
+
+       return interfaceInstances;
+    }
+
     getMembers():String[] {
         this.members=[];
         this.membersBySocketId.forEach((v,k)=>{
@@ -59,7 +79,7 @@ export class Drawing {
     }
 
     setName(name:String):void {
-        this.name=name;
+        this.drawingName=name;
     }
 
     setCreator(creator:String) {

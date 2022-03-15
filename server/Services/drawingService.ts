@@ -35,6 +35,7 @@ class DrawingService {
     await databaseService.getAllDrawings().then((drawings)=>{
       drawings.forEach((drawing)=>{
         let drawingObj:Drawing=new Drawing(drawing);
+        console.log(drawingObj);
         this.drawings.set(drawingObj.getName(),drawingObj);
       })
     }).catch((e:Error)=>{
@@ -48,7 +49,7 @@ class DrawingService {
       await drawing.save();
       console.log("drawing saved");
       const drawingInterface:DrawingInterface={
-        name:drawingName,
+        drawingName:drawingName,
         creator:creator,
         elements:elements,
         roomName:roomName,
@@ -60,6 +61,17 @@ class DrawingService {
     catch(error) {
       console.log(error);
     }
+  }
+
+  addonDrawingName(name:String):String {
+     let newName:String="drawing"+name;
+     return newName;
+  }
+
+  sourceDrawingName(name:String):String {
+    let originalName:String=name.slice(7);
+    console.log(originalName);
+    return originalName;
   }
 
 }

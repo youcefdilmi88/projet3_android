@@ -4,6 +4,7 @@ import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
+import { DrawingInterface } from "../Interface/DrawingInterface";
 import { MessageInterface } from "../Interface/Message";
 import drawingService from "../Services/drawingService";
 import roomService from "../Services/roomService";
@@ -13,7 +14,7 @@ import userService from "../Services/userService";
 const router = express.Router();
 
 const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
-    let drawingName:String=req.body.drawingName as String;
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
 
     let user:User=userService.getUserByUseremail(useremail) as User;
@@ -21,10 +22,32 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
     let socket=socketService.getIo().sockets.sockets.get(socketId);
 
+    console.log("join drawing name:"+drawingName);
+
+    console.log(drawingService.drawings.has(drawingName));
+    drawingService.drawings.forEach((v,k)=>{
+        console.log(k);
+    })
+    
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+
+        if(drawingService.socketInDrawing.has(socket?.id as string)) {
+            // delete user from previous drawing
+            drawingService.socketInDrawing.delete(socket?.id as string); 
+        }
+           
         if(drawing.membersBySocketId.has(socket?.id as string)==false) {
+            // join drawing and chat associated
             socket?.join(drawingName as string);
+            socket?.join(drawing.roomName as string);
+
+            const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawing.getName())}
+            socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification))
+            const joinRoomNotification={useremail:useremail,roomName:useremail};
+            socketService.getIo().emit(SOCKETEVENT.JOINROOM,JSON.stringify(joinRoomNotification));
+            
+
             drawingService.socketInDrawing.set(socket?.id as string,drawing);
             drawing.addMember(socket?.id as string,useremail);
             return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
@@ -37,11 +60,13 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 }
 
 const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
-    let drawingName:String=req.body.drawingName as String;
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String; 
     let creator:String=req.body.creator as String;
     let elements:BaseShapeInterface[]=[];
-    let roomName:String=drawingName;
+    let roomName:String=req.body.drawingName as String;
     let members:String[]=[];
+
+    console.log("created drawing name:"+drawingName);
 
     if(drawingName && creator && roomName) {
       if(drawingService.drawings.has(drawingName)==false) 
@@ -52,7 +77,7 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
         }
         drawingService.createDrawing(drawingName,creator,elements,roomName,members).then(()=>{
             let messages:MessageInterface[]=[];
-            roomService.createRoom(drawingName,creator,members,messages).then(()=>{
+            roomService.createRoom(roomName,creator,members,messages).then(()=>{
                 const messageDrawing={message:"drawing created"};
                 const messageRoom={message:"room created"};
                 socketService.getIo().emit(SOCKETEVENT.DRAWINGCREATED,JSON.stringify(messageDrawing));
@@ -72,28 +97,40 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
 }
 
 const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
-    let drawings:Drawing[]=[];
+    let drawings:DrawingInterface[]=[];
     drawingService.drawings.forEach((v,k)=>{
-       drawings.push(v);
+        let drawing:DrawingInterface={
+            drawingName:drawingService.sourceDrawingName(v.getName()),
+            creator:v.getCreator(),
+            elements:v.getElementsInterface(),
+            roomName:v.roomName,
+            members:v.getMembers(),
+        }
+        drawings.push(drawing);
     });
     return res.status(200).json(drawings);
 }
 
 const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
+
     let useremail:String=req.body.useremail as String;
     let user:User=userService.getUserByUseremail(useremail) as User;
-    if(userService.getSocketIdByUser().has(user)) {
-        let socketId:string=userService.getSocketIdByUser().get(user) as string;
-        let socket=socketService.getIo().sockets.sockets.get(socketId);
-        if(drawingService.socketInDrawing.has(socket?.id as string)) {
-            let drawing:Drawing=drawingService.socketInDrawing.get(socket?.id as string) as Drawing;
-            socket?.leave(drawing.getName() as string);
-            drawingService.socketInDrawing.delete(socket?.id as string);
-            return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
-        }
-        return res.status(404).json({message:SOCKETEVENT.UNOTCONNECTED});
+
+    let socketId:string=userService.getSocketIdByUser().get(user) as string;
+    let socket=socketService.getIo().sockets.sockets.get(socketId);
+
+    if(drawingService.socketInDrawing.has(socket?.id as string)) {
+
+        let drawing:Drawing=drawingService.socketInDrawing.get(socket?.id as string) as Drawing;
+
+        console.log("leave drawing:"+drawing.getName());
+
+        socket?.leave(drawing.getName() as string);
+        drawingService.socketInDrawing.delete(socket?.id as string);
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
-    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+  
+    return res.status(404).json({message:SOCKETEVENT.UNOTCONNECTED});
 }
 
 router.post('/joinDrawing',joinDrawing);

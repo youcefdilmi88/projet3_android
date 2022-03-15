@@ -1,7 +1,7 @@
 import { BaseShapeInterface } from "./BaseShapeInterface";
 
 export interface DrawingInterface {
-    name:String,
+    drawingName:String,
     creator:String,
     elements:BaseShapeInterface[],
     roomName:String,
