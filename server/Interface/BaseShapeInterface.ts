@@ -1,9 +1,5 @@
-export interface FilledShape {
-    id: string;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+export interface BaseShapeInterface {
+    id:string;
     strokeWidth: number;
     fill: string;
     stroke: string;

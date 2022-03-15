@@ -51,7 +51,6 @@ class AccountService {
 
   getAccount(useremail:String) {
     if(this.accounts.has(useremail)) {
-      console.log(this.accounts.get(useremail));
       return this.accounts.get(useremail);
     }
     return null;

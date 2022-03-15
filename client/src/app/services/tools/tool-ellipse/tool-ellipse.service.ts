@@ -75,6 +75,7 @@ export class ToolEllipseService implements Tools {
       this.oldY = offset.y;
 
       this.ellipse = {
+        id:"",
         x: this.x, y: this.y,
         width: 0, height: 0,
         strokeWidth: this.strokeWidth.value as number,

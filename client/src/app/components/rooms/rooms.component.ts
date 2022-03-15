@@ -102,10 +102,10 @@ export class RoomsComponent implements OnInit {
       this.http.post<any>(link, { roomName: this.room, creator: this.socketService.email }).subscribe((data: any) => {
         if (data.message == "success") {
           this.http.get<any>(link2).subscribe((data: any) => {
-            let length = Object.keys(data).length; 
+            //let length = Object.keys(data).length; 
             //this.list.push(data[length-1].roomName);
             // this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
-            this.buttonsTexts = [...this.buttonsTexts, `${data[length - 1].roomName}`];
+            this.buttonsTexts = [...this.buttonsTexts, text];
           });
           this.input.nativeElement.value = ' ';
         }

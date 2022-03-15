@@ -26,9 +26,13 @@
     "socket.io": "^4.2.0",
     "socketio-auth": "^0.1.1",
     "ts-node": "^10.2.1",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "uuid": "^8.3.2",
+    "@types/uuid": "^8.3.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    
+  },
   "optionalDependencies": {
     "bufferutil": "^4.0.3",
     "utf-8-validate": "^5.0.5"

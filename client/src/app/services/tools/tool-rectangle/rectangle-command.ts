@@ -1,4 +1,4 @@
-import { Renderer2 } from '@angular/core';
+/*import { Renderer2 } from '@angular/core';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { DrawingService } from '../../drawing/drawing.service';
 import { FilledShape } from './filed-shape.model';
@@ -74,4 +74,4 @@ export class RectangleCommand implements ICommand {
         }
     }
 
-}
+}*/

@@ -3,6 +3,7 @@ import { Room } from "../class/Room";
 import RoomSchema from "../Entities/RoomSchema";
 import { MessageInterface } from "../Interface/Message";
 import databaseService from "./databaseService";
+import socketService from "./socketService";
 
 
 export class RoomService {
@@ -109,6 +110,36 @@ export class RoomService {
     }
     let message:string="room does not exists";
     return message;
+  }
+
+  moveUserToDefault(name:String) {
+    this.socketToRoom.forEach((v,k)=>{
+      if(v==name) {
+        let socketId:string=k as string;
+        let room:Room=this.getDefaultRoom() as Room;
+        let socket=socketService.getIo().sockets.sockets.get(k);
+        socket?.leave(v);
+        this.socketToRoom.delete(k);
+        this.socketToRoom.set(socketId,room.getRoomName() as string);
+        room.addUserToRoom(this.socketidToEmail.get(socketId) as String);
+      }
+    });
+    
+  }
+
+  async deleteRoom(name:String) {
+    if(this.rooms.has(name)) {
+       try {
+         await RoomSchema.deleteOne({roomName:name}).then((data)=>{
+           console.log(data);
+           this.rooms.delete(name);
+           this.moveUserToDefault(name);
+         });
+       }
+       catch(error) {
+         console.log(error);
+       }
+    }
   }
 
   parseObject(arg: any): Object {

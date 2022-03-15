@@ -8,6 +8,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
+import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
 import { URL } from '../../../../constants';
 
 
@@ -30,10 +31,12 @@ export class AlbumsComponent implements OnInit {
     private socketService: SocketService,
     private hotkeyService: HotkeysService,
     private pencilService:PencilToolService,
+    private rectangleService:ToolRectangleService,
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
     this.pencilService.setUpPencil();
+    this.rectangleService.setUpRectangle();
   }
 
   newDrawing() {
