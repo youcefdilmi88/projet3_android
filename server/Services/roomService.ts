@@ -1,5 +1,4 @@
 
-import { Socket } from "socket.io";
 import { Room } from "../class/Room";
 import { User } from "../class/User";
 import { SOCKETEVENT } from "../Constants/socketEvent";
