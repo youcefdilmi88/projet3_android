@@ -1,7 +1,8 @@
 import { Point } from 'src/app/model/point.model';
 
 export interface Pencil {
-    id:string,
+    id: string,
+    //user: string;
     pointsList: Point[];
     strokeWidth: number;
     fill: string;

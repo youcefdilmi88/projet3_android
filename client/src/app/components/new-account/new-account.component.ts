@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AvatarComponent } from '@app/components/avatar/avatar.component';
@@ -65,7 +65,17 @@ export class NewAccountComponent implements OnInit {
           console.log("SUCC");
           this.router.navigate([""]);
         }
-      });
+      },(error:HttpErrorResponse)=>{
+        console.error(error);
+        console.log(error.status);
+        console.log(error.error.message);
+        if( error.error.message == "404 (Not Found)" || error.error.message == "Http failure response for https://projet3-3990-207.herokuapp.com/user/registerUser: 404 Not Found" || error.error.message == "failed") {
+          console.log("404");
+          document.getElementById("error")!.style.visibility= "visible";
+          document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
+        }
+      }
+      );
       return true;
     }
   }

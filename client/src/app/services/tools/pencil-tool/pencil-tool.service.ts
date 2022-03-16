@@ -57,6 +57,7 @@ export class PencilToolService implements Tools {
       console.log("STARTLINE");
       this.pencil={
         id:data.id,
+        //user: data.user,
         pointsList:data.pointsList,
         strokeWidth:data.strokeWidth,
         fill:data.fill,
@@ -65,6 +66,11 @@ export class PencilToolService implements Tools {
         strokeOpacity:data.strokeOpacity,
       };
       this.identif = data.id;
+      
+      /*if (data.user == this.socketService.nickname) {
+        this.pencil.id = data.id as string;
+      }*/
+
       console.log("shapeid:",this.pencil.id);
       console.log("renderSVG");
       this.renderSVG();
@@ -72,8 +78,10 @@ export class PencilToolService implements Tools {
 
     this.socketService.getSocket().on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
-      if (this.identif == this.pencil?.id) {
-        this.addPointToLine({x:data.x,y:data.y} as Point);
+      //if (this.identif == data.shapeId) {
+        if (this.identif == this.pencil?.id) {
+        //this.addPointToLine({x:data.point.x, y:data.point.y} as Point);
+        this.addPointToLine({x:data.x, y:data.y} as Point);
       }
       //this.addPointToLine({x:data.x,y:data.y} as Point);
     });
@@ -139,6 +147,7 @@ export class PencilToolService implements Tools {
         //this.pencil
         let pencilObj = {
           id:"",
+          //user: this.socketService.nickname,
           pointsList:[offset],
           strokeWidth: this.strokeWidth.value,
           fill: 'none',
@@ -173,6 +182,7 @@ export class PencilToolService implements Tools {
   onMove(event: MouseEvent): void {
     if(event.button === LEFT_CLICK) {
       this.socketService.getSocket().emit("DRAWLINE",JSON.stringify(this.offsetManager.offsetFromMouseEvent(event)));
+      //this.socketService.getSocket().emit("DRAWLINE",JSON.stringify({ point:this.offsetManager.offsetFromMouseEvent(event), shapeId:this.id } ));
     }  
   }
 

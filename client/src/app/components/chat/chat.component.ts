@@ -31,7 +31,6 @@ export class ChatComponent implements AfterViewInit {
     ) { }
 
   ngAfterViewInit(): void {   
-    console.log(this.socketService.currentRoom);
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     this.http.get<any>(link).subscribe((data: any) => {
 
@@ -68,17 +67,20 @@ export class ChatComponent implements AfterViewInit {
 
     this.socketService.getSocket().on("MSG", (data)=>{
       data = JSON.parse(data);
-      console.log(data.msg.message);
-      const datepipe: DatePipe = new DatePipe('en-CA');
-      let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
-      this.message.push(formattedDate);
-      this.message.push(data.msg.nickname);
-      this.message.push(data.msg.message.replace(/(\r\n|\n|\r)/gm, " "));
-      this.message.push("\n");
-      this.others.push("");
-      this.others.push("");
-      this.others.push("");
-      this.others.push("\n");
+      console.log("socket room " + this.socketService.currentRoom.slice(8).trim());
+      console.log("data room " + data.roomName);
+      if (data.roomName == this.socketService.currentRoom.slice(8).trim()) {
+        const datepipe: DatePipe = new DatePipe('en-CA');
+        let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
+        this.message.push(formattedDate);
+        this.message.push(data.msg.nickname);
+        this.message.push(data.msg.message.replace(/(\r\n|\n|\r)/gm, " "));
+        this.message.push("\n");
+        this.others.push("");
+        this.others.push("");
+        this.others.push("");
+        this.others.push("\n");
+      }
     });
   }
 
@@ -95,9 +97,8 @@ export class ChatComponent implements AfterViewInit {
     const currentTime = Date.now();
 
     if (text.trim() != '') {
-      console.log("lenght");
-      console.log(text.length);
-      const msg = { time: currentTime, nickname: this.socketService.nickname, message: text.trim() }
+      const msg = { time: currentTime, nickname: this.socketService.nickname, message: text.trim() };
+      //const mesg = { roomName: this.socketService.currentRoom, msg: { time: currentTime, nickname: this.socketService.nickname, message: text.trim() }};
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(currentTime, 'dd-MM-yyyy HH:mm:ss') as string;
       this.others.push(formattedDate);
@@ -110,6 +111,7 @@ export class ChatComponent implements AfterViewInit {
       this.message.push("\n");
 
       this.socketService.getSocket().emit("MSG",JSON.stringify(msg));
+
       this.input.nativeElement.value = ' ';
     }
 

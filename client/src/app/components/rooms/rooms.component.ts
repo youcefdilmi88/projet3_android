@@ -91,7 +91,7 @@ export class RoomsComponent implements OnInit {
           this.http.get<any>(link2).subscribe((data: any) => {
             let length = Object.keys(data).length;
             this.numberOfRooms = length;
-            for(var i = 0; i < length; i++) { 
+            for(var i = 0; i <= length; i++) { 
               //this.list.push(data[i].roomName);
               // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
               this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
