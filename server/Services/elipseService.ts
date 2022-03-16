@@ -9,7 +9,7 @@ constructor() { }
 
 private io:Server;
 
-  initRectangle(server:Server) {
+  initEllipse(server:Server) {
     this.io=server;
     this.connect();
   }
