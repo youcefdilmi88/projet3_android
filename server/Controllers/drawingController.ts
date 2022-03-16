@@ -32,24 +32,13 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
 
-        if(drawingService.socketInDrawing.has(socket?.id as string)) {
-            // delete user from previous drawing
-            drawingService.socketInDrawing.delete(socket?.id as string); 
-        }
-           
         if(drawing.membersBySocketId.has(socket?.id as string)==false) {
             // join drawing and chat associated
-            socket?.join(drawingName as string);
-            socket?.join(drawing.roomName as string);
+            drawingService.joinDrawing(drawingName,useremail);
 
-            const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawing.getName())}
-            socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification))
-            const joinRoomNotification={useremail:useremail,roomName:useremail};
-            socketService.getIo().emit(SOCKETEVENT.JOINROOM,JSON.stringify(joinRoomNotification));
-            
-
-            drawingService.socketInDrawing.set(socket?.id as string,drawing);
-            drawing.addMember(socket?.id as string,useremail);
+            if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+              roomService.joinRoom(drawing.roomName,useremail);
+            }
             return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
         }
         return res.status(404).json({message:HTTPMESSAGE.UCONNECTED});
@@ -122,11 +111,11 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
 
         let drawing:Drawing=drawingService.socketInDrawing.get(socket?.id as string) as Drawing;
-
         console.log("leave drawing:"+drawing.getName());
 
         socket?.leave(drawing.getName() as string);
         drawingService.socketInDrawing.delete(socket?.id as string);
+        drawing.removeMember(socket?.id as string);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
   
@@ -136,6 +125,6 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
 router.post('/joinDrawing',joinDrawing);
 router.post('/createDrawing',createDrawing);
 router.get('/getAllDrawings',getAllDrawings);
-router.post('leaveDrawing',leaveDrawing);
+router.post('/leaveDrawing',leaveDrawing);
 
 export=router;
