@@ -10,10 +10,10 @@ export class Drawing {
     private creator:String;
     private elements:BaseShape[];  // shapeId and Shape
     public roomName:String;
-    public members:String[]; // socketId and useremail
+    public members:String[];
 
     elementById:Map<String,BaseShape>;
-    membersBySocketId:Map<string,String>;
+    membersBySocketId:Map<string,String>;  // socketId and useremail
 
     constructor(drawing:DrawingInterface) {
        this.drawingName=drawing.drawingName;

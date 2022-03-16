@@ -1,9 +1,13 @@
 import { Server, Socket } from "socket.io";
 import { Drawing } from "../class/Drawing";
+import { User } from "../class/User";
+import { SOCKETEVENT } from "../Constants/socketEvent";
 import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
 import databaseService from "./databaseService";
+import socketService from "./socketService";
+import userService from "./userService";
 
 
 class DrawingService {
@@ -72,6 +76,29 @@ class DrawingService {
     let originalName:String=name.slice(7);
     console.log(originalName);
     return originalName;
+  }
+
+  joinDrawing(drawingName:String,useremail:String) {
+
+    let user:User=userService.getUserByUseremail(useremail) as User;
+    let socketId:string=userService.getSocketIdByUser().get(user) as string;
+
+    let socket=socketService.getIo().sockets.sockets.get(socketId);
+
+    socket?.join(drawingName as string);
+
+    const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawingName)}
+    socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification))
+
+    if(drawingService.socketInDrawing.has(socket?.id as string)) {
+      // delete user from previous drawing
+      drawingService.socketInDrawing.delete(socket?.id as string); 
+    }
+
+    let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+
+    drawingService.socketInDrawing.set(socket?.id as string,drawing);
+    drawing.addMember(socket?.id as string,useremail);
   }
 
 }
