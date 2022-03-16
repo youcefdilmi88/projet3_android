@@ -47,7 +47,14 @@
 }
 
 #roomIDButton {
-    width: 100%;
+    width: 50%;
+    float: left;
+    margin-bottom: 15px;
+}
+
+#roomIDButtonDelete {
+    width: 50%;
+    float: right;
     margin-bottom: 15px;
 }
 
@@ -56,7 +63,7 @@
 }
 
 .special-word { 
-    color: white; 
+    font-size: 0;
   } 
 
 .input {

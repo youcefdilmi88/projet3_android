@@ -59,6 +59,13 @@ export class SocketService {
     this.socket.emit("JOINROOM",JSON.stringify(newRoom)); // OUBLIER PAS DE STRINGIFY avant de emit
   }
 
+  roomDeleted(room: string) {
+    this.socket.on("ROOMDELETED",(data)=>{ 
+      data=JSON.parse(data);           // OUBLIER PAS DE PARSE direct quand vous recevez 
+      console.log(data);
+    });
+  }
+
   getSocket() {
     return this.socket;
   }

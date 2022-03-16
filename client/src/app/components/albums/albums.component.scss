@@ -1,3 +1,5 @@
+body{overflow: scroll;}
+
 .title {
     background-color: #592bc7;
     color: azure;
@@ -10,6 +12,37 @@
 
 #logout {
 	float: right;
+}
+
+.SectionAlbums {
+    width: 100%;
+    position: relative;
+}
+
+.listAlbumsButtons {
+    float: bottom;
+    width: 50%;
+    height: 307.5px; // pour que chaque album soit en vertical line
+    margin-top: 20px;
+    float:left; display:inline; width: 49%;
+}
+
+.listAlbums {
+    float: top;
+    width: 50%;
+    margin-top: 20px;
+    float:left; display:inline; width: 49%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.albums {
+    background-color: aqua;
+    border-style: solid;
+    height: 300px;
+    width: 300px;
+    text-align: center;
 }
 
 .btn {
@@ -83,6 +116,4 @@ button {
 
 body {
     background-color: #F5F5F5;
-    overflow: hidden;
 }
-
