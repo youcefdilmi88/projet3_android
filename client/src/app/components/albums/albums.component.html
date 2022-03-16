@@ -1,23 +1,55 @@
 <!DOCTYPE html>
-<html>
-    <body>
+<html>  
+<body>
 
         <div class="title">
             <h1 id="title">Choisir un album</h1>
             <button (click)="logout()" class = "btn" id="logout" routerLink = "">Déconnexion</button>
         </div>
-
-        <div class="center_me">
-            <!-- <div class="outer">
-                <div class="middle">
-                    <div class="inner"> -->
-
-                        <button mat-raised-button>Menu compte</button>
-                        <button mat-raised-button routerLink="/sidenav" (click)="newDrawing()">Accéder au chat</button>
-
-                    <!-- </div>
-                </div> 
-            </div> -->
+        <!-- <div class="center_me"> -->
+        <div>
+            <button mat-raised-button (click)="newPublicAlbum()" >Menu compte</button>
+            <button mat-raised-button routerLink="/sidenav" (click)="newDrawing()">Accéder au chat</button>  
         </div>
+        <!-- </div> -->
+
+
+        <!-- <div class="SectionAlbums" *ngFor="let album of AlbumsPublic">
+            <div class="listAlbums">
+                <div class="albums">
+                    {{album}}
+                </div>
+            </div>    
+            <div class="listAlbumsButtons">
+                <p> Public Album </p>
+                <p> {{album}} </p>
+                <button mat-raised-button id="roomIDButton" (click)="openAlbum()">
+                    Ouvrir <span class='special-word'>{{album}}</span>
+                </button>
+                <button mat-raised-button id="roomIDButtonDelete"  >
+                    Supprimer <span class='special-word'>{{album}}</span>
+                </button>
+            </div>
+        </div> -->
+
+        <div class="SectionAlbums" *ngFor="let album of AlbumsPublic">
+            <div class="listAlbums">
+                <div class="albums">
+                    {{album}}
+                </div>
+                <div class="listAlbumsButtons">
+                    <p> Public Album </p>
+                    <p> {{album}} </p>
+                    <button mat-raised-button id="roomIDButton" (click)="openAlbum()">
+                        Ouvrir <span class='special-word'>{{album}}</span>
+                    </button>
+                    <button mat-raised-button id="roomIDButtonDelete"  >
+                        Supprimer <span class='special-word'>{{album}}</span>
+                    </button>
+                </div>
+            </div>    
+        </div>
+
+
     </body>
 </html>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -7,10 +7,9 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
-import { URL } from '../../../../constants';
 
 
-@Component({
+@Component({ 
   selector: 'app-rooms',
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.scss']
@@ -21,11 +20,13 @@ export class RoomsComponent implements OnInit {
   @ViewChild('roomfilter') search: any;
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
-  private readonly BASE_URL: string = URL;
+  private readonly BASE_URL: string =//"http://localhost:8080/";
+  "https://projet3-3990-207.herokuapp.com/";
 
   public list = new Array<string>(); 
   public numberOfRooms: number ;
-  public buttonsTexts:Array<string> = ['DEFAULT'];
+  public buttonsTexts:Array<string> = [];
+  //public buttonsTexts:Array<string> = ['DEFAULT'];
 
   constructor(
     public dialog: MatDialog,
@@ -40,12 +41,11 @@ export class RoomsComponent implements OnInit {
     this.http.get<any>(link).subscribe((data: any) => {
       let length = Object.keys(data).length;
       this.numberOfRooms = length;
-      for(var i = 1; i <= length; i++) { 
+      for(var i = 0; i < length; i++) { 
         //this.list.push(data[i].roomName);
         // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
         this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
       }
-      
     });
   }
 
@@ -72,6 +72,34 @@ export class RoomsComponent implements OnInit {
         this.socketService.currentRoom = element.textContent;
       }
     });
+  } 
+
+
+  deleteRoom(element: any): void {
+    this.socketService.roomDeleted(element.textContent.trim().slice(10));
+
+    let link = this.BASE_URL + "room/deleteRoom";
+    let link2 = this.BASE_URL+"room/getAllRooms";
+
+      this.http.post<any>(link,{roomName: element.textContent.trim().slice(10) }).subscribe((data: any) => { 
+        console.log(data);
+        if (data == 404) {
+          console.log("edwin" + data);
+        }
+        if (data.message == "success") {
+          this.buttonsTexts = [];
+          this.http.get<any>(link2).subscribe((data: any) => {
+            let length = Object.keys(data).length;
+            this.numberOfRooms = length;
+            for(var i = 0; i < length; i++) { 
+              //this.list.push(data[i].roomName);
+              // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+              this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+            }
+          });
+        }
+      });
+
   }
 
   find(text: string) {
@@ -96,21 +124,42 @@ export class RoomsComponent implements OnInit {
     let link = this.BASE_URL+"room/createRoom";
     let link2 = this.BASE_URL+"room/getAllRooms";
 
+
     text.trim();
     if (text.trim() != '') {
-      document.getElementById("error")!.style.visibility= "hidden";
-      this.http.post<any>(link, { roomName: this.room, creator: this.socketService.email }).subscribe((data: any) => {
-        if (data.message == "success") {
-          this.http.get<any>(link2).subscribe((data: any) => {
-            //let length = Object.keys(data).length; 
-            //this.list.push(data[length-1].roomName);
-            // this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
-            this.buttonsTexts = [...this.buttonsTexts, text];
-          });
-          this.input.nativeElement.value = ' ';
-        }
+      this.http.get<any>(link2).subscribe((data: any) => {
+
+            document.getElementById("error")!.style.visibility= "hidden";
+            this.http.post<any>(link, { roomName: this.room.trim(), creator: this.socketService.email }).subscribe((data: any) => {
+              if (data.message == "success") {
+                this.http.get<any>(link2).subscribe((data: any) => {
+                  let length = Object.keys(data).length; 
+                  //this.list.push(data[length-1].roomName);
+                  // this.buttonsTexts = [...this.buttonsTexts, `${data[length-1].roomName}, (par ${data[length-1].creator})`];
+                  text = text.trim();
+                  this.buttonsTexts = [...this.buttonsTexts, text.trim()];
+                  console.log("REGARDE MOI" + text.trim());
+                  for(var i = 0; i < length; i++) { 
+                    console.log(data[i].roomName);
+                  }
+                });
+                this.input.nativeElement.value = ' ';
+              }
+            },(error:HttpErrorResponse)=>{
+              console.error(error);
+              console.log(error.status);
+              console.log(error.error.message);
+              if( error.error.message == "404 (Not Found)" || data == 404 || error.error.message == "Http failure response for https://projet3-3990-207.herokuapp.com/room/createRoom: 404 Not Found" || error.error.message == "failed") {
+                document.getElementById("error")!.style.visibility = "visible";
+                document.getElementById("error")!.innerHTML = "La salle " + text.trim() + " existe déjà";
+              }
+            }
+            );
+
+      
       });
     }
+
 
     if (text.trim().length == 0) {
       this.input.nativeElement.value = ' ';
@@ -119,6 +168,7 @@ export class RoomsComponent implements OnInit {
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
     }
+    
     this.input.nativeElement.focus();
   }
 

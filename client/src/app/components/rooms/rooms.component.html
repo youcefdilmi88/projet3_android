@@ -17,7 +17,7 @@
  
     <button mat-raised-button id="createRoom" (click)="create(roomname.value)">Créer une salle</button>
 </div>
-<div>
+<div> 
 
     <mat-form-field class="search" floatLabel="always" appearance="outline">
         <mat-label>Nom de la salle/createur</mat-label>
@@ -32,11 +32,14 @@
         <div class="listRoomsText">
             <p id="roomID" >
                 {{buttonText}}
-            </p>
+            </p> 
         </div>
         <div class="listRoomsButtons">
             <button mat-raised-button id="roomIDButton" (click)="changeRoom($event.target)" >
                 Joindre <span class='special-word'>{{buttonText}}</span>
+            </button>
+            <button mat-raised-button id="roomIDButtonDelete" (click)="deleteRoom($event.target)" >
+                Supprimer <span class='special-word'>{{buttonText}}</span>
             </button>
         </div>
     </div>
@@ -47,5 +50,3 @@
     <!-- <button mat-raised-button class="cancel" (click)="cancel()">Annuler</button> -->
 
 </div>
-
-

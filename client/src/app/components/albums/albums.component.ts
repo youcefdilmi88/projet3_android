@@ -9,7 +9,9 @@ import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
 import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
+import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
 import { URL } from '../../../../constants';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,6 +23,10 @@ import { URL } from '../../../../constants';
 export class AlbumsComponent implements OnInit {
 
   private readonly BASE_URL: string = URL;
+  public AlbumsPublic:Array<string> = [];
+  public AlbumsPrivate:Array<string> = [];
+  public compteur:number = 0;
+
 
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
@@ -28,30 +34,37 @@ export class AlbumsComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private http: HttpClient,
+    private router: Router,
     private socketService: SocketService,
     private hotkeyService: HotkeysService,
     private pencilService:PencilToolService,
     private rectangleService:ToolRectangleService,
+    private ellipseService:ToolEllipseService,
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
     this.pencilService.setUpPencil();
     this.rectangleService.setUpRectangle();
+    this.ellipseService.setUpEllipse();
   }
 
   newDrawing() {
-    this.welcomeDialogRef = this.dialog.open(WelcomeDialogComponent, {
-      hasBackdrop: true,
-      panelClass: 'filter-popup',
-      autoFocus: false,
-      disableClose: true,
-      maxHeight: 500,
-      maxWidth: 500,
-    });
-    this.welcomeDialogSub = this.welcomeDialogRef.afterClosed().subscribe(() => {
-      this.dialog.open(NewDrawingComponent);
-    });
-  }
+    this.dialog.open(NewDrawingComponent);
+}
+
+newPublicAlbum() {
+    this.AlbumsPublic = [...this.AlbumsPublic, `${this.compteur}`];
+    this.compteur++;
+}
+
+newPrivateAlbum() {
+  this.AlbumsPrivate = [...this.AlbumsPrivate, `${"hello"}`];
+}
+
+openAlbum() {
+  this.router.navigate(['/', 'dessins']);
+}
+
 
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
