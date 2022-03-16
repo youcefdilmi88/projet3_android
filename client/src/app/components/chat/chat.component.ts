@@ -33,24 +33,18 @@ export class ChatComponent implements AfterViewInit {
   ngAfterViewInit(): void {   
     console.log(this.socketService.currentRoom);
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
-    console.log("AEUGH");
     this.http.get<any>(link).subscribe((data: any) => {
 
-      console.log("CHAT INIT");
-
       let length = Object.keys(data).length;
-      console.log("PP SIZE" + length);
    
       for(var i = 0; i <= length; i++) {
-        console.log("data msg" + data.msg[0]);
         const datepipe: DatePipe = new DatePipe('en-CA');
-        let formattedDate = datepipe.transform(data[i], 'dd-MM-yyyy HH:mm:ss') as string;
-        console.log("data msg" + data[0]);
+        let formattedDate = datepipe.transform(data[i].time, 'dd-MM-yyyy HH:mm:ss') as string;
 
-        if (this.socketService.nickname == data[i].msg.nickname) {
+        if (this.socketService.nickname == data[i].nickname) {
           this.others.push(formattedDate);
-          this.others.push(data[i].msg.nickname);
-          this.others.push(data[i].msg.message.replace(/(\r\n|\n|\r)/gm, " "));
+          this.others.push(data[i].nickname);
+          this.others.push(data[i].message.replace(/(\r\n|\n|\r)/gm, " "));
           this.others.push("\n");
           this.message.push("");
           this.message.push("");
@@ -59,10 +53,10 @@ export class ChatComponent implements AfterViewInit {
 
         }
 
-        if (this.socketService.nickname != data[i].msg.nickname) {
+        if (this.socketService.nickname != data[i].nickname) {
           this.message.push(formattedDate);
-          this.message.push(data[i].msg.nickname);
-          this.message.push(data[i].msg.message.replace(/(\r\n|\n|\r)/gm, " "));
+          this.message.push(data[i].nickname);
+          this.message.push(data[i].message.replace(/(\r\n|\n|\r)/gm, " "));
           this.message.push("\n");
           this.others.push("");
           this.others.push("");
@@ -72,7 +66,9 @@ export class ChatComponent implements AfterViewInit {
       }
     });
 
-    this.socketService.getSocket().on("MSG", (data)=>{   
+    this.socketService.getSocket().on("MSG", (data)=>{
+      data = JSON.parse(data);
+      console.log(data.msg.message);
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
       this.message.push(formattedDate);
@@ -101,8 +97,7 @@ export class ChatComponent implements AfterViewInit {
     if (text.trim() != '') {
       console.log("lenght");
       console.log(text.length);
-      const msg = {roomName: this.socketService.currentRoom, msg: { time: currentTime, nickname: this.socketService.nickname, message: text.trim() }}
-      console.log("room:" + this.socketService.currentRoom);
+      const msg = { time: currentTime, nickname: this.socketService.nickname, message: text.trim() }
       const datepipe: DatePipe = new DatePipe('en-CA');
       let formattedDate = datepipe.transform(currentTime, 'dd-MM-yyyy HH:mm:ss') as string;
       this.others.push(formattedDate);
