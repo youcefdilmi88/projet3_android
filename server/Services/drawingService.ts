@@ -39,7 +39,6 @@ class DrawingService {
     await databaseService.getAllDrawings().then((drawings)=>{
       drawings.forEach((drawing)=>{
         let drawingObj:Drawing=new Drawing(drawing);
-        console.log(drawingObj);
         this.drawings.set(drawingObj.getName(),drawingObj);
       })
     }).catch((e:Error)=>{
