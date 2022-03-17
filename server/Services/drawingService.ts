@@ -67,6 +67,31 @@ class DrawingService {
     }
   }
 
+  kickUsersFromDrawing(drawingName:String) {
+    let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+    this.socketInDrawing.forEach((v,k)=>{
+      if(v==drawing) {
+        this.socketInDrawing.delete(k);
+      }
+    })
+    drawing.setMembers([]); // set all members in drawing to nothing
+  }
+
+  async deleteDrawing(drawingName:String) {
+    try {
+        await DrawingSchema.deleteOne({drawingName:drawingName}).then((data)=>{
+          console.log(data);
+          this.drawings.delete(drawingName);
+          this.kickUsersFromDrawing(drawingName);
+          const drawingNotification={drawingName:drawingName}
+          socketService.getIo().emit(SOCKETEVENT.DRAWINGDELETED,JSON.stringify(drawingNotification));
+        });
+      }
+      catch(error) {
+        console.log(error);
+    }
+  }
+
   addonDrawingName(name:String):String {
      let newName:String="drawing"+name;
      return newName;

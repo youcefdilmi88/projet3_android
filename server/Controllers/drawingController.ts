@@ -85,6 +85,19 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     return res.status(404).json({message:HTTPMESSAGE.FAILED});
 }
 
+const deleteDrawing=(req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
+    let roomName:String=req.body.drawingName as String;
+
+    if(drawingService.drawings.has(drawingName)) {
+       drawingService.deleteDrawing(drawingName);
+       roomService.deleteRoom(roomName);
+       return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+
+    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+}
+
 const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
     let drawings:DrawingInterface[]=[];
     drawingService.drawings.forEach((v,k)=>{
@@ -126,5 +139,6 @@ router.post('/joinDrawing',joinDrawing);
 router.post('/createDrawing',createDrawing);
 router.get('/getAllDrawings',getAllDrawings);
 router.post('/leaveDrawing',leaveDrawing);
+router.post('/deleteDrawing',deleteDrawing);
 
 export=router;
