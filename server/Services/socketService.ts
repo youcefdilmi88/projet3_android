@@ -1,7 +1,7 @@
 import http from 'http';
 import { Server } from "socket.io";
 import drawingService from './drawingService';
-import ellipseService from './elipseService';
+import ellipseService from './ellipseService';
 import messageService from "./messageService";
 import pencilService from './pencilService';
 import rectangleService from './rectangleService';

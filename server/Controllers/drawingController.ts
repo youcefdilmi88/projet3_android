@@ -81,7 +81,6 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
       }
       return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
     }
-
     return res.status(404).json({message:HTTPMESSAGE.FAILED});
 }
 

@@ -23,7 +23,4 @@ export class Line extends BaseShape {
         return this.pointsList;
     }
 
-    addPoint(point:Point):void {
-        this.pointsList.push(point);
-    }
 }

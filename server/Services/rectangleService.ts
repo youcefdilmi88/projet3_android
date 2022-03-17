@@ -1,6 +1,9 @@
 import { Server, Socket } from "socket.io";
 import roomService from "./roomService";
 import { v4 as uuidv4 } from 'uuid';
+import { Drawing } from "../class/Drawing";
+import { Rectangle } from "../class/Rectangle";
+import drawingService from "./drawingService";
 
 
 export class RectangleService {
@@ -43,9 +46,16 @@ private io:Server;
   }
 
   endRectangle(socket:Socket) {
-    socket.on("ENDRECTANGLE",()=>{
+    socket.on("ENDRECTANGLE",(data)=>{
+      data=JSON.parse(data);
       console.log("ENDRECTANGLE");
       console.log(roomService.getRoomNameBySocket(socket.id)+" endrectangle")
+
+      console.log(data);
+      let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
+      let rectangle:Rectangle=new Rectangle(data);
+      drawing.elementById.set(rectangle.getId(),rectangle);
+
       // socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",{});
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDRECTANGLE",{});
     })
