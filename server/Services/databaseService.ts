@@ -62,6 +62,8 @@ class DatabaseService {
             return data as Array<DrawingInterface>;
         })
     }
+
+
 }
 
 const databaseService=new DatabaseService();

@@ -1,8 +1,13 @@
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
-import { checkLine } from "../Interface/LineInterface";
+import { checkEllipse, EllipseInterface } from "../Interface/EllipseInterface";
+import { checkLine, LineInterface } from "../Interface/LineInterface";
+import { checkRectangle, RectangleInterface } from "../Interface/RectangleInterface";
+import drawingService from "../Services/drawingService";
 import { BaseShape } from "./BaseShape";
+import { Ellipse } from "./Ellipse";
 import { Line } from "./Line";
+import { Rectangle } from "./Rectangle";
 
 
 export class Drawing {
@@ -18,20 +23,30 @@ export class Drawing {
     constructor(drawing:DrawingInterface) {
        this.drawingName=drawing.drawingName;
        this.creator=drawing.creator;
-       this.elements=[];
        this.roomName=drawing.roomName;
        this.members=drawing.members;
-
+       this.elements=[];
        this.elementById=new Map<String,BaseShape>();
        this.membersBySocketId=new Map<string,String>();
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
-               let line:Line=element as Line;
+               console.log("line");
+               let line:Line=new Line(element);
                this.elementById.set(line.getId(),line);
            }
+           if(checkEllipse(element)) {
+               console.log("ellipse");
+               let ellipse:Ellipse=new Ellipse(element);
+               this.elementById.set(ellipse.getId(),ellipse);
+           }
+           if(checkRectangle(element)) {
+               console.log("rectangle");
+               let rectangle:Rectangle=new Rectangle(element);
+               this.elementById.set(rectangle.getId(),rectangle);
+            }
        });
-
+       this.autoSave();
     }
 
     getName():String {
@@ -54,7 +69,7 @@ export class Drawing {
        let interfaceInstances:BaseShapeInterface[]=[];
        this.getElements().forEach((element)=>{
            if(element instanceof Line) {
-             let elementInterface={  
+             let elementInterface:LineInterface={  
                id:element.getId(),
                strokeWidth:element.getStrokeWidth(),
                fill:element.getFill(),
@@ -62,11 +77,43 @@ export class Drawing {
                fillOpacity:element.getFillOpacity(),
                strokeOpacity:element.getStrokeOpacity(),
                pointsList:element.getPoints()
-             }
+             } as LineInterface;
              interfaceInstances.push(elementInterface);
            }
+           if(element instanceof Ellipse) {
+              let elementInterface:EllipseInterface={
+                id:element.getId(),
+                strokeWidth:element.getStrokeWidth(),
+                fill:element.getFill(),
+                stroke:element.getStroke(),
+                fillOpacity:element.getFillOpacity(),
+                strokeOpacity:element.getStrokeOpacity(),
+                x:element.getX(),
+                y:element.getY(),
+                width:element.getWidth(),
+                height:element.getHeight(),
+                type:"ellipse"
+              } as EllipseInterface;
+              interfaceInstances.push(elementInterface);
+           }
+           if(element instanceof Rectangle) {
+            let elementInterface:RectangleInterface={
+              id:element.getId(),
+              strokeWidth:element.getStrokeWidth(),
+              fill:element.getFill(),
+              stroke:element.getStroke(),
+              fillOpacity:element.getFillOpacity(),
+              strokeOpacity:element.getStrokeOpacity(),
+              x:element.getX(),
+              y:element.getY(),
+              width:element.getWidth(),
+              height:element.getHeight(),
+              type:"rectangle"
+            } as RectangleInterface;
+            interfaceInstances.push(elementInterface);
+         }
        });
-
+       
        return interfaceInstances;
     }
 
@@ -102,7 +149,12 @@ export class Drawing {
         this.membersBySocketId.set(socketId,email);
     }
     
-
+    autoSave() {
+        drawingService.autoSaveDrawing(this.drawingName);
+        setTimeout(() => {
+            this.autoSave();
+       }, 10000)
+    }
 
 
 }

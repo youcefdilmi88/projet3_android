@@ -38,10 +38,12 @@ class DrawingService {
     this.drawings.clear();
     await databaseService.getAllDrawings().then((drawings)=>{
       drawings.forEach((drawing)=>{
+        console.log("loaded drawing");
+        console.log(drawing);
+        console.log("");
         let drawingObj:Drawing=new Drawing(drawing);
-        console.log(drawingObj);
         this.drawings.set(drawingObj.getName(),drawingObj);
-      })
+      });
     }).catch((e:Error)=>{
         console.log(e);
     });
@@ -64,6 +66,31 @@ class DrawingService {
     }
     catch(error) {
       console.log(error);
+    }
+  }
+
+  kickUsersFromDrawing(drawingName:String) {
+    let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+    this.socketInDrawing.forEach((v,k)=>{
+      if(v==drawing) {
+        this.socketInDrawing.delete(k);
+      }
+    })
+    drawing.setMembers([]); // set all members in drawing to nothing
+  }
+
+  async deleteDrawing(drawingName:String) {
+    try {
+        await DrawingSchema.deleteOne({drawingName:drawingName}).then((data)=>{
+          console.log(data);
+          this.drawings.delete(drawingName);
+          this.kickUsersFromDrawing(drawingName);
+          const drawingNotification={drawingName:drawingName}
+          socketService.getIo().emit(SOCKETEVENT.DRAWINGDELETED,JSON.stringify(drawingNotification));
+        });
+      }
+      catch(error) {
+        console.log(error);
     }
   }
 
@@ -99,6 +126,28 @@ class DrawingService {
 
     drawingService.socketInDrawing.set(socket?.id as string,drawing);
     drawing.addMember(socket?.id as string,useremail);
+  }
+
+
+  async autoSaveDrawing(drawingName:String) {
+    if(this.drawings.has(drawingName)) {
+     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+     const drawingUpdate = {
+       $set: {
+         "elements": drawing.getElementsInterface(),
+         "members":drawing.getMembers()
+       }
+      };
+     try {
+       DrawingSchema.findOneAndUpdate({drawingName:drawingName},drawingUpdate).then((data)=>{
+       }).catch((error:Error)=>{
+         console.log(error);
+       })
+     }
+     catch(error) {
+       console.log(error);
+     }
+   }
   }
 
 }

@@ -125,7 +125,7 @@ export class PencilToolService implements Tools {
     if (event.button === LEFT_CLICK) {
       if (this.strokeWidth.valid) {
        const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
-       
+
         // INITIALISE PENCIL
         let pencilObj = {
           id:"",

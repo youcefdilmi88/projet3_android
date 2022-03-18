@@ -131,8 +131,7 @@ export class RoomService {
   }
 
   async deleteRoom(name:String) {
-    if(this.rooms.has(name)) {
-       try {
+      try {
          await RoomSchema.deleteOne({roomName:name}).then((data)=>{
            console.log(data);
            this.rooms.delete(name);
@@ -141,8 +140,7 @@ export class RoomService {
        }
        catch(error) {
          console.log(error);
-       }
-    }
+      }
   }
 
   joinRoom(name:String,useremail:String) {
