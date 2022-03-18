@@ -25,11 +25,12 @@ export class PencilToolService implements Tools {
   readonly id = ToolIdConstants.PENCIL_ID;
   private strokeWidth: FormControl;
   private pencil: Pencil | null;
-  private dot: SVGCircleElement | null = null;
-  private pencil2: SVGPolylineElement | null = null;
+  private pencil3: SVGPathElement;
   parameters: FormGroup;
   private identif: string;
 
+  public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
+  public gObjects = new Map<string, SVGGraphicsElement>();
 
   renderer: Renderer2;
 
@@ -53,11 +54,10 @@ export class PencilToolService implements Tools {
 
     this.socketService.getSocket().on("STARTLINE",(data)=>{
       data=JSON.parse(data);
-      console.log(data);
       console.log("STARTLINE");
       this.pencil={
         id:data.id,
-        //user: data.user,
+        user:data.user,
         pointsList:data.pointsList,
         strokeWidth:data.strokeWidth,
         fill:data.fill,
@@ -65,28 +65,31 @@ export class PencilToolService implements Tools {
         fillOpacity:data.fillOpacity,
         strokeOpacity:data.strokeOpacity,
       };
-      this.identif = data.id;
       
-      /*if (data.user == this.socketService.nickname) {
-        this.pencil.id = data.id as string;
-      }*/
+      if (data.user == this.socketService.nickname) {
+        console.log(data.user);
+        console.log(this.socketService.nickname);
+        this.identif = this.pencil.id as string;
+      }
+      console.log(this.pencil.id);
 
-      console.log("shapeid:",this.pencil.id);
-      console.log("renderSVG");
       this.renderSVG();
     });
 
     this.socketService.getSocket().on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
-      //if (this.identif == data.shapeId) {
-        if (this.identif == this.pencil?.id) {
-        //this.addPointToLine({x:data.point.x, y:data.point.y} as Point);
-        this.addPointToLine({x:data.x, y:data.y} as Point);
+      console.log("shapeid " + data.shapeId);
+
+      if (this.pencil?.id == data.shapeId) {
+        this.addPointToLine({x:data.point.x, y:data.point.y} as Point, data.shapeId);
       }
-      //this.addPointToLine({x:data.x,y:data.y} as Point);
+      if (this.pencil?.id != data.shapeId) {
+        this.pencil!.id = this.identif;
+        this.addPointToLine({x:data.point.x, y:data.point.y} as Point, data.shapeId);
+      }
     });
 
-    this.socketService.getSocket().on("ENDLINE",()=>{
+    this.socketService.getSocket().on("ENDLINE",(data)=>{
       console.log("ENDLINE");
     });
 
@@ -94,47 +97,26 @@ export class PencilToolService implements Tools {
 
   renderSVG(): void {
     console.log("GOT RENDERED");
-    //FOR A DOT
-    if (this.pencil!.pointsList.length <= 1) {
-      console.log("dot");
-      this.dot = this.renderer.createElement('circle', 'svg') as SVGCircleElement;
-      this.renderer.setAttribute(this.dot,'id',this.pencil?.id as string);
-      this.renderer.setAttribute(this.dot, 'cx', this.pencil!.pointsList[0].x.toString() + 'px');
-      this.renderer.setAttribute(this.dot, 'cy', this.pencil!.pointsList[0].y.toString() + 'px');
-      this.renderer.setAttribute(this.dot, 'r', (this.pencil!.strokeWidth / 2).toString() + 'px');
-      this.renderer.setStyle(this.dot, 'fill', this.pencil!.stroke);
-      this.renderer.setStyle(this.dot, 'fillOpacity', this.pencil!.strokeOpacity);
-      this.drawingService.addObject(this.dot);
-    }
-    //FOR A LINE
-    else {
-      console.log("line");
-      this.pencil2 = this.renderer.createElement('polyline', 'svg') as SVGPolylineElement;
-      this.renderer.setAttribute(this.pencil2,'id',this.pencil?.id as string);
-      this.renderer.setAttribute(this.pencil2, 'points', this.pointString());
-      this.renderer.setAttribute(this.pencil2, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
-      this.renderer.setStyle(this.pencil2, 'fill', this.pencil!.fill);
-      this.renderer.setStyle(this.pencil2, 'stroke', this.pencil!.stroke);
-      this.renderer.setStyle(this.pencil2, 'fillOpacity', this.pencil!.fillOpacity);
-      this.renderer.setStyle(this.pencil2, 'strokeOpacity', this.pencil!.strokeOpacity);
-      this.drawingService.addObject(this.pencil2);
-    }
+    this.pencil3 = this.renderer.createElement('path', 'svg');
+    this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
+    this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
+    this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
+    this.renderer.setStyle(this.pencil3, 'fill', 'none');
+    this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
+    this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+    this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+    this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
+    this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
+    this.drawingService.addObject(this.pencil3);
+    this.objects.set(this.pencil!.id, this.pencil3);
   }
 
-  private pointString(): string {
-    let pointString = "";
-    for (const point of this.pencil!.pointsList) {
-        pointString += `${point.x} ${point.y},`;
-    }
-    return pointString.substring(0, pointString.length - 1);
-  }
-
-  addPointToLine(point: Point): void {
-    console.log(point);
-    this.pencil?.pointsList?.push(point);
-    if (this.pencil!.pointsList.length > 1 && this.dot) {
-        this.renderSVG();
-    }
+  addPointToLine(point: Point, id: string): void {
+    this.pencil?.pointsList.push(point);
+    let line = this.objects.get(id);
+    console.log("x " + point.x.toString());
+    console.log("y " + point.y.toString());
+    line!.setAttribute('d', (line!.getAttribute('d') as string) + ' L ' + point.x.toString() + ' ' + point.y.toString());
 }
 
   /// Création d'un polyline selon la position de l'evenement de souris, choisi les bonnes couleurs selon le clique de souris
@@ -143,23 +125,20 @@ export class PencilToolService implements Tools {
     if (event.button === LEFT_CLICK) {
       if (this.strokeWidth.valid) {
        const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
+       
         // INITIALISE PENCIL
-        //this.pencil
         let pencilObj = {
           id:"",
-          //user: this.socketService.nickname,
+          user: this.socketService.nickname,
           pointsList:[offset],
           strokeWidth: this.strokeWidth.value,
           fill: 'none',
           stroke: 'none',
           fillOpacity: 'none',
           strokeOpacity: 'none',
-        };
-        //pencilObj.pointsList?.push({x:offset.x as number,y:offset.y as number});
+        } as Pencil;
 
-        //this.pencil
         pencilObj!.stroke = this.colorTool.primaryColorString;
-        //this.pencil
         pencilObj!.strokeOpacity = this.colorTool.primaryAlpha.toString();
 
         this.socketService.getSocket().emit("STARTLINE",JSON.stringify(pencilObj));
@@ -174,15 +153,14 @@ export class PencilToolService implements Tools {
 
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
-    this.socketService.getSocket().emit("ENDLINE",{})
+    this.socketService.getSocket().emit("ENDLINE", JSON.stringify(this.pencil));
     return;
   }
 
   /// Ajout d'un point selon le déplacement de la souris
   onMove(event: MouseEvent): void {
     if(event.button === LEFT_CLICK) {
-      this.socketService.getSocket().emit("DRAWLINE",JSON.stringify(this.offsetManager.offsetFromMouseEvent(event)));
-      //this.socketService.getSocket().emit("DRAWLINE",JSON.stringify({ point:this.offsetManager.offsetFromMouseEvent(event), shapeId:this.id } ));
+      this.socketService.getSocket().emit("DRAWLINE",JSON.stringify({ point: this.offsetManager.offsetFromMouseEvent(event), shapeId:this.identif } ));
     }  
   }
 
