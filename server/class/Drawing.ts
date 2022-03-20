@@ -31,17 +31,14 @@ export class Drawing {
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
-               console.log("line");
                let line:Line=new Line(element);
                this.elementById.set(line.getId(),line);
            }
            if(checkEllipse(element)) {
-               console.log("ellipse");
                let ellipse:Ellipse=new Ellipse(element);
                this.elementById.set(ellipse.getId(),ellipse);
            }
            if(checkRectangle(element)) {
-               console.log("rectangle");
                let rectangle:Rectangle=new Rectangle(element);
                this.elementById.set(rectangle.getId(),rectangle);
             }
