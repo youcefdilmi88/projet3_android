@@ -74,10 +74,7 @@ const deleteRoom=(req:Request,res:Response,next:NextFunction)=>{
      return res.status(404).json({message:HTTPMESSAGE.FAILED});
    }
    if(roomName!=roomService.getDefaultRoom().getRoomName()) {
-    roomService.deleteRoom(roomName).then(()=>{
-        const message={message:"room deleted"};
-        socketService.getIo().emit(SOCKETEVENT.ROOMDELETED,JSON.stringify(message));
-    }).catch((e:Error)=>{
+    roomService.deleteRoom(roomName).catch((e:Error)=>{
         console.log(e);
     });
     return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
