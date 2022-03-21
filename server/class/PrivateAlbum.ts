@@ -1,5 +1,6 @@
 import { AlbumInterface } from "../Interface/AlbumInterface";
-import { PrivateAlbumInterface } from "../Interface/privateAlbumInterface";
+import { PrivateAlbumInterface } from "../Interface/PrivateAlbumInterface";
+
 import { Album } from "./Album";
 
 
