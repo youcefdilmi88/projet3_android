@@ -1,10 +1,12 @@
 import  mongoose  from 'mongoose';
 import AccountSchema from '../Entities/AccountSchema';
+import AlbumSchema from '../Entities/AlbumSchema';
 import DrawingSchema from '../Entities/DrawingSchema';
 import MessageSchema from '../Entities/MessageSchema';
 import RoomSchema from '../Entities/RoomSchema';
 import UserSchema from '../Entities/UserSchema';
 import { AccountInterface } from '../Interface/Account';
+import { AlbumInterface } from '../Interface/AlbumInterface';
 import { DrawingInterface } from '../Interface/DrawingInterface';
 import { MessageInterface } from '../Interface/Message';
 import { RoomInterface } from '../Interface/Room';
@@ -63,6 +65,12 @@ class DatabaseService {
         })
     }
 
+
+    async getAllAlbums() {
+        return await AlbumSchema.albumSchema.find({}).then((data)=>{
+            return data as Array<AlbumInterface>;
+        })
+    }
 
 }
 

@@ -1,15 +1,15 @@
 import express, { NextFunction, Request, Response }  from "express";
+import { Album } from "../class/Album";
 import { Drawing } from "../class/Drawing";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { VISIBILITY } from "../Constants/visibility";
-//import albumService from "../Services/albumService";
+import albumService from "../Services/albumService";
 
 let bcrypt=require("bcryptjs");
 
 const router = express.Router();
 
 const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
-    console.log("album")
     let albumName:String=req.body.albumName as String;
     let creator:String=req.body.creator as String;
     let drawings:Drawing[]=[];
@@ -27,14 +27,28 @@ const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
         const hashedPassword=await bcrypt.hash(req.body.password,salt);
         album["password"]=hashedPassword;
     }
-    console.log(album);
 
-    //await albumService.createAlbum(album);
-    return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    if(albumService.albums.has(album.albumName)) {
+        return res.status(404).json({message:HTTPMESSAGE.ALBUMEXIST});
+    }
 
+    if(album.albumName && album.creator && album.visibility) {
+      albumService.createAlbum(album);
+      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+}
+
+const getAlbums=(req:Request,res:Response,next:NextFunction)=>{
+    let albums:Album[]=[];
+    albumService.albums.forEach((v,k)=>{
+       albums.push(v);
+    })
+    return res.status(200).json(albums);
 }
 
 
 router.post('/createAlbum',createAlbum);
+router.get('/getAlbums',getAlbums);
 
 export=router;
