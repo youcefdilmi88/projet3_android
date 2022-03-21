@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AlbumsComponent } from './albums/albums.component';
 import { ChatComponent } from './chat/chat.component';
+import { DessinsComponent } from './dessins/dessins.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewAccountComponent } from './new-account/new-account.component';
 import { RoomsComponent } from './rooms/rooms.component';
@@ -26,6 +27,9 @@ const routes: Routes = [
   },
   {
     path: 'sidenav', component: SidenavComponent
+  },
+  {
+    path: 'dessins', component: DessinsComponent
   },
 ];
 

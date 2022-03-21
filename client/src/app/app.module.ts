@@ -35,6 +35,7 @@ import { NewAccountComponent } from './components/new-account/new-account.compon
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { RoomsComponent } from './components/rooms/rooms.component';
 import { AlbumsComponent } from './components/albums/albums.component';
+import { DessinsComponent } from './components/dessins/dessins.component';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import { AlbumsComponent } from './components/albums/albums.component';
         RoomsComponent,
         AlbumsComponent,
         RoomsComponent,
+        DessinsComponent,
     ],
     imports: [
         BrowserModule,

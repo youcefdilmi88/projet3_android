@@ -1,0 +1,41 @@
+<div class="wrapper">
+    <div class="title">
+        <h1 id="title">Dessins</h1>
+        <button class = "btn" id="logout" (click)="logout()" routerLink = "">Déconnexion</button>
+    </div>
+
+
+    <div id="galleryView">
+        <div id="galleryContainer">
+            <button
+                mat-raised-button
+                class="left-arrow"
+                (click)="leftSideSlide()"
+            >
+                <i class="fas fa-arrow-left fa-3x"></i>
+            </button>
+            <div id="mainView" #DessinCenter></div>
+            <!-- <div id="rightView" #DessinRight></div>
+            <div id="LeftView" #DessinLeft></div> -->
+            <button
+                mat-raised-button
+                class="right-arrow"
+                (click)="rightSideSlide()"
+            >
+            <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
+    </div>
+    <div id="InfoDessins">
+        <p>INFOS ICI</p>
+        <p>{{this.imageUrlArray[this.centerImage]}}</p>
+        <p>SOMETHING</p>
+        <button mat-raised-button id="DessinsButtonOpen" (click)="openDessins()">
+            Ouvrir 
+        </button>
+        <button mat-raised-button id="DessinsButtonDelete" >
+            Supprimer 
+        </button>
+    </div>
+
+</div>

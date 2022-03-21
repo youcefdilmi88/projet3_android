@@ -67,9 +67,21 @@ export class ChatComponent implements AfterViewInit {
 
     this.socketService.getSocket().on("MSG", (data)=>{
       data = JSON.parse(data);
-      console.log("socket room " + this.socketService.currentRoom.slice(8).trim());
+      console.log("socket room " + this.socketService.currentRoom.trim());
       console.log("data room " + data.roomName);
       if (data.roomName == this.socketService.currentRoom.slice(8).trim()) {
+        const datepipe: DatePipe = new DatePipe('en-CA');
+        let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
+        this.message.push(formattedDate);
+        this.message.push(data.msg.nickname);
+        this.message.push(data.msg.message.replace(/(\r\n|\n|\r)/gm, " "));
+        this.message.push("\n");
+        this.others.push("");
+        this.others.push("");
+        this.others.push("");
+        this.others.push("\n");
+      }
+      else if (data.roomName == this.socketService.currentRoom.trim()) {
         const datepipe: DatePipe = new DatePipe('en-CA');
         let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
         this.message.push(formattedDate);

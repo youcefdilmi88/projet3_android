@@ -1,0 +1,119 @@
+.wrapper {
+    position: relative;
+}
+
+.title {
+    background-color: #592bc7;
+    color: azure;
+}
+
+#title {
+    margin-left: 50px;
+    display: inline-block;
+}
+
+#logout {
+    float: right;
+    border: black;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--light-color);
+    color: var(--dark-color-a);
+    border: 0;
+    font-size: 17px;
+}
+
+#galleryContainer {
+    height: 300px;
+    width: 800px;
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 10px;
+}
+
+#galleryView {
+    height: 60vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 100px;
+    margin-top: 50px;
+}
+
+#mainView {
+    position: relative;
+    // height: 425px;
+    // width: 350px;
+    height: 500px;
+    width: 100%;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 1;
+    border: black 1px solid;
+}
+
+#leftView {
+    position: relative;
+    height: 400px;
+    width: 300px;
+    opacity: 0.5;
+    border-radius: 5px;
+    transform: skewy(0deg); // tilt
+    transform-origin: top right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: black 1px solid;
+}
+
+#rightView {
+    position: relative;
+    height: 400px;
+    width: 300px;
+    opacity: 0.5;
+    border-radius: 5px;
+    transform: skewy(0deg); // tilt
+    transform-origin: top left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: black 1px solid;
+}
+
+.left-arrow {
+    border: black 1px solid;
+    background-color: rgb(165, 180, 220);
+    margin-right: 10px;
+    width: 50px;
+    height: 45px;
+}
+
+.right-arrow {
+    border: black 1px solid;
+    background-color: rgb(165, 180, 220);
+    margin-left: 10px;
+    width: 50px;
+    height: 45px;
+}
+
+#InfoDessins {
+    text-align: center;
+}
+
+#DessinsButtonOpen {
+    margin-right: 10px;
+}
+
+#DessinsButtonDelete {
+    margin-left: 10px;
+}

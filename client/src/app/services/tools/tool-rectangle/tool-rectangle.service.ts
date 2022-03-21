@@ -94,7 +94,7 @@ export class ToolRectangleService implements Tools {
       );
 
       if (data.user == this.socketService.nickname) {
-        this.identif = data.id as string;
+        this.identif = data.id as string; 
       }
 
       this.renderSVG();

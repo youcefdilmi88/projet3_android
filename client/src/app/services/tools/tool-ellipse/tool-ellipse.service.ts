@@ -13,6 +13,7 @@ import { FilledShape } from '../tool-rectangle/filed-shape.model';
 import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
 import { SocketService } from '@app/services/socket/socket.service';
 // import { EllipseCommand } from './ellipse-command';
+import { Point } from 'src/app/model/point.model';
 
 /// Outil pour créer des ellipse, click suivis de bouge suivis de relache crée l'ellipse
 /// et avec shift créer un cercle
@@ -23,25 +24,23 @@ export class ToolEllipseService implements Tools {
   readonly faIcon: IconDefinition = faCircle;
   readonly toolName = 'Outil Ellipse';
   readonly id = ToolIdConstants.ELLIPSE_ID;
-
-  // private ellipse: FilledShape | null;
-  // private ellipseCommand: EllipseCommand | null;
-  private ellipse2: SVGEllipseElement;
-  private ellipseAttributes: FilledShape;
   private identif: string;
 
+  private ellipse2: SVGEllipseElement;
+  private ellipseAttributes: FilledShape;
   private contour: SVGRectElement | null;
   // private contourId: number;
 
   parameters: FormGroup;
   private strokeWidth: FormControl;
   private ellipseStyle: FormControl;
-
-  private isCircle = false;
-  // private oldX = 0;
-  // private oldY = 0;
   private x: number;
   private y: number;
+
+  private moving: boolean = false;
+
+  public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
+  initPoints: Map<string, Point> =  new Map<string, Point>();
 
   renderer: Renderer2;
 
@@ -63,6 +62,8 @@ export class ToolEllipseService implements Tools {
   }
 
   setUpEllipse() : void {
+    console.log("ellipse set up completed");
+
     this.socketService.getSocket().on("STARTELLIPSE", (data) => {
       data = JSON.parse(data);
       this.ellipseAttributes = {
@@ -78,31 +79,49 @@ export class ToolEllipseService implements Tools {
         fillOpacity: data.fillOpacity,
         strokeOpacity: data.strokeOpacity
       }
-      this.identif = data.id;
+
       this.x = data.x;
       this.y = data.y;
+
+      console.log(this.x + this.y);
+
       this.setStyle(
         data.fill,
         data.strokeOpacity,
         data.stroke,
         data.fillOpacity,
       ); 
+
+      if(data.user == this.socketService.nickname) {
+        this.identif = data.id as string;
+      }
+
       this.renderSVG();
+      this.moving = true;
     });
+
     this.socketService.getSocket().on("DRAWELLIPSE", (data) => {
       data = JSON.parse(data);
-      if(this.ellipseAttributes.id == this.identif) {
-        this.setSize(data.x as number, data.y as number);
+      if (this.ellipseAttributes?.id == data.shapeId) {
+        this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
+      }
+      if (this.ellipseAttributes?.id != data.shapeId) {
+        this.ellipseAttributes!.id = this.identif;
+        this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
       }
     });
+    
     this.socketService.getSocket().on("ENDELLIPSE", (data) => {
       console.log(data);
+      this.moving = false;
     });
   }
 
 
   renderSVG(): void {
+    console.log("RENDERED ELLIPSE");
     this.ellipse2 = this.renderer.createElement('ellipse', 'svg');
+    this.renderer.setAttribute(this.ellipse2,'id',this.ellipseAttributes?.id as string);
     this.renderer.setAttribute(this.ellipse2, 'cx', this.ellipseAttributes.x.toString() + 'px');
     this.renderer.setAttribute(this.ellipse2, 'cy', this.ellipseAttributes.y.toString() + 'px');
     this.renderer.setAttribute(this.ellipse2, 'width', this.ellipseAttributes.width.toString() + 'px');
@@ -115,6 +134,8 @@ export class ToolEllipseService implements Tools {
     this.renderer.setStyle(this.ellipse2, 'fillOpacity', this.ellipseAttributes!.fillOpacity);
     this.renderer.setStyle(this.ellipse2, 'strokeOpacity', this.ellipseAttributes!.strokeOpacity);
     this.drawingService.addObject(this.ellipse2);
+    this.objects.set(this.ellipseAttributes!.id, this.ellipse2);
+    this.initPoints.set(this.ellipseAttributes!.id, {x: this.ellipseAttributes.x, y: this.ellipseAttributes.y });
 }
 
   /// Quand le bouton de la sourie est enfoncé, on crée un ellipse et on le retourne
@@ -138,7 +159,7 @@ export class ToolEllipseService implements Tools {
       let ellipse: FilledShape;
       ellipse = {
         id: "",
-        user: "",
+        user: this.socketService.nickname,
         x: offset.x, y: offset.y,
         width: 0, height: 0,
         strokeWidth: this.strokeWidth.value as number,
@@ -169,8 +190,8 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est apuyé et on bouge celle-ci, l'objet courrant subit des modifications.
   onMove(event: MouseEvent): void {
-    if(event.button === LEFT_CLICK) {
-      this.socketService.getSocket().emit("DRAWELLIPSE", JSON.stringify(this.offsetManager.offsetFromMouseEvent(event)));
+    if(event.button === LEFT_CLICK && this.moving == true) {
+      this.socketService.getSocket().emit("DRAWELLIPSE",JSON.stringify({ point: this.offsetManager.offsetFromMouseEvent(event), shapeId:this.identif }));
     }
 
   }
@@ -193,72 +214,62 @@ export class ToolEllipseService implements Tools {
   }
 
   /// Transforme le size de l'objet courrant avec un x et un y en entrée
-  private setSize(mouseX: number, mouseY: number): void {
+  private setSize(mouseX: number, mouseY: number, id:string): void {
+    let startX = this.initPoints.get(id)?.x as number
+    let startY = this.initPoints.get(id)?.y as number
+    let width = Math.abs(mouseX - startX);
+    let height = Math.abs(mouseY - startY);
+    let newX = 0;
+    let newY = 0;
+
+    if (mouseX < startX) {
+        newX = mouseX;
+    } 
+    else {
+        newX = startX
+    }
+
+    if (mouseY < startY) {
+        newY = mouseY;
+    } 
+    else {
+        newY = startY;
+    }
+    newX += width / 2;
+    newY += height / 2;
+    let strokeFactor = 0;
     if (!this.ellipse2 || !this.ellipseAttributes) {
       return;
     }
-    let strokeFactor = 0;
     if (this.ellipseAttributes.stroke !== 'none') {
       strokeFactor = this.strokeWidth.value;
+      console.log(strokeFactor);
     }
 
-    // this.oldX = mouseX;
-    // this.oldY = mouseY;
+    this.ellipSVG(id, newX, newY, width, height);
 
-    let width = Math.abs(mouseX - this.x);
-    let height = Math.abs(mouseY - this.y);
-    let xValue = this.x;
-    let yValue = this.y;
+    // this.rendererService.renderer.setAttribute(this.contour, 'x', (this.ellipseAttributes.x - width / 2).toString());
+    // this.rendererService.renderer.setAttribute(this.contour, 'y', (this.ellipseAttributes.y - height / 2).toString());
+    // this.rendererService.renderer.setAttribute(this.contour, 'width', (width).toString());
+    // this.rendererService.renderer.setAttribute(this.contour, 'height', (height).toString());
+  }
 
-    if (mouseY < this.y) {
-      yValue = mouseY;
-    }
-    if (mouseX < this.x) {
-      xValue = mouseX;
-    }
+  private ellipSVG(id: string, x: number, y: number, width: number, height: number): void {
+    let ellip = this.objects.get(id);
 
-    if (this.isCircle) {
-      const minSide = Math.min(width, height);
-      if (mouseX < this.x) {
-        xValue += (width - minSide);
-      }
-      if (mouseY < this.y) {
-        yValue += (height - minSide);
-      }
-      width = minSide;
-      height = minSide;
-    }
-    xValue += width / 2;
-    yValue += height / 2;
+    if (ellip !== undefined) {
+      ellip!.setAttribute('cx', x.toString() + 'px');
+      ellip!.setAttribute('cy', y.toString() + 'px');
+      ellip!.setAttribute('height', height.toString() + 'px');
+      ellip!.setAttribute('width', width.toString() + 'px');
+      ellip!.setAttribute('rx', ((width/2).toString()) + 'px');
+      ellip!.setAttribute('ry', ((height/2).toString()) + 'px');
 
-    this.ellipseAttributes.x = xValue;
-    if (this.ellipse2) {
-      this.renderer.setAttribute(this.ellipse2, 'cx', this.ellipseAttributes.x.toString() + 'px');
+      this.rendererService.renderer.setAttribute(this.contour, 'x', (x - width / 2).toString());
+      this.rendererService.renderer.setAttribute(this.contour, 'y', (y - height / 2).toString());
+      this.rendererService.renderer.setAttribute(this.contour, 'width', (width).toString());
+      this.rendererService.renderer.setAttribute(this.contour, 'height', (height).toString());
     }
-    this.ellipseAttributes.y = yValue;
-    if (this.ellipse2) {
-      this.renderer.setAttribute(this.ellipse2, 'cy', this.ellipseAttributes.y.toString() + 'px');
-    }
-    this.ellipseAttributes.height = (height - strokeFactor) <= 0 ? 1 : (height - strokeFactor);
-    if (this.ellipse2) {
-      this.renderer.setAttribute(this.ellipse2, 'height', this.ellipseAttributes.height.toString() + 'px');
-      this.renderer.setAttribute(this.ellipse2, 'ry', (this.ellipseAttributes.height / 2).toString() + 'px');
-    }
-    this.ellipseAttributes.width = (width - strokeFactor) <= 0 ? 1 : (width - strokeFactor);
-    if (this.ellipse2) {
-      this.renderer.setAttribute(this.ellipse2, 'width', this.ellipseAttributes.width.toString() + 'px');
-      this.renderer.setAttribute(this.ellipse2, 'rx', (this.ellipseAttributes.width / 2).toString() + 'px');
-    }
-
-    // this.ellipseCommand.setCX(xValue);
-    // this.ellipseCommand.setCY(yValue);
-    // this.ellipseCommand.setHeight((height - strokeFactor) <= 0 ? 1 : (height - strokeFactor));
-    // this.ellipseCommand.setWidth((width - strokeFactor) <= 0 ? 1 : (width - strokeFactor));
-
-    this.rendererService.renderer.setAttribute(this.contour, 'x', (xValue - width / 2).toString());
-    this.rendererService.renderer.setAttribute(this.contour, 'y', (yValue - height / 2).toString());
-    this.rendererService.renderer.setAttribute(this.contour, 'width', (width).toString());
-    this.rendererService.renderer.setAttribute(this.contour, 'height', (height).toString());
   }
 
   /// Ajustement du style de l'ellipse

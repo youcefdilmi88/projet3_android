@@ -85,7 +85,7 @@ export class RoomsComponent implements OnInit {
 
   room: string;
 
-  changeRoom(element: any): void {
+  changeRoom(element: any): void { 
     this.socketService.joinRoom(element.textContent.trim().slice(8));
     this.socketService.currentRoom = element.textContent.trim().slice(8);
     console.log("LOOOK ATTT MEEEE" + element.textContent.trim().slice(8));
@@ -121,7 +121,7 @@ export class RoomsComponent implements OnInit {
           console.log("edwin" + data);
         }
         if (data.message == "success") {
-          console.log(data.message);
+          console.log("look at me " + data.message);
         }
       });
 
