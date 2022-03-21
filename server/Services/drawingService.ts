@@ -38,9 +38,6 @@ class DrawingService {
     this.drawings.clear();
     await databaseService.getAllDrawings().then((drawings)=>{
       drawings.forEach((drawing)=>{
-        console.log("loaded drawing");
-        console.log(drawing);
-        console.log("");
         let drawingObj:Drawing=new Drawing(drawing);
         this.drawings.set(drawingObj.getName(),drawingObj);
       });
