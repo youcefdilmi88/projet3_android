@@ -13,6 +13,8 @@ import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
 import { FilledShape } from './filed-shape.model';
 // import { RectangleCommand } from './rectangle-command';
 import { SocketService } from '@app/services/socket/socket.service';
+import { Point } from 'src/app/model/point.model';
+//import { Point } from 'src/app/model/point.model';
 
 /// Outil pour créer des rectangle, click suivis de bouge suivis de relache crée le rectangle
 /// et avec shift créer un carrée
@@ -28,15 +30,17 @@ export class ToolRectangleService implements Tools {
   private rectangle2: SVGRectElement;
   private rectangleAttributes: FilledShape;
 
-
   parameters: FormGroup;
   private strokeWidth: FormControl;
   private rectStyle: FormControl;
-
-  private isSquare = false;
-
   private x: number;
   private y: number;
+
+  private moving: boolean = false;
+
+
+  public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
+  initPoints: Map<string, Point> =  new Map<string, Point>();
 
   renderer: Renderer2;
 
@@ -46,7 +50,6 @@ export class ToolRectangleService implements Tools {
     private colorTool: ToolsColorService,
     private drawingService: DrawingService,
     private socketService:SocketService,
-    //private rendererService: RendererProviderService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
     this.strokeWidth = new FormControl(1, Validators.min(1));
@@ -62,10 +65,10 @@ export class ToolRectangleService implements Tools {
 
     this.socketService.getSocket().on("STARTRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      console.log(data);
       console.log("STARTRECTANGLE");
       this.rectangleAttributes={
         id:data.id,
+        user: data.user,
         x:data.x,
         y:data.y,
         width:data.width,
@@ -76,35 +79,49 @@ export class ToolRectangleService implements Tools {
         fillOpacity: data.fillOpacity,
         strokeOpacity: data.strokeOpacity,
       };
-      this.identif = data.id;
+
       this.x = data.x;
       this.y = data.y;
+
+      //ce shit cest pour pas que vs code piss off
+      console.log(this.x + this.y);
+
       this.setStyle(
         data.fill,
         data.strokeOpacity,
         data.stroke,
         data.fillOpacity,
       );
+
+      if (data.user == this.socketService.nickname) {
+        this.identif = data.id as string;
+      }
+
       this.renderSVG();
+      this.moving = true;
     });
 
     this.socketService.getSocket().on("DRAWRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      if (this.rectangleAttributes.id == this.identif) {
-        this.setSize(data.x as number, data.y as number);
+      if (this.rectangleAttributes?.id == data.shapeId) {
+        this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
       }
-      //this.setSize(data.x as number, data.y as number);
+      if (this.rectangleAttributes?.id != data.shapeId) {
+        this.rectangleAttributes!.id = this.identif;
+        this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
+      }
     });
 
     this.socketService.getSocket().on("ENDRECTANGLE",(data)=>{
-      console.log(data);
       console.log("ENDRECTANGLE");
+      this.moving = false;
     });
   }
 
   renderSVG(): void {
       console.log("RENDERED RECTANGLE");
       this.rectangle2 = this.renderer.createElement('rect', 'svg');
+      this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
       this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
       this.renderer.setAttribute(this.rectangle2, 'y', this.rectangleAttributes.y.toString() + 'px');
       this.renderer.setAttribute(this.rectangle2, 'width', this.rectangleAttributes.width.toString() + 'px');
@@ -115,6 +132,8 @@ export class ToolRectangleService implements Tools {
       this.renderer.setStyle(this.rectangle2, 'fillOpacity', this.rectangleAttributes!.fillOpacity);
       this.renderer.setStyle(this.rectangle2, 'strokeOpacity', this.rectangleAttributes!.strokeOpacity);
       this.drawingService.addObject(this.rectangle2);
+      this.objects.set(this.rectangleAttributes!.id, this.rectangle2);
+      this.initPoints.set(this.rectangleAttributes!.id, {x: this.rectangleAttributes.x, y: this.rectangleAttributes.y });
   }
 
 
@@ -123,11 +142,10 @@ export class ToolRectangleService implements Tools {
   onPressed(event: MouseEvent): void {
     if (event.button === LEFT_CLICK) {
       const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
-      //this.x = offset.x;
-      //this.y = offset.y;
       let rectangleObj: FilledShape;
       rectangleObj = {
         id:"",
+        user: this.socketService.nickname,
         x: offset.x, 
         y: offset.y,
         width: 0, height: 0,
@@ -138,7 +156,7 @@ export class ToolRectangleService implements Tools {
       rectangleObj!.fill = this.colorTool.secondaryColorString;
       this.socketService.getSocket().emit("STARTRECTANGLE",JSON.stringify(rectangleObj));
     }
-      if(event.button === RIGHT_CLICK) {
+      if (event.button === RIGHT_CLICK) {
         this.setStyle(
           this.colorTool.secondaryColorString,
           this.colorTool.secondaryAlpha.toString(),
@@ -156,10 +174,8 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est apuyé et on bouge celle-ci, l'objet courrant subit des modifications.
   onMove(event: MouseEvent): void {
-    //const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
-    //this.setSize(offset.x, offset.y);
-    if(event.button === LEFT_CLICK) {
-      this.socketService.getSocket().emit("DRAWRECTANGLE",JSON.stringify(this.offsetManager.offsetFromMouseEvent(event)));
+    if (event.button === LEFT_CLICK && this.moving == true) {
+      this.socketService.getSocket().emit("DRAWRECTANGLE",JSON.stringify({ point: this.offsetManager.offsetFromMouseEvent(event), shapeId:this.identif }));
     }
   }
 
@@ -181,54 +197,47 @@ export class ToolRectangleService implements Tools {
   }
   
   /// Transforme le size de l'objet courrant avec un x et un y en entrée
-  private setSize(mouseX: number, mouseY: number): void {
+  private setSize(mouseX: number, mouseY: number, id: string): void {
+    let startX = this.initPoints.get(id)?.x as number
+    let startY = this.initPoints.get(id)?.y as number
+    let width = Math.abs(mouseX - startX);
+    let height = Math.abs(mouseY - startY);
+    let newX = 0;
+    let newY = 0;
+
+    if (mouseX < startX) {
+        newX = mouseX;
+    } 
+    else {
+        newX = startX
+    }
+
+    if (mouseY < startY) {
+        newY = mouseY;
+    } 
+    else {
+        newY = startY;
+    }
+    let strokeFactor = 0;
     if (!this.rectangle2 || !this.rectangleAttributes) {
       return;
     }
-    let strokeFactor = 0;
     if (this.rectangleAttributes.stroke !== 'none') {
       strokeFactor = this.strokeWidth.value;
+      console.log(strokeFactor);
     }
 
-    let width = Math.abs(mouseX - this.x);
-    let height = Math.abs(mouseY - this.y);
-    let xValue = this.x;
-    let yValue = this.y;
+    this.rectSVG(id, newX, newY, width, height);
+  }
 
-    if (mouseY < this.y) {
-      yValue = mouseY;
-    }
-    if (mouseX < this.x) {
-      xValue = mouseX;
-    }
+  private rectSVG(id: string, x: number, y: number, width: number, height: number): void {
+    let rect = this.objects.get(id);
 
-    if (this.isSquare) {
-      const minSide = Math.min(width, height);
-      if (mouseX < this.x) {
-        xValue += (width - minSide);
-      }
-      if (mouseY < this.y) {
-        yValue += (height - minSide);
-      }
-      width = minSide;
-      height = minSide;
-    }
-
-    this.rectangleAttributes.x = (width - strokeFactor) <= 0 ? xValue + strokeFactor / 2 + (width - strokeFactor) : xValue + strokeFactor / 2;
-    if (this.rectangle2) {
-      this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
-    }
-    this.rectangleAttributes.y = (height - strokeFactor) <= 0 ? yValue + strokeFactor / 2 + (height - strokeFactor) : yValue + strokeFactor / 2
-    if (this.rectangle2) {
-      this.renderer.setAttribute(this.rectangle2, 'y', this.rectangleAttributes.y.toString() + 'px');
-    }
-    this.rectangleAttributes.height = (height - strokeFactor) <= 0 ? 1 : (height - strokeFactor);
-    if (this.rectangle2) {
-      this.renderer.setAttribute(this.rectangle2, 'height', this.rectangleAttributes.height.toString() + 'px');
-    }
-    this.rectangleAttributes.width = (width - strokeFactor) <= 0 ? 1 : (width - strokeFactor);
-    if (this.rectangle2) {
-      this.renderer.setAttribute(this.rectangle2, 'width', this.rectangleAttributes.width.toString() + 'px');
+    if (rect !== undefined) {
+      rect!.setAttribute('x', x.toString() + 'px');
+      rect!.setAttribute('y', y.toString() + 'px');
+      rect!.setAttribute('height', height.toString() + 'px');
+      rect!.setAttribute('width', width.toString() + 'px');
     }
   }
 

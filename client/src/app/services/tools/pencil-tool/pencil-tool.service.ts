@@ -29,8 +29,9 @@ export class PencilToolService implements Tools {
   parameters: FormGroup;
   private identif: string;
 
+  private moving: boolean = false;
+
   public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
-  public gObjects = new Map<string, SVGGraphicsElement>();
 
   renderer: Renderer2;
 
@@ -74,6 +75,7 @@ export class PencilToolService implements Tools {
       console.log(this.pencil.id);
 
       this.renderSVG();
+      this.moving = true;
     });
 
     this.socketService.getSocket().on("DRAWLINE",(data)=>{
@@ -91,6 +93,7 @@ export class PencilToolService implements Tools {
 
     this.socketService.getSocket().on("ENDLINE",(data)=>{
       console.log("ENDLINE");
+      this.moving = false;
     });
 
   }
@@ -159,7 +162,7 @@ export class PencilToolService implements Tools {
 
   /// Ajout d'un point selon le déplacement de la souris
   onMove(event: MouseEvent): void {
-    if(event.button === LEFT_CLICK) {
+    if (event.button === LEFT_CLICK && this.moving == true) {
       this.socketService.getSocket().emit("DRAWLINE",JSON.stringify({ point: this.offsetManager.offsetFromMouseEvent(event), shapeId:this.identif } ));
     }  
   }

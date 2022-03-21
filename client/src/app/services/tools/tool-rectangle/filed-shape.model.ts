@@ -1,5 +1,6 @@
 export interface FilledShape {
     id: string;
+    user: string;
     x: number;
     y: number;
     width: number;

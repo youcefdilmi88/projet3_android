@@ -77,6 +77,7 @@ export class PolygonToolService implements Tools {
       this.y = offset.y;
       this.polygon = {
         id:"",
+        user: "",
         pointsList: [offset],
         x: this.x, y: this.y,
         width: 0, height: 0,

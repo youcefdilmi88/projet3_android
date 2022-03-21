@@ -67,6 +67,7 @@ export class ToolEllipseService implements Tools {
       data = JSON.parse(data);
       this.ellipseAttributes = {
         id: data.id,
+        user: data.user,
         x: data.x,
         y: data.y,
         width: data.width,
@@ -137,6 +138,7 @@ export class ToolEllipseService implements Tools {
       let ellipse: FilledShape;
       ellipse = {
         id: "",
+        user: "",
         x: offset.x, y: offset.y,
         width: 0, height: 0,
         strokeWidth: this.strokeWidth.value as number,
