@@ -112,15 +112,16 @@ class DrawingService {
 
     let socket=socketService.getIo().sockets.sockets.get(socketId);
 
+    if(drawingService.socketInDrawing.has(socket?.id as string)) {
+      socket?.leave(drawingService.socketInDrawing.get(socket?.id)?.getName() as string);
+      // delete user from previous drawing
+      drawingService.socketInDrawing.delete(socket?.id as string); 
+    }
+
     socket?.join(drawingName as string);
 
     const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawingName)}
     socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification))
-
-    if(drawingService.socketInDrawing.has(socket?.id as string)) {
-      // delete user from previous drawing
-      drawingService.socketInDrawing.delete(socket?.id as string); 
-    }
 
     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
 

@@ -136,6 +136,8 @@ export class RoomService {
            console.log(data);
            this.rooms.delete(name);
            this.moveUserToDefault(name);
+           const message={message:"room deleted"};
+           socketService.getIo().emit(SOCKETEVENT.ROOMDELETED,JSON.stringify(message));
          });
        }
        catch(error) {
