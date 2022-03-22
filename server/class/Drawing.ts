@@ -68,6 +68,7 @@ export class Drawing {
            if(element instanceof Line) {
              let elementInterface:LineInterface={  
                id:element.getId(),
+               user:element.getUser(),
                strokeWidth:element.getStrokeWidth(),
                fill:element.getFill(),
                stroke:element.getStroke(),
