@@ -10,6 +10,7 @@ export class Line extends BaseShape {
     {
        super(
            line.id,
+           line.user,
            line.strokeWidth,
            line.fill,
            line.stroke,

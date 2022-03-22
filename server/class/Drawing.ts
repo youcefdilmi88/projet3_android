@@ -80,6 +80,7 @@ export class Drawing {
            if(element instanceof Ellipse) {
               let elementInterface:EllipseInterface={
                 id:element.getId(),
+                user:element.getUser(),
                 strokeWidth:element.getStrokeWidth(),
                 fill:element.getFill(),
                 stroke:element.getStroke(),
@@ -96,6 +97,7 @@ export class Drawing {
            if(element instanceof Rectangle) {
             let elementInterface:RectangleInterface={
               id:element.getId(),
+              user:element.getUser(),
               strokeWidth:element.getStrokeWidth(),
               fill:element.getFill(),
               stroke:element.getStroke(),
