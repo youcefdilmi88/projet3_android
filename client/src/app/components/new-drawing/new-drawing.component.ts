@@ -32,6 +32,7 @@ export class NewDrawingComponent implements OnInit {
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
+    this.newDrawing();
     this.form = new FormGroup(
       {
         dimension: this.newDrawingService.form,
@@ -66,7 +67,8 @@ export class NewDrawingComponent implements OnInit {
   /// Cree un nouveau dessin
   private newDrawing() {
     this.drawingService.isCreated = true;
-    const size: { width: number, height: number } = this.newDrawingService.sizeGroup.value;
+    // const size: { width: number, height: number } = this.newDrawingService.sizeGroup.value;
+    const size: { width: number, height: number } = {width: 800, height: 1000};
     this.drawingService.newDrawing(
       size.width,
       size.height,

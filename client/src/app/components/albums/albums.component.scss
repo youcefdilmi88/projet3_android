@@ -17,6 +17,10 @@ body{overflow: scroll;}
 .SectionAlbums {
     width: 100%;
     position: relative;
+    align-items: center;
+    justify-content: center;
+    // position: absolute;
+    left:15%;
 }
 
 .listAlbumsButtons {
@@ -32,7 +36,7 @@ body{overflow: scroll;}
     width: 50%;
     margin-top: 20px;
     float:left; display:inline; width: 49%;
-    display: flex;
+    // display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -40,8 +44,8 @@ body{overflow: scroll;}
 .albums {
     background-color: aqua;
     border-style: solid;
-    height: 300px;
-    width: 300px;
+    height: 400px;
+    width: 400px;
     text-align: center;
 }
 

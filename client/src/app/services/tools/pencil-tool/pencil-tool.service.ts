@@ -94,6 +94,7 @@ export class PencilToolService implements Tools {
     this.socketService.getSocket().on("ENDLINE",(data)=>{
       console.log("ENDLINE");
       this.moving = false;
+      console.log(data);
     });
 
   }

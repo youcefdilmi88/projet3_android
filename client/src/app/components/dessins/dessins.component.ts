@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit } from '@angular/core';
-//import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
+import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
 
 
 @Component({
@@ -21,9 +23,10 @@ export class DessinsComponent implements OnInit {
 
 
   constructor(
+    public dialog: MatDialog,
+    // private router: Router,
     private socketService: SocketService,
     private http: HttpClient,
-    //private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +71,7 @@ export class DessinsComponent implements OnInit {
         
     } else {
         const mainView = document.getElementById('mainView');
-        mainView!.style.backgroundImage = 'url(' + this.imageUrlArray[this.centerImage] + ')'
+        mainView!.style.backgroundImage = 'url(' + this.imageUrlArray[this.centerImage] + ')';
 
         const leftView = document.getElementById('leftView');
         leftView!.style.backgroundImage = 'url(' + this.imageUrlArray[this.leftImage] + ')';
@@ -90,6 +93,7 @@ export class DessinsComponent implements OnInit {
     this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
       data=JSON.parse(data);
       console.log(data.message);
+      this.dialog.open(NewDrawingComponent);
     });
 
     this.socketService.getSocket().on("CREATEROOM", (data)=> {
