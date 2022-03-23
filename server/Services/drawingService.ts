@@ -5,6 +5,7 @@ import { SOCKETEVENT } from "../Constants/socketEvent";
 import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
+import albumService from "./albumService";
 import databaseService from "./databaseService";
 import socketService from "./socketService";
 import userService from "./userService";
@@ -82,6 +83,11 @@ class DrawingService {
           console.log(data);
           this.drawings.delete(drawingName);
           this.kickUsersFromDrawing(drawingName);
+          albumService.albums.forEach((v,k)=>{
+            if(v.getDrawings().includes(drawingName)) {
+              v.removeDrawing(k);      // remove drawing from all albums
+            }
+          })
           const drawingNotification={drawingName:drawingName}
           socketService.getIo().emit(SOCKETEVENT.DRAWINGDELETED,JSON.stringify(drawingNotification));
         });
@@ -124,6 +130,17 @@ class DrawingService {
 
     drawingService.socketInDrawing.set(socket?.id as string,drawing);
     drawing.addMember(socket?.id as string,useremail);
+  }
+
+  leaveDrawing(socket:Socket,mail:String) {
+    let drawing:Drawing=this.socketInDrawing.get(socket?.id as string) as Drawing;
+    console.log("leave drawing:"+drawing.getName());
+
+    socket?.leave(drawing.getName() as string);
+    drawingService.socketInDrawing.delete(socket?.id as string);
+    drawing.removeMember(socket?.id as string);
+    const message={drawingName:drawing.getName(),useremail:mail};
+    socketService.getIo().emit(SOCKETEVENT.LEAVEDRAWING,JSON.stringify(message));
   }
 
 

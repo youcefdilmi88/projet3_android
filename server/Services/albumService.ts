@@ -14,12 +14,12 @@ class AlbumService {
    public albums:Map<String,Album>;
 
    constructor() {
-     this.albums=new Map<String,Album>();
+     this.albums=new Map<String,Album>();  // albumName and Album
      this.loadAllAlbum();
     }
 
    async loadAllAlbum() {
-    this.albums.clear();
+    this.albums.clear(); 
     await databaseService.getAllAlbums().then((albums)=>{
          albums.forEach((album)=>{
              if(album.visibility==VISIBILITY.PUBLIC) {
@@ -74,6 +74,20 @@ class AlbumService {
         console.log(e);
       }
       
+   }
+
+   async deleteAlbum(name:String) {
+     try {
+      await AlbumSchema.albumSchema.deleteOne({albumName:name}).then((data)=>{
+        console.log(data);
+        this.albums.delete(name);
+        const message={message:"album deleted"};
+        socketService.getIo().emit(SOCKETEVENT.ALBUMDELETED,JSON.stringify(message));
+      });
+     }
+     catch(e) {
+       console.log(e);
+     }
    }
 
 }

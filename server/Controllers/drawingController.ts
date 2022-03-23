@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import { Socket } from "socket.io";
 import { Drawing } from "../class/Drawing";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
@@ -118,16 +119,10 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let user:User=userService.getUserByUseremail(useremail) as User;
 
     let socketId:string=userService.getSocketIdByUser().get(user) as string;
-    let socket=socketService.getIo().sockets.sockets.get(socketId);
+    let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
 
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
-
-        let drawing:Drawing=drawingService.socketInDrawing.get(socket?.id as string) as Drawing;
-        console.log("leave drawing:"+drawing.getName());
-
-        socket?.leave(drawing.getName() as string);
-        drawingService.socketInDrawing.delete(socket?.id as string);
-        drawing.removeMember(socket?.id as string);
+        drawingService.leaveDrawing(socket,useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
   
