@@ -5,6 +5,7 @@ import ellipseService from './ellipseService';
 import messageService from "./messageService";
 import pencilService from './pencilService';
 import rectangleService from './rectangleService';
+import selectionService from './selectionService';
 
 
 class SocketService {
@@ -19,6 +20,7 @@ class SocketService {
      rectangleService.initRectangle(this.io);
      ellipseService.initEllipse(this.io);
      pencilService.initPencil(this.io);
+     selectionService.initSelection(this.io);
      drawingService.initDrawing(this.io);
   }
 

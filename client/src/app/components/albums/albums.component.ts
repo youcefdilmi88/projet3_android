@@ -12,6 +12,7 @@ import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-re
 import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
 import { URL } from '../../../../constants';
 import { Router } from '@angular/router';
+import { SelectionToolService } from '@app/services/tools/selection-tool/selection-tool.service';
 
 
 @Component({
@@ -40,12 +41,14 @@ export class AlbumsComponent implements OnInit {
     private pencilService:PencilToolService,
     private rectangleService:ToolRectangleService,
     private ellipseService:ToolEllipseService,
+    private selectionService: SelectionToolService,
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
     this.pencilService.setUpPencil();
     this.rectangleService.setUpRectangle();
     this.ellipseService.setUpEllipse();
+    this.selectionService.setUpSelection();
   }
 
   newDrawing() {

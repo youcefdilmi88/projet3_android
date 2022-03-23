@@ -13,6 +13,8 @@ import { ToolIdConstants } from '../tool-id-constants';
 import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
 import { SelectionCommandConstants } from './command-type-constant';
 import { SelectionTransformService } from './selection-transform.service';
+import { SocketService } from '@app/services/socket/socket.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +40,7 @@ export class SelectionToolService implements Tools {
   private rectSelection: SVGPolygonElement;
 
   private rectInversement: SVGRectElement;
-  private firstInvObj: SVGElement | null;
+  //private firstInvObj: SVGElement | null;
   private recStrokeWidth = 1;
 
   private objects: SVGElement[] = [];
@@ -52,10 +54,64 @@ export class SelectionToolService implements Tools {
     private offsetManager: OffsetManagerService,
     private rendererService: RendererProviderService,
     private selectionTransformService: SelectionTransformService,
+    private socketService: SocketService,
   ) {
     this.setRectInversement();
     this.setRectSelection();
     this.setCtrlPoints();
+  }
+
+  setUpSelection() {
+    this.socketService.getSocket().on("STARTSELECT", (data)=>{
+      console.log("STARTSELECT aeugh");
+      data=JSON.parse(data);
+
+      console.log(data.x as number);
+
+      this.isIn = true;
+      /*if (!this.selectionTransformService.hasCommand()) {
+        this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
+      }*/
+      /*this.ctrlPoints.forEach((point) => {
+        this.rendererService.renderer.setAttribute(point, 'x', data.x.toString() + 'px');
+        this.rendererService.renderer.setAttribute(point, 'y', data.y.toString() + 'px');
+        console.log("onpressed6");
+      });*/
+      /*this.removeSelection();
+
+      console.log(data.object);
+
+      this.objects.push(data.object);
+      //this.setSelection();
+      this.isIn = true;
+
+      this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
+
+      this.rendererService.renderer.appendChild(this.drawingService.drawing, this.rectSelection);
+      this.rendererService.renderer.appendChild(this.drawingService.drawing, this.ctrlG);*/
+      //this.setSelection();
+      //this.setRectSelection();
+    });
+
+    this.socketService.getSocket().on("DRAWSELECT", (data)=>{
+      console.log("draw bool " + this.isIn);
+      console.log("DRAWSELECT");
+      data=JSON.parse(data);
+      
+      this.rendererService.renderer.setAttribute(this.rectSelection, 'points', this.pointsToString());
+
+      console.log(data.x);
+      
+      this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
+      this.selectionTransformService.translate(data.x, data.y);
+      this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
+      //this.setSelection();
+    });
+
+    this.socketService.getSocket().on("ENDSELECT", (data)=>{
+      console.log("ENDSELECT");
+      //data=JSON.parse(data);
+    });
   }
 
   /// Quand le bouton gauche de la sourie est enfoncé, soit on selectionne un objet, soit on debute une zone de selection
@@ -67,31 +123,29 @@ export class SelectionToolService implements Tools {
       this.tmpX = offset.x;
       this.tmpY = offset.y;
       let target = event.target as SVGElement;
-      if (this.ctrlPoints.includes(target as SVGRectElement)) {
-        this.selectionTransformService.createCommand(
-          SelectionCommandConstants.RESIZE, this.rectSelection, this.objects, offset, target as SVGRectElement,
-        );
-        return;
-      }
-
-      if (target.getAttribute('name') === 'pen') {
-        target = target.parentNode as SVGElement;
-      }
+      console.log("onpressed1");
       const obj = this.drawingService.getObject(Number(target.id));
 
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
-          this.isIn = true;
+          console.log("onpressed4");
+          this.isIn = true;//
           if (!this.selectionTransformService.hasCommand()) {
-            this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
-          }
-        } else {
+            //this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
+            console.log("onpressed5");
+          }//
+        } 
+        else {
           this.ctrlPoints.forEach((point) => {
             this.rendererService.renderer.setAttribute(point, 'x', `${offset.x}`);
             this.rendererService.renderer.setAttribute(point, 'y', `${offset.y}`);
+            console.log("onpressed6");
           });
-          this.removeSelection();
+          this.removeSelection();//
           if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
+
+            console.log("offsetx " + offset.x);
+            this.socketService.getSocket().emit("STARTSELECT", JSON.stringify({object: obj, x: this.tmpX, y: this.tmpY}));
             this.objects.push(obj);
             this.setSelection();
             this.isIn = true;
@@ -100,19 +154,19 @@ export class SelectionToolService implements Tools {
 
             this.rendererService.renderer.appendChild(this.drawingService.drawing, this.rectSelection);
             this.rendererService.renderer.appendChild(this.drawingService.drawing, this.ctrlG);
+            console.log("onpressed7");
             return;
           }
         }
-      } else {
-        if (obj) {
-          this.firstInvObj = obj;
-        }
+      } 
+      else {
         this.rendererService.renderer.appendChild(this.drawingService.drawing, this.rectInversement);
-
+        console.log("onpressed8")
         this.wasMoved = true;
       }
 
       if (this.hasSelectedItems) {
+        console.log("onpressed9");
         return;
       }
 
@@ -127,35 +181,41 @@ export class SelectionToolService implements Tools {
   onRelease(event: MouseEvent): ICommand | void {
     if ((event.button === RIGHT_CLICK || event.button === LEFT_CLICK) && this.drawingService.drawing) {
       if (event.button === LEFT_CLICK) {
-        if (this.wasMoved && !this.hasSelectedItems) {
-          this.findObjects(this.rectSelection, event.button);
-        } else if (!this.wasMoved && this.objects.length >= 1 && this.isIn) {
+        if (!this.wasMoved && this.objects.length >= 1 && this.isIn) {
           this.objects = [];
           const target = event.target as SVGElement;
           const obj = this.drawingService.getObject(Number(target.id));
+
+          //this.socketService.getSocket().emit("STARTSELECT", JSON.stringify(obj));
+          
+          console.log("onrelease2");
           if (obj) {
             this.objects.push(obj);
             this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
+            console.log("onrelease3");
+            //this.socketService.getSocket().emit("STARTSELECT", JSON.stringify(obj));
           }
         }
-      } else {
-        this.findObjects(this.rectInversement, event.button);
-      }
+      } 
       if (this.objects.length > 0) {
-        this.setSelection();
-      } else {
+        //this.setSelection();
+        console.log("onrelease5");
+      } 
+      else {
         this.removeSelection();
+        console.log("onrelease6");
       }
 
       this.removeInversement();
 
-      this.firstInvObj = null;
+      //this.firstInvObj = null;
       this.isIn = false;
       let returnRectangleCommand;
       if (this.wasMoved) {
         if (this.selectionTransformService.hasCommand()) {
           returnRectangleCommand = this.selectionTransformService.getCommand();
           this.selectionTransformService.endCommand();
+          console.log("onrelease7");
         }
         this.wasMoved = false;
         return returnRectangleCommand;
@@ -173,24 +233,33 @@ export class SelectionToolService implements Tools {
     if (this.drawingService.drawing) {
       if (event.buttons === 1) {
         this.wasMoved = true;
+        console.log("move1");
 
         if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
           this.selectionTransformService.resize(event.movementX, event.movementY, offset);
-          this.setSelection();
+          //this.setSelection();
+          console.log("move2");
           return;
         }
 
         if (this.isIn) {
           if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.TRANSLATE) {
-            this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
+            //this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
+            console.log("move3");
           }
-          this.selectionTransformService.translate(event.movementX, event.movementY);
-          this.setSelection();
-        } else {
+          //this.selectionTransformService.translate(event.movementX, event.movementY);
+          this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY }));
+          //this.setSelection();
+          console.log("move4");
+        } 
+        else {
           this.setSizeOfSelectionArea(offset.x, offset.y, this.rectSelection);
+          console.log("move5");
         }
-      } else if (event.buttons === 2) {
+      } 
+      else if (event.buttons === 2) {
         this.setSizeOfSelectionArea(offset.x, offset.y, this.rectInversement);
+        console.log("move6");
       }
     }
   }
@@ -297,7 +366,7 @@ export class SelectionToolService implements Tools {
   }
 
   /// Methode qui trouve les objets se situant a l'interieur du rectangle de selection ou d'inversement trace.
-  private findObjects(rectUsing: SVGElement, button: number): void {
+  /*private findObjects(rectUsing: SVGElement, button: number): void {
     const allObject: SVGElement[] = [];
     this.drawingService.getObjectList().forEach((value) => {
       if (value.tagName.toLowerCase() !== 'defs') {
@@ -338,7 +407,7 @@ export class SelectionToolService implements Tools {
         }
       }
     }
-  }
+  }*/
 
   /// Methode qui calcule la surface que le rectangle de selection doit prendre en fonction des objets selectionnes.
   private setSelection(): void {
