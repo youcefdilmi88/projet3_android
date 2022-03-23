@@ -4,6 +4,14 @@
         <button class = "btn" id="logout" (click)="logout()" routerLink = "">Déconnexion</button>
     </div>
 
+    <div>
+        <mat-form-field class="input" floatLabel="always" appearance="outline">
+            <mat-label>Nom du nouveau dessin</mat-label>
+            <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="drawing">
+        </mat-form-field> 
+     
+        <button mat-raised-button id="createRoom" (click)="createDrawing(drawingname.value)">Créer un dessin</button>
+    </div>
 
     <div id="galleryView">
         <div id="galleryContainer">

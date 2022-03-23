@@ -156,6 +156,7 @@ export class PencilToolService implements Tools {
 
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
+    // this.socketService.getSocket().emit("ENDLINE", JSON.stringify(this.pencil));
     this.socketService.getSocket().emit("ENDLINE", JSON.stringify(this.pencil));
     return;
   }

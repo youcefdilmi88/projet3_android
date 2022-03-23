@@ -15,6 +15,7 @@ export class SocketService {
   public email: string;
   public isConnected: boolean;
   public currentRoom: string;
+  public drawingName: string;
   //private userService: UserService;
 
   constructor() { }

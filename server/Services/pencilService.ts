@@ -57,7 +57,7 @@ export class PencilService {
 
       console.log("ENDLINE");
       console.log(roomService.getRoomNameBySocket(socket.id)+" endline")
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",{});
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",JSON.stringify(data));
     })
   }
 
