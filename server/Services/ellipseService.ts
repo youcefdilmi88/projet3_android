@@ -57,7 +57,7 @@ private io:Server;
       drawing.elementById.set(ellipse.getId(),ellipse);
 
       // socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",{});
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDELLIPSE",{});
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDELLIPSE",JSON.stringify(data));
     })
   }
 
