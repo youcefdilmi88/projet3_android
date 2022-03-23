@@ -1,4 +1,5 @@
 
+import { Socket } from "socket.io";
 import { Room } from "../class/Room";
 import { User } from "../class/User";
 import { SOCKETEVENT } from "../Constants/socketEvent";
@@ -13,7 +14,7 @@ export class RoomService {
 
   private rooms=new Map<String,Room>(); // roomName and room
   private socketidToEmail=new Map<string,String>(); // socketid and useremail
-  private socketToRoom=new Map<string,string>(); //socketid and roomName
+  private socketToRoom=new Map<string,string>(); //socketid and roomName 
 
   constructor() {
     this.createDefaultRoom();
@@ -155,7 +156,7 @@ export class RoomService {
     nextRoom.addUserToRoom(useremail);
 
     if(this.getSocketsRoomNames().has(socket?.id as string)) {
-        this.getSocketsRoomNames().delete(socket?.id as string);
+        this.getSocketsRoomNames().delete(socket?.id as string); // delete to set current room
     }
     this.getSocketsRoomNames().set(socket?.id as string,nextRoom.getRoomName() as string); // current chat room
 
@@ -165,6 +166,15 @@ export class RoomService {
 
     socketService.getIo().emit(SOCKETEVENT.JOINROOM,JSON.stringify(joinRoomNotification));
     console.log("ROOM CHANGE:"+nextRoom.getRoomName());
+  }
+
+  leaveRoom(socket:Socket,roomToLeave:String,useremail:String) {
+    console.log(roomToLeave);
+    socket?.leave(roomToLeave as string);   
+    let room:Room=this.rooms.get(roomToLeave) as Room;
+    room.removeUserFromRoom(useremail);  // removes user from room members
+    const message={useremail:useremail,roomName:roomToLeave};
+    socketService.getIo().emit(SOCKETEVENT.LEAVEROOM,JSON.stringify(message));
   }
 
   parseObject(arg: any): Object {

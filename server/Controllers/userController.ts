@@ -5,6 +5,8 @@ import accountService from '../Services/accountService';
 import { User } from '../class/User';
 import roomService from '../Services/roomService';
 import { HTTPMESSAGE } from '../Constants/httpMessage';
+import socketService from '../Services/socketService';
+import { Socket } from 'socket.io';
 
 
 
@@ -70,9 +72,19 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
 
 const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     let useremail:String=req.body.useremail;
+    
+    let user:User=userService.getUserByUseremail(useremail) as User;
+    let socketId:string=userService.getSocketIdByUser().get(user) as string;
+    let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
+
     console.log(useremail+" wants to loggout");
     console.log("user in map for logout ? "+userService.getLoggedUsers().has(useremail))
     if(userService.getLoggedUsers().has(useremail)) {
+        roomService.getAllRooms().forEach((v,k)=>{
+          if(v.getUsersInRoom().includes(useremail)) {
+            roomService.leaveRoom(socket,k,useremail);
+          }
+        })
         userService.getLoggedUsers().delete(useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS})
     }

@@ -3,10 +3,10 @@ import { MessageInterface } from "../Interface/Message";
 
 
 export class Room {
-    roomName:String;
-    creator:String;
-    members:String[]=[];
-    messages:Array<MessageInterface>;
+    private roomName:String;
+    private creator:String;
+    private members:String[]=[];
+    private messages:Array<MessageInterface>;
 
     constructor(roomName:String,creator:String,members:String[],messages:MessageInterface[]) {
        this.roomName=roomName;
