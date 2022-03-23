@@ -11,6 +11,7 @@ export class Ellipse extends BaseShape {
     constructor(ellipse:EllipseInterface) {
        super(
          ellipse.id,
+         ellipse.user,
          ellipse.strokeWidth,
          ellipse.fill,
          ellipse.stroke,

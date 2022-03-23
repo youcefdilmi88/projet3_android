@@ -7,4 +7,5 @@ export enum HTTPMESSAGE {
     MAILUND="email undefined",
     DRAWINGEXIST="drawing already exists",
     ROOMEXIST="room already exists",
+    ALBUMEXIST="album already exist"
 }

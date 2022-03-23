@@ -11,6 +11,7 @@ export class Rectangle extends BaseShape {
     constructor(rectangle:RectangleInterface) {
        super(
          rectangle.id,
+         rectangle.user,
          rectangle.strokeWidth,
          rectangle.fill,
          rectangle.stroke,

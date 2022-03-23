@@ -31,7 +31,7 @@ class AccountService {
    async createAccount(email:String,pass:String,nickName:String) {
     const account=new AccountSchema({useremail:email,password:pass,nickname:nickName});
     const user=new UserSchema({useremail:email,nickname:nickName,currentRoom:roomService.getDefaultRoom().getRoomName()});
-
+    
     await account.save().catch((e:Error)=>{
       console.log(e);
     });

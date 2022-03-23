@@ -1,5 +1,6 @@
 export abstract class BaseShape {
     private id:string;
+    private user:string;
     private strokeWidth:number;
     private fill:string;
     private stroke:string;
@@ -8,6 +9,7 @@ export abstract class BaseShape {
 
     constructor(
         id:string,
+        user:string,
         strokeWidth:number,
         fill:string,
         stroke:string,
@@ -15,6 +17,7 @@ export abstract class BaseShape {
         strokeOpacity:string,
     ) {
         this.id=id;
+        this.user=user;
         this.strokeWidth=strokeWidth;
         this.fill=fill;
         this.stroke=stroke;
@@ -24,6 +27,10 @@ export abstract class BaseShape {
     
     getId():string {
         return this.id;
+    }
+
+    getUser():string {
+        return this.user;
     }
 
     getStrokeWidth():number {
