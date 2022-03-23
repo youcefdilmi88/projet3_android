@@ -47,8 +47,19 @@ const getAlbums=(req:Request,res:Response,next:NextFunction)=>{
     return res.status(200).json(albums);
 }
 
+const deleteAlbum=(req:Request,res:Response,next:NextFunction)=>{
+    let albumName:String=req.body.albumName as String;
+    
+    if(albumService.albums.has(albumName)) {
+      albumService.deleteAlbum(albumName);
+      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});
+}
+
 
 router.post('/createAlbum',createAlbum);
 router.get('/getAlbums',getAlbums);
+router.post('/deleteAlbum',deleteAlbum);
 
 export=router;
