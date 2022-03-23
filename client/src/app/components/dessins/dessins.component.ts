@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+//import { Router } from '@angular/router';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
 
@@ -22,6 +23,7 @@ export class DessinsComponent implements OnInit {
   constructor(
     private socketService: SocketService,
     private http: HttpClient,
+    //private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -78,6 +80,32 @@ export class DessinsComponent implements OnInit {
 
   openDessins() {
     console.log(this.imageUrlArray[this.centerImage]);
+  }
+
+  drawing:string;
+
+  createDrawing(text: string) {
+    let link = this.BASE_URL+"drawing/createDrawing";
+
+    this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
+      data=JSON.parse(data);
+      console.log(data.message);
+    });
+
+    this.socketService.getSocket().on("CREATEROOM", (data)=> {
+      data=JSON.parse(data);
+      console.log(data.message);
+    });
+
+    text.trim();
+    if (text.trim() != '') {
+      this.http.post<any>(link,{drawingName: this.drawing.trim(), creator: this.socketService.email}).subscribe((data: any) => { 
+        console.log(data);
+        if (data.message == "success") {
+          console.log(data.message);
+        }
+      });
+    }
   }
 
 

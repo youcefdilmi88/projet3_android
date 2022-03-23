@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { Socket } from 'socket.io';
 import { Room } from '../class/Room';
 import { User } from '../class/User';
 import { HTTPMESSAGE } from '../Constants/httpMessage';
@@ -34,6 +35,27 @@ const joinRoom=(req:Request,res:Response,next:NextFunction)=>{
     }
     const message={message:HTTPMESSAGE.FAILED}
     return res.status(404).json(message);
+}
+
+const leaveRoom=(req:Request,res:Response,next:NextFunction)=>{
+
+   let useremail:String=req.body.useremail as String;
+
+   let user:User=userService.getUserByUseremail(useremail) as User;
+
+   if(userService.getSocketIdByUser().has(user)) {
+     let socketId:string=userService.getSocketIdByUser().get(user) as string;
+
+     let roomName:String=roomService.getRoomNameBySocket(socketId) as String;
+     let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
+
+     if(roomService.getAllRooms().has(roomName)) {
+       roomService.leaveRoom(socket,roomName,useremail);
+       return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+     }
+     return res.status(404).json({message:HTTPMESSAGE.RNOTFOUND});
+   }
+   return res.status(404).json({message:HTTPMESSAGE.FAILED});
 }
 
 
@@ -86,6 +108,7 @@ const deleteRoom=(req:Request,res:Response,next:NextFunction)=>{
 
 router.get('/getAllRooms',getRooms);
 router.post('/joinRoom',joinRoom);
+router.post('/leaveRoom',leaveRoom);
 router.post('/createRoom',createRoom);
 router.post('/deleteRoom',deleteRoom);
 

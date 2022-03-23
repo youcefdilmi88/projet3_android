@@ -57,7 +57,7 @@ private io:Server;
       drawing.elementById.set(rectangle.getId(),rectangle);
 
       // socket.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",{});
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDRECTANGLE",{});
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDRECTANGLE",JSON.stringify(data));
     })
   }
 
