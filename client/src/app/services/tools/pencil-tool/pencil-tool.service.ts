@@ -51,11 +51,8 @@ export class PencilToolService implements Tools {
   }
 
   setUpPencil() {
-    console.log("pencil set up completed");
-
     this.socketService.getSocket().on("STARTLINE",(data)=>{
       data=JSON.parse(data);
-      console.log("STARTLINE");
       this.pencil={
         id:data.id,
         user:data.user,
@@ -80,7 +77,6 @@ export class PencilToolService implements Tools {
 
     this.socketService.getSocket().on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
-      console.log("shapeid " + data.shapeId);
 
       if (this.pencil?.id == data.shapeId) {
         this.addPointToLine({x:data.point.x, y:data.point.y} as Point, data.shapeId);
@@ -92,14 +88,12 @@ export class PencilToolService implements Tools {
     });
 
     this.socketService.getSocket().on("ENDLINE",(data)=>{
-      console.log("ENDLINE");
       this.moving = false;
     });
 
   }
 
   renderSVG(): void {
-    console.log("GOT RENDERED");
     this.pencil3 = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
     this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
@@ -117,8 +111,6 @@ export class PencilToolService implements Tools {
   addPointToLine(point: Point, id: string): void {
     this.pencil?.pointsList.push(point);
     let line = this.objects.get(id);
-    console.log("x " + point.x.toString());
-    console.log("y " + point.y.toString());
     line!.setAttribute('d', (line!.getAttribute('d') as string) + ' L ' + point.x.toString() + ' ' + point.y.toString());
 }
 

@@ -61,11 +61,8 @@ export class ToolRectangleService implements Tools {
   }
 
   setUpRectangle() {
-    console.log("rectangle set up completed");
-
     this.socketService.getSocket().on("STARTRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      console.log("STARTRECTANGLE");
       this.rectangleAttributes={
         id:data.id,
         user: data.user,
@@ -113,13 +110,11 @@ export class ToolRectangleService implements Tools {
     });
 
     this.socketService.getSocket().on("ENDRECTANGLE",(data)=>{
-      console.log("ENDRECTANGLE");
       this.moving = false;
     });
   }
 
   renderSVG(): void {
-      console.log("RENDERED RECTANGLE");
       this.rectangle2 = this.renderer.createElement('rect', 'svg');
       this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
       this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');

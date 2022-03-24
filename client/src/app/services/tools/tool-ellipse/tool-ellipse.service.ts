@@ -62,8 +62,6 @@ export class ToolEllipseService implements Tools {
   }
 
   setUpEllipse() : void {
-    console.log("ellipse set up completed");
-
     this.socketService.getSocket().on("STARTELLIPSE", (data) => {
       data = JSON.parse(data);
       this.ellipseAttributes = {
@@ -119,7 +117,6 @@ export class ToolEllipseService implements Tools {
 
 
   renderSVG(): void {
-    console.log("RENDERED ELLIPSE");
     this.ellipse2 = this.renderer.createElement('ellipse', 'svg');
     this.renderer.setAttribute(this.ellipse2,'id',this.ellipseAttributes?.id as string);
     this.renderer.setAttribute(this.ellipse2, 'cx', this.ellipseAttributes.x.toString() + 'px');
