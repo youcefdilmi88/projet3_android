@@ -4,6 +4,7 @@ import { Drawing } from "../class/Drawing";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
+import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
 import { MessageInterface } from "../Interface/Message";
@@ -129,10 +130,23 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
     return res.status(404).json({message:SOCKETEVENT.UNOTCONNECTED});
 }
 
+const getDrawingByName=async (req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=req.params.drawingName as String;
+    if(drawingService.drawings.has(drawingName)) {
+        let drawing;
+        await DrawingSchema.findOne({drawingName:drawingName}).then((data)=>{
+          drawing=data;
+      }).catch((e:Error)=>{console.log(e)});
+      return res.status(200).json({drawing:drawing});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+}
+
 router.post('/joinDrawing',joinDrawing);
 router.post('/createDrawing',createDrawing);
 router.get('/getAllDrawings',getAllDrawings);
 router.post('/leaveDrawing',leaveDrawing);
 router.post('/deleteDrawing',deleteDrawing);
+router.get('/getDrawingByName/:drawingName',getDrawingByName)
 
 export=router;

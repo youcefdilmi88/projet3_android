@@ -16,6 +16,7 @@ export class Drawing {
     private elements:BaseShape[];  // shapeId and Shape
     public roomName:String;
     public members:String[];
+    public modified:boolean=false;
 
     elementById:Map<String,BaseShape>;
     membersBySocketId:Map<string,String>;  // socketId and useremail
@@ -41,7 +42,7 @@ export class Drawing {
            if(checkRectangle(element)) {
                let rectangle:Rectangle=new Rectangle(element);
                this.elementById.set(rectangle.getId(),rectangle);
-            }
+           }
        });
        this.autoSave();
     }
@@ -58,7 +59,7 @@ export class Drawing {
         this.elements=[];
         this.elementById.forEach((v,k)=>{
             this.elements.push(v);
-        })
+        });
         return this.elements;
     }
 
@@ -149,11 +150,11 @@ export class Drawing {
         this.membersBySocketId.set(socketId,email);
     }
     
-    autoSave() {
-        drawingService.autoSaveDrawing(this.drawingName);
+    async autoSave() {
+        await drawingService.autoSaveDrawing(this.drawingName);
         setTimeout(() => {
             this.autoSave();
-       }, 10000)
+       }, 1000)
     }
 
 

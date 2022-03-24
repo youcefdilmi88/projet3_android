@@ -47,6 +47,8 @@ export class PencilService {
       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
       let line:Line=new Line(data);
       drawing.elementById.set(line.getId(),line);
+      drawing.modified=true;
+      
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",JSON.stringify(data));
     })
   }

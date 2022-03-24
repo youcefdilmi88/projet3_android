@@ -50,8 +50,11 @@ class DrawingService {
   async createDrawing(drawingName:String,creator:String,elements:BaseShapeInterface[],roomName:String,members:String[]) {
     try {
       const drawing=new DrawingSchema({drawingName:drawingName,creator:creator,elements:elements,roomName:roomName,members:members});
-      await drawing.save();
-      console.log("drawing saved");
+      await drawing.save().then(()=>{
+        console.log("drawing saved");
+      }).catch((e:Error)=>{
+        console.log(e);
+      })
       const drawingInterface:DrawingInterface={
         drawingName:drawingName,
         creator:creator,
@@ -145,24 +148,32 @@ class DrawingService {
 
 
   async autoSaveDrawing(drawingName:String) {
-    if(this.drawings.has(drawingName)) {
+    if(this.drawings.has(drawingName)) 
+    {
      let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
-     const drawingUpdate = {
-       $set: {
-         "elements": drawing.getElementsInterface(),
-         "members":drawing.getMembers()
-       }
-      };
-     try {
-       DrawingSchema.findOneAndUpdate({drawingName:drawingName},drawingUpdate).then((data)=>{
-       }).catch((error:Error)=>{
-         console.log(error);
-       })
-     }
-     catch(error) {
-       console.log(error);
-     }
-   }
+     if(drawing.modified==true) {
+      const filter={drawingName:drawingName};
+      const drawingUpdate = {
+           $set:{
+             "elements":drawing.getElementsInterface(),
+             "members":drawing.getMembers()
+           }
+       };
+        try {
+           let drawingDoc=await DrawingSchema.findOne(filter);
+           await DrawingSchema.updateOne(filter,drawingUpdate).catch((e:Error)=>{
+             console.log(e);
+           });
+           await drawingDoc?.save().catch((e:Error)=>{
+             console.log(e);
+           });
+         }
+         catch(error) {
+          console.log(error);
+         }
+      }
+    }
+
   }
 
 }

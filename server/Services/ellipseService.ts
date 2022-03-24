@@ -46,6 +46,7 @@ private io:Server;
       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
       let ellipse:Ellipse=new Ellipse(data);
       drawing.elementById.set(ellipse.getId(),ellipse);
+      drawing.modified=true;
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDELLIPSE",JSON.stringify(data));
     })
   }
