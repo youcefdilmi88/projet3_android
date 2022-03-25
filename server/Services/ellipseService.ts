@@ -43,10 +43,12 @@ private io:Server;
   endEllipse(socket:Socket) {
     socket.on("ENDELLIPSE",(data)=>{
       data=JSON.parse(data);
-      let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
-      let ellipse:Ellipse=new Ellipse(data);
-      drawing.elementById.set(ellipse.getId(),ellipse);
-      drawing.modified=true;
+      if(drawingService.drawings.has("drawing123")) {
+       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
+       let ellipse:Ellipse=new Ellipse(data);
+       drawing.elementById.set(ellipse.getId(),ellipse);
+       drawing.modified=true;
+      }
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDELLIPSE",JSON.stringify(data));
     })
   }

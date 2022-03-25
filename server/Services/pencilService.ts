@@ -44,10 +44,12 @@ export class PencilService {
     socket.on("ENDLINE",(data)=>{
       data=JSON.parse(data);
       // save to one drawing currently have to change when users can be in a specific drawing with socketInDrawing
-      let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
-      let line:Line=new Line(data);
-      drawing.elementById.set(line.getId(),line);
-      drawing.modified=true;
+      if(drawingService.drawings.has("drawing123")) {
+       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
+       let line:Line=new Line(data);
+       drawing.elementById.set(line.getId(),line);
+       drawing.modified=true;
+      }
       
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",JSON.stringify(data));
     })

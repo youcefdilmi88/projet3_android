@@ -43,10 +43,12 @@ private io:Server;
   endRectangle(socket:Socket) {
     socket.on("ENDRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
-      let rectangle:Rectangle=new Rectangle(data);
-      drawing.elementById.set(rectangle.getId(),rectangle);
-      drawing.modified=true;
+      if(drawingService.drawings.has("drawing123")) {
+       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
+       let rectangle:Rectangle=new Rectangle(data);
+       drawing.elementById.set(rectangle.getId(),rectangle);
+       drawing.modified=true;
+      }
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDRECTANGLE",JSON.stringify(data));
     })
   }
