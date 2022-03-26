@@ -12,7 +12,10 @@ export class PrivateAlbum extends Album {
             albumName:album.albumName,
             creator:album.creator,
             drawings:album.drawings,
-            visibility:album.visibility
+            visibility:album.visibility,
+            dateCreation:album.dateCreation,
+            nbContributeursActif:album.nbContributeursActif,
+            description:album.description
         } as AlbumInterface
 
         super(

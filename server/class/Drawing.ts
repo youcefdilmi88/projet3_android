@@ -12,23 +12,25 @@ import { Rectangle } from "./Rectangle";
 
 export class Drawing {
     private drawingName:String;
-    private creator:String;
+    private owner:String;
     private elements:BaseShape[];  // shapeId and Shape
     public roomName:String;
     public members:String[];
     public modified:boolean=false;
+    private visibility:String;
 
     elementById:Map<String,BaseShape>;
     membersBySocketId:Map<string,String>;  // socketId and useremail
 
     constructor(drawing:DrawingInterface) {
        this.drawingName=drawing.drawingName;
-       this.creator=drawing.creator;
+       this.owner=drawing.owner;
        this.roomName=drawing.roomName;
        this.members=drawing.members;
        this.elements=[];
        this.elementById=new Map<String,BaseShape>();
        this.membersBySocketId=new Map<string,String>();
+       this.visibility=drawing.visibility;
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
@@ -51,8 +53,8 @@ export class Drawing {
         return this.drawingName;
     }
 
-    getCreator():String {
-        return this.creator;
+    getOwner():String {
+        return this.owner;
     }
 
     getElements():BaseShape[] {
@@ -126,12 +128,16 @@ export class Drawing {
         return this.members;
     }
 
+    getVisibility():String {
+        return this.visibility;
+    }
+
     setName(name:String):void {
         this.drawingName=name;
     }
 
-    setCreator(creator:String) {
-        this.creator=creator;
+    setOwner(owner:String) {
+        this.owner=owner;
     }
 
     setElements(elements:BaseShape[]) {
@@ -140,6 +146,10 @@ export class Drawing {
 
     setMembers(members:String[]) {
         this.members=members;
+    }
+
+    setVisibility(visibility:String) {
+        this.visibility=visibility;
     }
 
     removeMember(socketId:string):void {

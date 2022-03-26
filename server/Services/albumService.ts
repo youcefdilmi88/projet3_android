@@ -1,4 +1,5 @@
 import { Album } from '../class/Album';
+import { Drawing } from '../class/Drawing';
 import { PrivateAlbum } from '../class/PrivateAlbum';
 import { SOCKETEVENT } from '../Constants/socketEvent';
 import { VISIBILITY } from '../Constants/visibility';
@@ -6,6 +7,7 @@ import AlbumSchema from '../Entities/AlbumSchema';
 import { AlbumInterface } from '../Interface/AlbumInterface';
 import { PrivateAlbumInterface } from '../Interface/PrivateAlbumInterface';
 import databaseService from './databaseService';
+import drawingService from './drawingService';
 import socketService from './socketService';
 
 
@@ -41,7 +43,10 @@ class AlbumService {
         albumName:albumToCreate.albumName,
         creator:albumToCreate.creator,
         drawings:albumToCreate.drawings,
-        visibility:albumToCreate.visibility
+        visibility:albumToCreate.visibility,
+        dateCreation:albumToCreate.dateCreation,
+        nbContributeursActif:albumToCreate.nbContributeursActif,
+        description:albumToCreate.description
       });
 
       let albumObj=new Album(album as AlbumInterface);
@@ -52,7 +57,10 @@ class AlbumService {
           creator:albumToCreate.creator,
           drawings:albumToCreate.drawings,
           visibility:albumToCreate.visibility,
-          password:albumToCreate.password
+          dateCreation:albumToCreate.dateCreation,
+          nbContributeursActif:albumToCreate.nbContributeursActif,
+          password:albumToCreate.password,
+          description:albumToCreate.description
         });
 
         albumObj=new PrivateAlbum(album as PrivateAlbumInterface);
@@ -88,6 +96,97 @@ class AlbumService {
      catch(e) {
        console.log(e);
      }
+   }
+
+  async updateAlbum(albumChanged:any) {
+    let album=new AlbumSchema.albumSchema({
+      albumName:albumChanged.albumName,
+      creator:albumChanged.creator,
+      drawings:albumChanged.drawings,
+      visibility:albumChanged.visibility,
+      dateCreation:albumChanged.dateCreation,
+      nbContributeursActif:albumChanged.nbContributeursActif,
+      description:albumChanged.description
+    });
+
+    let albumObj=new Album(album as AlbumInterface);
+
+    if(albumChanged.visibility==VISIBILITY.PRIVATE && albumChanged.password!=undefined) {
+      album=new AlbumSchema.privateAlbumSchema({
+        albumName:albumChanged.albumName,
+        creator:albumChanged.creator,
+        drawings:albumChanged.drawings,
+        visibility:albumChanged.visibility,
+        dateCreation:albumChanged.dateCreation,
+        nbContributeursActif:albumChanged.nbContributeursActif,
+        description:albumChanged.description,
+        password:albumChanged.password
+      });
+      albumObj=new PrivateAlbum(album as PrivateAlbumInterface);
+      let privObj=albumObj as PrivateAlbum;
+ 
+      try {
+        const filter={albumName:privObj.getName()};
+            const albumUpdate = {
+              $set:{
+                "albumName":privObj.getName(),
+                "creator":privObj.getCreator(),
+                "drawings":privObj.getDrawings(),
+                "dateCreation":privObj.getDateCreation(),
+                "nbContributeursActif":privObj.getNbContributeursActif(),
+                "description":privObj.getDescription(),
+                "password":privObj.getPassword()
+              }
+            };
+            let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
+            await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
+              console.log(e);
+            });
+            await albumDoc?.save().catch((e:Error)=>{
+              console.log(e);
+            });
+      }
+      catch(e:any) {
+        console.log(e);
+      }
+    }
+    try {
+      const filter={albumName:albumObj.getName()};
+          const albumUpdate = {
+            $set:{
+              "albumName":albumObj.getName(),
+              "creator":albumObj.getCreator(),
+              "drawings":albumObj.getDrawings(),
+              "dateCreation":albumObj.getDateCreation(),
+              "nbContributeursActif":albumObj.getNbContributeursActif(),
+              "description":albumObj.getDescription(),
+            }
+          };
+          let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
+          await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
+            console.log(e);
+          });
+          await albumDoc?.save().catch((e:Error)=>{
+            console.log(e);
+          });
+    }
+    catch(e:any) {
+      console.log(e);
+    }
+  }
+
+   getnbActifMembers(name:String) {
+     let count:number=0;
+     if(this.albums.has(name)) {
+       this.albums.get(name)?.getDrawings().forEach((drawingName)=>{
+         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+         drawing.getMembers().forEach(()=>{
+           count++;
+         });
+       });
+       return count as Number;
+     }
+     return count;
    }
 
 }

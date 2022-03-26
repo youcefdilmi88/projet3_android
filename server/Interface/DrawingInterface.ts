@@ -2,9 +2,10 @@ import { BaseShapeInterface } from "./BaseShapeInterface";
 
 export interface DrawingInterface {
     drawingName:String,
-    creator:String,
+    owner:String,
     elements:BaseShapeInterface[],
     roomName:String,
     members:String[],
+    visibility:String
 }
 

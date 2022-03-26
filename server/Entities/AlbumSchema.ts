@@ -20,6 +20,18 @@ const albumSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    dateCreation:{
+        type:Number,
+        required:true
+    },
+    nbContributeursActif:{
+        type:Number,
+        required:true
+    },
+    description:{
+        type:String,
+        required:true,
+    }
 },options);
 
 const Album = mongoose.model('albumSchema', albumSchema);

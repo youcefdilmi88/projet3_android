@@ -9,5 +9,6 @@ export enum HTTPMESSAGE {
     ROOMEXIST="room already exists",
     ALBUMEXIST="album already exist",
     RNOTFOUND="room not found",
-    ANOTFOUND="album not found"
+    ANOTFOUND="album not found",
+    DNOTFOUND="drawing not found",
 }

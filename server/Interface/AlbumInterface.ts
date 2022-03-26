@@ -3,4 +3,7 @@ export interface AlbumInterface {
     creator:String,
     drawings:String[],
     visibility:String,
+    dateCreation:Number,
+    nbContributeursActif:Number,
+    description:String
 }
