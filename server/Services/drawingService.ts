@@ -86,6 +86,8 @@ class DrawingService {
     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
     this.socketInDrawing.forEach((v,k)=>{
       if(v==drawing) {
+        let socket=socketService.getIo().sockets.sockets.get(k);
+        socket?.leave(drawing.getName() as string);
         this.socketInDrawing.delete(k);
       }
     })
@@ -169,8 +171,16 @@ class DrawingService {
     await this.createDrawing(drawing.getName(),drawing.getOwner(),drawing.getElementsInterface(),drawing.roomName,drawing.getMembers(),drawing.getVisibility()).then(()=>{
       this.socketInDrawing.forEach((v,k)=>{
         if(v.getName()==oldName) {
-          this.socketInDrawing.delete(k);
+          let socket=socketService.getIo().sockets.sockets.get(k);
+          socket?.join(newName as string);
           this.socketInDrawing.set(k,drawing);
+        }
+      })
+      roomService.getSocketsRoomNames().forEach((v,k)=>{
+        if(v==this.sourceDrawingName(oldName)) {
+           let socket=socketService.getIo().sockets.sockets.get(k);
+           socket?.join(drawing.roomName as string);
+           roomService.getSocketsRoomNames().set(socket?.id as string,this.sourceDrawingName(newName) as string);
         }
       })
     });

@@ -116,19 +116,15 @@ export class RoomService {
     return message;
   }
 
-  moveUserToDefault(name:String) {
+  kickUserFromRoom(name:String) {
     this.socketToRoom.forEach((v,k)=>{
       if(v==name) {
-        let socketId:string=k as string;
-        let room:Room=this.getDefaultRoom() as Room;
         let socket=socketService.getIo().sockets.sockets.get(k);
         socket?.leave(v);
         this.socketToRoom.delete(k);
-        this.socketToRoom.set(socketId,room.getRoomName() as string);
-        room.addUserToRoom(this.socketidToEmail.get(socketId) as String);
       }
     });
-    
+    console.log(this.socketToRoom);
   }
 
   async deleteRoom(name:String) {
@@ -136,7 +132,7 @@ export class RoomService {
          await RoomSchema.deleteOne({roomName:name}).then((data)=>{
            console.log(data);
            this.rooms.delete(name);
-           this.moveUserToDefault(name);
+           this.kickUserFromRoom(name);
            const message={message:"room deleted"};
            socketService.getIo().emit(SOCKETEVENT.ROOMDELETED,JSON.stringify(message));
          });
