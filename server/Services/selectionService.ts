@@ -21,6 +21,7 @@ export class SelectionService {
         this.drawSelect(socket);
         this.endSelect(socket);
         this.resizeSelect(socket);
+        this.deleteSelect(socket);
     })
   }
 
@@ -49,6 +50,14 @@ export class SelectionService {
       data=JSON.parse(data);
       data.id=uuidv4();
       this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("SIZESELECT",JSON.stringify(data));
+      //console.log("data x " + data.x);
+    })
+  }
+
+  deleteSelect(socket:Socket) {
+    socket.on("DELETESELECT",(data)=>{
+      data=JSON.parse(data);
+      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DELETESELECT",JSON.stringify(data));
       //console.log("data x " + data.x);
     })
   }

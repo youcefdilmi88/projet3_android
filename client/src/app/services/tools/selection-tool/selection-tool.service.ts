@@ -38,6 +38,7 @@ export class SelectionToolService implements Tools {
   private ctrlPoints: SVGRectElement[] = [];
   private controlPoints: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
   private ctrlG: SVGGElement;
+  private object: SVGElement;
   private rectSelection: SVGPolygonElement;
 
   private rectInversement: SVGRectElement;
@@ -49,6 +50,8 @@ export class SelectionToolService implements Tools {
   private tmpY: number;
   private wasMoved = false;
   private isIn = false;
+
+  public dom = false;
 
   renderer: Renderer2
 
@@ -73,6 +76,8 @@ export class SelectionToolService implements Tools {
       this.tmpX = data.off.x;
       this.tmpY = data.off.y;
       const obj = this.drawingService.getObject(Number(data.identif));
+
+      this.object = obj!;
 
       if (this.isInside(data.off.x, data.off.y)) {
         this.isIn = true;
@@ -156,6 +161,22 @@ export class SelectionToolService implements Tools {
       const obj = this.controlPoints.get(data.identif);
       this.selectionTransformService.createCommand(SelectionCommandConstants.RESIZE, this.rectSelection, this.objects, data.off, obj as SVGRectElement,);
       this.isIn = false;
+    });
+
+    this.socketService.getSocket().on("DELETESELECT", (data)=>{
+      data=JSON.parse(data);
+
+      if (data.bool == true) {
+        this.drawingService.removeObject(Number(this.object));
+      }
+      this.dom = false;
+      this.objects = [];
+      this.hasSelectedItems = false;
+  
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.objects);
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.rectSelection);
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.ctrlG);
+      this.rendererService.renderer.setAttribute(this.rectSelection, 'points', '');
     });
 
     this.socketService.getSocket().on("ENDSELECT", (data)=>{
@@ -529,11 +550,16 @@ export class SelectionToolService implements Tools {
     this.objects = [];
     this.hasSelectedItems = false;
 
+    this.rendererService.renderer.removeChild(this.drawingService.drawing, this.objects);
     this.rendererService.renderer.removeChild(this.drawingService.drawing, this.rectSelection);
     this.rendererService.renderer.removeChild(this.drawingService.drawing, this.ctrlG);
-
     this.rendererService.renderer.setAttribute(this.rectSelection, 'points', '');
   }
+
+  removeSelectionCollab(): void {
+    this.socketService.getSocket().emit("DELETESELECT", JSON.stringify({ bool: this.dom }));
+  }
+
   /// Methode pour cacher la selection en gardant en memoire les element
   hideSelection(): void {
     this.rendererService.renderer.setAttribute(this.ctrlG, 'visibility', 'hidden');

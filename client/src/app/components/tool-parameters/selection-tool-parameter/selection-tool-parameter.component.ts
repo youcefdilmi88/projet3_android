@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CopyPasteToolService } from 'src/app/services/tools/copy-paste-tool/copy-paste-tool.service';
-import { DeletingToolService } from 'src/app/services/tools/selection-tool/delete-command/delete-tool.service';
+//import { DeletingToolService } from 'src/app/services/tools/selection-tool/delete-command/delete-tool.service';
 import { SelectionToolService } from 'src/app/services/tools/selection-tool/selection-tool.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class SelectionToolParameterComponent {
 
   constructor(
     private selectionService: SelectionToolService,
-    private deletingService: DeletingToolService,
+    //private deletingService: DeletingToolService,
     private copyPasteService: CopyPasteToolService) { }
 
   get toolName(): string {
@@ -49,7 +49,10 @@ export class SelectionToolParameterComponent {
 
   /// SelectAll
   deleteSelection(): void {
-    this.deletingService.deleteSelection();
+    //this.deletingService.deleteSelection();
+    this.selectionService.dom = true;
+    //this.selectionService.removeSelection();
+    this.selectionService.removeSelectionCollab();
   }
 
   /// SelectAll

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CommandInvokerService } from '../../../command-invoker/command-invoker.service';
 //import { DrawingService } from '../../../drawing/drawing.service';
-import { SelectionToolService } from '../selection-tool.service';
+//import { SelectionToolService } from '../selection-tool.service';
 import { DeleteCommand } from './delete-command';
 
 /// Service ayant comme fonction d'effectuer la supression de selection
@@ -13,7 +13,7 @@ export class DeletingToolService {
   private deleteCommand: DeleteCommand;
 
   constructor(
-    private selectionTool: SelectionToolService,
+    //private selectionTool: SelectionToolService,
     private commandInvoker: CommandInvokerService,
     //private drawingService: DrawingService,
   ) { }
@@ -26,7 +26,8 @@ export class DeletingToolService {
     );*/
 
     this.commandInvoker.executeCommand(this.deleteCommand);
+    //this.deleteCommand.execute()
 
-    this.selectionTool.removeSelection();
+    //this.selectionTool.removeSelection();
   }
 }
