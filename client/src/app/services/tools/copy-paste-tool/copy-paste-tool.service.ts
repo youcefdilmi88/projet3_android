@@ -56,11 +56,11 @@ export class CopyPasteToolService {
     this.copyPasteOffsetService.offsetInit = this.selectionTool.getRectSelectionOffset();
 
     this.cloneList = [];
-    this.selectionTool.getObjectList().forEach((obj) => {
+    /*this.selectionTool.getObjectList().forEach((obj) => {
       const clone: SVGElement = obj.cloneNode(true) as SVGElement;
       clone.removeAttribute('id');
       this.cloneList.push(clone);
-    });
+    });*/
 
     this.createAndExecuteCommand(false);
   }
@@ -74,14 +74,14 @@ export class CopyPasteToolService {
   private copyCut(): void {
     this.copyPasteOffsetService.offsetInit = this.selectionTool.getRectSelectionOffset();
 
-    if (this.selectionTool.getObjectList().length > 0) {
+    /*if (this.selectionTool.getObjectList().length > 0) {
       this.clipboardList = [];
     }
     this.selectionTool.getObjectList().forEach((obj) => {
       const clone: SVGElement = obj.cloneNode(true) as SVGElement;
       clone.removeAttribute('id');
       this.clipboardList.push(clone);
-    });
+    });*/
   }
 
   /// Creation de la commande pour pouvoir effectuer les fonctionnalité

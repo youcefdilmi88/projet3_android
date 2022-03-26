@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CommandInvokerService } from '../../../command-invoker/command-invoker.service';
-import { DrawingService } from '../../../drawing/drawing.service';
+//import { DrawingService } from '../../../drawing/drawing.service';
 import { SelectionToolService } from '../selection-tool.service';
 import { DeleteCommand } from './delete-command';
 
@@ -15,15 +15,15 @@ export class DeletingToolService {
   constructor(
     private selectionTool: SelectionToolService,
     private commandInvoker: CommandInvokerService,
-    private drawingService: DrawingService,
+    //private drawingService: DrawingService,
   ) { }
 
   /// Creation et execution d'une commande de supression
   deleteSelection(): void {
-    this.deleteCommand = new DeleteCommand(
+    /*this.deleteCommand = new DeleteCommand(
       this.drawingService,
       this.selectionTool.getObjectList(),
-    );
+    );*/
 
     this.commandInvoker.executeCommand(this.deleteCommand);
 
