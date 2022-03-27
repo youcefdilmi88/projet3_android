@@ -141,13 +141,13 @@ class DrawingService {
 
     socket?.join(drawingName as string);
 
-    const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawingName)}
-    socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification))
-
     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
 
     drawingService.socketInDrawing.set(socket?.id as string,drawing);
-    drawing.addMember(socket?.id as string,useremail);
+    drawing.addMember(socket?.id as string,useremail);4
+
+    const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawingName),members:drawing.getMembers()}
+    socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification));
   }
 
   leaveDrawing(socket:Socket,mail:String) {
@@ -156,7 +156,7 @@ class DrawingService {
     socket?.leave(drawing.getName() as string);
     drawingService.socketInDrawing.delete(socket?.id as string);
     drawing.removeMember(socket?.id as string);
-    const message={drawingName:drawing.getName(),useremail:mail};
+    const message={drawingName:this.sourceDrawingName(drawing.getName()),useremail:mail,members:drawing.getMembers()};
     socketService.getIo().emit(SOCKETEVENT.LEAVEDRAWING,JSON.stringify(message));
   }
 

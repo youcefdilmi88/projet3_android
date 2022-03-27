@@ -1,6 +1,4 @@
 import { AlbumInterface } from "../Interface/AlbumInterface";
-import albumService from "../Services/albumService";
-
 
 export class Album {
     private albumName:String;
@@ -8,8 +6,9 @@ export class Album {
     private drawings:String[];
     private visibility:String;
     private dateCreation:Number;
-    private nbContributeursActif:Number;
     private description:String;
+    private members:String[];
+    private requests:String[];
 
     constructor(album:AlbumInterface) {
         this.albumName=album.albumName;
@@ -17,8 +16,9 @@ export class Album {
         this.drawings=album.drawings;
         this.visibility=album.visibility;
         this.dateCreation=album.dateCreation;
-        this.nbContributeursActif=album.nbContributeursActif;
         this.description=album.description;
+        this.members=album.members;
+        this.requests=album.requests;
     }
 
     getName():String {
@@ -41,13 +41,16 @@ export class Album {
         return this.dateCreation;
     }
 
-    getNbContributeursActif():Number {
-       this.nbContributeursActif=albumService.getnbActifMembers(this.albumName) as Number;
-       return this.nbContributeursActif;
-    }
-
     getDescription():String {
         return this.description;
+    }
+
+    getMembers():String[] {
+        return this.members;
+    }
+
+    getRequests():String[] {
+        return this.requests;
     }
 
     addDrawing(drawingName:String):void {
@@ -70,14 +73,39 @@ export class Album {
         this.dateCreation=time;
     }
 
-    setNbContributeursActif(nombre:number) {
-        this.nbContributeursActif=nombre;
-    }
-
     setDescription(text:String) {
         this.description=text;
     }
 
+    setMembers(members:String[]) {
+        this.members=members;
+    }
+
+    addMember(member:String) {
+        this.members.push(member);
+    }
+
+    removeMember(member:String) {
+        const index = this.members.indexOf(member);
+        if (index > -1) {
+            this.members.splice(index, 1); 
+        }
+    }
+
+    setRequests(requests:String[]):void {
+        this.requests=requests;
+    }
+
+    addRequest(request:String):void {
+        this.requests.push(request);
+    }
+
+    removeRequest(request:String):void {
+        const index = this.requests.indexOf(request);
+        if (index > -1) {
+            this.requests.splice(index, 1); 
+        }
+    }
     
 
    

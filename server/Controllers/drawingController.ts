@@ -164,6 +164,19 @@ const updateDrawing=(req:Request,res:Response,next:NextFunction)=>{
     return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND});
 }
 
+const getConnectedUserInDrawing=(req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=req.params.drawingName as String;
+    if(drawingService.drawings.has(drawingName)) {
+        let count:number=0;
+        let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+        drawing.getMembers().forEach((drawingName)=>{
+            count++;
+        });
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS,count:count});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND, count:0});
+}
+
 router.post('/joinDrawing',joinDrawing);
 router.post('/createDrawing',createDrawing);
 router.get('/getAllDrawings',getAllDrawings);
@@ -171,5 +184,6 @@ router.post('/leaveDrawing',leaveDrawing);
 router.post('/deleteDrawing',deleteDrawing);
 router.get('/getDrawingByName/:drawingName',getDrawingByName);
 router.post('/updateDrawing',updateDrawing);
+router.get('/getConnectedUser/:roomName',getConnectedUserInDrawing);
 
 export=router;

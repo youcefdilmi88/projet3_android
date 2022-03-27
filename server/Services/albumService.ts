@@ -1,11 +1,7 @@
 import { Album } from '../class/Album';
-import { Drawing } from '../class/Drawing';
-import { PrivateAlbum } from '../class/PrivateAlbum';
 import { SOCKETEVENT } from '../Constants/socketEvent';
-import { VISIBILITY } from '../Constants/visibility';
 import AlbumSchema from '../Entities/AlbumSchema';
 import { AlbumInterface } from '../Interface/AlbumInterface';
-import { PrivateAlbumInterface } from '../Interface/PrivateAlbumInterface';
 import databaseService from './databaseService';
 import drawingService from './drawingService';
 import socketService from './socketService';
@@ -24,14 +20,8 @@ class AlbumService {
     this.albums.clear(); 
     await databaseService.getAllAlbums().then((albums)=>{
          albums.forEach((album)=>{
-             if(album.visibility==VISIBILITY.PUBLIC) {
-               let albumObj=new Album(album);
-               this.albums.set(albumObj.getName(),albumObj);
-             }
-             if(album.visibility==VISIBILITY.PRIVATE) {
-               let albumObj=new PrivateAlbum(album as PrivateAlbumInterface);
-               this.albums.set(albumObj.getName(),albumObj);
-             } 
+            let albumObj=new Album(album);
+            this.albums.set(albumObj.getName(),albumObj);
          });
     }).catch((e:Error)=>{
         console.log(e);
@@ -45,26 +35,12 @@ class AlbumService {
         drawings:albumToCreate.drawings,
         visibility:albumToCreate.visibility,
         dateCreation:albumToCreate.dateCreation,
-        nbContributeursActif:albumToCreate.nbContributeursActif,
-        description:albumToCreate.description
+        description:albumToCreate.description,
+        members:albumToCreate.members
       });
 
       let albumObj=new Album(album as AlbumInterface);
 
-      if(albumToCreate.visibility==VISIBILITY.PRIVATE && albumToCreate.password!=undefined) {
-        album=new AlbumSchema.privateAlbumSchema({
-          albumName:albumToCreate.albumName,
-          creator:albumToCreate.creator,
-          drawings:albumToCreate.drawings,
-          visibility:albumToCreate.visibility,
-          dateCreation:albumToCreate.dateCreation,
-          nbContributeursActif:albumToCreate.nbContributeursActif,
-          password:albumToCreate.password,
-          description:albumToCreate.description
-        });
-
-        albumObj=new PrivateAlbum(album as PrivateAlbumInterface);
-      }
       try {
        await album.save().then(()=>{
          this.albums.set(albumObj.getName(),albumObj);
@@ -81,15 +57,96 @@ class AlbumService {
       catch(e) {
         console.log(e);
       }
-      
+   }
+
+   async addRequest(newMember:String,albumName:String) {
+     let album:Album=this.albums.get(albumName) as Album;
+     album.addRequest(newMember);
+     await this.updateRequests(album);
+   }
+
+   async updateRequests(album:Album) {
+    try {
+      const filter={albumName:album.getName()};
+          const albumUpdate = {
+            $set:{
+              "requests":album.getRequests(),
+            }
+          };
+          let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
+          await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
+            console.log(e);
+          }).catch((e:Error)=>{
+            console.log(e);
+          });
+          await albumDoc?.save().then(()=>{
+            this.albums[`${album.getName()}`]=album;
+            const message={album:album};
+            socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
+          }).catch((e:Error)=>{
+            console.log(e);
+          });
+    }
+    catch(e:any) {
+      console.log(e);
+    }
+   }
+
+   addMemberToAlbum(albumName:String,newMember:String) {
+     let album:Album=this.albums.get(albumName) as Album;
+     album.addMember(newMember);
+     this.updateMember(album);
+     const message={albumName:albumName,member:newMember};
+     socketService.getIo().emit(SOCKETEVENT.NEWUINALBUM,JSON.stringify(message));
+   }
+
+   removeMemberFromAlbum(albumName:String,member:String) {
+     let album:Album=this.albums.get(albumName) as Album;
+     album.removeMember(member);
+     this.updateMember(album)
+     const message={albumName:albumName,member:member};
+     socketService.getIo().emit(SOCKETEVENT.ULEFTALBUM,JSON.stringify(message));
+   }
+
+   async updateMember(album:Album) {
+    try {
+      const filter={albumName:album.getName()};
+          const albumUpdate = {
+            $set:{
+              "members":album.getMembers(),
+            }
+          };
+          let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
+          await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
+            console.log(e);
+          }).catch((e:Error)=>{
+            console.log(e);
+          });
+          await albumDoc?.save().then(()=>{
+            this.albums[`${album.getName()}`]=album;
+            const message={album:album};
+            socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
+          }).catch((e:Error)=>{
+            console.log(e);
+          });
+    }
+    catch(e:any) {
+      console.log(e);
+    }
    }
 
    async deleteAlbum(name:String) {
      try {
       await AlbumSchema.albumSchema.deleteOne({albumName:name}).then((data)=>{
         console.log(data);
+        let album:Album=this.albums.get(name) as Album;
         this.albums.delete(name);
-        const message={message:"album deleted"};
+        drawingService.drawings.forEach((v,k)=>{
+          if(album.getDrawings().includes(k)) {
+            drawingService.deleteDrawing(k);  // delete all drawings in album
+          }
+        });
+        const message={message:album.getName()};
         socketService.getIo().emit(SOCKETEVENT.ALBUMDELETED,JSON.stringify(message));
       });
      }
@@ -98,75 +155,43 @@ class AlbumService {
      }
    }
 
-  async updateAlbum(albumChanged:any) {
-    let album=new AlbumSchema.albumSchema({
-      albumName:albumChanged.albumName,
-      creator:albumChanged.creator,
-      drawings:albumChanged.drawings,
-      visibility:albumChanged.visibility,
-      dateCreation:albumChanged.dateCreation,
-      nbContributeursActif:albumChanged.nbContributeursActif,
-      description:albumChanged.description
+  async updateAlbum(newName:String,albumName:String,description:String) {
+    let album:Album=this.albums.get(albumName) as Album;
+    await this.deleteAlbum(albumName).then(()=>{
+      album.setName(newName);
+      album.setDescription(description);
+    }).catch((e:Error)=>{
+      console.log(e);
     });
 
-    let albumObj=new Album(album as AlbumInterface);
+    await this.createAlbum(album).then(()=>{
+      this.albums.delete(albumName);
+      this.albums.set(album.getName(),album);
+    }).catch((e:Error)=>{
+      console.log(e);
+    })
 
-    if(albumChanged.visibility==VISIBILITY.PRIVATE && albumChanged.password!=undefined) {
-      album=new AlbumSchema.privateAlbumSchema({
-        albumName:albumChanged.albumName,
-        creator:albumChanged.creator,
-        drawings:albumChanged.drawings,
-        visibility:albumChanged.visibility,
-        dateCreation:albumChanged.dateCreation,
-        nbContributeursActif:albumChanged.nbContributeursActif,
-        description:albumChanged.description,
-        password:albumChanged.password
-      });
-      albumObj=new PrivateAlbum(album as PrivateAlbumInterface);
-      let privObj=albumObj as PrivateAlbum;
- 
-      try {
-        const filter={albumName:privObj.getName()};
-            const albumUpdate = {
-              $set:{
-                "albumName":privObj.getName(),
-                "creator":privObj.getCreator(),
-                "drawings":privObj.getDrawings(),
-                "dateCreation":privObj.getDateCreation(),
-                "nbContributeursActif":privObj.getNbContributeursActif(),
-                "description":privObj.getDescription(),
-                "password":privObj.getPassword()
-              }
-            };
-            let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
-            await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
-              console.log(e);
-            });
-            await albumDoc?.save().catch((e:Error)=>{
-              console.log(e);
-            });
-      }
-      catch(e:any) {
-        console.log(e);
-      }
-    }
+  }
+
+  async changeAlbumDescription(albumName:String,description:String) {
     try {
-      const filter={albumName:albumObj.getName()};
+      const filter={albumName:albumName};
           const albumUpdate = {
             $set:{
-              "albumName":albumObj.getName(),
-              "creator":albumObj.getCreator(),
-              "drawings":albumObj.getDrawings(),
-              "dateCreation":albumObj.getDateCreation(),
-              "nbContributeursActif":albumObj.getNbContributeursActif(),
-              "description":albumObj.getDescription(),
+              "description":description,
             }
           };
           let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
           await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
             console.log(e);
           });
-          await albumDoc?.save().catch((e:Error)=>{
+          await albumDoc?.save().then(()=>{
+            let album:Album=albumService.albums.get(albumName) as Album;
+            album.setDescription(description);
+            this.albums[`${albumName}`]=album;
+            const message={album:album};
+            socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
+          }).catch((e:Error)=>{
             console.log(e);
           });
     }
@@ -175,19 +200,36 @@ class AlbumService {
     }
   }
 
-   getnbActifMembers(name:String) {
-     let count:number=0;
-     if(this.albums.has(name)) {
-       this.albums.get(name)?.getDrawings().forEach((drawingName)=>{
-         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
-         drawing.getMembers().forEach(()=>{
-           count++;
-         });
-       });
-       return count as Number;
-     }
-     return count;
-   }
+  async addDrawingToAlbum(drawingName:String,albumName:String) {
+    let album:Album=this.albums.get(albumName) as Album;
+    album.addDrawing(drawingName);
+    await this.updateDrawingInAlbum(album);
+  }
+
+  async updateDrawingInAlbum(album:Album) {
+    try {
+      const filter={albumName:album.getName()};
+          const albumUpdate = {
+            $set:{
+              "drawings":album.getDrawings(),
+            }
+          };
+          let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
+          await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
+            console.log(e);
+          });
+          await albumDoc?.save().then(()=>{
+            this.albums[`${album.getName()}`]=album;
+            const message={album:album};
+            socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
+          }).catch((e:Error)=>{
+            console.log(e);
+          });
+    }
+    catch(e:any) {
+      console.log(e);
+    }
+  }
 
 }
 

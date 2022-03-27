@@ -4,6 +4,7 @@ export interface AlbumInterface {
     drawings:String[],
     visibility:String,
     dateCreation:Number,
-    nbContributeursActif:Number,
-    description:String
+    description:String,
+    members:String[],
+    requests:String[]
 }

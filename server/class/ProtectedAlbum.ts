@@ -1,21 +1,22 @@
 import { AlbumInterface } from "../Interface/AlbumInterface";
-import { PrivateAlbumInterface } from "../Interface/PrivateAlbumInterface";
+import { ProtectedAlbumInterface } from "../Interface/ProtectedAlbumInterface";
 
 import { Album } from "./Album";
 
 
-export class PrivateAlbum extends Album {
+export class ProtectedAlbum extends Album {
     private password:String;
 
-    constructor(album:PrivateAlbumInterface) {
+    constructor(album:ProtectedAlbumInterface) {
         const base={
             albumName:album.albumName,
             creator:album.creator,
             drawings:album.drawings,
             visibility:album.visibility,
             dateCreation:album.dateCreation,
-            nbContributeursActif:album.nbContributeursActif,
-            description:album.description
+            description:album.description,
+            members:album.members,
+            requests:album.requests
         } as AlbumInterface
 
         super(

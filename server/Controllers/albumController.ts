@@ -1,14 +1,12 @@
 import express, { NextFunction, Request, Response }  from "express";
 import { Album } from "../class/Album";
 import { Drawing } from "../class/Drawing";
-import { PrivateAlbum } from "../class/PrivateAlbum";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
-import { SOCKETEVENT } from "../Constants/socketEvent";
 import { VISIBILITY } from "../Constants/visibility";
 import albumService from "../Services/albumService";
-import socketService from "../Services/socketService";
+import drawingService from "../Services/drawingService";
+import userService from "../Services/userService";
 
-let bcrypt=require("bcryptjs");
 
 const router = express.Router();
 
@@ -18,8 +16,17 @@ const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
     let drawings:Drawing[]=[];
     let visibility:String=req.body.visibility as String;
     let dateCreation:Number=Date.now();
-    let nbContributeursActif:Number=0;
     let description:String=req.body.description;
+    let members:String[]=[];
+
+    if(visibility==VISIBILITY.PRIVATE) {
+      members.push(creator);
+    }
+    if(visibility==VISIBILITY.PUBLIC) {
+      userService.getUsers().forEach((user)=>{
+        members.push(user.getUseremail());
+      })
+    }
 
     if(!description) {
         description="";
@@ -31,15 +38,9 @@ const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
         drawings:drawings,
         visibility:visibility,
         dateCreation:dateCreation,
-        nbContributeursActif:nbContributeursActif,
-        description:description
+        description:description,
+        members:members
     };
-
-    if(visibility==VISIBILITY.PRIVATE && req.body.password!=undefined) {
-        const salt=await bcrypt.genSalt();
-        const hashedPassword=await bcrypt.hash(req.body.password,salt);
-        album["password"]=hashedPassword;
-    }
 
     if(albumService.albums.has(album.albumName)) {
         return res.status(404).json({message:HTTPMESSAGE.ALBUMEXIST});
@@ -62,10 +63,13 @@ const getAlbums=(req:Request,res:Response,next:NextFunction)=>{
 
 const deleteAlbum=(req:Request,res:Response,next:NextFunction)=>{
     let albumName:String=req.body.albumName as String;
-    
+    let useremail:String=req.body.useremail as String;
     if(albumService.albums.has(albumName)) {
-      albumService.deleteAlbum(albumName);
-      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+      if(albumService.albums.get(albumName)?.getCreator()==useremail) {
+        albumService.deleteAlbum(albumName);
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+      }
+      return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
     }
     return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});
 }
@@ -73,53 +77,102 @@ const deleteAlbum=(req:Request,res:Response,next:NextFunction)=>{
 const joinAlbum=async(req:Request,res:Response,next:NextFunction)=>{
    
    let albumName:String=req.body.albumName as String;
-   
+   let useremail:String=req.body.useremail as String;
    if(albumService.albums.has(albumName)) {
-     if(albumService.albums.get(albumName)?.getVisibility()==VISIBILITY.PRIVATE) {
-         let password:string=req.body.password;
-         let album:PrivateAlbum=albumService.albums.get(albumName) as PrivateAlbum;
-         if(await bcrypt.compare(password,album.getPassword() as string)) {
-           return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
-         }
-         return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
+     if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
      }
-     return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+     return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
    }
    return res.status(404).json({message:HTTPMESSAGE.FAILED});
 }
 
-const updateAlbum=async (req:Request,res:Response,next:NextFunction)=>{
-    let album={
-        albumName:req.body.album.albumName,
-        drawings:req.body.album.drawings,
-        visibility:req.body.album.visibility,
-        description:req.body.album.description
-    };
-    if(albumService.albums.has(album.albumName)) {
-      if(album.visibility==VISIBILITY.PRIVATE && req.body.password!=undefined) {
-         const salt=await bcrypt.genSalt();
-         const hashedPassword=await bcrypt.hash(req.body.password,salt);
-         album["password"]=hashedPassword;
-      }
-      albumService.updateAlbum(album).then(()=>{
-         socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(album));
-      });
-      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+const addRequestToAlbum=(req:Request,res:Response,next:NextFunction)=>{
+  let newMember:String=req.body.newMember as String;
+  let albumName:String=req.body.albumName as String;
+
+  if(userService.getUsers().find((user)=>user.getUseremail()==newMember)) {
+    if(albumService.albums.has(albumName)) {
+        albumService.addRequest(newMember,albumName)
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
-    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+    return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});
+  }
+  return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
 }
 
-/*
-const addDrawing=(req:Request,res:Response,next:NextFunction)=>{
+const leaveAlbum=(req:Request,res:Response,next:NextFunction)=>{
+   let albumName:String=req.body.album.albumName as String;
+   let visibility:String=req.body.album.visibility as String;
+   let member:String=req.body.member as String;
 
+   if(visibility==VISIBILITY.PUBLIC) {
+     return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
+   }
+    
+   if(albumService.albums.has(albumName)) {
+     let album:Album=albumService.albums.get(albumName) as Album;
+     if(album.getMembers().includes(member)) {
+       if(album.getCreator()==member) {
+         return res.status(404).json({message:HTTPMESSAGE.UISOWNER});
+       }
+       albumService.removeMemberFromAlbum(albumName,member);
+       return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+     }
+     return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
+   }
+   return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});
 }
-*/
+
+const updateAlbum=async (req:Request,res:Response,next:NextFunction)=>{
+  let useremail:String=req.body.useremail as String;  
+  let albumName:String=req.body.album.albumName as String;
+  let description:String=req.body.album.description as String;
+
+  if(albumService.albums.has(albumName)) {
+    if(albumService.albums.get(albumName)?.getCreator()==useremail) {
+        if(req.body.newName!==undefined) {
+         let newName:String=req.body.newName;
+         await albumService.updateAlbum(newName,albumName,description);
+         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+        }
+        albumService.changeAlbumDescription(albumName,description);
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+      return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
+  }
+  return res.status(404).json({message:HTTPMESSAGE.FAILED});
+}
+
+
+const addDrawing=async (req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=req.body.drawingName as String;
+    let useremail:String=req.body.useremail as String;
+    let albumName:String=req.body.albumName as String;
+
+    if(albumService.albums.has(albumName)==false) {
+      return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});
+    }
+
+    if(drawingService.drawings.has(drawingName)) {
+      if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
+        await albumService.addDrawingToAlbum(drawingName,albumName);
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+      }
+      return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND});
+}
+
 
 
 router.post('/createAlbum',createAlbum);
 router.get('/getAlbums',getAlbums);
 router.post('/deleteAlbum',deleteAlbum);
 router.post('/joinAlbum',joinAlbum);
+router.post('/addRequest',addRequestToAlbum);
+router.post('/leaveAlbum',leaveAlbum);
 router.post('/updateAlbum',updateAlbum);
+router.post('/addDrawing',addDrawing);
 
 export=router;
