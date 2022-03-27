@@ -199,6 +199,8 @@ export class RoomService {
             socket?.join(room.getRoomName() as string);
           }
         });
+        const message={oldName:oldName,room:room};
+        socketService.getIo().emit(SOCKETEVENT.ROOMMODIFIED,JSON.stringify(message));
       }).catch((e:Error)=>{
         console.log(e);
       });

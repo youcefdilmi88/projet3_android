@@ -188,6 +188,9 @@ class DrawingService {
             socket?.join(drawing.getName() as string);
           }
         });
+        drawing.setName(this.sourceDrawingName(newName));
+        const message={oldName:this.sourceDrawingName(oldName),drawing:drawing};
+        socketService.getIo().emit(SOCKETEVENT.DRAWINGMODIFIED,JSON.stringify(message));
       }).catch((e:Error)=>{
         console.log(e);
       });
