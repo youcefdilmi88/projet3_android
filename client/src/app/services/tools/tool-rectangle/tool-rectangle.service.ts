@@ -111,6 +111,8 @@ export class ToolRectangleService implements Tools {
 
     this.socketService.getSocket().on("ENDRECTANGLE",(data)=>{
       this.moving = false;
+      console.log("height", this.rectangleAttributes.height);
+      console.log("height", this.rectangleAttributes.width);
     });
   }
 
@@ -163,6 +165,10 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
+    let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
+    let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
+    this.rectangleAttributes.height = +height!;
+    this.rectangleAttributes.width = +width!;
     this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
     return;
   }

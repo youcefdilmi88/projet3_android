@@ -110,8 +110,9 @@ export class ToolEllipseService implements Tools {
     });
     
     this.socketService.getSocket().on("ENDELLIPSE", (data) => {
-      console.log(data);
       this.moving = false;
+      console.log("height", this.ellipseAttributes.height);
+      console.log("height", this.ellipseAttributes.width);
     });
   }
 
@@ -181,6 +182,10 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
+    let height = this.ellipse2.getAttribute('height')?.slice(0, -2);
+    let width = this.ellipse2.getAttribute('width')?.slice(0, -2);
+    this.ellipseAttributes.height = +height!;
+    this.ellipseAttributes.width = +width!;
     this.socketService.getSocket().emit("ENDELLIPSE", JSON.stringify(this.ellipseAttributes));
     return;
   }
