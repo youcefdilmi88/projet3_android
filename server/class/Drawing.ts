@@ -12,22 +12,25 @@ import { Rectangle } from "./Rectangle";
 
 export class Drawing {
     private drawingName:String;
-    private creator:String;
+    private owner:String;
     private elements:BaseShape[];  // shapeId and Shape
     public roomName:String;
     public members:String[];
+    public modified:boolean=false;
+    private visibility:String;
 
     elementById:Map<String,BaseShape>;
     membersBySocketId:Map<string,String>;  // socketId and useremail
 
     constructor(drawing:DrawingInterface) {
        this.drawingName=drawing.drawingName;
-       this.creator=drawing.creator;
+       this.owner=drawing.owner;
        this.roomName=drawing.roomName;
        this.members=drawing.members;
        this.elements=[];
        this.elementById=new Map<String,BaseShape>();
        this.membersBySocketId=new Map<string,String>();
+       this.visibility=drawing.visibility;
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
@@ -41,7 +44,7 @@ export class Drawing {
            if(checkRectangle(element)) {
                let rectangle:Rectangle=new Rectangle(element);
                this.elementById.set(rectangle.getId(),rectangle);
-            }
+           }
        });
        this.autoSave();
     }
@@ -50,15 +53,15 @@ export class Drawing {
         return this.drawingName;
     }
 
-    getCreator():String {
-        return this.creator;
+    getOwner():String {
+        return this.owner;
     }
 
     getElements():BaseShape[] {
         this.elements=[];
         this.elementById.forEach((v,k)=>{
             this.elements.push(v);
-        })
+        });
         return this.elements;
     }
 
@@ -125,12 +128,16 @@ export class Drawing {
         return this.members;
     }
 
+    getVisibility():String {
+        return this.visibility;
+    }
+
     setName(name:String):void {
         this.drawingName=name;
     }
 
-    setCreator(creator:String) {
-        this.creator=creator;
+    setOwner(owner:String) {
+        this.owner=owner;
     }
 
     setElements(elements:BaseShape[]) {
@@ -141,6 +148,10 @@ export class Drawing {
         this.members=members;
     }
 
+    setVisibility(visibility:String) {
+        this.visibility=visibility;
+    }
+
     removeMember(socketId:string):void {
         this.membersBySocketId.delete(socketId);
     }
@@ -149,11 +160,11 @@ export class Drawing {
         this.membersBySocketId.set(socketId,email);
     }
     
-    autoSave() {
-        drawingService.autoSaveDrawing(this.drawingName);
+    async autoSave() {
+        await drawingService.autoSaveDrawing(this.drawingName);
         setTimeout(() => {
             this.autoSave();
-       }, 10000)
+       }, 1000)
     }
 
 
