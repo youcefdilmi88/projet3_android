@@ -36,7 +36,8 @@ class AlbumService {
         visibility:albumToCreate.visibility,
         dateCreation:albumToCreate.dateCreation,
         description:albumToCreate.description,
-        members:albumToCreate.members
+        members:albumToCreate.members,
+        requests:albumToCreate.requests
       });
 
       let albumObj=new Album(album as AlbumInterface);

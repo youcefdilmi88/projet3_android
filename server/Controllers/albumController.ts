@@ -18,6 +18,7 @@ const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
     let dateCreation:Number=Date.now();
     let description:String=req.body.description;
     let members:String[]=[];
+    let requests:String[]=[];
 
     if(visibility==VISIBILITY.PRIVATE) {
       members.push(creator);
@@ -39,7 +40,8 @@ const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
         visibility:visibility,
         dateCreation:dateCreation,
         description:description,
-        members:members
+        members:members,
+        requests:requests
     };
 
     if(albumService.albums.has(album.albumName)) {
