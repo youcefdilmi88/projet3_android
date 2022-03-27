@@ -103,6 +103,26 @@ const addRequestToAlbum=(req:Request,res:Response,next:NextFunction)=>{
   return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
 }
 
+const acceptRequestInAlbum=(req:Request,res:Response,next:NextFunction)=>{
+  let useremail:String=req.body.useremail as String;
+  let albumName:String=req.body.albumName as String;
+  let request:String=req.body.request as String;
+
+  if(albumService.albums.get(albumName)?.getRequests().includes(request)) {
+    return res.status(404).json({message:HTTPMESSAGE.REQNOTFOUND});
+  } 
+
+  if(albumService.albums.has(albumName)) {
+    if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
+      albumService.acceptRequest(request,albumName);
+      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
+  }
+  return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});
+
+}
+
 const leaveAlbum=(req:Request,res:Response,next:NextFunction)=>{
    let albumName:String=req.body.album.albumName as String;
    let visibility:String=req.body.album.visibility as String;
@@ -173,8 +193,10 @@ router.get('/getAlbums',getAlbums);
 router.post('/deleteAlbum',deleteAlbum);
 router.post('/joinAlbum',joinAlbum);
 router.post('/addRequest',addRequestToAlbum);
+router.post('/acceptRequest',acceptRequestInAlbum);
 router.post('/leaveAlbum',leaveAlbum);
 router.post('/updateAlbum',updateAlbum);
+
 router.post('/addDrawing',addDrawing);
 
 export=router;

@@ -63,50 +63,33 @@ class AlbumService {
    async addRequest(newMember:String,albumName:String) {
      let album:Album=this.albums.get(albumName) as Album;
      album.addRequest(newMember);
-     await this.updateRequests(album);
+     await this.updateMember(album);
    }
 
-   async updateRequests(album:Album) {
-    try {
-      const filter={albumName:album.getName()};
-          const albumUpdate = {
-            $set:{
-              "requests":album.getRequests(),
-            }
-          };
-          let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
-          await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
-            console.log(e);
-          }).catch((e:Error)=>{
-            console.log(e);
-          });
-          await albumDoc?.save().then(()=>{
-            this.albums[`${album.getName()}`]=album;
-            const message={album:album};
-            socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
-          }).catch((e:Error)=>{
-            console.log(e);
-          });
-    }
-    catch(e:any) {
-      console.log(e);
-    }
+   async acceptRequest(request:String,albumName:String) {
+      let album:Album=this.albums.get(albumName) as Album;
+      album.addMember(request);
+      album.removeRequest(request);
+      await this.updateMember(album);
    }
 
-   addMemberToAlbum(albumName:String,newMember:String) {
+   async addMemberToAlbum(albumName:String,newMember:String) {
      let album:Album=this.albums.get(albumName) as Album;
      album.addMember(newMember);
-     this.updateMember(album);
-     const message={albumName:albumName,member:newMember};
-     socketService.getIo().emit(SOCKETEVENT.NEWUINALBUM,JSON.stringify(message));
+     await this.updateMember(album);
    }
 
-   removeMemberFromAlbum(albumName:String,member:String) {
+   async removeMemberFromAlbum(albumName:String,member:String) {
      let album:Album=this.albums.get(albumName) as Album;
      album.removeMember(member);
-     this.updateMember(album)
-     const message={albumName:albumName,member:member};
-     socketService.getIo().emit(SOCKETEVENT.ULEFTALBUM,JSON.stringify(message));
+     drawingService.drawings.forEach((v,k)=>{
+       if(album.getDrawings().includes(k)) {
+         v.setOwner(album.getCreator());
+         drawingService.drawings[`${k}`]=v;
+         drawingService.autoSaveDrawing(k);
+       }
+     })
+     await this.updateMember(album)
    }
 
    async updateMember(album:Album) {
@@ -115,6 +98,7 @@ class AlbumService {
           const albumUpdate = {
             $set:{
               "members":album.getMembers(),
+              "requests":album.getRequests()
             }
           };
           let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
@@ -158,20 +142,35 @@ class AlbumService {
 
   async updateAlbum(newName:String,albumName:String,description:String) {
     let album:Album=this.albums.get(albumName) as Album;
-    await this.deleteAlbum(albumName).then(()=>{
-      album.setName(newName);
-      album.setDescription(description);
-    }).catch((e:Error)=>{
-      console.log(e);
-    });
+    let oldName:String=album.getName() as String;
+    
+    const filter={albumName:album.getName()};
+    const albumUpdate = {
+         $set:{
+           "albumName":newName,
+           "description":description
+         }
+     };
+    try {
+      let albumDoc=await AlbumSchema.albumSchema.findOne(filter);
+      await AlbumSchema.albumSchema.updateOne(filter,albumUpdate).catch((e:Error)=>{
+        console.log(e);
+      });
+      await albumDoc?.save().then(()=>{
+        album.setName(newName);
+        album.setDescription(description);
+        this.albums.delete(oldName);
+        this.albums.set(album.getName(),album);
 
-    await this.createAlbum(album).then(()=>{
-      this.albums.delete(albumName);
-      this.albums.set(album.getName(),album);
-    }).catch((e:Error)=>{
+        const message={oldName:oldName,album:album};
+        socketService.getIo().emit(SOCKETEVENT.ALBUMNAMECHANGED,JSON.stringify(message));
+      }).catch((e:Error)=>{
+        console.log(e);
+      });
+    }
+    catch(e) {
       console.log(e);
-    })
-
+    }
   }
 
   async changeAlbumDescription(albumName:String,description:String) {
@@ -202,6 +201,12 @@ class AlbumService {
   }
 
   async addDrawingToAlbum(drawingName:String,albumName:String) {
+    this.albums.forEach((v,k)=>{
+      if(v.getDrawings().includes(drawingName)) {
+        v.removeDrawing(drawingName);
+        this.updateDrawingInAlbum(v);
+      }
+    })
     let album:Album=this.albums.get(albumName) as Album;
     album.addDrawing(drawingName);
     await this.updateDrawingInAlbum(album);

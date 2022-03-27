@@ -13,5 +13,6 @@ export enum HTTPMESSAGE {
     DNOTFOUND="drawing not found",
     UNOPERMISSION="user does not have permission",
     UNOTMEMBER="user is not a member",
-    UISOWNER="user is owner"
+    UISOWNER="user is owner",
+    REQNOTFOUND="request not found"
 }
