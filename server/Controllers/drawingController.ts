@@ -1,14 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Socket } from "socket.io";
 import { Drawing } from "../class/Drawing";
-import { Room } from "../class/Room";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
 import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
-import { MessageInterface } from "../Interface/Message";
 import drawingService from "../Services/drawingService";
 import roomService from "../Services/roomService";
 import socketService from "../Services/socketService";
@@ -58,7 +56,6 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let roomName:String=req.body.drawingName as String;
     let members:String[]=[];
     let visibility:String=req.body.visibility as String;
-    let messages:MessageInterface[]=[];
 
     console.log("created drawing name:"+drawingName);
 
@@ -69,7 +66,6 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
         {
             return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
         }
-        drawingService.roomInfo=new Room(roomName,owner,members,messages);
         drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility).catch((e:Error)=>{
                 console.log(e);
         });

@@ -145,7 +145,7 @@ export class RoomService {
   joinRoom(name:String,useremail:String) {
     let user:User=userService.getUserByUseremail(useremail) as User;
     let socketId:string=userService.getSocketIdByUser().get(user) as string;
-    let nextRoom:Room=roomService.getRoomByName(name) as Room;
+    let nextRoom:Room=this.getRoomByName(name) as Room;
 
     let socket=socketService.getIo().sockets.sockets.get(socketId);
        
@@ -171,6 +171,41 @@ export class RoomService {
     room.removeUserFromRoom(useremail);  // removes user from room members
     const message={useremail:useremail,roomName:roomToLeave};
     socketService.getIo().emit(SOCKETEVENT.LEAVEROOM,JSON.stringify(message));
+  }
+
+  async updateRoomName(newName:String,roomName:String) {
+    let oldName:String=roomName;
+    let room:Room=this.rooms.get(roomName) as Room;
+    const filter={roomName:room.getRoomName()};
+    const roomUpdate = {
+         $set:{
+           "roomName":newName
+         }
+     };
+    try {
+      let roomDoc=await RoomSchema.findOne(filter);
+      await RoomSchema.updateOne(filter,roomUpdate).catch((e:Error)=>{
+        console.log(e);
+      });
+      await roomDoc?.save().then(()=>{
+        room.setRoomName(newName);
+        this.rooms.delete(oldName);
+        this.rooms.set(room.getRoomName(),room);
+        this.socketToRoom.forEach((v,k)=>{
+          if(v==oldName) {
+            this.socketToRoom[k]=room.getRoomName();
+            let socket=socketService.getIo().sockets.sockets.get(k);
+            socket?.leave(oldName as string);
+            socket?.join(room.getRoomName() as string);
+          }
+        });
+      }).catch((e:Error)=>{
+        console.log(e);
+      });
+    }
+    catch(e) {
+      console.log(e);
+    }
   }
 
   parseObject(arg: any): Object {
