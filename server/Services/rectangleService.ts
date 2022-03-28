@@ -1,5 +1,4 @@
-import { Server, Socket } from "socket.io";
-import roomService from "./roomService";
+import { Socket } from "socket.io";
 import { v4 as uuidv4 } from 'uuid';
 import { Drawing } from "../class/Drawing";
 import { Rectangle } from "../class/Rectangle";
@@ -9,8 +8,8 @@ import drawingService from "./drawingService";
 export class RectangleService {
 
 constructor() { }
-
-private io:Server;
+  /*
+  private io:Server;
 
   initRectangle(server:Server) {
     this.io=server;
@@ -24,32 +23,34 @@ private io:Server;
         this.endRectangle(socket);
     })
   }
+  */
 
   startRectangle(socket:Socket) {
     socket.on("STARTRECTANGLE",(data)=>{
       data=JSON.parse(data);
       data.id=uuidv4();
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("STARTRECTANGLE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTRECTANGLE",JSON.stringify(data));
     })
   }
 
   drawRectangle(socket:Socket) {
     socket.on("DRAWRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DRAWRECTANGLE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("DRAWRECTANGLE",JSON.stringify(data));
     })
   }
 
   endRectangle(socket:Socket) {
     socket.on("ENDRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      if(drawingService.drawings.has("drawing123")) {
-       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
-       let rectangle:Rectangle=new Rectangle(data);
-       drawing.elementById.set(rectangle.getId(),rectangle);
-       drawing.modified=true;
+      if(drawingService.socketInDrawing.has(socket?.id)) {
+        let name:String=drawingService.socketInDrawing.get(socket?.id)?.getName() as String;
+        let drawing:Drawing=drawingService.drawings.get(name) as Drawing;
+        let rectangle:Rectangle=new Rectangle(data);
+        drawing.elementById.set(rectangle.getId(),rectangle);
+        drawing.modified=true;
       }
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDRECTANGLE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("ENDRECTANGLE",JSON.stringify(data));
     })
   }
 

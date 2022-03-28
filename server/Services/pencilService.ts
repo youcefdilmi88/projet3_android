@@ -1,5 +1,4 @@
-import { Server, Socket } from "socket.io";
-import roomService from "./roomService";
+import { Socket } from "socket.io";
 import { v4 as uuidv4 } from 'uuid';
 import drawingService from "./drawingService";
 import { Drawing } from "../class/Drawing";
@@ -9,7 +8,7 @@ import { Line } from "../class/Line";
 export class PencilService {
 
   constructor() { }
-
+/*
   private io:Server;
 
   initPencil(server:Server) {
@@ -24,19 +23,19 @@ export class PencilService {
         this.endLine(socket);
     })
   }
-
+*/
   startLine(socket:Socket) {
     socket.on("STARTLINE",(data)=>{
       data=JSON.parse(data);
       data.id=uuidv4();
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("STARTLINE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTLINE",JSON.stringify(data));
     })
   }
 
   drawLine(socket:Socket) {
     socket.on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DRAWLINE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTLINE",JSON.stringify(data));
     })
   }
 
@@ -44,14 +43,15 @@ export class PencilService {
     socket.on("ENDLINE",(data)=>{
       data=JSON.parse(data);
       // save to one drawing currently have to change when users can be in a specific drawing with socketInDrawing
-      if(drawingService.drawings.has("drawing123")) {
-       let drawing:Drawing=drawingService.drawings.get("drawing123") as Drawing;
+      if(drawingService.socketInDrawing.has(socket?.id)) {
+       let name:String=drawingService.socketInDrawing.get(socket?.id)?.getName() as String;
+       let drawing:Drawing=drawingService.drawings.get(name) as Drawing;
        let line:Line=new Line(data);
        drawing.elementById.set(line.getId(),line);
        drawing.modified=true;
       }
       
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTLINE",JSON.stringify(data));
     })
   }
 
