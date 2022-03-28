@@ -4,6 +4,7 @@ import { Drawing } from "../class/Drawing";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { VISIBILITY } from "../Constants/visibility";
 import { AlbumInterface } from "../Interface/AlbumInterface";
+import { DrawingInterface } from "../Interface/DrawingInterface";
 import albumService from "../Services/albumService";
 import drawingService from "../Services/drawingService";
 import userService from "../Services/userService";
@@ -203,6 +204,29 @@ const addDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND});
 }
 
+const getDrawingsFromAlbum=(req:Request,res:Response,next:NextFunction)=>{
+    let albumName:String=req.params.albumName as String;
+    let drawings:DrawingInterface[]=[];
+    if(albumService.albums.has(albumName)) {
+      let album:Album=albumService.albums.get(albumName) as Album;
+      album.getDrawings().forEach((drawingName)=>{
+        let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+        let drawingInterface:DrawingInterface={
+          drawingName:drawingService.sourceDrawingName(drawing.getName()),
+          owner:drawing.getOwner(),
+          elements:drawing.getElementsInterface(),
+          roomName:drawing.roomName,
+          members:drawing.getMembers(),
+          visibility:drawing.getVisibility()
+        }
+        drawings.push(drawingInterface);
+      });
+      return res.status(200).json(drawings);
+    } 
+    return res.status(404).json({message:HTTPMESSAGE.ANOTFOUND});  
+   
+}
+
 
 
 router.post('/createAlbum',createAlbum);
@@ -215,5 +239,6 @@ router.post('/leaveAlbum',leaveAlbum);
 router.post('/updateAlbum',updateAlbum);
 
 router.post('/addDrawing',addDrawing);
+router.get('/getDrawings/:albumName',getDrawingsFromAlbum);
 
 export=router;

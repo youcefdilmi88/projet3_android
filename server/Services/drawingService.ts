@@ -8,7 +8,11 @@ import { DrawingInterface } from "../Interface/DrawingInterface";
 import { MessageInterface } from "../Interface/Message";
 import albumService from "./albumService";
 import databaseService from "./databaseService";
+import ellipseService from "./ellipseService";
+import pencilService from "./pencilService";
+import rectangleService from "./rectangleService";
 import roomService from "./roomService";
+import selectionService from "./selectionService";
 import socketService from "./socketService";
 import userService from "./userService";
 
@@ -25,6 +29,9 @@ class DrawingService {
     this.loadAllDrawings();
   }
 
+  getIo():Server {
+    return this.io;
+  }
 
   initDrawing(server:Server) {
     this.io=server;
@@ -32,8 +39,26 @@ class DrawingService {
   }
 
   connect() {
-    this.io.on("connection",(socket:Socket)=>{
+    this.io.on("connection",async (socket:Socket)=>{
         console.log("user start drawing "+socket.id);
+        pencilService.startLine(socket);
+        pencilService.drawLine(socket);
+        pencilService.endLine(socket);
+
+        rectangleService.startRectangle(socket);
+        rectangleService.drawRectangle(socket);
+        rectangleService.endRectangle(socket);
+
+        ellipseService.startEllipse(socket);
+        ellipseService.drawEllipse(socket);
+        ellipseService.endEllipse(socket);
+
+        selectionService.startSelect(socket);
+        selectionService.drawSelect(socket);
+        selectionService.endSelect(socket);
+        selectionService.resizeSelect(socket);
+        selectionService.deleteSelect(socket);
+
     })
   }
 
@@ -280,7 +305,13 @@ class DrawingService {
            await DrawingSchema.updateOne(filter,drawingUpdate).catch((e:Error)=>{
              console.log(e);
            });
-           await drawingDoc?.save().catch((e:Error)=>{
+           await drawingDoc?.save().then(()=>{
+             this.socketInDrawing.forEach((v,k)=>{
+               if(v.getName()==drawing.getName()) {
+                 this.socketInDrawing[k]=drawing;
+               }
+             })
+           }).catch((e:Error)=>{
              console.log(e);
            });
          }

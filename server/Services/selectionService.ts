@@ -1,12 +1,13 @@
-import { Server, Socket } from "socket.io";
-import roomService from "./roomService";
+import { Socket } from "socket.io";
 import { v4 as uuidv4 } from 'uuid';
+import drawingService from "./drawingService";
 
 
 export class SelectionService {
 
   constructor() { }
 
+  /*
   private io:Server;
 
   initSelection(server:Server) {
@@ -24,6 +25,7 @@ export class SelectionService {
         this.deleteSelect(socket);
     })
   }
+  */
 
   startSelect(socket:Socket) {
     socket.on("STARTSELECT",(data)=>{
@@ -32,15 +34,15 @@ export class SelectionService {
       data.id=uuidv4();
       console.log("user "+socket.id+" starts selecting");
       console.log("STARTSELECT");
-      console.log(data+""+roomService.getRoomNameBySocket(socket.id))
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("STARTSELECT",JSON.stringify(data));
+      console.log(data+""+drawingService.socketInDrawing.get(socket?.id)?.getName())
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTSELECT",JSON.stringify(data));
     })
   }
 
   drawSelect(socket:Socket) {
     socket.on("DRAWSELECT",(data)=>{
       data=JSON.parse(data);
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DRAWSELECT",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("DRAWSELECT",JSON.stringify(data));
       //console.log("data x " + data.x);
     })
   }
@@ -49,7 +51,7 @@ export class SelectionService {
     socket.on("SIZESELECT",(data)=>{
       data=JSON.parse(data);
       data.id=uuidv4();
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("SIZESELECT",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("SIZESELECT",JSON.stringify(data));
       //console.log("data x " + data.x);
     })
   }
@@ -57,7 +59,7 @@ export class SelectionService {
   deleteSelect(socket:Socket) {
     socket.on("DELETESELECT",(data)=>{
       data=JSON.parse(data);
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("DELETESELECT",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("DELETESELECT",JSON.stringify(data));
       //console.log("data x " + data.x);
     })
   }
@@ -69,8 +71,8 @@ export class SelectionService {
 
       console.log(data);
       console.log("ENDLINE");
-      console.log(roomService.getRoomNameBySocket(socket.id)+" endline")
-      this.io.to(roomService.getRoomNameBySocket(socket.id) as string).emit("ENDLINE",JSON.stringify(data));
+      console.log(drawingService.socketInDrawing.get(socket?.id)?.getName()+" endline")
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("ENDLINE",JSON.stringify(data));
     })
   }
 
