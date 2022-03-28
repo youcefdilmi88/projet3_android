@@ -28,7 +28,7 @@ export class ToolRectangleService implements Tools {
   private identif: string;
 
   private rectangle2: SVGRectElement;
-  private rectangleAttributes: FilledShape;
+  public rectangleAttributes: FilledShape;
 
   parameters: FormGroup;
   private strokeWidth: FormControl;
@@ -61,11 +61,8 @@ export class ToolRectangleService implements Tools {
   }
 
   setUpRectangle() {
-    console.log("rectangle set up completed");
-
     this.socketService.getSocket().on("STARTRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      console.log("STARTRECTANGLE");
       this.rectangleAttributes={
         id:data.id,
         user: data.user,
@@ -113,13 +110,13 @@ export class ToolRectangleService implements Tools {
     });
 
     this.socketService.getSocket().on("ENDRECTANGLE",(data)=>{
-      console.log("ENDRECTANGLE");
       this.moving = false;
+      console.log("height", this.rectangleAttributes.height);
+      console.log("height", this.rectangleAttributes.width);
     });
   }
 
   renderSVG(): void {
-      console.log("RENDERED RECTANGLE");
       this.rectangle2 = this.renderer.createElement('rect', 'svg');
       this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
       this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
@@ -175,16 +172,8 @@ export class ToolRectangleService implements Tools {
   onRelease(event: MouseEvent): ICommand | void {
     let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
     let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
-    // let stroke = this.rectangle2.getAttribute('stroke');
-    // let fill = this.rectangle2.getAttribute('fill');
-    // let strokeWidth = this.rectangle2.getAttribute('strokeWidth')?.slice(0, -2);
-
-
     this.rectangleAttributes.height = +height!;
     this.rectangleAttributes.width = +width!;
-    // this.rectangleAttributes.stroke = stroke!;
-    // this.rectangleAttributes.fill = fill!;
-    // this.rectangleAttributes.strokeWidth = +strokeWidth!;
     this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
 
     console.log(this.rectangleAttributes.fill);

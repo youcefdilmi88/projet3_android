@@ -4,9 +4,9 @@ import { Drawing } from "../class/Drawing";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
+import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
-import { MessageInterface } from "../Interface/Message";
 import drawingService from "../Services/drawingService";
 import roomService from "../Services/roomService";
 import socketService from "../Services/socketService";
@@ -51,32 +51,23 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
 const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String; 
-    let creator:String=req.body.creator as String;
+    let owner:String=req.body.owner as String;
     let elements:BaseShapeInterface[]=[];
     let roomName:String=req.body.drawingName as String;
     let members:String[]=[];
+    let visibility:String=req.body.visibility as String;
 
     console.log("created drawing name:"+drawingName);
 
-    if(drawingName && creator && roomName) {
+    if(drawingName && owner && roomName) {
       if(drawingService.drawings.has(drawingName)==false) 
       {
         if(roomService.getAllRooms().has(roomName)) 
         {
             return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
         }
-        drawingService.createDrawing(drawingName,creator,elements,roomName,members).then(()=>{
-            let messages:MessageInterface[]=[];
-            roomService.createRoom(roomName,creator,members,messages).then(()=>{
-                const messageDrawing={message:"drawing created"};
-                const messageRoom={message:"room created"};
-                socketService.getIo().emit(SOCKETEVENT.DRAWINGCREATED,JSON.stringify(messageDrawing));
-                socketService.getIo().emit(SOCKETEVENT.CREATEROOM,JSON.stringify(messageRoom));
-            }).catch((e:Error)=>{
+        drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility).catch((e:Error)=>{
                 console.log(e);
-            }).catch((e:Error)=>{
-                console.log(e);
-            });
         });
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
       }
@@ -103,13 +94,16 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
     drawingService.drawings.forEach((v,k)=>{
         let drawing:DrawingInterface={
             drawingName:drawingService.sourceDrawingName(v.getName()),
-            creator:v.getCreator(),
+            owner:v.getOwner(),
             elements:v.getElementsInterface(),
             roomName:v.roomName,
             members:v.getMembers(),
+            visibility:v.getVisibility()
         }
         drawings.push(drawing);
+        console.log(drawing.drawingName);
     });
+    
     return res.status(200).json(drawings);
 }
 
@@ -129,10 +123,65 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
     return res.status(404).json({message:SOCKETEVENT.UNOTCONNECTED});
 }
 
+const getDrawingByName=async (req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=req.params.drawingName as String;
+    if(drawingService.drawings.has(drawingName)) {
+        let drawing;
+        await DrawingSchema.findOne({drawingName:drawingName}).then((data)=>{
+          drawing=data;
+      }).catch((e:Error)=>{console.log(e)});
+      return res.status(200).json({drawing:drawing});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+}
+
+const updateDrawing=(req:Request,res:Response,next:NextFunction)=>{
+    let useremail:String=req.body.useremail as String;
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawing.drawingName) as String;
+    let drawingVisibility:String=req.body.drawing.visibility as String;
+    
+    if(drawingService.drawings.has(drawingName)) {
+      let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+      if(drawing.getOwner()==useremail) {
+          drawing.setVisibility(drawingVisibility);
+          if(req.body.newName!=undefined) {
+            let newName:String=drawingService.addonDrawingName(req.body.newName) as String;
+            if(drawingService.drawings.has(newName)) {
+                return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
+            }
+            if(roomService.getAllRooms().has(drawingService.sourceDrawingName(newName))) {
+                return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
+            }
+            drawingService.overwriteDrawingName(newName,drawing);
+            return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+          }
+          drawingService.overwriteDrawingVisibility(drawing);
+          return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+      }
+    }
+    return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND});
+}
+
+const getConnectedUserInDrawing=(req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=req.params.drawingName as String;
+    if(drawingService.drawings.has(drawingName)) {
+        let count:number=0;
+        let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+        drawing.getMembers().forEach((drawingName)=>{
+            count++;
+        });
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS,count:count});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND, count:0});
+}
+
 router.post('/joinDrawing',joinDrawing);
 router.post('/createDrawing',createDrawing);
 router.get('/getAllDrawings',getAllDrawings);
 router.post('/leaveDrawing',leaveDrawing);
 router.post('/deleteDrawing',deleteDrawing);
+router.get('/getDrawingByName/:drawingName',getDrawingByName);
+router.post('/updateDrawing',updateDrawing);
+router.get('/getConnectedUser/:roomName',getConnectedUserInDrawing);
 
 export=router;

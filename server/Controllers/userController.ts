@@ -53,6 +53,8 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
       try {
         if(await bcrypt.compare(req.body.password,account.getUserPassword() as string)) {
           const userFound:User=userService.getUsers().find((user)=>user.getUseremail()==account.getUserEmail()) as User;
+          let date:Number=Date.now();
+          userFound.setLastLoggedIn(date);
           userService.getLoggedUsers().set(userFound.getUseremail(),userFound);
        
           let defaultRoomName:String=roomService.getDefaultRoom().getRoomName() as String;
@@ -81,10 +83,13 @@ const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     console.log("user in map for logout ? "+userService.getLoggedUsers().has(useremail))
     if(userService.getLoggedUsers().has(useremail)) {
         roomService.getAllRooms().forEach((v,k)=>{
-          if(v.getUsersInRoom().includes(useremail)) {
+          if(v.getUsersInRoom().indexOf(useremail)!=-1) {
             roomService.leaveRoom(socket,k,useremail);
           }
         })
+        let date:Number=Date.now();
+        user.setLastLoggedOut(date);
+        userService.updateUser(user);
         userService.getLoggedUsers().delete(useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS})
     }

@@ -1,4 +1,5 @@
 import { User } from "../class/User";
+import UserSchema from "../Entities/UserSchema";
 import databaseService from "./databaseService";
 
 
@@ -21,6 +22,8 @@ class UserService {
        await databaseService.getAllUsers().then((users)=>{
            users.forEach((user)=>{
                let userObj=new User(user.useremail,user.nickname);
+               userObj.setLastLoggedIn(user.lastLoggedIn);
+               userObj.setLastLoggedOut(user.lastLoggedOut);
                this.users.push(userObj);
            })
        })
@@ -61,6 +64,26 @@ class UserService {
    }
 
 
+   async updateUser(user:User) {
+       const changes={
+         $set: {
+            "useremail": user.getUseremail(),
+            "nickname":user.getUserNickname(),
+            "lastLoggedIn":user.getLastLoggedIn(),
+            "lastLoggedOut":user.getLastLoggedOut()
+         }
+       }
+       try {
+         await UserSchema.findOneAndUpdate({useremail:user.getUseremail()},changes).then((data)=>{
+             console.log(data);
+         }).catch((e:Error)=>{
+             console.log(e);
+         });
+       }
+       catch(e) {
+           console.log(e);
+       }
+   }
 
 
 

@@ -116,19 +116,15 @@ export class RoomService {
     return message;
   }
 
-  moveUserToDefault(name:String) {
+  kickUserFromRoom(name:String) {
     this.socketToRoom.forEach((v,k)=>{
       if(v==name) {
-        let socketId:string=k as string;
-        let room:Room=this.getDefaultRoom() as Room;
         let socket=socketService.getIo().sockets.sockets.get(k);
         socket?.leave(v);
         this.socketToRoom.delete(k);
-        this.socketToRoom.set(socketId,room.getRoomName() as string);
-        room.addUserToRoom(this.socketidToEmail.get(socketId) as String);
       }
     });
-    
+    console.log(this.socketToRoom);
   }
 
   async deleteRoom(name:String) {
@@ -136,7 +132,7 @@ export class RoomService {
          await RoomSchema.deleteOne({roomName:name}).then((data)=>{
            console.log(data);
            this.rooms.delete(name);
-           this.moveUserToDefault(name);
+           this.kickUserFromRoom(name);
            const message={message:"room deleted"};
            socketService.getIo().emit(SOCKETEVENT.ROOMDELETED,JSON.stringify(message));
          });
@@ -149,7 +145,7 @@ export class RoomService {
   joinRoom(name:String,useremail:String) {
     let user:User=userService.getUserByUseremail(useremail) as User;
     let socketId:string=userService.getSocketIdByUser().get(user) as string;
-    let nextRoom:Room=roomService.getRoomByName(name) as Room;
+    let nextRoom:Room=this.getRoomByName(name) as Room;
 
     let socket=socketService.getIo().sockets.sockets.get(socketId);
        
@@ -173,8 +169,47 @@ export class RoomService {
     socket?.leave(roomToLeave as string);   
     let room:Room=this.rooms.get(roomToLeave) as Room;
     room.removeUserFromRoom(useremail);  // removes user from room members
+    this.rooms[`${room.getRoomName()}`]=room;
+    this.socketToRoom.delete(socket?.id);
     const message={useremail:useremail,roomName:roomToLeave};
     socketService.getIo().emit(SOCKETEVENT.LEAVEROOM,JSON.stringify(message));
+  }
+
+  async updateRoomName(newName:String,roomName:String) {
+    let oldName:String=roomName;
+    let room:Room=this.rooms.get(roomName) as Room;
+    const filter={roomName:room.getRoomName()};
+    const roomUpdate = {
+         $set:{
+           "roomName":newName
+         }
+     };
+    try {
+      let roomDoc=await RoomSchema.findOne(filter);
+      await RoomSchema.updateOne(filter,roomUpdate).catch((e:Error)=>{
+        console.log(e);
+      });
+      await roomDoc?.save().then(()=>{
+        room.setRoomName(newName);
+        this.rooms.delete(oldName);
+        this.rooms.set(room.getRoomName(),room);
+        this.socketToRoom.forEach((v,k)=>{
+          if(v==oldName) {
+            this.socketToRoom[k]=room.getRoomName();
+            let socket=socketService.getIo().sockets.sockets.get(k);
+            socket?.leave(oldName as string);
+            socket?.join(room.getRoomName() as string);
+          }
+        });
+        const message={oldName:oldName,room:room};
+        socketService.getIo().emit(SOCKETEVENT.ROOMMODIFIED,JSON.stringify(message));
+      }).catch((e:Error)=>{
+        console.log(e);
+      });
+    }
+    catch(e) {
+      console.log(e);
+    }
   }
 
   parseObject(arg: any): Object {

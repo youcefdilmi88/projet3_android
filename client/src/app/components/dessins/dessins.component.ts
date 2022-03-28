@@ -100,6 +100,7 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
       data=JSON.parse(data);
+
       this.getAllDrawings();
     });
 
@@ -163,7 +164,7 @@ export class DessinsComponent implements OnInit {
         //     v
         //   }
         // });
-        console.log("HERE:",data);
+        console.log("HERE:",drawing.visibility);
         this.names.push(drawing.drawingName); 
         console.log(this.names);
         this.owners.push(drawing.owner);
@@ -216,8 +217,8 @@ export class DessinsComponent implements OnInit {
     this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {
       if(data.message == "success") {
         console.log("join dessins:" + element.textContent.trim().slice(7));
-        this.router.navigate(['/', 'sidenav']);
         this.dialog.open(NewDrawingComponent);
+        this.router.navigate(['/', 'sidenav']);
 
         let counter:number = 0;
         let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(7));
@@ -320,11 +321,12 @@ export class DessinsComponent implements OnInit {
     text.trim();
     if (text.trim() != '') {
       console.log("cant create");
-      this.http.post<any>(link,{drawingName: this.drawing.trim(), owner: this.socketService.email}).subscribe((data: any) => { 
+      this.http.post<any>(link,{drawingName: this.drawing.trim(), owner: this.socketService.email, visibility: "private"}).subscribe((data: any) => { 
         console.log(data);
         if (data.message == "success") {
           console.log("CREATE DRAWING: " + data.message);
           
+          // this.setVisibilityToPrivate(this.drawing.trim());
           this.router.navigate(['/', 'sidenav']);
           this.dialog.open(NewDrawingComponent);
 
@@ -352,6 +354,23 @@ export class DessinsComponent implements OnInit {
       });
     }
 
+  }
+
+  setVisibilityToPrivate(name: string) :  void {
+    let link = this.BASE_URL + "drawing/updateDrawing";
+
+    const drawingObj = {
+      drawingName: name,
+      visibility: "private",
+    }
+
+    this.http.post<any>(link,{useremail: this.socketService.email, drawing: drawingObj}).pipe( 
+      catchError(async (err) => console.log("error catched" + err))
+      ).subscribe((data: any) => {
+        // if(data.message == "success") {
+        //   console.log("CHANGED VISIBILITY");
+        // }
+      });
   }
 
   changerPublic(element: any): void {

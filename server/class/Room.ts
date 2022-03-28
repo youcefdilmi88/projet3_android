@@ -46,4 +46,8 @@ export class Room {
     addMessageToRoom(message:MessageInterface) {
         this.messages.push(message);
     }
+
+    setRoomName(name:String) {
+        this.roomName=name;
+    }
 }

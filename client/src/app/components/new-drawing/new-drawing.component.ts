@@ -61,6 +61,7 @@ export class NewDrawingComponent implements OnInit {
       });
     } else {
       this.newDrawing();
+      console.log("RESET");
     }
   }
 

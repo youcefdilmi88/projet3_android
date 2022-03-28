@@ -53,11 +53,8 @@ export class PencilToolService implements Tools {
   }
 
   setUpPencil() {
-    console.log("pencil set up completed");
-
     this.socketService.getSocket().on("STARTLINE",(data)=>{
       data=JSON.parse(data);
-      console.log("STARTLINE");
       this.pencil={
         id:data.id,
         user:data.user,
@@ -82,7 +79,6 @@ export class PencilToolService implements Tools {
 
     this.socketService.getSocket().on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
-      console.log("shapeid " + data.shapeId);
 
       if (this.pencil?.id == data.shapeId) {
         this.addPointToLine({x:data.point.x, y:data.point.y} as Point, data.shapeId);
@@ -94,7 +90,6 @@ export class PencilToolService implements Tools {
     });
 
     this.socketService.getSocket().on("ENDLINE",(data)=>{
-      console.log("ENDLINE");
       this.moving = false;
       console.log(data);
     });
@@ -102,39 +97,23 @@ export class PencilToolService implements Tools {
   }
 
   renderSVG(): void {
-    // if (this.pencil!.pointsList.length <= 1) {
-    //   this.dot = this.renderer.createElement('circle', 'svg') as SVGCircleElement;
-    //   this.renderer.setAttribute(this.dot, 'cx', this.pencil!.pointsList[0].x.toString() + 'px');
-    //   this.renderer.setAttribute(this.dot, 'cy', this.pencil!.pointsList[0].y.toString() + 'px');
-    //   this.renderer.setAttribute(this.dot, 'r', (this.pencil!.strokeWidth / 2).toString() + 'px');
-    //   this.renderer.setStyle(this.dot, 'fill', this.pencil!.stroke);
-    //   this.renderer.setStyle(this.dot, 'fillOpacity', this.pencil!.strokeOpacity);
-    //   this.drawingService.addObject(this.dot);
-    // }
-    // else if (this.pencil!.pointsList.length > 1) {
-      console.log("GOT RENDERED");
-      this.pencil3 = this.renderer.createElement('path', 'svg');
-      this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
-      this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
-      console.log(this.pencil!.pointsList[0].x.toString());
-      this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
-      this.renderer.setStyle(this.pencil3, 'fill', 'none');
-      this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
-      this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
-      this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
-      this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
-      this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
-      this.drawingService.addObject(this.pencil3);
-      this.objects.set(this.pencil!.id, this.pencil3);
-      console.log("ca dessine");
-    // }
+    this.pencil3 = this.renderer.createElement('path', 'svg');
+    this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
+    this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
+    this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
+    this.renderer.setStyle(this.pencil3, 'fill', 'none');
+    this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
+    this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+    this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+    this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
+    this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
+    this.drawingService.addObject(this.pencil3);
+    this.objects.set(this.pencil!.id, this.pencil3);
   }
 
   addPointToLine(point: Point, id: string): void {
     this.pencil?.pointsList.push(point);
     let line = this.objects.get(id);
-    console.log("x " + point.x.toString());
-    console.log("y " + point.y.toString());
     line!.setAttribute('d', (line!.getAttribute('d') as string) + ' L ' + point.x.toString() + ' ' + point.y.toString());
 }
 

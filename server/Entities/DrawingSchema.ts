@@ -9,7 +9,7 @@ const drawingSchema = new mongoose.Schema({
         required: true,
         unique:true,
     },
-    creator: {
+    owner: {
         type:String,
         require: true,
     },
@@ -24,6 +24,10 @@ const drawingSchema = new mongoose.Schema({
     members:{
         type:[String],
         required:true,
+    },
+    visibility:{
+        type:String,
+        required:true
     }
     
 });

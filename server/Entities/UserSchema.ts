@@ -12,8 +12,12 @@ const userSchema = new mongoose.Schema({
         type:String,
         require: true,
     },
-
-
+    lastLoggedIn:{
+        type:Number
+    },
+    lastLoggedOut:{
+        type:Number
+    }
 });
 
 export=mongoose.model<UserInterface>('userSchema',userSchema);

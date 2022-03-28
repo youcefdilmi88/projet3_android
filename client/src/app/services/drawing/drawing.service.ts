@@ -99,6 +99,7 @@ export class DrawingService {
     this.drawing = this.renderer.createElement('svg', 'svg');
     this.setDimension(width, height);
     this.setDrawingColor(rgba);
+    console.log("READ ME", this.drawing);
     this.drawingEmit.emit(this.drawing);
   }
 

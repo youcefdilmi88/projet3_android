@@ -3,7 +3,6 @@ import { User } from "../class/User";
 import AccountSchema from "../Entities/AccountSchema";
 import UserSchema from "../Entities/UserSchema";
 import databaseService from "./databaseService";
-import roomService from "./roomService";
 import userService from "./userService";
 
 
@@ -30,7 +29,7 @@ class AccountService {
 
    async createAccount(email:String,pass:String,nickName:String) {
     const account=new AccountSchema({useremail:email,password:pass,nickname:nickName});
-    const user=new UserSchema({useremail:email,nickname:nickName,currentRoom:roomService.getDefaultRoom().getRoomName()});
+    const user=new UserSchema({useremail:email,nickname:nickName,lastLoggedIn:null,lastLoggedOut:null});
     
     await account.save().catch((e:Error)=>{
       console.log(e);
