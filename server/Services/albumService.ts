@@ -109,6 +109,7 @@ class AlbumService {
           });
           await albumDoc?.save().then(()=>{
             this.albums[`${album.getName()}`]=album;
+            album.setDrawings(drawingService.convertAllDrawingToSourceName(album.getDrawings()));
             const message={album:album};
             socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
           }).catch((e:Error)=>{
@@ -131,7 +132,7 @@ class AlbumService {
             drawingService.deleteDrawing(k);  // delete all drawings in album
           }
         });
-        const message={message:album.getName()};
+        const message={albumName:album.getName()};
         socketService.getIo().emit(SOCKETEVENT.ALBUMDELETED,JSON.stringify(message));
       });
      }
@@ -161,7 +162,7 @@ class AlbumService {
         album.setDescription(description);
         this.albums.delete(oldName);
         this.albums.set(album.getName(),album);
-
+        album.setDrawings(drawingService.convertAllDrawingToSourceName(album.getDrawings()));
         const message={oldName:oldName,album:album};
         socketService.getIo().emit(SOCKETEVENT.ALBUMNAMECHANGED,JSON.stringify(message));
       }).catch((e:Error)=>{
@@ -189,6 +190,7 @@ class AlbumService {
             let album:Album=albumService.albums.get(albumName) as Album;
             album.setDescription(description);
             this.albums[`${albumName}`]=album;
+            album.setDrawings(drawingService.convertAllDrawingToSourceName(album.getDrawings()));
             const message={album:album};
             socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
           }).catch((e:Error)=>{
@@ -226,6 +228,7 @@ class AlbumService {
           });
           await albumDoc?.save().then(()=>{
             this.albums[`${album.getName()}`]=album;
+            album.setDrawings(drawingService.convertAllDrawingToSourceName(album.getDrawings()));
             const message={album:album};
             socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
           }).catch((e:Error)=>{
@@ -236,6 +239,7 @@ class AlbumService {
       console.log(e);
     }
   }
+
 
 }
 

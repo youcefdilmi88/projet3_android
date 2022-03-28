@@ -108,7 +108,7 @@ const acceptRequestInAlbum=(req:Request,res:Response,next:NextFunction)=>{
   let albumName:String=req.body.albumName as String;
   let request:String=req.body.request as String;
 
-  if(albumService.albums.get(albumName)?.getRequests().includes(request)) {
+  if(albumService.albums.get(albumName)?.getRequests().includes(request)==false) {
     return res.status(404).json({message:HTTPMESSAGE.REQNOTFOUND});
   } 
 
@@ -124,8 +124,8 @@ const acceptRequestInAlbum=(req:Request,res:Response,next:NextFunction)=>{
 }
 
 const leaveAlbum=(req:Request,res:Response,next:NextFunction)=>{
-   let albumName:String=req.body.album.albumName as String;
-   let visibility:String=req.body.album.visibility as String;
+   let albumName:String=req.body.albumName as String;
+   let visibility:String=albumService.albums.get(albumName)?.getVisibility() as String;
    let member:String=req.body.member as String;
 
    if(visibility==VISIBILITY.PUBLIC) {
@@ -154,9 +154,12 @@ const updateAlbum=async (req:Request,res:Response,next:NextFunction)=>{
   if(albumService.albums.has(albumName)) {
     if(albumService.albums.get(albumName)?.getCreator()==useremail) {
         if(req.body.newName!==undefined) {
-         let newName:String=req.body.newName;
-         await albumService.updateAlbum(newName,albumName,description);
-         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+          let newName:String=req.body.newName;
+          if(albumService.albums.has(newName)) {
+            return res.status(404).json({message:HTTPMESSAGE.ALBUMEXIST});
+          }
+          await albumService.updateAlbum(newName,albumName,description);
+          return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
         }
         albumService.changeAlbumDescription(albumName,description);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
@@ -168,7 +171,7 @@ const updateAlbum=async (req:Request,res:Response,next:NextFunction)=>{
 
 
 const addDrawing=async (req:Request,res:Response,next:NextFunction)=>{
-    let drawingName:String=req.body.drawingName as String;
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
     let albumName:String=req.body.albumName as String;
 
@@ -177,6 +180,9 @@ const addDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     }
 
     if(drawingService.drawings.has(drawingName)) {
+      if(drawingService.drawings.get(drawingName)?.getOwner()!=useremail) {
+        return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
+      }
       if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
         await albumService.addDrawingToAlbum(drawingName,albumName);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});

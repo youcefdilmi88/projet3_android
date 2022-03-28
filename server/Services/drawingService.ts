@@ -106,7 +106,7 @@ class DrawingService {
               v.removeDrawing(k);      // remove drawing from all albums
             }
           });
-          const drawingNotification={drawingName:drawingName}
+          const drawingNotification={drawingName:this.sourceDrawingName(drawingName)}
           socketService.getIo().emit(SOCKETEVENT.DRAWINGDELETED,JSON.stringify(drawingNotification));
         });
         await roomService.deleteRoom(this.sourceDrawingName(drawingName));
@@ -213,6 +213,7 @@ class DrawingService {
     console.log(this.drawings.get(drawing.getName()));
     drawing.modified=true;
     this.autoSaveDrawing(drawing.getName()).then(()=>{
+      drawing.setName(this.sourceDrawingName(drawing.getName()));
       socketService.getIo().emit(SOCKETEVENT.VISIBILITYCHANGED,JSON.stringify({drawing:drawing}));
     })
   }
@@ -246,6 +247,14 @@ class DrawingService {
          }
       }
     }
+  }
+
+  convertAllDrawingToSourceName(drawings:String[]):String[] {
+    let converted:String[]=[]
+    drawings.forEach((drawing)=>{
+      converted.push(this.sourceDrawingName(drawing));
+    });
+    return converted;
   }
 
 

@@ -53,6 +53,10 @@ export class Album {
         return this.requests;
     }
 
+    setDrawings(drawings:String[]):void {
+        this.drawings=drawings;
+    }
+
     addDrawing(drawingName:String):void {
         this.drawings.push(drawingName);
     }
