@@ -24,10 +24,12 @@ export class PencilToolService implements Tools {
   readonly faIcon: IconDefinition = faPencilAlt;
   readonly id = ToolIdConstants.PENCIL_ID;
   private strokeWidth: FormControl;
-  private pencil: Pencil | null;
+  public pencil: Pencil | null;
   private pencil3: SVGPathElement;
   parameters: FormGroup;
   private identif: string;
+
+  // private dot: SVGCircleElement | null = null;
 
   private moving: boolean = false;
 
@@ -100,19 +102,32 @@ export class PencilToolService implements Tools {
   }
 
   renderSVG(): void {
-    console.log("GOT RENDERED");
-    this.pencil3 = this.renderer.createElement('path', 'svg');
-    this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
-    this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
-    this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
-    this.renderer.setStyle(this.pencil3, 'fill', 'none');
-    this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
-    this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
-    this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
-    this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
-    this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
-    this.drawingService.addObject(this.pencil3);
-    this.objects.set(this.pencil!.id, this.pencil3);
+    // if (this.pencil!.pointsList.length <= 1) {
+    //   this.dot = this.renderer.createElement('circle', 'svg') as SVGCircleElement;
+    //   this.renderer.setAttribute(this.dot, 'cx', this.pencil!.pointsList[0].x.toString() + 'px');
+    //   this.renderer.setAttribute(this.dot, 'cy', this.pencil!.pointsList[0].y.toString() + 'px');
+    //   this.renderer.setAttribute(this.dot, 'r', (this.pencil!.strokeWidth / 2).toString() + 'px');
+    //   this.renderer.setStyle(this.dot, 'fill', this.pencil!.stroke);
+    //   this.renderer.setStyle(this.dot, 'fillOpacity', this.pencil!.strokeOpacity);
+    //   this.drawingService.addObject(this.dot);
+    // }
+    // else if (this.pencil!.pointsList.length > 1) {
+      console.log("GOT RENDERED");
+      this.pencil3 = this.renderer.createElement('path', 'svg');
+      this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
+      this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
+      console.log(this.pencil!.pointsList[0].x.toString());
+      this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
+      this.renderer.setStyle(this.pencil3, 'fill', 'none');
+      this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
+      this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+      this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+      this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
+      this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
+      this.drawingService.addObject(this.pencil3);
+      this.objects.set(this.pencil!.id, this.pencil3);
+      console.log("ca dessine");
+    // }
   }
 
   addPointToLine(point: Point, id: string): void {

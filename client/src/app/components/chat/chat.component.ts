@@ -32,6 +32,7 @@ export class ChatComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {   
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
+    console.log("CHECK MOI HEHE:" + this.socketService.currentRoom);
     this.http.get<any>(link).subscribe((data: any) => {
 
       let length = Object.keys(data).length;
@@ -100,9 +101,20 @@ export class ChatComponent implements AfterViewInit {
     console.log("chat page !");
   }
 
+  leaveDrawing() {
+    let link = this.BASE_URL + "drawing/leaveDrawing";
+
+    this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {
+      if(data.message == "succeful") {
+        console.log("EXITED DRAWING" + data.useremail);
+      }
+    });
+  }
+
   changeRoom(): void {
     //this.dialog.open(RoomsComponent, { disableClose: true });
     this.router.navigate(['/', 'rooms']);
+    this.leaveDrawing();
   }
 
   sendchatinput(text:String) {
@@ -154,5 +166,7 @@ export class ChatComponent implements AfterViewInit {
         console.log("sayonara");
       }   
     });
+
+    this.leaveDrawing()
   }
 }

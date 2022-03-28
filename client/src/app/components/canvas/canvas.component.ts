@@ -33,12 +33,14 @@ export class CanvasComponent implements AfterViewInit {
 
   /// la longueur de la zone de dessin
   get height(): number {
-    return this.drawingService.isCreated ? this.drawingService.height : 0;
+    // return this.drawingService.isCreated ? this.drawingService.height : 0;
+    return 1000;
   }
 
   /// la largueur de la zone de dessin
   get width(): number {
-    return this.drawingService.isCreated ? this.drawingService.width : 0;
+    // return this.drawingService.isCreated ? this.drawingService.width : 0;
+    return 1000;
   }
 
   /// la couleur de fond de la zone de dessin
@@ -52,7 +54,8 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   get isDrawingCreated(): boolean {
-    return this.drawingService.isCreated;
+    // return this.drawingService.isCreated;
+    return true;
   }
 
 }

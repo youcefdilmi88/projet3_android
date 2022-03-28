@@ -8,6 +8,17 @@ import { URL } from '../../../../constants';
 import { Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
+import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
+import { DrawingTempService } from '@app/services/drawingTemp.service';
+import { Drawing } from '@app/classes/Drawing';
+import { DrawingInterface } from '@app/interfaces/DrawingInterface';
+// import { BaseShapeInterface } from '@app/interfaces/BaseShapeInterface';
+// import { checkEllipse } from '@app/interfaces/EllipseInterface';
+// import { checkRectangle } from '@app/interfaces/RectangleInterface';
+import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
+import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
+import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
+// import { checkLine } from '@app/interfaces/LineInterface';
 
 
 @Component({ 
@@ -25,6 +36,8 @@ export class RoomsComponent implements OnInit {
   public list = new Array<string>(); 
   public numberOfRooms: number ;
   public buttonsTexts:Array<string> = [];
+  public drawingNames:Array<string> = [];
+  public bool: boolean = true;
   //public buttonsTexts:Array<string> = ['DEFAULT'];
 
   constructor(
@@ -32,7 +45,11 @@ export class RoomsComponent implements OnInit {
     private hotkeyService: HotkeysService,
     private socketService: SocketService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public drawingTempSerivce: DrawingTempService,
+    public pencilToolService: PencilToolService,
+    public toolEllipseService: ToolEllipseService,
+    public toolRectangleService: ToolRectangleService,
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
@@ -48,20 +65,45 @@ export class RoomsComponent implements OnInit {
     });
 
     this.roomListener();
+    this.getAllDrawings();
+    this.redirect();
+  }
+
+  redirect() {
+    this.bool = true;
+    let link2 = this.BASE_URL+"room/getAllRooms";
+    this.socketService.getSocket().on("ROOMDELETED",(data)=>{
+      data=JSON.parse(data);
+      this.http.get<any>(link2).subscribe((data: any) => {
+        let length = Object.keys(data).length;
+        this.numberOfRooms = length;
+
+        if(this.bool) {
+          // pour redirect les personnes dans rooms
+          for(var i = 0; i <= length; i++) { 
+            if(this.socketService.currentRoom != data[i].roomName) {
+              this.router.navigate(['/', 'rooms']);
+            }
+            else if (this.socketService.currentRoom == data[i].roomName) {
+              this.router.navigate(['/', 'clavardage']);
+              break;
+            }
+          }
+        }
+      });
+    });
   }
 
   roomListener() {
     let link2 = this.BASE_URL+"room/getAllRooms";
     this.socketService.getSocket().on("ROOMDELETED",(data)=>{
       data=JSON.parse(data);
-      console.log("ROOM DELETED"+data)
       this.buttonsTexts = [];
       this.http.get<any>(link2).subscribe((data: any) => {
         let length = Object.keys(data).length;
-        this.numberOfRooms = length;
+        this.numberOfRooms = length;        
+        // pour update les rooms buttons
         for(var i = 0; i <= length; i++) { 
-          //this.list.push(data[i].roomName);
-          // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
           this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
         }
       });
@@ -81,7 +123,19 @@ export class RoomsComponent implements OnInit {
       });
       this.input.nativeElement.value = ' ';
      });
+
   }
+
+  getAllDrawings() {
+    let link = this.BASE_URL + "drawing/getAllDrawings";
+    this.http.get<any>(link).subscribe((data: any) => {
+      this.drawingTempSerivce.drawings.clear();
+      data.forEach((drawing:any)=>{
+        let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
+        this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
+      });
+    });
+  } 
 
   room: string;
 
@@ -89,32 +143,80 @@ export class RoomsComponent implements OnInit {
     this.socketService.joinRoom(element.textContent.trim().slice(8));
     this.socketService.currentRoom = element.textContent.trim().slice(8);
     console.log("LOOOK ATTT MEEEE" + element.textContent.trim().slice(8));
-    this.router.navigate(['/', 'sidenav']);
+    
+    // Pour savoir si la salle doit avoir un canvas ou non
+    console.log("ca devrait etre un room: " + element.textContent.trim().slice(8));
+    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
+        console.log("wtf: " + element.textContent.trim().slice(8));
+        this.router.navigate(['/', 'sidenav']);
+        this.dialog.open(NewDrawingComponent);
+    }
+    else {
+      this.router.navigate(['/', 'clavardage']);
+    }
 
-    let link = this.BASE_URL + "room/joinRoom";
+    let link = this.BASE_URL + "drawing/joinDrawing";
+
+    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(8)}).subscribe((data:any) => {
+      if(data.message == "success") {
+        console.log("join dessins:" + element.textContent.trim().slice(8));
+        this.router.navigate(['/', 'sidenav']);
+        this.dialog.open(NewDrawingComponent);
+
+        // let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(8));
+        // drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
+        //   if(checkLine(element)) {
+        //     this.pencilToolService.pencil = element;
+        //     // console.log(this.pencilToolService.pencil);
+        //     console.log(element);
+        //     this.pencilToolService.renderSVG();
+        //   }
+        //   if(checkEllipse(element)) {
+        //     this.toolEllipseService.ellipseAttributes = element;
+        //     this.toolEllipseService.renderSVG();
+        //   }
+        //   if(checkRectangle(element)) {
+        //     this.toolRectangleService.rectangleAttributes = element;
+        //     this.toolRectangleService.renderSVG();
+        //   }
+        // });
+      }
+    });
+
+    // Route JoinRoom
+    let link2 = this.BASE_URL + "room/joinRoom";
 
     const userObj={
       useremail:this.socketService.email,
       nickname:this.socketService.nickname,
     }
 
-    this.http.post<any>(link,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
+    this.http.post<any>(link2,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
       catchError(async (err) => console.log("error catched" + err))
     ).subscribe((data: any) => {
   
       if(data.message == "success") {
-        this.socketService.currentRoom = element.textContent;
+        this.socketService.currentRoom = element.textContent.trim().slice(8);
       }
     });
+
   } 
 
-
   deleteRoom(element: any): void {
+    this.bool = false;
     this.socketService.roomDeleted(element.textContent.trim().slice(10));
-
     let link = this.BASE_URL + "room/deleteRoom";
+    let link2 = this.BASE_URL + "drawing/deleteDrawing";
 
-
+    // si c'est un drawing room
+    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(10))) {
+      this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
+        if (data.message == "success") {
+          console.log("TESTING" + data);
+        }
+      });
+    }
+    else { // si c'est un PAS drawing room
       this.http.post<any>(link,{roomName: element.textContent.trim().slice(10) }).subscribe((data: any) => { 
         console.log(data);
         if (data == 404) {
@@ -122,9 +224,10 @@ export class RoomsComponent implements OnInit {
         }
         if (data.message == "success") {
           console.log("look at me " + data.message);
+          this.socketService.currentRoom = "randomSHIT";
         }
       });
-
+    }
   }
 
   find(text: string) {
@@ -170,7 +273,7 @@ export class RoomsComponent implements OnInit {
     text.trim();
     if (text.trim() != '') {
       this.http.get<any>(link2).subscribe((data: any) => {
-  
+        
             document.getElementById("error")!.style.visibility= "hidden";
             this.http.post<any>(link, { roomName: this.room.trim(), creator: this.socketService.email }).subscribe((data: any) => {
               if (data.message == "success") {
@@ -186,8 +289,6 @@ export class RoomsComponent implements OnInit {
               }
             }
             );
-
-      
       });
     }
 

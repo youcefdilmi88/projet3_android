@@ -56,7 +56,7 @@ export class SocketService {
     const newRoom = { newRoomName: room, oldRoomName: this.currentRoom, useremail:this.email};
     console.log(room);
     console.log(this.currentRoom.trim());
-    console.log(this.email);
+    console.log("LIS MOI BRO" + this.email);
     this.socket.emit("JOINROOM",JSON.stringify(newRoom)); // OUBLIER PAS DE STRINGIFY avant de emit
   }
 

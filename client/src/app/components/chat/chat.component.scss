@@ -79,7 +79,15 @@ a {
 }
 
 .child {
-	display: inline-block;
+	//display: inline-block;
+	float: left;
+	width: 80%;
+	margin-top: 20px;
+}
+
+#send {
+	//display: inline-block;
+	float: right;
 }
 
 // .seperator {

@@ -42,11 +42,15 @@ body{overflow: scroll;}
 }
 
 .albums {
-    background-color: aqua;
+    // background-color: aqua;
     border-style: solid;
     height: 400px;
     width: 400px;
     text-align: center;
+}
+
+#albumCover {
+    background-image : url("../../../assets/avatar_1.png");
 }
 
 .btn {

@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 import { ColorPickerService } from 'src/app/color-picker/color-picker.service';
 import { DEFAULT_RGB_COLOR } from 'src/app/model/rgb.model';
 import { DEFAULT_ALPHA } from 'src/app/model/rgba.model';
@@ -9,7 +9,7 @@ import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { NewDrawingService } from 'src/app/services/new-drawing/new-drawing.service';
 import { NewDrawingAlertComponent } from './new-drawing-alert/new-drawing-alert.component';
 
-const ONE_SECOND = 1000;
+// const ONE_SECOND = 1000;
 @Component({
   selector: 'app-new-drawing',
   templateUrl: './new-drawing.component.html',
@@ -23,7 +23,7 @@ export class NewDrawingComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<NewDrawingComponent>,
-    private snackBar: MatSnackBar,
+    // private snackBar: MatSnackBar,
     private newDrawingService: NewDrawingService,
     private drawingService: DrawingService,
     private dialog: MatDialog,
@@ -77,7 +77,7 @@ export class NewDrawingComponent implements OnInit {
         a: this.colorPickerService.a.value,
       },
     );
-    this.snackBar.open('Nouveau dessin créé', '', { duration: ONE_SECOND, });
+    // this.snackBar.open('Nouveau dessin créé', '', { duration: ONE_SECOND, });
     this.newDrawingService.form.reset();
     this.dialogRef.close();
   }

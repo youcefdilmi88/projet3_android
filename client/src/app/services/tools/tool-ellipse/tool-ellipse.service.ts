@@ -27,7 +27,7 @@ export class ToolEllipseService implements Tools {
   private identif: string;
 
   private ellipse2: SVGEllipseElement;
-  private ellipseAttributes: FilledShape;
+  public ellipseAttributes: FilledShape;
   private contour: SVGRectElement | null;
   // private contourId: number;
 
@@ -136,6 +136,7 @@ export class ToolEllipseService implements Tools {
     this.drawingService.addObject(this.ellipse2);
     this.objects.set(this.ellipseAttributes!.id, this.ellipse2);
     this.initPoints.set(this.ellipseAttributes!.id, {x: this.ellipseAttributes.x, y: this.ellipseAttributes.y });
+    console.log("ca dessine un ellipse");
 }
 
   /// Quand le bouton de la sourie est enfoncé, on crée un ellipse et on le retourne

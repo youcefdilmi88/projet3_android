@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 import { Subscription } from 'rxjs';
-import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
+// import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
@@ -51,9 +51,30 @@ export class AlbumsComponent implements OnInit {
     this.selectionService.setUpSelection();
   }
 
-  newDrawing() {
-    this.dialog.open(NewDrawingComponent);
-}
+//   newDrawing() {
+//     this.dialog.open(NewDrawingComponent);
+// }
+
+  defaultRoom() {
+    this.socketService.joinRoom('DEFAULT');
+    this.socketService.currentRoom = 'DEFAULT';
+    let link2 = this.BASE_URL + "room/joinRoom";
+
+    const userObj={
+      useremail:this.socketService.email,
+      nickname:this.socketService.nickname,
+    }
+
+    this.http.post<any>(link2,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
+      catchError(async (err) => console.log("error catched" + err))
+    ).subscribe((data: any) => {
+  
+      if(data.message == "success") {
+        this.socketService.currentRoom = 'DEFAULT';
+        console.log("REGARDE MOI BIG:" + this.socketService.currentRoom);
+      }
+    });
+  }
 
 newPublicAlbum() {
     this.AlbumsPublic = [...this.AlbumsPublic, `${this.compteur}`];

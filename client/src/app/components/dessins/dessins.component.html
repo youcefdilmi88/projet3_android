@@ -37,14 +37,17 @@
         </div>
     </div>
     <div id="InfoDessins">
-        <p>INFOS ICI</p>
-        <p>{{this.imageUrlArray[this.centerImage]}}</p>
-        <p>SOMETHING</p>
-        <button mat-raised-button id="DessinsButtonOpen" (click)="openDessins()">
-            Ouvrir 
+        <p>Nom du dessin: {{names[this.centerImage]}}</p>
+        <p>Nom du propriétaire: {{owners[this.centerImage]}}</p>
+        <p>Visibilité: {{visibite[this.centerImage]}}</p>
+        <button mat-raised-button id="DessinsButtonOpen" (click)="openDessins($event.target)">
+            Ouvrir <span class='special-word'>{{names[this.centerImage]}}</span>
         </button>
-        <button mat-raised-button id="DessinsButtonDelete" >
-            Supprimer 
+        <button mat-raised-button id="DessinsButtonDelete" (click)="deleteDessins($event.target)">
+            Supprimer <span class='special-word'>{{names[this.centerImage]}}</span>
+        </button>
+        <button mat-raised-button id="Visibilite" (click)="changerPublic($event.target)">
+            Public <span class='special-word'>{{names[this.centerImage]}}</span>
         </button>
     </div>
 

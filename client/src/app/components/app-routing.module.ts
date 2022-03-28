@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AlbumsComponent } from './albums/albums.component';
 import { ChatComponent } from './chat/chat.component';
+import { ClavardageComponent } from './clavardage/clavardage.component';
 import { DessinsComponent } from './dessins/dessins.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewAccountComponent } from './new-account/new-account.component';
@@ -30,6 +31,9 @@ const routes: Routes = [
   },
   {
     path: 'dessins', component: DessinsComponent
+  },
+  {
+    path: 'clavardage', component: ClavardageComponent
   },
 ];
 
