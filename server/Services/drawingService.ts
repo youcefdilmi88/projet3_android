@@ -145,7 +145,7 @@ class DrawingService {
     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
 
     drawing.addMember(socket?.id as string,useremail);
-    drawing.setName(this.sourceDrawingName(drawing.getName()));
+  
     this.drawings[`${drawing.getName()}`]=drawing;
     this.socketInDrawing.set(socket?.id as string,drawing);
     
@@ -166,10 +166,10 @@ class DrawingService {
     let drawing:Drawing=this.socketInDrawing.get(socket?.id as string) as Drawing;
     console.log("leave drawing:"+drawing.getName());
     socket?.leave(drawing.getName() as string);
+
     drawingService.socketInDrawing.delete(socket?.id as string);
     
     drawing.removeMember(socket?.id as string);
-    drawing.setName(this.sourceDrawingName(drawing.getName()));
 
     this.drawings[`${drawing.getName()}`]=drawing;
     this.socketInDrawing.set(socket?.id as string,drawing);
