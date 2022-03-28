@@ -3,6 +3,7 @@ import { Album } from "../class/Album";
 import { Drawing } from "../class/Drawing";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { VISIBILITY } from "../Constants/visibility";
+import { AlbumInterface } from "../Interface/AlbumInterface";
 import albumService from "../Services/albumService";
 import drawingService from "../Services/drawingService";
 import userService from "../Services/userService";
@@ -56,10 +57,20 @@ const createAlbum=async (req:Request,res:Response,next:NextFunction)=>{
 }
 
 const getAlbums=(req:Request,res:Response,next:NextFunction)=>{
-    let albums:Album[]=[];
+    let albums:AlbumInterface[]=[];
     albumService.albums.forEach((v,k)=>{
-       albums.push(v);
-    })
+      let album:AlbumInterface={
+        albumName:v.getName(),
+        creator:v.getCreator(),
+        drawings:drawingService.convertAllDrawingToSourceName(v.getDrawings()),
+        visibility:v.getVisibility(),
+        dateCreation:v.getDateCreation(),
+        description:v.getDescription(),
+        members:v.getMembers(),
+        requests:v.getRequests()
+      } 
+      albums.push(album);
+    });
     return res.status(200).json(albums);
 }
 

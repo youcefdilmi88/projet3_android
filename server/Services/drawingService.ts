@@ -144,10 +144,21 @@ class DrawingService {
 
     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
 
-    drawingService.socketInDrawing.set(socket?.id as string,drawing);
-    drawing.addMember(socket?.id as string,useremail);4
+    drawing.addMember(socket?.id as string,useremail);
+    drawing.setName(this.sourceDrawingName(drawing.getName()));
+    this.drawings[`${drawing.getName()}`]=drawing;
+    this.socketInDrawing.set(socket?.id as string,drawing);
+    
+    let drawingInterface:DrawingInterface={
+      drawingName:this.sourceDrawingName(drawing.getName()),
+      owner:drawing.getOwner(),
+      elements:drawing.getElementsInterface(),
+      roomName:drawing.roomName,
+      members:drawing.getMembers(),
+      visibility:drawing.getVisibility()
+    }
 
-    const joinDrawingNotification={useremail:useremail,drawingName:drawingService.sourceDrawingName(drawingName),members:drawing.getMembers()}
+    const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
     socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification));
   }
 
@@ -156,8 +167,23 @@ class DrawingService {
     console.log("leave drawing:"+drawing.getName());
     socket?.leave(drawing.getName() as string);
     drawingService.socketInDrawing.delete(socket?.id as string);
+    
     drawing.removeMember(socket?.id as string);
-    const message={drawingName:this.sourceDrawingName(drawing.getName()),useremail:mail,members:drawing.getMembers()};
+    drawing.setName(this.sourceDrawingName(drawing.getName()));
+
+    this.drawings[`${drawing.getName()}`]=drawing;
+    this.socketInDrawing.set(socket?.id as string,drawing);
+
+    let drawingInterface:DrawingInterface={
+      drawingName:this.sourceDrawingName(drawing.getName()),
+      owner:drawing.getOwner(),
+      elements:drawing.getElementsInterface(),
+      roomName:drawing.roomName,
+      members:drawing.getMembers(),
+      visibility:drawing.getVisibility()
+    }
+
+    const message={useremail:mail,drawing:drawingInterface};
     socketService.getIo().emit(SOCKETEVENT.LEAVEDRAWING,JSON.stringify(message));
   }
 
@@ -188,8 +214,17 @@ class DrawingService {
             socket?.join(drawing.getName() as string);
           }
         });
-        drawing.setName(this.sourceDrawingName(newName));
-        const message={oldName:this.sourceDrawingName(oldName),drawing:drawing};
+
+        let drawingInterface:DrawingInterface={
+          drawingName:this.sourceDrawingName(drawing.getName()),
+          owner:drawing.getOwner(),
+          elements:drawing.getElementsInterface(),
+          roomName:drawing.roomName,
+          members:drawing.getMembers(),
+          visibility:drawing.getVisibility()
+        }
+
+        const message={oldName:this.sourceDrawingName(oldName),drawing:drawingInterface};
         socketService.getIo().emit(SOCKETEVENT.DRAWINGMODIFIED,JSON.stringify(message));
       }).catch((e:Error)=>{
         console.log(e);
@@ -213,8 +248,15 @@ class DrawingService {
     console.log(this.drawings.get(drawing.getName()));
     drawing.modified=true;
     this.autoSaveDrawing(drawing.getName()).then(()=>{
-      drawing.setName(this.sourceDrawingName(drawing.getName()));
-      socketService.getIo().emit(SOCKETEVENT.VISIBILITYCHANGED,JSON.stringify({drawing:drawing}));
+      let drawingInterface:DrawingInterface={
+        drawingName:this.sourceDrawingName(drawing.getName()),
+        owner:drawing.getOwner(),
+        elements:drawing.getElementsInterface(),
+        roomName:drawing.roomName,
+        members:drawing.getMembers(),
+        visibility:drawing.getVisibility()
+      }
+      socketService.getIo().emit(SOCKETEVENT.VISIBILITYCHANGED,JSON.stringify({drawing:drawingInterface}));
     })
   }
 
