@@ -92,7 +92,7 @@ const joinAlbum=async(req:Request,res:Response,next:NextFunction)=>{
    let albumName:String=req.body.albumName as String;
    let useremail:String=req.body.useremail as String;
    if(albumService.albums.has(albumName)) {
-     if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
+     if(albumService.albums.get(albumName)?.getMembers().indexOf(useremail)!=-1) {
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
      }
      return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
@@ -119,12 +119,12 @@ const acceptRequestInAlbum=(req:Request,res:Response,next:NextFunction)=>{
   let albumName:String=req.body.albumName as String;
   let request:String=req.body.request as String;
 
-  if(albumService.albums.get(albumName)?.getRequests().includes(request)==false) {
+  if(albumService.albums.get(albumName)?.getRequests().indexOf(request)!=-1) {
     return res.status(404).json({message:HTTPMESSAGE.REQNOTFOUND});
   } 
 
   if(albumService.albums.has(albumName)) {
-    if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
+    if(albumService.albums.get(albumName)?.getMembers().indexOf(useremail)!=-1) {
       albumService.acceptRequest(request,albumName);
       return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
@@ -145,7 +145,7 @@ const leaveAlbum=(req:Request,res:Response,next:NextFunction)=>{
     
    if(albumService.albums.has(albumName)) {
      let album:Album=albumService.albums.get(albumName) as Album;
-     if(album.getMembers().includes(member)) {
+     if(album.getMembers().indexOf(member)!=-1) {
        if(album.getCreator()==member) {
          return res.status(404).json({message:HTTPMESSAGE.UISOWNER});
        }
@@ -194,7 +194,7 @@ const addDrawing=async (req:Request,res:Response,next:NextFunction)=>{
       if(drawingService.drawings.get(drawingName)?.getOwner()!=useremail) {
         return res.status(404).json({message:HTTPMESSAGE.UNOPERMISSION});
       }
-      if(albumService.albums.get(albumName)?.getMembers().includes(useremail)) {
+      if(albumService.albums.get(albumName)?.getMembers().indexOf(useremail)!=-1) {
         await albumService.addDrawingToAlbum(drawingName,albumName);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
       }

@@ -102,7 +102,7 @@ class DrawingService {
           this.drawings.delete(drawingName);
           this.kickUsersFromDrawing(drawingName);
           albumService.albums.forEach((v,k)=>{
-            if(v.getDrawings().includes(drawingName)) {
+            if(v.getDrawings().indexOf(drawingName)!=-1) {
               v.removeDrawing(k);      // remove drawing from all albums
             }
           });

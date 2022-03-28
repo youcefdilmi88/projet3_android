@@ -81,7 +81,7 @@ class AlbumService {
      let album:Album=this.albums.get(albumName) as Album;
      album.removeMember(member);
      drawingService.drawings.forEach((v,k)=>{
-       if(album.getDrawings().includes(k)) {
+       if(album.getDrawings().indexOf(k)!=-1) {
          v.setOwner(album.getCreator());
          drawingService.drawings[`${k}`]=v;
          drawingService.autoSaveDrawing(k);

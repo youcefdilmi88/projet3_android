@@ -83,7 +83,7 @@ const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     console.log("user in map for logout ? "+userService.getLoggedUsers().has(useremail))
     if(userService.getLoggedUsers().has(useremail)) {
         roomService.getAllRooms().forEach((v,k)=>{
-          if(v.getUsersInRoom().includes(useremail)) {
+          if(v.getUsersInRoom().indexOf(useremail)!=-1) {
             roomService.leaveRoom(socket,k,useremail);
           }
         })
