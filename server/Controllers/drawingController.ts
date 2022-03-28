@@ -101,7 +101,9 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
             visibility:v.getVisibility()
         }
         drawings.push(drawing);
+        console.log(drawing.drawingName);
     });
+    
     return res.status(200).json(drawings);
 }
 
