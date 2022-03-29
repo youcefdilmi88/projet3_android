@@ -45,7 +45,8 @@ export class PencilService {
     socket.on("ENDLINE",(data)=>{
       data=JSON.parse(data);
       // save to one drawing currently have to change when users can be in a specific drawing with socketInDrawing
-      console.log("endline")
+      console.log("endline");
+      console.log(drawingService.socketInDrawing.has(socket?.id));
      try {
        let name:String=drawingService.socketInDrawing.get(socket?.id)?.getName() as String;
        console.log("user in drawing:"+name)
