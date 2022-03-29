@@ -27,7 +27,9 @@ export class PencilService {
   startLine(socket:Socket) {
     socket.on("STARTLINE",(data)=>{
       data=JSON.parse(data);
+      console.log(data);
       data.id=uuidv4();
+      console.log("line id:"+data.id);
       drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTLINE",JSON.stringify(data));
     })
   }
