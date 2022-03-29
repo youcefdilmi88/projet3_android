@@ -47,6 +47,7 @@ export class PencilService {
       // save to one drawing currently have to change when users can be in a specific drawing with socketInDrawing
       if(drawingService.socketInDrawing.has(socket?.id)) {
        let name:String=drawingService.socketInDrawing.get(socket?.id)?.getName() as String;
+       console.log("user in drawing:"+name)
        let drawing:Drawing=drawingService.drawings.get(name) as Drawing;
        let line:Line=new Line(data);
        drawing.elementById.set(line.getId(),line);
