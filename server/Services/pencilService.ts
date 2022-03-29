@@ -37,7 +37,7 @@ export class PencilService {
   drawLine(socket:Socket) {
     socket.on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
-      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTLINE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("DRAWLINE",JSON.stringify(data));
     })
   }
 
@@ -59,7 +59,7 @@ export class PencilService {
         console.log(e);
       }
       
-      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("STARTLINE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("ENDLINE",JSON.stringify(data));
     })
   }
 

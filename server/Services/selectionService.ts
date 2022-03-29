@@ -67,12 +67,7 @@ export class SelectionService {
   endSelect(socket:Socket) {
     socket.on("ENDSELECT",(data)=>{
       data=JSON.parse(data);
-      console.log("user "+socket.id+" ends select");
-
-      console.log(data);
-      console.log("ENDLINE");
-      console.log(drawingService.socketInDrawing.get(socket?.id)?.getName()+" endline")
-      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("ENDLINE",JSON.stringify(data));
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("ENDSELECT",JSON.stringify(data));
     })
   }
 
