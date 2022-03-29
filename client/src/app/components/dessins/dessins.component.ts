@@ -47,7 +47,7 @@ export class DessinsComponent implements OnInit {
   private strokeWidth: FormControl;
   private rectStyle: FormControl;
   public pencil: Pencil | null;
-  // private pencil3: SVGPathElement;
+  public rectangleAttributes: FilledShape;
 
   constructor(
     public dialog: MatDialog,
@@ -193,45 +193,6 @@ export class DessinsComponent implements OnInit {
     });
   } 
 
-  // private rectangle2: SVGRectElement;
-  public rectangleAttributes: FilledShape;
-
-
-  // renderRectangleSVG() : void {
-  //   this.rectangle2 = this.renderer.createElement('rect', 'svg');
-  //   this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
-  //   this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
-  //   this.renderer.setAttribute(this.rectangle2, 'y', this.rectangleAttributes.y.toString() + 'px');
-  //   this.renderer.setAttribute(this.rectangle2, 'width', this.rectangleAttributes.width.toString() + 'px');
-  //   this.renderer.setAttribute(this.rectangle2, 'height', this.rectangleAttributes.height.toString() + 'px');
-  //   this.renderer.setAttribute(this.rectangle2, 'stroke-width', (this.rectangleAttributes!.strokeWidth).toString() + 'px');
-  //   this.renderer.setStyle(this.rectangle2, 'fill', this.rectangleAttributes!.fill);
-  //   this.renderer.setAttribute(this.rectangle2, 'fill', this.rectangleAttributes!.fill);
-  //   // this.renderer.setStyle(this.rectangle2, 'fill', 'white');
-  //   this.renderer.setStyle(this.rectangle2, 'stroke', this.rectangleAttributes!.stroke);
-  //   this.renderer.setAttribute(this.rectangle2, 'stroke', this.rectangleAttributes!.stroke);
-  //   // this.renderer.setStyle(this.rectangle2, 'stroke', 'black');
-  //   this.renderer.setStyle(this.rectangle2, 'fillOpacity', this.rectangleAttributes!.fillOpacity);
-  //   this.renderer.setStyle(this.rectangle2, 'strokeOpacity', this.rectangleAttributes!.strokeOpacity);
-  //   this.drawingService.addObject(this.rectangle2);
-  //   console.log("BITCH");
-  // }
-
-  // renderPencilSVG(): void {
-  //   this.pencil3 = this.renderer.createElement('path', 'svg');
-  //   this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
-  //   this.renderer.setAttribute(this.pencil3, 'd', 'M ');
-  //   this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
-  //   this.renderer.setStyle(this.pencil3, 'fill', 'none');
-  //   this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
-  //   this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
-  //   this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
-  //   this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
-  //   this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
-  //   this.drawingService.addObject(this.pencil3);
-  // }
-
-
   openDessins(element: any): void { 
     this.socketService.joinRoom(element.textContent.trim().slice(7));
     this.socketService.currentRoom = element.textContent.trim().slice(7);
@@ -257,69 +218,16 @@ export class DessinsComponent implements OnInit {
 
         let counter:number = 0;
         let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(7));
-        // let drawingObj = this.drawingTempSerivce.drawings.get("123");
         drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
           counter++;
           if(checkLine(element)) {
-            // this.pencil={
-            //   id:element.id,
-            //   user:element.user,
-            //   pointsList:element.pointsList,
-            //   strokeWidth:element.strokeWidth,
-            //   fill:element.fill,
-            //   stroke:element.stroke,
-            //   fillOpacity:element.fillOpacity,
-            //   strokeOpacity:element.strokeOpacity,
-            // };
-            // console.log("TRAITES", this.pencilToolService.pencil!.pointsList[0]);
-            // this.pencilToolService.pencil = element;
-            // this.pencilToolService.pencil.pointsList = element.pointsList;
-            // // console.log("length",this.pencilToolService.pencil.pointsList.length);
-            // console.log("PTS",this.pencilToolService.pencil.pointsList);
 
-
-            // if(this.pencilToolService.pencil.pointsList.length != null) {
-            //   for(let i = 0; i < this.pencilToolService.pencil.pointsList.length; i++) {
-            //     console.log("POINTS", this.pencilToolService.pencil.pointsList[i]);
-            //     console.log("ELEMENTS POINTS", element.pointsList[i]);
-            //   }
-            // }
-
-            // console.log(this.pencilToolService.pencil);
-            //console.log(element);
-            // this.pencilToolService.renderSVG();
-            // this.renderPencilSVG();
           }
           if(checkEllipse(element)) {
             this.toolEllipseService.ellipseAttributes = element;
             this.toolEllipseService.renderSVG();
           }
           if(checkRectangle(element)) {
-            // this.rectangleAttributes = {
-            //   id: element.id,
-            //   user: element.user,
-            //   x:element.x,
-            //   y:element.y,
-            //   width:element.width,
-            //   height:element.height,
-            //   strokeWidth: element.strokeWidth,
-            //   fill: element.fill,
-            //   stroke: element.stroke,
-            //   fillOpacity: element.fillOpacity,
-            //   strokeOpacity: element.strokeOpacity,
-            // };
-
-            // this.setStyle(
-            //   element.fill,
-            //   element.strokeOpacity,
-            //   element.stroke,
-            //   element.fillOpacity,
-            // );
-            // console.log(this.rectangleAttributes.stroke);
-            // console.log(this.rectangleAttributes.fill);
-            // this.renderRectangleSVG();
-            // console.log("VAGIN ELEMENT stroke", element.stroke);
-            // console.log("VAGIN ELEMENT fill", element.fill);
             this.toolRectangleService.rectangleAttributes = element;
             this.toolRectangleService.renderSVG();
           }
