@@ -170,7 +170,9 @@ export class RoomService {
     let room:Room=this.rooms.get(roomToLeave) as Room;
     room.removeUserFromRoom(useremail);  // removes user from room members
     this.rooms[`${room.getRoomName()}`]=room;
-    this.socketToRoom.delete(socket?.id);
+    if(this.socketToRoom.get(socket?.id)==roomToLeave) {
+      this.socketToRoom.delete(socket?.id);
+    }
     const message={useremail:useremail,roomName:roomToLeave};
     socketService.getIo().emit(SOCKETEVENT.LEAVEROOM,JSON.stringify(message));
   }

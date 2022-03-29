@@ -40,17 +40,16 @@ const joinRoom=(req:Request,res:Response,next:NextFunction)=>{
 const leaveRoom=(req:Request,res:Response,next:NextFunction)=>{
 
    let useremail:String=req.body.useremail as String;
+   let roomToLeave:String=req.body.roomName as String;
 
    let user:User=userService.getUserByUseremail(useremail) as User;
 
    if(userService.getSocketIdByUser().has(user)) {
      let socketId:string=userService.getSocketIdByUser().get(user) as string;
-
-     let roomName:String=roomService.getRoomNameBySocket(socketId) as String;
      let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
 
-     if(roomService.getAllRooms().has(roomName)) {
-       roomService.leaveRoom(socket,roomName,useremail);
+     if(roomService.getAllRooms().has(roomToLeave)) {
+       roomService.leaveRoom(socket,roomToLeave,useremail);
        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
      }
      return res.status(404).json({message:HTTPMESSAGE.RNOTFOUND});
