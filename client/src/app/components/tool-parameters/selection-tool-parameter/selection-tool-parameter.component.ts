@@ -27,25 +27,25 @@ export class SelectionToolParameterComponent {
     return this.selectionService.hasSelection();
   }
 
-  /// Copy
-  copy(): void {
-    this.copyPasteService.copy();
-  }
+  // /// Copy
+  // copy(): void {
+  //   this.copyPasteService.copy();
+  // }
 
-  /// Cut
-  cut(): void {
-    this.copyPasteService.cut();
-  }
+  // /// Cut
+  // cut(): void {
+  //   this.copyPasteService.cut();
+  // }
 
-  /// Paste
-  paste(): void {
-    this.copyPasteService.paste();
-  }
+  // /// Paste
+  // paste(): void {
+  //   this.copyPasteService.paste();
+  // }
 
-  /// Duplicate
-  duplicate(): void {
-    this.copyPasteService.duplicate();
-  }
+  // /// Duplicate
+  // duplicate(): void {
+  //   this.copyPasteService.duplicate();
+  // }
 
   /// SelectAll
   deleteSelection(): void {
@@ -55,8 +55,8 @@ export class SelectionToolParameterComponent {
     this.selectionService.removeSelectionCollab();
   }
 
-  /// SelectAll
-  selectAll(): void {
-    this.selectionService.selectAll();
-  }
+  // /// SelectAll
+  // selectAll(): void {
+  //   this.selectionService.selectAll();
+  // }
 }

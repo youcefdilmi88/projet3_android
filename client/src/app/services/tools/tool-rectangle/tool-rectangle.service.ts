@@ -80,6 +80,11 @@ export class ToolRectangleService implements Tools {
       this.x = data.x;
       this.y = data.y;
 
+      console.log("string rectangle", data);
+      console.log("HEREEEE", this.rectangleAttributes.id);
+      console.log("HERE TOOO", data.id);
+
+
       //ce shit cest pour pas que vs code piss off
       console.log(this.x + this.y);
 
@@ -174,8 +179,9 @@ export class ToolRectangleService implements Tools {
     let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
     this.rectangleAttributes.height = +height!;
     this.rectangleAttributes.width = +width!;
+    if(this.rectangleAttributes?.height! > 1 || this.rectangleAttributes?.width! > 1) {
     this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
-
+    }
     console.log(this.rectangleAttributes.fill);
     console.log(this.rectangleAttributes.stroke);
     return;

@@ -18,6 +18,8 @@ import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellips
 import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { FilledShape } from '@app/services/tools/tool-rectangle/filed-shape.model';
+import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
+import { Point } from 'src/app/model/point.model';
 
 
 @Component({
@@ -42,6 +44,9 @@ export class ChatComponent implements AfterViewInit {
 
   private rectangle2: SVGRectElement;
   public rectangleAttributes: FilledShape;
+
+  public pencil: Pencil | null;
+  private pencil3: SVGPathElement;
 
   public ellipseAttributes: FilledShape;
 
@@ -68,9 +73,9 @@ export class ChatComponent implements AfterViewInit {
     }
 
   ngAfterViewInit(): void {  
-    console.log("start");
-    this.reDraw();
-    console.log("end");
+    // console.log("start");
+    // this.reDraw();
+    // console.log("end");
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     console.log("CHECK MOI HEHE:" + this.socketService.currentRoom);
     this.http.get<any>(link).subscribe((data: any) => {
@@ -194,6 +199,7 @@ export class ChatComponent implements AfterViewInit {
   }
 
   renderRectangleSVG() : void {
+
     this.rectangle2 = this.renderer.createElement('rect', 'svg');
     this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
     this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
@@ -211,13 +217,88 @@ export class ChatComponent implements AfterViewInit {
     console.log("BITCH");
   }
 
+  addPointToLine(point: Point): void {
+    this.pencil?.pointsList.push(point);
+    let line = this.pencil3;
+    line!.setAttribute('d', (line!.getAttribute('d') as string) + ' L ' + point.x.toString() + ' ' + point.y.toString());
+  }
+
+  renderPencilSVG(): void {
+      this.pencil3 = this.renderer.createElement('path', 'svg');
+      //console.log("LENGTH:",this.pencil!.pointsList.length);
+      //for(let i = 1; i <  this.pencil!.pointsList.length; i++) {
+        console.log("STRINGS", this.pencil?.id);
+        console.log("POINTSLISTS:",this.pencil!.pointsList);
+        this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
+        this.renderer.setAttribute(this.pencil3, 'd', 'M ' + this.pencil!.pointsList[0].x.toString() + ' ' + this.pencil!.pointsList[0].y.toString());
+        this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
+        this.renderer.setStyle(this.pencil3, 'fill', 'none');
+        this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
+        this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+        this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+        this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
+        this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
+      this.drawingService.addObject(this.pencil3);
+      return;
+  }
+
   reDraw (): void {
     let drawingObj = this.drawingTempSerivce.drawings.get(this.socketService.currentRoom);
     drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
       if(checkLine(element)) {
+            this.pencil={
+              id:element.id,
+              user:element.user,
+              pointsList:element.pointsList,
+              strokeWidth:element.strokeWidth,
+              fill:element.fill,
+              stroke:element.stroke,
+              fillOpacity:element.fillOpacity,
+              strokeOpacity:element.strokeOpacity,
+            };
+            if(element.pointsList != undefined) {
+              this.pencil3 = this.renderer.createElement('path', 'svg');
+              //console.log("LENGTH:",this.pencil!.pointsList.length);
+              //for(let i = 1; i <  this.pencil!.pointsList.length; i++) {
+                console.log("STRINGS", element.id);
+                console.log("POINTSLISTS:",element.pointsList);
+                this.renderer.setAttribute(this.pencil3,'id',element.id as string);
+                this.renderer.setAttribute(this.pencil3, 'd', 'M ' + element.pointsList[0].x.toString() + ' ' + element.pointsList[0].y.toString());
+                this.renderer.setAttribute(this.pencil3, 'stroke-width', (element.strokeWidth).toString() + 'px');
+                this.renderer.setStyle(this.pencil3, 'fill', 'none');
+                this.renderer.setStyle(this.pencil3, 'stroke', element.stroke);
+                this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+                this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+                this.renderer.setStyle(this.pencil3, 'fillOpacity', element.fillOpacity);
+                this.renderer.setStyle(this.pencil3, 'strokeOpacity', element.strokeOpacity);
+              this.drawingService.addObject(this.pencil3);
+              console.log("CACA");
+              // this.renderPencilSVG();
+              // console.log("LEEEEENNNGT", element.pointsList.length);
+              let index = element.pointsList.length;
+              for(let i = 0; i < element.pointsList.length; i++) {
+                if(i < index) {
+                  this.addPointToLine(element.pointsList[i]);
+                  // console.log("E", i);
+                }
+                //console.log("tabarnak", element.pointsList[i]);
+              }
+              console.log("PULLED OUT IN TIME");
+            }
         // this.pencilToolService.pencil = element;
+        // this.pencilToolService.pencil.pointsList = element.pointsList;
         // // console.log(this.pencilToolService.pencil);
         // // console.log(element);
+
+        //   if(this.pencilToolService.pencil.pointsList.length != null) {
+        //     console.log("ELEMENTS POINTS LISTS", element.pointsList);
+        //     console.log("TOOL SERVICe POINTS LISTS", this.pencilToolService.pencil.pointsList);
+        //       for(let i = 0; i < this.pencilToolService.pencil.pointsList.length; i++) {
+        //         console.log("POINTS", this.pencilToolService.pencil.pointsList[i]);
+        //         console.log("ELEMENTS POINTS", element.pointsList[i]);
+        //         this.pencilToolService.pencil.pointsList[i] = element.pointsList[i];
+        //       }
+        //     }
         // this.pencilToolService.renderSVG();
       }
       if(checkEllipse(element)) {

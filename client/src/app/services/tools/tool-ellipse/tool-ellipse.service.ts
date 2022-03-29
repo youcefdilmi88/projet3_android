@@ -187,7 +187,9 @@ export class ToolEllipseService implements Tools {
     let width = this.ellipse2.getAttribute('width')?.slice(0, -2);
     this.ellipseAttributes.height = +height!;
     this.ellipseAttributes.width = +width!;
+    if(this.ellipseAttributes?.height! > 1 || this.ellipseAttributes?.width! > 1) {
     this.socketService.getSocket().emit("ENDELLIPSE", JSON.stringify(this.ellipseAttributes));
+    }
     return;
   }
 

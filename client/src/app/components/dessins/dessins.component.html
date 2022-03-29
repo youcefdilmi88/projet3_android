@@ -14,6 +14,15 @@
      
         <button mat-raised-button id="createRoom" (click)="createDrawing(drawingname.value)">Créer un dessin</button>
     </div>
+    <!-- <div> 
+
+        <mat-form-field class="search" floatLabel="always" appearance="outline">
+            <mat-label>Nom de la salle/createur</mat-label>
+            <input #roomfilter matInput id="room" type="text" name="room" required >
+        </mat-form-field> 
+     
+        <button mat-raised-button class="searchRoom" >Trouver une salle</button>
+    </div> -->
 
     <div id="galleryView">
         <div id="galleryContainer">
@@ -38,7 +47,8 @@
     </div>
     <div id="InfoDessins">
         <p>Nom du dessin: {{names[this.centerImage]}}</p>
-        <p>Nom du propriétaire: {{owners[this.centerImage]}}</p>
+        <p>Nombre de collaborateurs: {{nbrMembres[this.centerImage]}}</p>
+        <p>Propriétaire: {{owners[this.centerImage]}}</p>
         <p>Visibilité: {{visibite[this.centerImage]}}</p>
         <button mat-raised-button id="DessinsButtonOpen" (click)="openDessins($event.target)">
             Ouvrir <span class='special-word'>{{names[this.centerImage]}}</span>

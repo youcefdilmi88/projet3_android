@@ -16,8 +16,10 @@ import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-re
 import { checkEllipse } from '@app/interfaces/EllipseInterface';
 import { checkRectangle } from '@app/interfaces/RectangleInterface';
 import { FilledShape } from '@app/services/tools/tool-rectangle/filed-shape.model';
-import { DrawingService } from '@app/services/drawing/drawing.service';
+// import { DrawingService } from '@app/services/drawing/drawing.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+// import { Point } from 'src/app/model/point.model';
+import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
 
 
 @Component({
@@ -33,6 +35,7 @@ export class DessinsComponent implements OnInit {
   public names:Array<string> = [];
   public owners:Array<string> = [];
   public visibite:Array<string> = [];
+  public nbrMembres:Array<number> = [];
   public centerImage: number = 0;
   public leftImage: number = this.imageUrlArray.length - 1;
   public rightImage: number = 1;
@@ -43,6 +46,8 @@ export class DessinsComponent implements OnInit {
   parameters: FormGroup;
   private strokeWidth: FormControl;
   private rectStyle: FormControl;
+  public pencil: Pencil | null;
+  // private pencil3: SVGPathElement;
 
   constructor(
     public dialog: MatDialog,
@@ -54,7 +59,7 @@ export class DessinsComponent implements OnInit {
     public toolEllipseService: ToolEllipseService,
     public toolRectangleService: ToolRectangleService,
     rendererFactory: RendererFactory2,
-    private drawingService: DrawingService,
+    // private drawingService: DrawingService,
   ) { 
     this.renderer = rendererFactory.createRenderer(null, null);
     this.strokeWidth = new FormControl(1, Validators.min(1));
@@ -95,7 +100,17 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("JOINDRAWING", (data) => {
       data = JSON.parse(data);
-      console.log("JOINED: " + data.drawing.drawingName);
+      console.log("JOINED: ", data.drawing.drawingName);
+      console.log("members join: ", data.drawing.members);
+      this.getAllDrawings();
+      // this.nbrMembres = [];
+
+    });
+
+    this.socketService.getSocket().on("LEAVEDRAWING", (data) => {
+      data = JSON.parse(data);
+      console.log("members left: ", data.drawing.members);
+      this.getAllDrawings();
     });
 
     this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
@@ -166,38 +181,56 @@ export class DessinsComponent implements OnInit {
         // });
         console.log("HERE:",drawing.visibility);
         this.names.push(drawing.drawingName); 
-        console.log(this.names);
+        console.log("drawing names:", this.names);
         this.owners.push(drawing.owner);
-        console.log(this.owners);
+        console.log("drawing owners", this.owners);
         this.visibite.push(drawing.visibility);
+        this.nbrMembres.push(drawing.members.length);
+        console.log("memb", drawing.members);
+        console.log("length de memb", drawing.members.length);
       });
       
     });
   } 
 
-  private rectangle2: SVGRectElement;
+  // private rectangle2: SVGRectElement;
   public rectangleAttributes: FilledShape;
 
 
-  renderRectangleSVG() : void {
-    this.rectangle2 = this.renderer.createElement('rect', 'svg');
-    this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
-    this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
-    this.renderer.setAttribute(this.rectangle2, 'y', this.rectangleAttributes.y.toString() + 'px');
-    this.renderer.setAttribute(this.rectangle2, 'width', this.rectangleAttributes.width.toString() + 'px');
-    this.renderer.setAttribute(this.rectangle2, 'height', this.rectangleAttributes.height.toString() + 'px');
-    this.renderer.setAttribute(this.rectangle2, 'stroke-width', (this.rectangleAttributes!.strokeWidth).toString() + 'px');
-    this.renderer.setStyle(this.rectangle2, 'fill', this.rectangleAttributes!.fill);
-    this.renderer.setAttribute(this.rectangle2, 'fill', this.rectangleAttributes!.fill);
-    // this.renderer.setStyle(this.rectangle2, 'fill', 'white');
-    this.renderer.setStyle(this.rectangle2, 'stroke', this.rectangleAttributes!.stroke);
-    this.renderer.setAttribute(this.rectangle2, 'stroke', this.rectangleAttributes!.stroke);
-    // this.renderer.setStyle(this.rectangle2, 'stroke', 'black');
-    this.renderer.setStyle(this.rectangle2, 'fillOpacity', this.rectangleAttributes!.fillOpacity);
-    this.renderer.setStyle(this.rectangle2, 'strokeOpacity', this.rectangleAttributes!.strokeOpacity);
-    this.drawingService.addObject(this.rectangle2);
-    console.log("BITCH");
-  }
+  // renderRectangleSVG() : void {
+  //   this.rectangle2 = this.renderer.createElement('rect', 'svg');
+  //   this.renderer.setAttribute(this.rectangle2,'id',this.rectangleAttributes?.id as string);
+  //   this.renderer.setAttribute(this.rectangle2, 'x', this.rectangleAttributes.x.toString() + 'px');
+  //   this.renderer.setAttribute(this.rectangle2, 'y', this.rectangleAttributes.y.toString() + 'px');
+  //   this.renderer.setAttribute(this.rectangle2, 'width', this.rectangleAttributes.width.toString() + 'px');
+  //   this.renderer.setAttribute(this.rectangle2, 'height', this.rectangleAttributes.height.toString() + 'px');
+  //   this.renderer.setAttribute(this.rectangle2, 'stroke-width', (this.rectangleAttributes!.strokeWidth).toString() + 'px');
+  //   this.renderer.setStyle(this.rectangle2, 'fill', this.rectangleAttributes!.fill);
+  //   this.renderer.setAttribute(this.rectangle2, 'fill', this.rectangleAttributes!.fill);
+  //   // this.renderer.setStyle(this.rectangle2, 'fill', 'white');
+  //   this.renderer.setStyle(this.rectangle2, 'stroke', this.rectangleAttributes!.stroke);
+  //   this.renderer.setAttribute(this.rectangle2, 'stroke', this.rectangleAttributes!.stroke);
+  //   // this.renderer.setStyle(this.rectangle2, 'stroke', 'black');
+  //   this.renderer.setStyle(this.rectangle2, 'fillOpacity', this.rectangleAttributes!.fillOpacity);
+  //   this.renderer.setStyle(this.rectangle2, 'strokeOpacity', this.rectangleAttributes!.strokeOpacity);
+  //   this.drawingService.addObject(this.rectangle2);
+  //   console.log("BITCH");
+  // }
+
+  // renderPencilSVG(): void {
+  //   this.pencil3 = this.renderer.createElement('path', 'svg');
+  //   this.renderer.setAttribute(this.pencil3,'id',this.pencil?.id as string);
+  //   this.renderer.setAttribute(this.pencil3, 'd', 'M ');
+  //   this.renderer.setAttribute(this.pencil3, 'stroke-width', (this.pencil!.strokeWidth).toString() + 'px');
+  //   this.renderer.setStyle(this.pencil3, 'fill', 'none');
+  //   this.renderer.setStyle(this.pencil3, 'stroke', this.pencil!.stroke);
+  //   this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+  //   this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+  //   this.renderer.setStyle(this.pencil3, 'fillOpacity', this.pencil!.fillOpacity);
+  //   this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
+  //   this.drawingService.addObject(this.pencil3);
+  // }
+
 
   openDessins(element: any): void { 
     this.socketService.joinRoom(element.textContent.trim().slice(7));
@@ -216,9 +249,11 @@ export class DessinsComponent implements OnInit {
     console.log(element.textContent.trim().slice(7));
     this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {
       if(data.message == "success") {
+        console.log("CA MARCHE OPEN");
         console.log("join dessins:" + element.textContent.trim().slice(7));
-        this.dialog.open(NewDrawingComponent);
         this.router.navigate(['/', 'sidenav']);
+        this.dialog.open(NewDrawingComponent);
+        console.log("CREATED CANVAS");
 
         let counter:number = 0;
         let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(7));
@@ -226,49 +261,73 @@ export class DessinsComponent implements OnInit {
         drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
           counter++;
           if(checkLine(element)) {
-            //this.pencilToolService.pencil = element;
+            // this.pencil={
+            //   id:element.id,
+            //   user:element.user,
+            //   pointsList:element.pointsList,
+            //   strokeWidth:element.strokeWidth,
+            //   fill:element.fill,
+            //   stroke:element.stroke,
+            //   fillOpacity:element.fillOpacity,
+            //   strokeOpacity:element.strokeOpacity,
+            // };
+            // console.log("TRAITES", this.pencilToolService.pencil!.pointsList[0]);
+            // this.pencilToolService.pencil = element;
+            // this.pencilToolService.pencil.pointsList = element.pointsList;
+            // // console.log("length",this.pencilToolService.pencil.pointsList.length);
+            // console.log("PTS",this.pencilToolService.pencil.pointsList);
+
+
+            // if(this.pencilToolService.pencil.pointsList.length != null) {
+            //   for(let i = 0; i < this.pencilToolService.pencil.pointsList.length; i++) {
+            //     console.log("POINTS", this.pencilToolService.pencil.pointsList[i]);
+            //     console.log("ELEMENTS POINTS", element.pointsList[i]);
+            //   }
+            // }
+
             // console.log(this.pencilToolService.pencil);
             //console.log(element);
             // this.pencilToolService.renderSVG();
+            // this.renderPencilSVG();
           }
           if(checkEllipse(element)) {
-            //this.toolEllipseService.ellipseAttributes = element;
-            // this.toolEllipseService.renderSVG();
+            this.toolEllipseService.ellipseAttributes = element;
+            this.toolEllipseService.renderSVG();
           }
           if(checkRectangle(element)) {
-            this.rectangleAttributes = {
-              id: element.id,
-              user: element.user,
-              x:element.x,
-              y:element.y,
-              width:element.width,
-              height:element.height,
-              strokeWidth: element.strokeWidth,
-              fill: element.fill,
-              stroke: element.stroke,
-              fillOpacity: element.fillOpacity,
-              strokeOpacity: element.strokeOpacity,
-            };
+            // this.rectangleAttributes = {
+            //   id: element.id,
+            //   user: element.user,
+            //   x:element.x,
+            //   y:element.y,
+            //   width:element.width,
+            //   height:element.height,
+            //   strokeWidth: element.strokeWidth,
+            //   fill: element.fill,
+            //   stroke: element.stroke,
+            //   fillOpacity: element.fillOpacity,
+            //   strokeOpacity: element.strokeOpacity,
+            // };
 
-            this.setStyle(
-              element.fill,
-              element.strokeOpacity,
-              element.stroke,
-              element.fillOpacity,
-            );
+            // this.setStyle(
+            //   element.fill,
+            //   element.strokeOpacity,
+            //   element.stroke,
+            //   element.fillOpacity,
+            // );
             // console.log(this.rectangleAttributes.stroke);
             // console.log(this.rectangleAttributes.fill);
-            this.renderRectangleSVG();
+            // this.renderRectangleSVG();
             // console.log("VAGIN ELEMENT stroke", element.stroke);
             // console.log("VAGIN ELEMENT fill", element.fill);
-            // this.toolRectangleService.rectangleAttributes = element;
-            // this.toolRectangleService.renderSVG();
+            this.toolRectangleService.rectangleAttributes = element;
+            this.toolRectangleService.renderSVG();
           }
       });
 
       console.log("counter", counter);
 
-        let link2 = this.BASE_URL + "room/joinRoom";
+      let link2 = this.BASE_URL + "room/joinRoom";
 
         const userObj={
           useremail:this.socketService.email,
@@ -281,8 +340,7 @@ export class DessinsComponent implements OnInit {
       
           if(data.message == "success") {
             this.socketService.currentRoom = element.textContent.trim().slice(7);
-            console.log("socketsERVICE;" + this.socketService.currentRoom);
-            console.log("???:" + element.textContent.trim().slice(7));
+            console.log("current room;" + this.socketService.currentRoom);
           }
         });
       }
@@ -326,7 +384,6 @@ export class DessinsComponent implements OnInit {
         if (data.message == "success") {
           console.log("CREATE DRAWING: " + data.message);
           
-          // this.setVisibilityToPrivate(this.drawing.trim());
           this.router.navigate(['/', 'sidenav']);
           this.dialog.open(NewDrawingComponent);
 
@@ -391,34 +448,34 @@ export class DessinsComponent implements OnInit {
       });
   }
 
-  private setStyle(primaryColor: string, primaryAlpha: string, secondaryColor: string, secondaryAlpha: string): void {
-    if (!this.rectangleAttributes) {
-      return;
-    }
-    // switch (this.rectStyle.value) {
-    //   case 'center':
-    //     this.rectangleAttributes.fill = primaryColor;
-    //     this.rectangleAttributes.fillOpacity = primaryAlpha;
-    //     this.rectangleAttributes.stroke = 'none';
-    //     this.rectangleAttributes.strokeOpacity = 'none';
-    //     break;
+  // private setStyle(primaryColor: string, primaryAlpha: string, secondaryColor: string, secondaryAlpha: string): void {
+  //   if (!this.rectangleAttributes) {
+  //     return;
+  //   }
+  //   // switch (this.rectStyle.value) {
+  //   //   case 'center':
+  //   //     this.rectangleAttributes.fill = primaryColor;
+  //   //     this.rectangleAttributes.fillOpacity = primaryAlpha;
+  //   //     this.rectangleAttributes.stroke = 'none';
+  //   //     this.rectangleAttributes.strokeOpacity = 'none';
+  //   //     break;
 
-    //   case 'border':
-    //     this.rectangleAttributes.fill = 'none';
-    //     this.rectangleAttributes.fillOpacity = 'none';
-    //     this.rectangleAttributes.stroke = secondaryColor;
-    //     this.rectangleAttributes.strokeOpacity = secondaryAlpha;
-    //     break;
+  //   //   case 'border':
+  //   //     this.rectangleAttributes.fill = 'none';
+  //   //     this.rectangleAttributes.fillOpacity = 'none';
+  //   //     this.rectangleAttributes.stroke = secondaryColor;
+  //   //     this.rectangleAttributes.strokeOpacity = secondaryAlpha;
+  //   //     break;
 
-    //   case 'fill':
-        this.rectangleAttributes.fill = primaryColor;
-        this.rectangleAttributes.fillOpacity = primaryAlpha;
-        this.rectangleAttributes.stroke = secondaryColor;
-        this.rectangleAttributes.strokeOpacity = secondaryAlpha;
+  //   //   case 'fill':
+  //       this.rectangleAttributes.fill = primaryColor;
+  //       this.rectangleAttributes.fillOpacity = primaryAlpha;
+  //       this.rectangleAttributes.stroke = secondaryColor;
+  //       this.rectangleAttributes.strokeOpacity = secondaryAlpha;
 
-        // break;
-    // }
-  }
+  //       // break;
+  //   // }
+  // }
 
 
   // for right button

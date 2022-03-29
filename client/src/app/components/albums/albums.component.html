@@ -7,9 +7,19 @@
             <button (click)="logout()" class = "btn" id="logout" routerLink = ""><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
         </div>
         <!-- <div class="center_me"> -->
+        <div class="subtext-container">
+            <div>
+                <mat-form-field class="input" floatLabel="always" appearance="outline">
+                    <mat-label>Nom du nouveau album</mat-label>
+                    <input #roomname matInput id="room" type="text" name="room" required>
+                </mat-form-field> 
+             
+                <button mat-raised-button id="createRoom">Créer un album</button>
+            </div> 
+        </div>
         <div>
-            <button mat-raised-button (click)="newPublicAlbum()" >Menu compte</button>
-            <button mat-raised-button routerLink="/clavardage" (click)="defaultRoom()">Accéder au chat</button>  
+            <button mat-raised-button id="menuCompte" (click)="newPublicAlbum()" >Menu compte</button>
+            <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">Accéder au chat</button> 
         </div>
         <!-- </div> -->
 

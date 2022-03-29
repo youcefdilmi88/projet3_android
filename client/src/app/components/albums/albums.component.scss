@@ -125,3 +125,31 @@ button {
 body {
     background-color: #F5F5F5;
 }
+
+.subtext-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+#createRoom {
+    float: right;
+    width: 49%;
+    height: 60px;
+    margin-top: 5px;
+}
+
+.input {
+    float: left;
+    width: 50%;
+}
+
+#menuCompte {
+    float: left;
+    width: 49%;
+}
+
+#chatRoom {
+    float: right;
+    width: 49%;
+}

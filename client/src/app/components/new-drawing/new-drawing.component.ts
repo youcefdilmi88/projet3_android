@@ -73,10 +73,10 @@ export class NewDrawingComponent implements OnInit {
     this.drawingService.newDrawing(
       size.width,
       size.height,
-      {
-        rgb: this.colorPickerService.rgb.value,
-        a: this.colorPickerService.a.value,
-      },
+      // {
+      //   rgb: this.colorPickerService.rgb.value,
+      //   a: this.colorPickerService.a.value,
+      // },
     );
     // this.snackBar.open('Nouveau dessin créé', '', { duration: ONE_SECOND, });
     this.newDrawingService.form.reset();

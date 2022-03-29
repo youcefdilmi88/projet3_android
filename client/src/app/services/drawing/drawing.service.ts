@@ -91,14 +91,23 @@ export class DrawingService {
     }
   }
 
-  /// Fonction pour appeller la cascade de bonne fonction pour réinitialisé un nouveau dessin
-  newDrawing(width: number, height: number, rgba: RGBA): void {
+  // // Fonction pour appeller la cascade de bonne fonction pour réinitialisé un nouveau dessin
+  // newDrawing(width: number, height: number, rgba: RGBA): void {
+  //   this.saved = false;
+  //   this.objectList.clear();
+  //   this.lastObjectId = 0;
+  //   this.drawing = this.renderer.createElement('svg', 'svg');
+  //   this.setDimension(width, height);
+  //   this.setDrawingColor(rgba);
+  //   console.log("READ ME", this.drawing);
+  //   this.drawingEmit.emit(this.drawing);
+  // }
+  newDrawing(width: number, height: number): void {
     this.saved = false;
     this.objectList.clear();
     this.lastObjectId = 0;
     this.drawing = this.renderer.createElement('svg', 'svg');
     this.setDimension(width, height);
-    this.setDrawingColor(rgba);
     console.log("READ ME", this.drawing);
     this.drawingEmit.emit(this.drawing);
   }

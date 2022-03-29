@@ -71,7 +71,12 @@ export class PencilToolService implements Tools {
         console.log(this.socketService.nickname);
         this.identif = this.pencil.id as string;
       }
-      console.log(this.pencil.id);
+
+      console.log("string", data);
+      console.log("pencil", this.pencil);
+      console.log("id", this.pencil.id);
+      console.log("HERE IDDDDD", data.id);
+  
 
       this.renderSVG();
       this.moving = true;
@@ -79,6 +84,8 @@ export class PencilToolService implements Tools {
 
     this.socketService.getSocket().on("DRAWLINE",(data)=>{
       data=JSON.parse(data);
+
+      console.log("DRAWING LINE");
 
       if (this.pencil?.id == data.shapeId) {
         this.addPointToLine({x:data.point.x, y:data.point.y} as Point, data.shapeId);
@@ -152,7 +159,11 @@ export class PencilToolService implements Tools {
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
     // this.socketService.getSocket().emit("ENDLINE", JSON.stringify(this.pencil));
-    this.socketService.getSocket().emit("ENDLINE", JSON.stringify(this.pencil));
+    console.log("BEFORE", this.pencil?.pointsList.length);
+    if(this.pencil?.pointsList.length! > 1) {
+      this.socketService.getSocket().emit("ENDLINE", JSON.stringify(this.pencil));
+      console.log("AFTER", this.pencil?.pointsList.length);
+    }
     return;
   }
 
