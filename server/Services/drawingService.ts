@@ -168,6 +168,7 @@ class DrawingService {
     }
 
     socket?.join(drawingName as string);
+    roomService.joinRoom(this.sourceDrawingName(drawingName),useremail);
 
     let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
 
@@ -193,7 +194,7 @@ class DrawingService {
     let drawing:Drawing=this.socketInDrawing.get(socket?.id as string) as Drawing;
     console.log("leave drawing:"+drawing.getName());
     socket?.leave(drawing.getName() as string);
-
+    roomService.leaveRoom(socket,this.sourceDrawingName(drawing.getName()),mail);
     drawingService.socketInDrawing.delete(socket?.id as string);
     
     drawing.removeMember(socket?.id as string);
