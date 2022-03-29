@@ -158,6 +158,8 @@ class DrawingService {
     let socketId:string=userService.getSocketIdByUser().get(user) as string;
 
     let socket=socketService.getIo().sockets.sockets.get(socketId);
+    console.log("join drawing socket:",socket?.id);
+    console.log("************************");
 
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
       socket?.leave(drawingService.socketInDrawing.get(socket?.id)?.getName() as string);
