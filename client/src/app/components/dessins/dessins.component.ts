@@ -212,8 +212,8 @@ export class DessinsComponent implements OnInit {
       if(data.message == "success") {
         console.log("CA MARCHE OPEN");
         console.log("join dessins:" + element.textContent.trim().slice(7));
-        this.router.navigate(['/', 'sidenav']);
         this.dialog.open(NewDrawingComponent);
+        this.router.navigate(['/', 'sidenav']);
         console.log("CREATED CANVAS");
 
         let counter:number = 0;
@@ -292,8 +292,8 @@ export class DessinsComponent implements OnInit {
         if (data.message == "success") {
           console.log("CREATE DRAWING: " + data.message);
           
-          this.router.navigate(['/', 'sidenav']);
           this.dialog.open(NewDrawingComponent);
+          this.router.navigate(['/', 'sidenav']);
 
           //------------ Pour join le nouveau room avec le dessin ---------
           this.socketService.joinRoom(this.drawing.trim());
@@ -318,7 +318,6 @@ export class DessinsComponent implements OnInit {
         }
       });
     }
-
   }
 
   setVisibilityToPrivate(name: string) :  void {
@@ -355,36 +354,6 @@ export class DessinsComponent implements OnInit {
         // }
       });
   }
-
-  // private setStyle(primaryColor: string, primaryAlpha: string, secondaryColor: string, secondaryAlpha: string): void {
-  //   if (!this.rectangleAttributes) {
-  //     return;
-  //   }
-  //   // switch (this.rectStyle.value) {
-  //   //   case 'center':
-  //   //     this.rectangleAttributes.fill = primaryColor;
-  //   //     this.rectangleAttributes.fillOpacity = primaryAlpha;
-  //   //     this.rectangleAttributes.stroke = 'none';
-  //   //     this.rectangleAttributes.strokeOpacity = 'none';
-  //   //     break;
-
-  //   //   case 'border':
-  //   //     this.rectangleAttributes.fill = 'none';
-  //   //     this.rectangleAttributes.fillOpacity = 'none';
-  //   //     this.rectangleAttributes.stroke = secondaryColor;
-  //   //     this.rectangleAttributes.strokeOpacity = secondaryAlpha;
-  //   //     break;
-
-  //   //   case 'fill':
-  //       this.rectangleAttributes.fill = primaryColor;
-  //       this.rectangleAttributes.fillOpacity = primaryAlpha;
-  //       this.rectangleAttributes.stroke = secondaryColor;
-  //       this.rectangleAttributes.strokeOpacity = secondaryAlpha;
-
-  //       // break;
-  //   // }
-  // }
-
 
   // for right button
   rightSideSlide(): void {

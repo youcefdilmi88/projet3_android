@@ -72,6 +72,8 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
 
+    console.log("VAGIN!!!!");
+
     let drawingObj = this.drawingTempSerivce.drawings.get(this.socketService.currentRoom);
     drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
       if(checkLine(element)) {
