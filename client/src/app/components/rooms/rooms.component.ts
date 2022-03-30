@@ -55,6 +55,7 @@ export class RoomsComponent implements OnInit {
   ngOnInit(): void {
     let link = this.BASE_URL+"room/getAllRooms";
     this.http.get<any>(link).subscribe((data: any) => {
+      console.log("update 2");
       let length = Object.keys(data).length;
       this.numberOfRooms = length;
       for(var i = 0; i < length; i++) { 
@@ -106,6 +107,7 @@ export class RoomsComponent implements OnInit {
         for(var i = 0; i <= length; i++) { 
           this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
         }
+        console.log("update 1");
       });
     });
 
@@ -213,6 +215,8 @@ export class RoomsComponent implements OnInit {
       this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
         if (data.message == "success") {
           console.log("TESTING" + data);
+          console.log("PIPI");
+          console.log("ICITE", this.socketService.currentRoom);
         }
       });
     }
@@ -224,7 +228,7 @@ export class RoomsComponent implements OnInit {
         }
         if (data.message == "success") {
           console.log("look at me " + data.message);
-          this.socketService.currentRoom = "randomSHIT";
+          this.socketService.currentRoom = "randomSHIT"; //IMPORTANT NE PAS ENLEVER
         }
       });
     }

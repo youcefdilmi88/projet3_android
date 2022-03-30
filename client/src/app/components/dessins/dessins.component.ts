@@ -273,6 +273,7 @@ export class DessinsComponent implements OnInit {
 
   createDrawing(text: string) {
     let link = this.BASE_URL+"drawing/createDrawing";
+    let link5 = this.BASE_URL + "drawing/joinDrawing";
 
     // this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
     //   data=JSON.parse(data);
@@ -292,8 +293,12 @@ export class DessinsComponent implements OnInit {
         if (data.message == "success") {
           console.log("CREATE DRAWING: " + data.message);
           
-          this.router.navigate(['/', 'sidenav']);
-          this.dialog.open(NewDrawingComponent);
+          this.http.post<any>(link5, {useremail: this.socketService.email, drawingName: this.drawing.trim()}).subscribe((data:any) => {
+            if(data.message == "success") {
+              this.router.navigate(['/', 'sidenav']);
+              this.dialog.open(NewDrawingComponent);
+            }
+          });
 
           //------------ Pour join le nouveau room avec le dessin ---------
           this.socketService.joinRoom(this.drawing.trim());
