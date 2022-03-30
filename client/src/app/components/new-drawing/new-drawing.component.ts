@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 // import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,6 +8,18 @@ import { DEFAULT_ALPHA } from 'src/app/model/rgba.model';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { NewDrawingService } from 'src/app/services/new-drawing/new-drawing.service';
 import { NewDrawingAlertComponent } from './new-drawing-alert/new-drawing-alert.component';
+import { SocketService } from '@app/services/socket/socket.service';
+import { DrawingTempService } from '@app/services/drawingTemp.service';
+import { BaseShapeInterface } from '@app/interfaces/BaseShapeInterface';
+import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
+import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
+import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
+import { FilledShape } from '@app/services/tools/tool-rectangle/filed-shape.model';
+import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
+import { checkLine } from '@app/interfaces/LineInterface';
+import { checkEllipse } from '@app/interfaces/EllipseInterface';
+import { checkRectangle } from '@app/interfaces/RectangleInterface';
+import { Point } from 'src/app/model/point.model';
 
 // const ONE_SECOND = 1000;
 @Component({
@@ -21,17 +33,34 @@ import { NewDrawingAlertComponent } from './new-drawing-alert/new-drawing-alert.
 export class NewDrawingComponent implements OnInit {
   form: FormGroup;
 
+  renderer: Renderer2;
+  public rectangleAttributes: FilledShape;
+
+  public pencil: Pencil | null;
+  private pencil3: SVGPathElement;
+
+  public ellipseAttributes: FilledShape;
+
   constructor(
     public dialogRef: MatDialogRef<NewDrawingComponent>,
+    public drawingTempSerivce: DrawingTempService,
+    private socketService: SocketService,
     // private snackBar: MatSnackBar,
     private newDrawingService: NewDrawingService,
     private drawingService: DrawingService,
     private dialog: MatDialog,
     private colorPickerService: ColorPickerService,
-  ) { }
+    public pencilToolService: PencilToolService,
+    public toolEllipseService: ToolEllipseService,
+    public toolRectangleService: ToolRectangleService,
+    rendererFactory: RendererFactory2,
+  ) { 
+    this.renderer = rendererFactory.createRenderer(null, null);
+  }
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
+    console.log("PENIS!!!!");
     this.newDrawing();
     this.form = new FormGroup(
       {
@@ -42,11 +71,50 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.disableClose = true;
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
+
+    let drawingObj = this.drawingTempSerivce.drawings.get(this.socketService.currentRoom);
+    drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
+      if(checkLine(element)) {
+        if(element.pointsList != undefined) {
+          this.pencil3 = this.renderer.createElement('path', 'svg');
+          this.renderer.setAttribute(this.pencil3,'id',element.id as string);
+          this.renderer.setAttribute(this.pencil3, 'd', 'M ' + element.pointsList[0].x.toString() + ' ' + element.pointsList[0].y.toString());
+          this.renderer.setAttribute(this.pencil3, 'stroke-width', (element.strokeWidth).toString() + 'px');
+          this.renderer.setStyle(this.pencil3, 'fill', 'none');
+          this.renderer.setStyle(this.pencil3, 'stroke', element.stroke);
+          this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
+          this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
+          this.renderer.setStyle(this.pencil3, 'fillOpacity', element.fillOpacity);
+          this.renderer.setStyle(this.pencil3, 'strokeOpacity', element.strokeOpacity);
+          this.drawingService.addObject(this.pencil3);
+          let index = element.pointsList.length;
+          for(let i = 0; i < element.pointsList.length; i++) {
+            if(i < index) {
+              this.addPointToLine(element.pointsList[i]);
+            }
+          }
+        }
+      }
+      if(checkEllipse(element)) {
+        this.toolEllipseService.ellipseAttributes = element;
+        this.toolEllipseService.renderSVG();
+      }
+      if(checkRectangle(element)) {
+        this.toolRectangleService.rectangleAttributes = element;
+        this.toolRectangleService.renderSVG();
+      }
+  });
   }
 
   get sizeForm(): FormGroup {
     return (this.form.get('dimension') as FormGroup).get('size') as FormGroup;
   }
+
+  addPointToLine(point: Point): void {
+    let line = this.pencil3;
+    line!.setAttribute('d', (line!.getAttribute('d') as string) + ' L ' + point.x.toString() + ' ' + point.y.toString());
+  }
+
 
   /// Ouvre le dialog pour l'alerte lorsque le service est creer
   onAccept(): void {

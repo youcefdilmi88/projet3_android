@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, Renderer2, RendererFactory2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
@@ -7,19 +7,6 @@ import { catchError } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { URL } from '../../../../constants';
-import { BaseShapeInterface } from '@app/interfaces/BaseShapeInterface';
-import { checkLine } from '@app/interfaces/LineInterface';
-import { checkEllipse } from '@app/interfaces/EllipseInterface';
-import { checkRectangle } from '@app/interfaces/RectangleInterface';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DrawingTempService } from '@app/services/drawingTemp.service';
-import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
-import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
-import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
-import { DrawingService } from '@app/services/drawing/drawing.service';
-import { FilledShape } from '@app/services/tools/tool-rectangle/filed-shape.model';
-import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
-import { Point } from 'src/app/model/point.model';
 
 
 @Component({
@@ -36,39 +23,12 @@ export class ChatComponent implements AfterViewInit {
   public others = new Array<string>();
   public time = new Array<string>();
 
-
-  renderer: Renderer2;
-  parameters: FormGroup;
-  private strokeWidth: FormControl;
-  private rectStyle: FormControl;
-
-  public rectangleAttributes: FilledShape;
-
-  public pencil: Pencil | null;
-  private pencil3: SVGPathElement;
-
-  public ellipseAttributes: FilledShape;
-
-
   constructor(
     public dialog: MatDialog,
     private http: HttpClient,
     private socketService: SocketService,
     private router: Router,
-    public drawingTempSerivce: DrawingTempService,
-    public pencilToolService: PencilToolService,
-    public toolEllipseService: ToolEllipseService,
-    public toolRectangleService: ToolRectangleService,
-    rendererFactory: RendererFactory2,
-    private drawingService: DrawingService,
     ) { 
-      this.renderer = rendererFactory.createRenderer(null, null);
-      this.strokeWidth = new FormControl(1, Validators.min(1));
-      this.rectStyle = new FormControl('fill');
-      this.parameters = new FormGroup({
-        strokeWidth: this.strokeWidth,
-        rectStyle: this.rectStyle,
-      });
     }
 
   ngAfterViewInit(): void {  
@@ -195,47 +155,6 @@ export class ChatComponent implements AfterViewInit {
     this.http.post<any>(link,{ msg:"sjdakjsd",user:"admin" }).subscribe((data: any) => {
       console.log(data);
     });
-  }
-
-
-  addPointToLine(point: Point): void {
-    let line = this.pencil3;
-    line!.setAttribute('d', (line!.getAttribute('d') as string) + ' L ' + point.x.toString() + ' ' + point.y.toString());
-  }
-
-  reDraw (): void {
-    let drawingObj = this.drawingTempSerivce.drawings.get(this.socketService.currentRoom);
-    drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
-      if(checkLine(element)) {
-        if(element.pointsList != undefined) {
-          this.pencil3 = this.renderer.createElement('path', 'svg');
-          this.renderer.setAttribute(this.pencil3,'id',element.id as string);
-          this.renderer.setAttribute(this.pencil3, 'd', 'M ' + element.pointsList[0].x.toString() + ' ' + element.pointsList[0].y.toString());
-          this.renderer.setAttribute(this.pencil3, 'stroke-width', (element.strokeWidth).toString() + 'px');
-          this.renderer.setStyle(this.pencil3, 'fill', 'none');
-          this.renderer.setStyle(this.pencil3, 'stroke', element.stroke);
-          this.renderer.setStyle(this.pencil3, 'stroke-linecap', 'round');
-          this.renderer.setStyle(this.pencil3, 'stroke-linejoin', 'round')
-          this.renderer.setStyle(this.pencil3, 'fillOpacity', element.fillOpacity);
-          this.renderer.setStyle(this.pencil3, 'strokeOpacity', element.strokeOpacity);
-          this.drawingService.addObject(this.pencil3);
-          let index = element.pointsList.length;
-          for(let i = 0; i < element.pointsList.length; i++) {
-            if(i < index) {
-              this.addPointToLine(element.pointsList[i]);
-            }
-          }
-        }
-      }
-      if(checkEllipse(element)) {
-        this.toolEllipseService.ellipseAttributes = element;
-        this.toolEllipseService.renderSVG();
-      }
-      if(checkRectangle(element)) {
-        this.toolRectangleService.rectangleAttributes = element;
-        this.toolRectangleService.renderSVG();
-      }
-  });
   }
 
   logout() {
