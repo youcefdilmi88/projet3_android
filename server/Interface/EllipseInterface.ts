@@ -5,8 +5,6 @@ export interface EllipseInterface extends BaseShapeInterface {
     y:Number;
     width:Number;
     height:Number;
-    finalX: Number;
-    finalY: Number;
     type:String;
     finalX:Number;
     finalY:Number;
