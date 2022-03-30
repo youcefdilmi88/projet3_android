@@ -106,6 +106,7 @@ export class ChatComponent implements AfterViewInit {
   }
 
   leaveDrawing() {
+    this.socketService.currentRoom = "randomSHIT";
     let link = this.BASE_URL + "drawing/leaveDrawing";
 
     this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {

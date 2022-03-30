@@ -36,6 +36,8 @@ export class ToolEllipseService implements Tools {
   private ellipseStyle: FormControl;
   private x: number;
   private y: number;
+  private finalx: number;
+  private finaly: number;
 
   private moving: boolean = false;
 
@@ -100,6 +102,9 @@ export class ToolEllipseService implements Tools {
 
     this.socketService.getSocket().on("DRAWELLIPSE", (data) => {
       data = JSON.parse(data);
+      this.finalx = data.point.x as number;
+      this.finaly = data.point.y as number;
+
       if (this.ellipseAttributes?.id == data.shapeId) {
         this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
       }
@@ -183,10 +188,11 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
-    let height = this.ellipse2.getAttribute('height')?.slice(0, -2);
-    let width = this.ellipse2.getAttribute('width')?.slice(0, -2);
+    let height = this.finaly;
+    let width = this.finalx;
     this.ellipseAttributes.height = +height!;
     this.ellipseAttributes.width = +width!;
+
     if(this.ellipseAttributes?.height! > 1 || this.ellipseAttributes?.width! > 1) {
     this.socketService.getSocket().emit("ENDELLIPSE", JSON.stringify(this.ellipseAttributes));
     }
