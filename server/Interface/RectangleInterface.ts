@@ -8,6 +8,8 @@ export interface RectangleInterface extends BaseShapeInterface {
     finalX: Number;
     finalY: Number;
     type:String;
+    finalX:Number;
+    finalY:Number;
 }
 
 export function checkRectangle(object:any):object is RectangleInterface {
