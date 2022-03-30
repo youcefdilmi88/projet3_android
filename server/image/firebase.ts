@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
-import { getAnalytics } from "firebase/analytics";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -22,7 +21,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const fireApp = initializeApp(firebaseConfig);
-const analytics = getAnalytics(fireApp);
 
 export const uploadFile = async (email: string, buffer: any) => {
 
