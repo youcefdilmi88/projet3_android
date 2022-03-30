@@ -7,6 +7,8 @@ export class Ellipse extends BaseShape {
     private y:Number;
     private width:Number;
     private height:Number;
+    private finalX:Number;
+    private finalY:Number;
 
     constructor(ellipse:EllipseInterface) {
        super(
@@ -22,6 +24,8 @@ export class Ellipse extends BaseShape {
        this.y=ellipse.y;
        this.width=ellipse.width;
        this.height=ellipse.height;
+       this.finalX=ellipse.finalX;
+       this.finalY=ellipse.finalY;
     }
 
     getX():Number {
@@ -38,5 +42,13 @@ export class Ellipse extends BaseShape {
 
     getHeight():Number {
         return this.height;
+    }
+
+    getFinalX():Number {
+        return this.finalX;
+    }
+
+    getFinalY():Number {
+        return this.finalY;
     }
 }

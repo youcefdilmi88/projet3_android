@@ -7,6 +7,8 @@ export class Rectangle extends BaseShape {
     private y:Number;
     private width:Number;
     private height:Number;
+    private finalX:Number;
+    private finalY:Number;
 
     constructor(rectangle:RectangleInterface) {
        super(
@@ -22,6 +24,8 @@ export class Rectangle extends BaseShape {
        this.y=rectangle.y;
        this.width=rectangle.width;
        this.height=rectangle.height;
+       this.finalX=rectangle.finalX;
+       this.finalY=rectangle.finalY;
     }
 
     getX():Number {
@@ -38,5 +42,13 @@ export class Rectangle extends BaseShape {
 
     getHeight():Number {
         return this.height;
+    }
+
+    getFinalX():Number {
+        return this.finalX;
+    }
+
+    getFinalY():Number {
+        return this.finalY;
     }
 }

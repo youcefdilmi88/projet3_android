@@ -28,6 +28,7 @@ class AccountService {
    }
 
    async createAccount(email:String,pass:String,nickName:String) {
+
     const account=new AccountSchema({useremail:email,password:pass,nickname:nickName});
     const user=new UserSchema({useremail:email,nickname:nickName,lastLoggedIn:null,lastLoggedOut:null});
     
@@ -40,6 +41,7 @@ class AccountService {
 
     const accountObj=new Account(email,pass,nickName);
     this.accounts.set(email,accountObj);
+
     const userObj=new User(email,nickName);
     userService.getUsers().push(userObj);
   }
