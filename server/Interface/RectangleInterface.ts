@@ -5,6 +5,8 @@ export interface RectangleInterface extends BaseShapeInterface {
     y:Number;
     width:Number;
     height:Number;
+    finalX: Number;
+    finalY: Number;
     type:String;
 }
 

@@ -36,6 +36,8 @@ export class ToolEllipseService implements Tools {
   private ellipseStyle: FormControl;
   private x: number;
   private y: number;
+  private finalX: number;
+  private finalY: number;
 
   private moving: boolean = false;
 
@@ -71,6 +73,8 @@ export class ToolEllipseService implements Tools {
         y: data.y,
         width: data.width,
         height: data.height,
+        finalX: data.finalX,
+        finalY: data.finalY,
         strokeWidth: data.strokeWidth,
         fill: data.fill,
         stroke: data.stroke,
@@ -100,6 +104,9 @@ export class ToolEllipseService implements Tools {
 
     this.socketService.getSocket().on("DRAWELLIPSE", (data) => {
       data = JSON.parse(data);
+      this.finalX = data.point.x as number;
+      this.finalY = data.point.y as number;
+
       if (this.ellipseAttributes?.id == data.shapeId) {
         this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
       }
@@ -110,7 +117,7 @@ export class ToolEllipseService implements Tools {
     });
     
     this.socketService.getSocket().on("ENDELLIPSE", (data) => {
-      this.moving = false;
+      // this.moving = false;
       console.log("height", this.ellipseAttributes.height);
       console.log("height", this.ellipseAttributes.width);
     });
@@ -134,7 +141,7 @@ export class ToolEllipseService implements Tools {
     this.drawingService.addObject(this.ellipse2);
     this.objects.set(this.ellipseAttributes!.id, this.ellipse2);
     this.initPoints.set(this.ellipseAttributes!.id, {x: this.ellipseAttributes.x, y: this.ellipseAttributes.y });
-    console.log("ca dessine un ellipse");
+    //console.log("ca dessine un ellipse");
 }
 
   /// Quand le bouton de la sourie est enfoncé, on crée un ellipse et on le retourne
@@ -161,6 +168,7 @@ export class ToolEllipseService implements Tools {
         user: this.socketService.nickname,
         x: offset.x, y: offset.y,
         width: 0, height: 0,
+        finalX: 0, finalY: 0,
         strokeWidth: this.strokeWidth.value as number,
         fill: 'none', stroke: 'none', fillOpacity: 'none', strokeOpacity: 'none',
       };
@@ -183,13 +191,20 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
+    let lastY = this.finalY;
+    let lastX = this.finalX;
     let height = this.ellipse2.getAttribute('height')?.slice(0, -2);
     let width = this.ellipse2.getAttribute('width')?.slice(0, -2);
+
+    this.ellipseAttributes.finalY = +lastY!;
+    this.ellipseAttributes.finalX = +lastX!;
     this.ellipseAttributes.height = +height!;
     this.ellipseAttributes.width = +width!;
+
     if(this.ellipseAttributes?.height! > 1 || this.ellipseAttributes?.width! > 1) {
     this.socketService.getSocket().emit("ENDELLIPSE", JSON.stringify(this.ellipseAttributes));
     }
+    this.moving = false;
     return;
   }
 
@@ -306,4 +321,3 @@ export class ToolEllipseService implements Tools {
     }
   }
 }
-

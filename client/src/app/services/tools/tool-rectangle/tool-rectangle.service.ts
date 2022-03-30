@@ -35,6 +35,8 @@ export class ToolRectangleService implements Tools {
   private rectStyle: FormControl;
   private x: number;
   private y: number;
+  private finalX: number;
+  private finalY: number;
 
   private moving: boolean = false;
 
@@ -70,6 +72,8 @@ export class ToolRectangleService implements Tools {
         y:data.y,
         width:data.width,
         height:data.height,
+        finalX: data.finalX,
+        finalY: data.finalY,
         strokeWidth: data.strokeWidth,
         fill: data.fill,
         stroke: data.stroke,
@@ -79,10 +83,6 @@ export class ToolRectangleService implements Tools {
 
       this.x = data.x;
       this.y = data.y;
-
-      console.log("string rectangle", data);
-      console.log("HEREEEE", this.rectangleAttributes.id);
-      console.log("HERE TOOO", data.id);
 
 
       //ce shit cest pour pas que vs code piss off
@@ -105,6 +105,9 @@ export class ToolRectangleService implements Tools {
 
     this.socketService.getSocket().on("DRAWRECTANGLE",(data)=>{
       data=JSON.parse(data);
+      this.finalX = data.point.x as number;
+      this.finalY = data.point.y as number;
+
       if (this.rectangleAttributes?.id == data.shapeId) {
         this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
       }
@@ -115,9 +118,7 @@ export class ToolRectangleService implements Tools {
     });
 
     this.socketService.getSocket().on("ENDRECTANGLE",(data)=>{
-      this.moving = false;
-      console.log("height", this.rectangleAttributes.height);
-      console.log("height", this.rectangleAttributes.width);
+      // this.moving = false;
     });
   }
 
@@ -156,6 +157,7 @@ export class ToolRectangleService implements Tools {
         x: offset.x, 
         y: offset.y,
         width: 0, height: 0,
+        finalX: 0, finalY: 0,
         strokeWidth: this.strokeWidth.value as number,
         fill: 'none', stroke: 'none', fillOpacity: 'none', strokeOpacity: 'none',
       };
@@ -175,15 +177,22 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
+    //let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
+    //let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
+    let lastY = this.finalY;
+    let lastX = this.finalX;
     let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
     let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
+
+    this.rectangleAttributes.finalY = +lastY!;
+    this.rectangleAttributes.finalX = +lastX!;
     this.rectangleAttributes.height = +height!;
     this.rectangleAttributes.width = +width!;
+
     if(this.rectangleAttributes?.height! > 1 || this.rectangleAttributes?.width! > 1) {
-    this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
+      this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
     }
-    console.log(this.rectangleAttributes.fill);
-    console.log(this.rectangleAttributes.stroke);
+    this.moving = false;
     return;
   }
 
