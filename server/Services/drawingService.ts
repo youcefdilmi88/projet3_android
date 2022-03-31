@@ -129,7 +129,6 @@ class DrawingService {
           albumService.albums.forEach((v,k)=>{
             if(v.getDrawings().indexOf(drawingName)!=-1) {
               v.removeDrawing(k);      // remove drawing from all albums
-              albumService.updateDrawingInAlbum(v);
             }
           });
           const drawingNotification={drawingName:this.sourceDrawingName(drawingName)}

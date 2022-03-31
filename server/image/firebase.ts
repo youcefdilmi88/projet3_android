@@ -32,7 +32,7 @@ export const uploadFile = async (email: string, buffer: any) => {
       metadata: {
           firebaseStorageDownloadTokens: token,
       },
-      contentType: 'image/jpg',
+      contentType: 'image/jpeg',
       cacheControl: 'public, max-age=31536000',
   };
 
