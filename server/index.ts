@@ -8,6 +8,9 @@ import socketService from './Services/socketService';
 import roomController from './Controllers/roomController';
 import drawingController from './Controllers/drawingController';
 import albumController from './Controllers/albumController';
+import imageController from './Controllers/imageController';
+//import bodyParser from 'body-parser';
+
 
 
 const app = express();
@@ -31,6 +34,18 @@ app.use('/message',chatMessageController);
 app.use('/room',roomController);
 app.use('/drawing',drawingController);
 app.use('/album',albumController);
+
+/*
+const multer = require('multer');
+const upload = multer({ dest: 'image/' });
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use('/image',upload.single('thumbnail'),imageController);
+*/
+app.use('/image',imageController);
 
 
 const server = http.createServer(app); // server for http
