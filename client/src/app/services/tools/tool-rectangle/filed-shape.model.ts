@@ -5,6 +5,8 @@ export interface FilledShape {
     y: number;
     width: number;
     height: number;
+    finalX: number;
+    finalY: number;
     strokeWidth: number;
     fill: string;
     stroke: string;

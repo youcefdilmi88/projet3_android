@@ -81,6 +81,7 @@ export class PolygonToolService implements Tools {
         pointsList: [offset],
         x: this.x, y: this.y,
         width: 0, height: 0,
+        finalX: 0, finalY: 0,
         strokeWidth: this.strokeWidth.value as number,
         fill: 'none', stroke: 'none', fillOpacity: 'none', strokeOpacity: 'none',
       };
