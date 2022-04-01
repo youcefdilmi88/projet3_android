@@ -5,6 +5,7 @@ export const French = {
     createAcc: "Créer un compte",
     join : "Rejoindre le chat",
     connection: "Connexion",
+    options: "Paramètres",
 
     //new account
     createTitle: "Créer un compte",
@@ -49,6 +50,7 @@ export const English = {
     createAcc: "Create account",
     join : "Join chat",
     connection: "Connection",
+    options: "Settings",
     
     //new account
     createTitle: "Create account",

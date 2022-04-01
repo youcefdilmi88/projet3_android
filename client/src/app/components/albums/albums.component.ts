@@ -13,10 +13,10 @@ import { URL } from '../../../../constants';
 import { Router } from '@angular/router';
 import { SelectionToolService } from '@app/services/tools/selection-tool/selection-tool.service';
 import { NewAlbumComponent } from '../new-album/new-album.component';
-import { AlbumTempService } from '@app/services/AlbumTempService';
 import { Album } from '@app/classes/Album';
 import { AlbumInterface } from '@app/interfaces/AlbumInterface';
 import { French, English} from '@app/interfaces/Langues';
+import { AlbumTempService } from '@app/services/albumTempService';
 
 
 @Component({
