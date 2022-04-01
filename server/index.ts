@@ -8,13 +8,14 @@ import socketService from './Services/socketService';
 import roomController from './Controllers/roomController';
 import drawingController from './Controllers/drawingController';
 import albumController from './Controllers/albumController';
+import imageController from './Controllers/imageController';
 
 
 const app = express();
 
 app.set('PORT', process.env.PORT ||8080);
 
-app.use(express.json());
+app.use(express.json({limit:"10mb"}));
 
 app.use((req, res, next) => {   // must be here to make http request work without access problems
     res.header('Access-Control-Allow-Origin', '*');
@@ -32,6 +33,8 @@ app.use('/room',roomController);
 app.use('/drawing',drawingController);
 app.use('/album',albumController);
 
+
+app.use('/image',imageController);
 
 const server = http.createServer(app); // server for http
 

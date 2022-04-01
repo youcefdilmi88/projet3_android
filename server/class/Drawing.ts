@@ -18,6 +18,7 @@ export class Drawing {
     public members:String[];
     public modified:boolean=false;
     private visibility:String;
+    private creationDate:Number;
 
     elementById:Map<String,BaseShape>;
     membersBySocketId:Map<string,String>;  // socketId and useremail
@@ -31,6 +32,7 @@ export class Drawing {
        this.elementById=new Map<String,BaseShape>();
        this.membersBySocketId=new Map<string,String>();
        this.visibility=drawing.visibility;
+       this.creationDate=drawing.creationDate;
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
@@ -136,6 +138,10 @@ export class Drawing {
         return this.visibility;
     }
 
+    getCreationDate():Number {
+        return this.creationDate;
+    }
+
     setName(name:String):void {
         this.drawingName=name;
     }
@@ -154,6 +160,10 @@ export class Drawing {
 
     setVisibility(visibility:String) {
         this.visibility=visibility;
+    }
+
+    setCreationDate(date:number) {
+        this.creationDate=date;
     }
 
     removeMember(socketId:string):void {

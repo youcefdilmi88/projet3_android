@@ -80,4 +80,8 @@ export class MainPageComponent implements OnInit {
   registerClick(): void {
     this.router.navigate(['/', 'register']);
   }
+
+  avatar():void {
+    this.router.navigate(['/','avatar']);
+  }
 }
