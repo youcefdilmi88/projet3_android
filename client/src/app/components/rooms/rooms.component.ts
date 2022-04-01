@@ -12,13 +12,10 @@ import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
 import { DrawingTempService } from '@app/services/drawingTemp.service';
 import { Drawing } from '@app/classes/Drawing';
 import { DrawingInterface } from '@app/interfaces/DrawingInterface';
-// import { BaseShapeInterface } from '@app/interfaces/BaseShapeInterface';
-// import { checkEllipse } from '@app/interfaces/EllipseInterface';
-// import { checkRectangle } from '@app/interfaces/RectangleInterface';
 import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
 import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
 import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
-// import { checkLine } from '@app/interfaces/LineInterface';
+import { French, English } from '@app/interfaces/Langues';
 
 
 @Component({ 
@@ -40,6 +37,14 @@ export class RoomsComponent implements OnInit {
   public bool: boolean = true;
   //public buttonsTexts:Array<string> = ['DEFAULT'];
 
+  public creaRoom: string;
+  public finRoom: string;
+  public nameOfNewRoom: string;
+  public nameOfRoomCreator: string;
+  public roomTitle: string;
+  public join2: string;
+  public delete: string;
+
   constructor(
     public dialog: MatDialog,
     private hotkeyService: HotkeysService,
@@ -53,6 +58,26 @@ export class RoomsComponent implements OnInit {
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
+    if(this.socketService.language == "french") {
+      this.creaRoom = French.create;
+      this.finRoom = French.findRoom;
+      this.nameOfNewRoom = French.nameOfNewRoom;
+      this.nameOfRoomCreator = French.nameOfRoomCreator;
+      this.roomTitle = French.changeRoom;
+      this.join2 = French.join2;
+      this.delete = French.delete;
+    }
+    else {
+      this.creaRoom = English.create;
+      this.finRoom = English.findRoom;
+      this.nameOfNewRoom = English.nameOfNewRoom;
+      this.nameOfRoomCreator = English.nameOfRoomCreator;
+      this.join2 = English.join2;
+      this.delete = English.delete;
+    }
+
+    this.getAllDrawings();
+
     let link = this.BASE_URL+"room/getAllRooms";
     this.http.get<any>(link).subscribe((data: any) => {
       console.log("update 2");
@@ -61,12 +86,19 @@ export class RoomsComponent implements OnInit {
       for(var i = 0; i < length; i++) { 
         //this.list.push(data[i].roomName);
         // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
-        this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+        console.log("TEMP", this.drawingTempSerivce.drawings);
+        console.log("DATA ROOMNAME", data[i].roomName);
+        if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+        }
+        else {
+          console.log("A");
+        }
       }
     });
 
     this.roomListener();
-    this.getAllDrawings();
+    // this.getAllDrawings();
     this.redirect();
   }
 
@@ -82,16 +114,18 @@ export class RoomsComponent implements OnInit {
         if(this.bool) {
           // pour redirect les personnes dans rooms
           for(var i = 0; i <= length; i++) { 
-            if(this.socketService.currentRoom != data[i].roomName) {
-              this.router.navigate(['/', 'rooms']);
-            }
-            else if(this.drawingTempSerivce.drawings.has(this.socketService.currentRoom)) { 
-              this.router.navigate(['/', 'sidenav']);
-              break;
-            }
-            else if (this.socketService.currentRoom == data[i].roomName) {
-              this.router.navigate(['/', 'clavardage']);
-              break;
+            if(this.router.url == "/clavardage" || this.router.url == "/sidenav") {
+              if(this.socketService.currentRoom != data[i].roomName) {
+                this.router.navigate(['/', 'rooms']);
+              }
+              else if(this.drawingTempSerivce.drawings.has(this.socketService.currentRoom)) { 
+                this.router.navigate(['/', 'sidenav']);
+                break;
+              }
+              else if (this.socketService.currentRoom == data[i].roomName) {
+                this.router.navigate(['/', 'clavardage']);
+                break;
+              }
             }
           }
         }
@@ -109,7 +143,9 @@ export class RoomsComponent implements OnInit {
         this.numberOfRooms = length;        
         // pour update les rooms buttons
         for(var i = 0; i <= length; i++) { 
-          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          }
         }
         console.log("update 1");
       });
@@ -122,9 +158,9 @@ export class RoomsComponent implements OnInit {
         let length = Object.keys(data).length;
         this.numberOfRooms = length;
         for(var i = 0; i <= length; i++) { 
-          //this.list.push(data[i].roomName);
-          // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
-          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          }
         }
       });
       this.input.nativeElement.value = ' ';
@@ -141,6 +177,7 @@ export class RoomsComponent implements OnInit {
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
       });
     });
+    console.log("GOTTEM");
   } 
 
   room: string;
@@ -168,24 +205,6 @@ export class RoomsComponent implements OnInit {
         console.log("join dessins:" + element.textContent.trim().slice(8));
         this.router.navigate(['/', 'sidenav']);
         this.dialog.open(NewDrawingComponent);
-
-        // let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(8));
-        // drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
-        //   if(checkLine(element)) {
-        //     this.pencilToolService.pencil = element;
-        //     // console.log(this.pencilToolService.pencil);
-        //     console.log(element);
-        //     this.pencilToolService.renderSVG();
-        //   }
-        //   if(checkEllipse(element)) {
-        //     this.toolEllipseService.ellipseAttributes = element;
-        //     this.toolEllipseService.renderSVG();
-        //   }
-        //   if(checkRectangle(element)) {
-        //     this.toolRectangleService.rectangleAttributes = element;
-        //     this.toolRectangleService.renderSVG();
-        //   }
-        // });
       }
     });
 

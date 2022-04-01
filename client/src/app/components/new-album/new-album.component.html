@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Création d'un album</h1>
+
+<div> 
+
+    <mat-form-field class="search" floatLabel="always" appearance="outline">
+        <mat-label>Nom de l'album</mat-label>
+        <input matInput id="album" type="text" name="album" required [(ngModel)]="name" >
+    </mat-form-field> 
+
+    <mat-form-field class="search" floatLabel="always" appearance="outline">
+        <mat-label>Déscription</mat-label>
+        <input matInput id="description" type="text" name="description" required [(ngModel)]="description" >
+    </mat-form-field> 
+ 
+    <button mat-raised-button class="searchRoom" (click)="createAlbum()" >Créer l'album</button>
+</div>

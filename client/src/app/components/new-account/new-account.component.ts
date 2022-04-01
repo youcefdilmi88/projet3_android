@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AvatarComponent } from '@app/components/avatar/avatar.component';
 import { URL } from '../../../../constants';
+import { French, English } from '@app/interfaces/Langues';
+import { SocketService } from '@app/services/socket/socket.service';
 
 
 @Component({
@@ -15,14 +17,39 @@ import { URL } from '../../../../constants';
 export class NewAccountComponent implements OnInit {
 
   private readonly BASE_URL: string = URL;
+  public emai: string;
+  public password: string;
+  public repeatPass: string;
+  public cancel: string;
+  public confirm: string;
+  public createTitle: string;
+
 
   constructor(
+    private socketService: SocketService,
     public dialog: MatDialog,
     private http: HttpClient,
     private router: Router
   ) { }
 
   ngOnInit() {
+    if(this.socketService.language == "french") 
+    {
+      this.emai = French.email;
+      this.password = French.pass;
+      this.repeatPass = French.repeat;
+      this.cancel = French.cancel;
+      this.confirm = French.create;
+      this.createTitle = French.createTitle;
+    }
+    else {
+      this.emai = English.email;
+      this.password = English.pass;
+      this.repeatPass = English.repeat;
+      this.cancel = English.cancel;
+      this.confirm = English.create;
+      this.createTitle = English.createTitle;
+    }
   }
 
   pass: string;

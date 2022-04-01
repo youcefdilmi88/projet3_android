@@ -74,9 +74,9 @@ class DrawingService {
     });
   }
 
-  async createDrawing(drawingName:String,owner:String,elements:BaseShapeInterface[],roomName:String,members:String[],visibility:String) {
+  async createDrawing(drawingName:String,owner:String,elements:BaseShapeInterface[],roomName:String,members:String[],visibility:String,creationDate:Number) {
     try {
-      const drawing=new DrawingSchema({drawingName:drawingName,owner:owner,elements:elements,roomName:roomName,members:members,visibility:visibility});
+      const drawing=new DrawingSchema({drawingName:drawingName,owner:owner,elements:elements,roomName:roomName,members:members,visibility:visibility,creationDate:creationDate});
       await drawing.save().then(()=>{
         console.log("drawing saved");
       }).catch((e:Error)=>{
@@ -88,7 +88,8 @@ class DrawingService {
         elements:elements,
         roomName:roomName,
         members:members,
-        visibility:visibility
+        visibility:visibility,
+        creationDate:creationDate
       }
       const drawingObj=new Drawing(drawingInterface);
       this.drawings.set(drawingObj.getName(),drawingObj);
@@ -129,6 +130,7 @@ class DrawingService {
           albumService.albums.forEach((v,k)=>{
             if(v.getDrawings().indexOf(drawingName)!=-1) {
               v.removeDrawing(k);      // remove drawing from all albums
+              albumService.updateDrawingInAlbum(v);
             }
           });
           const drawingNotification={drawingName:this.sourceDrawingName(drawingName)}
@@ -183,7 +185,8 @@ class DrawingService {
       elements:drawing.getElementsInterface(),
       roomName:drawing.roomName,
       members:drawing.getMembers(),
-      visibility:drawing.getVisibility()
+      visibility:drawing.getVisibility(),
+      creationDate:drawing.getCreationDate()
     }
 
     const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
@@ -208,7 +211,8 @@ class DrawingService {
       elements:drawing.getElementsInterface(),
       roomName:drawing.roomName,
       members:drawing.getMembers(),
-      visibility:drawing.getVisibility()
+      visibility:drawing.getVisibility(),
+      creationDate:drawing.getCreationDate()
     }
 
     const message={useremail:mail,drawing:drawingInterface};
@@ -249,7 +253,8 @@ class DrawingService {
           elements:drawing.getElementsInterface(),
           roomName:drawing.roomName,
           members:drawing.getMembers(),
-          visibility:drawing.getVisibility()
+          visibility:drawing.getVisibility(),
+          creationDate:drawing.getCreationDate()
         }
 
         const message={oldName:this.sourceDrawingName(oldName),drawing:drawingInterface};
@@ -282,7 +287,8 @@ class DrawingService {
         elements:drawing.getElementsInterface(),
         roomName:drawing.roomName,
         members:drawing.getMembers(),
-        visibility:drawing.getVisibility()
+        visibility:drawing.getVisibility(),
+        creationDate:drawing.getCreationDate()
       }
       socketService.getIo().emit(SOCKETEVENT.VISIBILITYCHANGED,JSON.stringify({drawing:drawingInterface}));
     })

@@ -8,18 +8,19 @@ import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
 import { Drawing } from '@app/classes/Drawing';
 import { DrawingInterface } from '@app/interfaces/DrawingInterface';
 import { DrawingTempService } from '@app/services/drawingTemp.service';
-import { BaseShapeInterface } from '@app/interfaces/BaseShapeInterface';
-import { checkLine } from '@app/interfaces/LineInterface';
+// import { BaseShapeInterface } from '@app/interfaces/BaseShapeInterface';
+// import { checkLine } from '@app/interfaces/LineInterface';
 import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.service';
 import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
 import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
-import { checkEllipse } from '@app/interfaces/EllipseInterface';
-import { checkRectangle } from '@app/interfaces/RectangleInterface';
+// import { checkEllipse } from '@app/interfaces/EllipseInterface';
+// import { checkRectangle } from '@app/interfaces/RectangleInterface';
 import { FilledShape } from '@app/services/tools/tool-rectangle/filed-shape.model';
 // import { DrawingService } from '@app/services/drawing/drawing.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 // import { Point } from 'src/app/model/point.model';
 import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
+import { French, English } from '@app/interfaces/Langues';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class DessinsComponent implements OnInit {
   public leftImage: number = this.imageUrlArray.length - 1;
   public rightImage: number = 1;
   public bool: boolean = true;
-  public numberOfDrawings: number ;
+  public numberOfDrawings: number;
 
   renderer: Renderer2;
   parameters: FormGroup;
@@ -48,6 +49,16 @@ export class DessinsComponent implements OnInit {
   private rectStyle: FormControl;
   public pencil: Pencil | null;
   public rectangleAttributes: FilledShape;
+
+  public drawingTitle: string;
+  public drawingInput: string;
+  public creaDrawing: string;
+  public drawName: string;
+  public numberOfPeople: string;
+  public own: string;
+  public visib: string;
+  public open: string;
+  public delete: string;
 
   constructor(
     public dialog: MatDialog,
@@ -71,6 +82,29 @@ export class DessinsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.socketService.language == "french") {
+      this.drawingTitle = French.drawingTitle;
+      this.drawingInput = French.drawingInput;
+      this.creaDrawing = French.createDrawing;
+      this.drawName = French.drawingName;
+      this.numberOfPeople = French.numberOfPeople;
+      this.own = French.owner;
+      this.visib = French.visibility;
+      this.open = French.open;
+      this.delete = French.delete;
+    }
+    else {
+      this.drawingTitle = English.drawingTitle;
+      this.drawingInput = English.drawingInput;
+      this.creaDrawing = English.createDrawing;
+      this.drawName = English.drawingName;
+      this.numberOfPeople = English.numberOfPeople;
+      this.own = English.owner;
+      this.visib = English.visibility;
+      this.open = English.open;
+      this.delete = English.delete;
+    }
+    
     this.getAllDrawings();
     this.roomListerner();
     this.redirect();
@@ -79,23 +113,24 @@ export class DessinsComponent implements OnInit {
 
 
   roomListerner() {
-    let link3 = this.BASE_URL + "drawing/getAllDrawings";
+    // let link3 = this.BASE_URL + "drawing/getAllDrawings";
 
     this.socketService.getSocket().on("DRAWINGDELETED", (data) => {
-      console.log("HELLO?????");
-      data = JSON.parse(data);
-      this.names = [];
-      this.owners = [];
-      this.visibite = [];
-      this.imageUrlArray = [];
-      this.http.get<any>(link3).subscribe((data: any) => { 
-        data.forEach((drawing:any)=>{
-          this.imageUrlArray.push("../../../assets/avatar_1.png");
-          this.names.push(drawing.drawingName); 
-          this.owners.push(drawing.owner); 
-          this.visibite.push(drawing.visibility);
-        });
-      });
+      this.getAllDrawings();
+      // console.log("HELLO?????");
+      // data = JSON.parse(data);
+      // this.names = [];
+      // this.owners = [];
+      // this.visibite = [];
+      // this.imageUrlArray = [];
+      // this.http.get<any>(link3).subscribe((data: any) => { 
+      //   data.forEach((drawing:any)=>{
+      //     this.imageUrlArray.push("../../../assets/avatar_1.png");
+      //     this.names.push(drawing.drawingName); 
+      //     this.owners.push(drawing.owner); 
+      //     this.visibite.push(drawing.visibility);
+      //   });
+      // });
     });
 
     this.socketService.getSocket().on("JOINDRAWING", (data) => {
@@ -130,6 +165,11 @@ export class DessinsComponent implements OnInit {
       });
     });
 
+    this.socketService.getSocket().on("ALBUMMODIFIED", (data) => {
+      data=JSON.parse(data);
+      
+    
+    });
   }
 
 
@@ -164,7 +204,8 @@ export class DessinsComponent implements OnInit {
   }
 
   getAllDrawings() {
-    let link = this.BASE_URL + "drawing/getAllDrawings";
+    console.log("album name", this.socketService.albumName);
+    let link = this.BASE_URL + "album/getDrawings/" + this.socketService.albumName;
     this.http.get<any>(link).subscribe((data: any) => {
       this.drawingTempSerivce.drawings.clear();
       this.names = [];
@@ -174,24 +215,18 @@ export class DessinsComponent implements OnInit {
         this.imageUrlArray.push("../../../assets/avatar_1.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
-        // this.drawingTempSerivce.drawings.forEach((v,k) => {
-        //   if(k == "1") {
-        //     v
-        //   }
-        // });
-        console.log("HERE:",drawing.visibility);
+        
         this.names.push(drawing.drawingName); 
         console.log("drawing names:", this.names);
         this.owners.push(drawing.owner);
-        console.log("drawing owners", this.owners);
         this.visibite.push(drawing.visibility);
         this.nbrMembres.push(drawing.members.length);
         console.log("memb", drawing.members);
-        console.log("length de memb", drawing.members.length);
       });
       
     });
   } 
+
 
   openDessins(element: any): void { 
     this.socketService.joinRoom(element.textContent.trim().slice(7));
@@ -216,24 +251,24 @@ export class DessinsComponent implements OnInit {
         this.router.navigate(['/', 'sidenav']);
         console.log("CREATED CANVAS");
 
-        let counter:number = 0;
-        let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(7));
-        drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
-          counter++;
-          if(checkLine(element)) {
+      //   let counter:number = 0;
+      //   let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(7));
+      //   drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
+      //     counter++;
+      //     if(checkLine(element)) {
 
-          }
-          if(checkEllipse(element)) {
-            this.toolEllipseService.ellipseAttributes = element;
-            this.toolEllipseService.renderSVG();
-          }
-          if(checkRectangle(element)) {
-            this.toolRectangleService.rectangleAttributes = element;
-            this.toolRectangleService.renderSVG();
-          }
-      });
+      //     }
+      //     if(checkEllipse(element)) {
+      //       this.toolEllipseService.ellipseAttributes = element;
+      //       this.toolEllipseService.renderSVG();
+      //     }
+      //     if(checkRectangle(element)) {
+      //       this.toolRectangleService.rectangleAttributes = element;
+      //       this.toolRectangleService.renderSVG();
+      //     }
+      // });
 
-      console.log("counter", counter);
+      // console.log("counter", counter);
 
       let link2 = this.BASE_URL + "room/joinRoom";
 
@@ -257,7 +292,7 @@ export class DessinsComponent implements OnInit {
 
   deleteDessins(element: any): void {
     this.bool = false;
-    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(10))) {
+    // if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(10))) {
       console.log("delete dessins:"+ element.textContent.trim().slice(10));
       let link2 = this.BASE_URL + "drawing/deleteDrawing";
 
@@ -266,15 +301,16 @@ export class DessinsComponent implements OnInit {
           console.log("DELETE DRAWING IS " + data);
         }
       });
-    }
+    // }
   } 
 
-  drawing:string;
+  drawing: string;
 
   createDrawing(text: string) {
     let link = this.BASE_URL+"drawing/createDrawing";
     let link5 = this.BASE_URL + "drawing/joinDrawing";
-
+    let link6 = this.BASE_URL + "album/addDrawing";
+    
     // this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
     //   data=JSON.parse(data);
     //   this.getAllDrawings();
@@ -297,6 +333,12 @@ export class DessinsComponent implements OnInit {
             if(data.message == "success") {
               this.router.navigate(['/', 'sidenav']);
               this.dialog.open(NewDrawingComponent);
+            }
+          });
+
+          this.http.post<any>(link6, {drawingName: this.drawing.trim(), useremail: this.socketService.email, albumName: this.socketService.albumName }).subscribe((data:any) => {
+            if (data.message == "success") {
+              console.log("dessin ajoute a album " + this.socketService.albumName);
             }
           });
 

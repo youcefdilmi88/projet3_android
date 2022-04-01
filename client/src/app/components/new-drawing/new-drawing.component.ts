@@ -60,7 +60,7 @@ export class NewDrawingComponent implements OnInit {
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
-    console.log("PENIS!!!!");
+    console.log("PIPI DE EDWIN");
     this.newDrawing();
     this.form = new FormGroup(
       {
@@ -72,10 +72,11 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
 
-    console.log("VAGIN!!!!");
-
+    console.log("AVANT");
+    console.log("LOL", this.socketService.currentRoom);
     let drawingObj = this.drawingTempSerivce.drawings.get(this.socketService.currentRoom);
     drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
+      console.log("FOREACHE");
       if(checkLine(element)) {
         if(element.pointsList != undefined) {
           this.pencil3 = this.renderer.createElement('path', 'svg');
@@ -106,6 +107,7 @@ export class NewDrawingComponent implements OnInit {
         this.toolRectangleService.renderSVG();
       }
   });
+  console.log("DERNIER");
   }
 
   get sizeForm(): FormGroup {
@@ -139,7 +141,7 @@ export class NewDrawingComponent implements OnInit {
   private newDrawing() {
     this.drawingService.isCreated = true;
     // const size: { width: number, height: number } = this.newDrawingService.sizeGroup.value;
-    const size: { width: number, height: number } = {width: 800, height: 1000};
+    const size: { width: number, height: number } = {width: 1000, height: 636};
     this.drawingService.newDrawing(
       size.width,
       size.height,

@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
 import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { URL } from '../../../../constants';
+import { French, English} from '@app/interfaces/Langues';
+// import { SettingsComponent } from '../settings/settings.component';
+import { MatDialog } from '@angular/material/dialog';
 // import { catchError } from 'rxjs/operators';
 
 
@@ -13,19 +16,48 @@ import { URL } from '../../../../constants';
   styleUrls: ['./main-page.component.scss']
 })
 
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit{
+
+  langue: string = '';
 
   private readonly BASE_URL: string = URL;
   //"https://projet3-3990-207.herokuapp.com/";
   socket:Socket;
+  public rejoindre: string;
+  public creer: string;
+  public emai: string;
+  public pass: string;
+  public connection: string;
+  public options: string = "English";
+  private counter: number = 0;
 
   constructor(
+    public dialog: MatDialog,
     private socketService: SocketService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private ref:ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // setTimeout(() => { this.ngOnInit() }, 100);
+    this.ref.detectChanges();
+    if(this.socketService.language == "french") 
+    {
+      this.rejoindre = French.join;
+      this.creer = French.create;
+      this.emai = French.email;
+      this.pass = French.pass;
+      this.connection = French.connection;
+    }
+    else {
+      this.rejoindre = English.join;
+      this.creer = English.create;
+      this.emai = English.email;
+      this.pass = English.pass;
+      this.connection = English.connection;
+    }
+
   }
 
   password: string;
@@ -74,10 +106,31 @@ export class MainPageComponent implements OnInit {
       }
       );
     }
-
   }
+
+  language(): void {
+    this.counter++;
+    if (this.counter % 2 == 0) {
+      this.options = "English";
+      this.socketService.language = "french";
+      this.ngOnInit();
+    }
+    else {
+      this.options = "Français";
+      this.socketService.language = "english";
+      this.ngOnInit();
+    }
+  }
+
+  /*openSettings(): void {
+    this.dialog.open(SettingsComponent);
+  }*/
 
   registerClick(): void {
     this.router.navigate(['/', 'register']);
+  }
+
+  avatar():void {
+    this.router.navigate(['/','avatar']);
   }
 }

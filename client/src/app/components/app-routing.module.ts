@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 // import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { AlbumsComponent } from './albums/albums.component';
+import { AvatarComponent } from './avatar/avatar.component';
 import { ChatComponent } from './chat/chat.component';
 import { ClavardageComponent } from './clavardage/clavardage.component';
 import { DessinsComponent } from './dessins/dessins.component';
@@ -34,6 +35,9 @@ const routes: Routes = [
   },
   {
     path: 'clavardage', component: ClavardageComponent
+  },
+  {
+    path:'avatar',component:AvatarComponent
   },
 ];
 

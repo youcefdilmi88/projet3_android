@@ -28,6 +28,10 @@ const drawingSchema = new mongoose.Schema({
     visibility:{
         type:String,
         required:true
+    },
+    creationDate:{
+        type:Number,
+        required:true
     }
     
 });

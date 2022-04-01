@@ -3,23 +3,14 @@
 <body>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="title">
-            <h1 id="title">Choisir un album</h1>
+            <h1 id="title">{{albumTitle}}</h1>
             <button (click)="logout()" class = "btn" id="logout" routerLink = ""><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
         </div>
         <!-- <div class="center_me"> -->
-        <div class="subtext-container">
-            <div>
-                <mat-form-field class="input" floatLabel="always" appearance="outline">
-                    <mat-label>Nom du nouveau album</mat-label>
-                    <input #roomname matInput id="room" type="text" name="room" required>
-                </mat-form-field> 
-             
-                <button mat-raised-button id="createRoom">Créer un album</button>
-            </div> 
-        </div>
-        <div>
-            <button mat-raised-button id="menuCompte" (click)="newPublicAlbum()" >Menu compte</button>
-            <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">Accéder au chat</button> 
+        <div class="subtext-container">   
+            <button mat-raised-button id="createAlbum" (click)="createAlbum()">{{creaAlbum}}</button>
+            <button mat-raised-button id="menuCompte">{{accoutMenu}}</button>
+            <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">{{goChat}}</button> 
         </div>
         <!-- </div> -->
 
@@ -42,17 +33,17 @@
             </div>
         </div> -->
 
-        <div class="SectionAlbums" *ngFor="let album of AlbumsPublic">
+        <div class="SectionAlbums" *ngFor="let albumName of AlbumsNames; let i = index">
             <div class="listAlbums"> 
-                <p> Public Album </p>
+                <p> Album: {{AlbumsVisibilite[i]}} </p>
                 <div id="albumCover" class="albums">
-                    {{album}}
+                    {{albumName}}
                 </div>
-                <button mat-raised-button id="roomIDButton" (click)="openAlbum()">
-                    Ouvrir <span class='special-word'>{{album}}</span>
+                <button mat-raised-button id="albumIDButton" (click)="openAlbum($event.target)">
+                    {{open}} <span class='special-word'>{{albumName}}</span>
                 </button>
-                <button mat-raised-button id="roomIDButtonDelete"  >
-                    Supprimer <span class='special-word'>{{album}}</span>
+                <button mat-raised-button id="albumIDButtonDelete"  (click)="deleteAlbum($event.target)">
+                    {{delete}} <span class='special-word'>{{albumName}}</span>
                 </button>
                 <!-- <div class="listAlbumsButtons"> -->
                     <!-- <p> Public Album </p>

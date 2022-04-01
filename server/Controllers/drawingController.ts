@@ -56,6 +56,7 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let roomName:String=req.body.drawingName as String;
     let members:String[]=[];
     let visibility:String=req.body.visibility as String;
+    let date:Number=Date.now();
 
     console.log("created drawing name:"+drawingName);
 
@@ -66,7 +67,7 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
         {
             return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
         }
-        drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility).catch((e:Error)=>{
+        drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility,date).catch((e:Error)=>{
                 console.log(e);
         });
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
@@ -98,7 +99,8 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
             elements:v.getElementsInterface(),
             roomName:v.roomName,
             members:v.getMembers(),
-            visibility:v.getVisibility()
+            visibility:v.getVisibility(),
+            creationDate:v.getCreationDate()
         }
         drawings.push(drawing);
         console.log(drawing.drawingName);
