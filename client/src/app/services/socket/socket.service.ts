@@ -16,6 +16,8 @@ export class SocketService {
   public isConnected: boolean;
   public currentRoom: string;
   public drawingName: string;
+  public albumName: string;
+  public language = "french";
   //private userService: UserService;
 
   constructor() { }

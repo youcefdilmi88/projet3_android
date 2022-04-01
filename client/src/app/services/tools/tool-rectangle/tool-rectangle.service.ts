@@ -84,7 +84,6 @@ export class ToolRectangleService implements Tools {
       this.x = data.x;
       this.y = data.y;
 
-
       //ce shit cest pour pas que vs code piss off
       console.log(this.x + this.y);
 

@@ -10,18 +10,18 @@
             <div class="middle">
                 <div class="inner">
 
-                    <h1 id="color">Connexion</h1>
+                    <h1 id="color">{{connection}}</h1>
 
                     <div class="pseudo">
                         <mat-form-field class="input" floatLabel="always" appearance="outline">
-                            <mat-label>Email</mat-label>
+                            <mat-label>{{emai}}</mat-label>
                             <input matInput id="email" type="text" name="email" required [(ngModel)]="email">
                         </mat-form-field> 
                     </div>
 
                     <div class="pass">    
                         <mat-form-field class="input" floatLabel="always" appearance="outline">
-                            <mat-label>Mot de Passe</mat-label>
+                            <mat-label>{{pass}}</mat-label>
                             <input matInput id="password" type="password" name="password" required [(ngModel)]="password">
                         </mat-form-field> 
                     </div>
@@ -30,8 +30,9 @@
                         <p id="error">Error</p>
                     </div>
 
-                    <button mat-raised-button (click)="registerClick()">Créer un compte</button>
-                    <button mat-raised-button (click)="closeClick()">Rejoindre le chat</button>
+                    <button mat-raised-button (click)="registerClick()">{{creer}}</button>
+                    <button mat-raised-button (click)="closeClick()">{{rejoindre}}</button>
+                    <!-- <button mat-raised-button (click)="closeClick()">Rejoindre le chat</button> -->
 
                 </div>
             </div>

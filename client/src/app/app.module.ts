@@ -37,6 +37,7 @@ import { RoomsComponent } from './components/rooms/rooms.component';
 import { AlbumsComponent } from './components/albums/albums.component';
 import { DessinsComponent } from './components/dessins/dessins.component';
 import { ClavardageComponent } from './components/clavardage/clavardage.component';
+import { NewAlbumComponent } from './components/new-album/new-album.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { ClavardageComponent } from './components/clavardage/clavardage.componen
         RoomsComponent,
         DessinsComponent,
         ClavardageComponent,
+        NewAlbumComponent,
     ],
     imports: [
         BrowserModule,

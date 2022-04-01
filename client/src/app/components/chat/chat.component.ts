@@ -7,6 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { URL } from '../../../../constants';
+import { French, English } from '@app/interfaces/Langues';
 
 
 @Component({
@@ -23,6 +24,13 @@ export class ChatComponent implements AfterViewInit {
   public others = new Array<string>();
   public time = new Array<string>();
 
+  public chatTitle: string;
+  public roomChange: string;
+
+  // chatTitle: "Clavardage",
+  // changeRoom: "Changer de salle",
+
+
   constructor(
     public dialog: MatDialog,
     private http: HttpClient,
@@ -32,9 +40,22 @@ export class ChatComponent implements AfterViewInit {
     }
 
   ngAfterViewInit(): void {  
-    // console.log("start");
-    // this.reDraw();
-    // console.log("end");
+    if(this.router.url == "/clavardage") {
+      document.getElementById("principal")!.style.width = "100%";
+    }
+    else if(this.router.url == "/sidenav") {
+      document.getElementById("principal")!.style.width = "500px";
+    }
+
+    if(this.socketService.language == "french") {
+      this.chatTitle =  French.chatTitle;
+      this.roomChange = French.changeRoom;
+     }
+     else {
+       this.chatTitle =  English.chatTitle;
+       this.roomChange = English.changeRoom;
+     }
+
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     console.log("CHECK MOI HEHE:" + this.socketService.currentRoom);
     this.http.get<any>(link).subscribe((data: any) => {

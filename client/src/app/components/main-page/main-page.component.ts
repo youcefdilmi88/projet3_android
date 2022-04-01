@@ -4,6 +4,7 @@ import { Socket } from 'socket.io-client';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { URL } from '../../../../constants';
+import { French, English} from '@app/interfaces/Langues';
 // import { catchError } from 'rxjs/operators';
 
 
@@ -18,6 +19,11 @@ export class MainPageComponent implements OnInit {
   private readonly BASE_URL: string = URL;
   //"https://projet3-3990-207.herokuapp.com/";
   socket:Socket;
+  public rejoindre: string;
+  public creer: string;
+  public emai: string;
+  public pass: string;
+  public connection: string;
 
   constructor(
     private socketService: SocketService,
@@ -26,6 +32,21 @@ export class MainPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(this.socketService.language == "french") 
+    {
+      this.rejoindre = French.join;
+      this.creer = French.create;
+      this.emai = French.email;
+      this.pass = French.pass;
+      this.connection = French.connection;
+    }
+    else {
+      this.rejoindre = English.join;
+      this.creer = English.create;
+      this.emai = English.email;
+      this.pass = English.pass;
+      this.connection = English.connection;
+    }
   }
 
   password: string;

@@ -115,11 +115,13 @@ mat-label {
     color: black;
 }
 
-button {
-    width: 150px;
-    margin: 5px;
-    background-color: #592bc7;
-    color:azure;
+#albumIDButton {
+    margin-right: 25px;
+    background-color: #adebad;
+}
+
+#albumIDButtonDelete {
+    background-color: #ff9999;
 }
 
 body {
@@ -127,29 +129,31 @@ body {
 }
 
 .subtext-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    display: inline-block;
 }
 
-#createRoom {
-    float: right;
-    width: 49%;
-    height: 60px;
-    margin-top: 5px;
-}
-
-.input {
-    float: left;
-    width: 50%;
+#createAlbum{
+    margin: 15px;
+    background-color: #592bc7;
+    color:azure;
+    width: 32%;
 }
 
 #menuCompte {
-    float: left;
-    width: 49%;
+    margin: 5px;
+    background-color: #592bc7;
+    color:azure;
+    width: 32%;
 }
 
 #chatRoom {
-    float: right;
-    width: 49%;
+    margin: 5px;
+    background-color: #592bc7;
+    color:azure;
+    width: 32%;
 }
+
+.special-word { 
+    font-size: 0;
+} 
