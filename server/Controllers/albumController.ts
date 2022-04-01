@@ -217,7 +217,8 @@ const getDrawingsFromAlbum=(req:Request,res:Response,next:NextFunction)=>{
           elements:drawing.getElementsInterface(),
           roomName:drawing.roomName,
           members:drawing.getMembers(),
-          visibility:drawing.getVisibility()
+          visibility:drawing.getVisibility(),
+          creationDate:drawing.getCreationDate()
         }
         drawings.push(drawingInterface);
       });

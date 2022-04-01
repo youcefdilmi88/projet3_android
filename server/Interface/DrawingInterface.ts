@@ -6,6 +6,7 @@ export interface DrawingInterface {
     elements:BaseShapeInterface[],
     roomName:String,
     members:String[],
-    visibility:String
+    visibility:String,
+    creationDate:Number;
 }
 

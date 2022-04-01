@@ -38,7 +38,7 @@ export const uploadFile = async (email: string, buffer: any) => {
 
   return await uploadBytes(storageRef, buffer, metadata)
   .then((snapshot: any) => {
-      return "" + email + ".jpg" + "?alt=media&token=" + token;
+      return "https://firebasestorage.googleapis.com/v0/b/projet-3-207.appspot.com/o/" + email + ".jpg" + "?alt=media&token=" + token;
   }).catch((err: any) => {
       return err;
   });
