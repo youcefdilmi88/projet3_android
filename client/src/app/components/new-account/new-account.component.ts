@@ -6,12 +6,15 @@ import { AvatarComponent } from '@app/components/avatar/avatar.component';
 import { URL } from '../../../../constants';
 import { French, English } from '@app/interfaces/Langues';
 import { SocketService } from '@app/services/socket/socket.service';
+import { RouterOutlet } from '@angular/router';
+import { fader } from '@assets/animations';
 
 
 @Component({
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
-  styleUrls: ['./new-account.component.scss']
+  styleUrls: ['./new-account.component.scss'],
+  animations: [fader],
 })
 
 export class NewAccountComponent implements OnInit {
@@ -23,6 +26,9 @@ export class NewAccountComponent implements OnInit {
   public cancel: string;
   public confirm: string;
   public createTitle: string;
+  public error1: string
+  public error5: string;
+  public error6: string;
 
 
   constructor(
@@ -41,6 +47,9 @@ export class NewAccountComponent implements OnInit {
       this.cancel = French.cancel;
       this.confirm = French.create;
       this.createTitle = French.createTitle;
+      this.error1 = French.error1;
+      this.error5 = French.error5;
+      this.error6 = French.error6;
     }
     else {
       this.emai = English.email;
@@ -49,6 +58,9 @@ export class NewAccountComponent implements OnInit {
       this.cancel = English.cancel;
       this.confirm = English.create;
       this.createTitle = English.createTitle;
+      this.error1 = English.error1;
+      this.error5 = English.error5;
+      this.error6 = English.error6;
     }
   }
 
@@ -57,6 +69,10 @@ export class NewAccountComponent implements OnInit {
   mail: string;
   name: string;
 
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  }
+
   closeClick(): boolean {
     if (this.passRepeat == "" || this.passRepeat == null ||
         this.pass == "" || this.pass == null ||
@@ -64,13 +80,15 @@ export class NewAccountComponent implements OnInit {
         this.mail == "" || this.mail == null) {
 
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
+      document.getElementById("error")!.innerHTML = this.error1;
+      this.playAudio("error.wav");
       return false;
     }
 
     else if (this.pass != this.passRepeat) {
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Les mots de passes ne correspondent pas";
+      document.getElementById("error")!.innerHTML = this.error5;
+      this.playAudio("error.wav");
       return false;
     }
     
@@ -86,11 +104,14 @@ export class NewAccountComponent implements OnInit {
         if (data == 404) {
           console.log("404");
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
+          document.getElementById("error")!.innerHTML = this.error6;
+          this.playAudio("error.wav");
+          return;
         }
         else if (data.message == "success") {
           console.log("SUCC");
           this.router.navigate([""]);
+          this.playAudio("notif.wav");
         }
       },(error:HttpErrorResponse)=>{
         console.error(error);
@@ -99,7 +120,9 @@ export class NewAccountComponent implements OnInit {
         if( error.error.message == "404 (Not Found)" || error.error.message == "Http failure response for https://projet3-3990-207.herokuapp.com/user/registerUser: 404 Not Found" || error.error.message == "failed") {
           console.log("404");
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
+          document.getElementById("error")!.innerHTML = this.error6;
+          this.playAudio("error.wav");
+          return;
         }
       }
       );
@@ -107,12 +130,21 @@ export class NewAccountComponent implements OnInit {
     }
   }
 
+  playAudio(title: string){
+    let audio = new Audio();
+    audio.src = "../../../assets/" + title;
+    audio.load();
+    audio.play();
+  }
+
   cancelClick(): void {
     this.router.navigate([""]);
+    this.playAudio("ui2.wav");
   }
 
   openAvatar(): void {
     this.dialog.open(AvatarComponent, { disableClose: true });
+    this.playAudio("ui2.wav");
   }
 
 }

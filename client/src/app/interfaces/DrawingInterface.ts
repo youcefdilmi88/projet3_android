@@ -7,5 +7,6 @@ export interface DrawingInterface {
     roomName:string,
     members:string[],
     visibility:string,
+    creationDate:number;
 }
 

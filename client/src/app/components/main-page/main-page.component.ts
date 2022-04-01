@@ -7,18 +7,23 @@ import { URL } from '../../../../constants';
 import { French, English} from '@app/interfaces/Langues';
 // import { SettingsComponent } from '../settings/settings.component';
 import { MatDialog } from '@angular/material/dialog';
+// import { SettingsComponent } from '../settings/settings.component';
 // import { catchError } from 'rxjs/operators';
+import { LightGrey, DarkGrey } from '@app/interfaces/Themes';
+import { RouterOutlet } from '@angular/router';
+import { fader } from '@assets/animations';
+
 
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.scss']
+  styleUrls: ['./main-page.component.scss'], 
+  animations: [fader],
 })
 
 export class MainPageComponent implements OnInit{
 
-  langue: string = '';
 
   private readonly BASE_URL: string = URL;
   //"https://projet3-3990-207.herokuapp.com/";
@@ -28,8 +33,11 @@ export class MainPageComponent implements OnInit{
   public emai: string;
   public pass: string;
   public connection: string;
-  public options: string = "English";
-  private counter: number = 0;
+  public options: string;
+  public error1: string;
+  public error2: string;
+  public error3: string;
+  public error4: string;
 
   constructor(
     public dialog: MatDialog,
@@ -49,6 +57,11 @@ export class MainPageComponent implements OnInit{
       this.emai = French.email;
       this.pass = French.pass;
       this.connection = French.connection;
+      this.options = French.options;
+      this.error1 = French.error1;
+      this.error2 = French.error2;
+      this.error3 = French.error3;
+      this.error4 = French.error4;
     }
     else {
       this.rejoindre = English.join;
@@ -56,6 +69,29 @@ export class MainPageComponent implements OnInit{
       this.emai = English.email;
       this.pass = English.pass;
       this.connection = English.connection;
+      this.options = English.options;
+      this.error1 = English.error1;
+      this.error2 = English.error2;
+      this.error3 = English.error3;
+      this.error4 = English.error4;
+    }
+
+  console.log(this.socketService.theme);
+    if(this.socketService.theme == "light grey"){
+      const collection = document.getElementsByTagName("button");
+      for (let i = 0; i < collection.length; i++) {
+      collection[i].style.backgroundColor = LightGrey.main;
+      collection[i].style.color = LightGrey.text;
+      //aussi pour le title
+      }
+    }
+    else if(this.socketService.theme == "dark grey"){
+      const collection = document.getElementsByTagName("button");
+      for (let i = 0; i < collection.length; i++) {
+      collection[i].style.backgroundColor = DarkGrey.main;
+      collection[i].style.color = DarkGrey.text;
+      //aussi pour le title
+      }
     }
 
   }
@@ -64,12 +100,17 @@ export class MainPageComponent implements OnInit{
   email: string;
   conditionValid: boolean;
 
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  }
+
   closeClick(): void {
     if (this.email == "" || this.email == null ||
         this.password == "" || this.password == null) {
 
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
+      document.getElementById("error")!.innerHTML = this.error1;
+      this.playAudio("error.wav");
       return;
     }
     else { 
@@ -83,7 +124,8 @@ export class MainPageComponent implements OnInit{
           this.socketService.nickname = data.user.nickname;
           this.socketService.currentRoom=data.currentRoom;
           this.socketService.initSocket();
-          this.router.navigate(['/', 'albums']);
+          this.router.navigate(['/', 'albums']);          
+          this.playAudio("notif.wav");
         }
       },
       (error:HttpErrorResponse)=>{
@@ -92,45 +134,49 @@ export class MainPageComponent implements OnInit{
         console.log(error.error.message);
         if(error.error.message=="password does not match") {
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Email ou mot de passe invalide";
+          document.getElementById("error")!.innerHTML = this.error2;
+          this.playAudio("error.wav");
+          return;
         }
         else if(error.error.message=="user already connected") {
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Ce compte est déjà connecté";
+          document.getElementById("error")!.innerHTML = this.error3;
+          this.playAudio("error.wav");
           return;
         }
         else if(error.error.message=="user not found !") {
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Ce compte n'existe pas";
+          document.getElementById("error")!.innerHTML = this.error4;
+          this.playAudio("error.wav");
+          return;
         }
       }
       );
     }
   }
 
-  language(): void {
-    this.counter++;
-    if (this.counter % 2 == 0) {
-      this.options = "English";
-      this.socketService.language = "french";
-      this.ngOnInit();
-    }
-    else {
-      this.options = "Français";
-      this.socketService.language = "english";
-      this.ngOnInit();
-    }
+  playAudio(title: string){
+    let audio = new Audio();
+    audio.src = "../../../assets/" + title;
+    audio.load();
+    audio.play();
   }
+  
+  //("../../../assets/avatar_1.png");
 
-  /*openSettings(): void {
-    this.dialog.open(SettingsComponent);
-  }*/
+  openSettings(): void {
+    // this.dialog.open(SettingsComponent);
+    this.router.navigate(['/', 'settings']);
+    this.playAudio("ui2.wav");
+  }
 
   registerClick(): void {
     this.router.navigate(['/', 'register']);
+    this.playAudio("ui2.wav");
   }
 
   avatar():void {
     this.router.navigate(['/','avatar']);
+    this.playAudio("ui2.wav");
   }
 }

@@ -39,6 +39,7 @@ import { DessinsComponent } from './components/dessins/dessins.component';
 import { ClavardageComponent } from './components/clavardage/clavardage.component';
 import { NewAlbumComponent } from './components/new-album/new-album.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { ModifyDrawingComponent } from './components/modify-drawing/modify-drawing.component';
 
 
 @NgModule({
@@ -75,6 +76,7 @@ import { SettingsComponent } from './components/settings/settings.component';
         ClavardageComponent,
         NewAlbumComponent,
         SettingsComponent,
+        ModifyDrawingComponent,
     ],
     imports: [
         BrowserModule,

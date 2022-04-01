@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+// import { MatDialogRef } from '@angular/material/dialog';
 import { SocketService } from '@app/services/socket/socket.service';
 
 
@@ -14,7 +14,7 @@ export class SettingsComponent implements OnInit {
 
 
   constructor(
-    public dialogRef: MatDialogRef<SettingsComponent>,
+    // public dialogRef: MatDialogRef<SettingsComponent>,
     private socketService: SocketService,
   ) { }
 
@@ -31,5 +31,17 @@ export class SettingsComponent implements OnInit {
       this.socketService.language = "english";
     }
     console.log(this.socketService.language);
+    
   }
+  
+  onValChange(value: any){
+    this.socketService.language = value;
+  }
+
+  onChange(value: any) {
+    this.socketService.theme = value;
+    console.log(this.socketService.theme);
+  }
+
+
 }

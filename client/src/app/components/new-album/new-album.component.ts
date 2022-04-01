@@ -28,6 +28,13 @@ export class NewAlbumComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  playAudio(title: string){
+    let audio = new Audio();
+    audio.src = "../../../assets/" + title;
+    audio.load();
+    audio.play();
+  }
+
   createAlbum() : void  {
     console.log("name", this.name);
     console.log("description", this.description);
@@ -37,6 +44,10 @@ export class NewAlbumComponent implements OnInit {
     this.http.post<any>(link, {albumName: this.name.trim(), creator: this.socketService.email, visibility:"public", description: this.description}).subscribe((data:any) => {
       if(data.message == "success") {
         console.log("ALBUM CREATED");
+        this.playAudio("ui1.wav");
+      }
+      else {
+        this.playAudio("error.wav");
       }
     });
     this.dialogRef.close();

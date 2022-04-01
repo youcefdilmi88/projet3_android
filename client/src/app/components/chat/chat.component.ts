@@ -40,6 +40,7 @@ export class ChatComponent implements AfterViewInit {
     }
 
   ngAfterViewInit(): void {  
+    this.playAudio("ui2.wav")
     if(this.router.url == "/clavardage") {
       document.getElementById("principal")!.style.width = "100%";
     }
@@ -93,6 +94,7 @@ export class ChatComponent implements AfterViewInit {
 
     this.socketService.getSocket().on("MSG", (data)=>{
       data = JSON.parse(data);
+      this.playAudio("cell_notif.wav");
       console.log("socket room " + this.socketService.currentRoom.trim());
       console.log("data room " + data.roomName);
       if (data.roomName == this.socketService.currentRoom.slice(8).trim()) {
@@ -126,6 +128,13 @@ export class ChatComponent implements AfterViewInit {
     console.log("chat page !");
   }
 
+  playAudio(title: string) {
+    let audio = new Audio();
+    audio.src = "../../../assets/" + title;
+    audio.load();
+    audio.play();
+  }
+
   leaveDrawing() {
     console.log("current", this.socketService.currentRoom);
     // this.socketService.currentRoom = "randomSHIT";
@@ -141,6 +150,7 @@ export class ChatComponent implements AfterViewInit {
   changeRoom(): void {
     //this.dialog.open(RoomsComponent, { disableClose: true });
     this.router.navigate(['/', 'rooms']);
+    this.playAudio("ui2.wav");
     this.leaveDrawing();
   }
 
@@ -160,6 +170,8 @@ export class ChatComponent implements AfterViewInit {
       this.message.push("");
       this.message.push("");
       this.message.push("\n");
+
+      this.playAudio("msg.wav");
 
       this.socketService.getSocket().emit("MSG",JSON.stringify(msg));
 
@@ -183,6 +195,7 @@ export class ChatComponent implements AfterViewInit {
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
+    this.playAudio("ui1.wav");
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

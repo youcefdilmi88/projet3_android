@@ -177,11 +177,20 @@ export class SelectionToolService implements Tools {
       this.rendererService.renderer.removeChild(this.drawingService.drawing, this.rectSelection);
       this.rendererService.renderer.removeChild(this.drawingService.drawing, this.ctrlG);
       this.rendererService.renderer.setAttribute(this.rectSelection, 'points', '');
+
+      this.playAudio("bin.wav");
     });
 
     this.socketService.getSocket().on("ENDSELECT", (data)=>{
       data=JSON.parse(data);
     });
+  }
+
+  playAudio(title: string) {
+    let audio = new Audio();
+    audio.src = "../../../assets/" + title;
+    audio.load();
+    audio.play();
   }
 
   /// Quand le bouton gauche de la sourie est enfoncé, soit on selectionne un objet, soit on debute une zone de selection

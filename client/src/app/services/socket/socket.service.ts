@@ -18,6 +18,7 @@ export class SocketService {
   public drawingName: string;
   public albumName: string;
   public language = "french";
+  public theme = "light grey";
   //private userService: UserService;
 
   constructor() { }
