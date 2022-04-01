@@ -35,8 +35,8 @@ export class ToolRectangleService implements Tools {
   private rectStyle: FormControl;
   private x: number;
   private y: number;
-  private finalx: number;
-  private finaly: number;
+  private finalX: number;
+  private finalY: number;
 
   private moving: boolean = false;
 
@@ -72,6 +72,8 @@ export class ToolRectangleService implements Tools {
         y:data.y,
         width:data.width,
         height:data.height,
+        finalX: data.finalX,
+        finalY: data.finalY,
         strokeWidth: data.strokeWidth,
         fill: data.fill,
         stroke: data.stroke,
@@ -102,8 +104,10 @@ export class ToolRectangleService implements Tools {
 
     this.socketService.getSocket().on("DRAWRECTANGLE",(data)=>{
       data=JSON.parse(data);
-      this.finalx = data.point.x as number;
-      this.finaly = data.point.y as number;
+      this.finalX = data.point.x as number;
+      this.finalY = data.point.y as number;
+      console.log("X", data.point.x);
+      console.log("Y", data.point.y);
 
       if (this.rectangleAttributes?.id == data.shapeId) {
         this.setSize(data.point.x as number, data.point.y as number, data.shapeId);
@@ -115,7 +119,14 @@ export class ToolRectangleService implements Tools {
     });
 
     this.socketService.getSocket().on("ENDRECTANGLE",(data)=>{
-      //this.moving = false;
+      console.log("height", this.rectangleAttributes.height);
+      console.log("width", this.rectangleAttributes.width);
+      console.log("final x", this.rectangleAttributes.finalX);
+      console.log("final y", this.rectangleAttributes.finalY);
+      console.log("x", this.rectangleAttributes.x);
+      console.log("y", this.rectangleAttributes.y);
+
+      // this.moving = false;
     });
   }
 
@@ -154,6 +165,7 @@ export class ToolRectangleService implements Tools {
         x: offset.x, 
         y: offset.y,
         width: 0, height: 0,
+        finalX: 0, finalY: 0,
         strokeWidth: this.strokeWidth.value as number,
         fill: 'none', stroke: 'none', fillOpacity: 'none', strokeOpacity: 'none',
       };
@@ -175,10 +187,16 @@ export class ToolRectangleService implements Tools {
   onRelease(event: MouseEvent): ICommand | void {
     //let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
     //let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
-    let height = this.finaly;
-    let width = this.finalx;
+    let lastY = this.finalY;
+    let lastX = this.finalX;
+    let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
+    let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
+
+    this.rectangleAttributes.finalY = +lastY!;
+    this.rectangleAttributes.finalX = +lastX!;
     this.rectangleAttributes.height = +height!;
     this.rectangleAttributes.width = +width!;
+
     if(this.rectangleAttributes?.height! > 1 || this.rectangleAttributes?.width! > 1) {
       this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
     }

@@ -85,6 +85,10 @@ export class RoomsComponent implements OnInit {
             if(this.socketService.currentRoom != data[i].roomName) {
               this.router.navigate(['/', 'rooms']);
             }
+            else if(this.drawingTempSerivce.drawings.has(this.socketService.currentRoom)) { 
+              this.router.navigate(['/', 'sidenav']);
+              break;
+            }
             else if (this.socketService.currentRoom == data[i].roomName) {
               this.router.navigate(['/', 'clavardage']);
               break;

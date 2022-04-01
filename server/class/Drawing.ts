@@ -94,7 +94,9 @@ export class Drawing {
                 y:element.getY(),
                 width:element.getWidth(),
                 height:element.getHeight(),
-                type:"ellipse"
+                type:"ellipse",
+                finalX:element.getFinalX(),
+                finalY:element.getFinalY()
               } as EllipseInterface;
               interfaceInstances.push(elementInterface);
            }
@@ -111,7 +113,9 @@ export class Drawing {
               y:element.getY(),
               width:element.getWidth(),
               height:element.getHeight(),
-              type:"rectangle"
+              type:"rectangle",
+              finalX:element.getFinalX(),
+              finalY:element.getFinalY()
             } as RectangleInterface;
             interfaceInstances.push(elementInterface);
          }

@@ -6,4 +6,6 @@ export interface BaseShapeInterface {
     stroke: string;
     fillOpacity: string;
     strokeOpacity: string;
+    finalX: number;
+    finalY: number;
 }
