@@ -21,6 +21,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 // import { Point } from 'src/app/model/point.model';
 import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
 import { French, English } from '@app/interfaces/Langues';
+import { ModifyDrawingComponent } from '../modify-drawing/modify-drawing.component';
 
 
 @Component({
@@ -116,9 +117,9 @@ export class DessinsComponent implements OnInit {
     // let link3 = this.BASE_URL + "drawing/getAllDrawings";
 
     this.socketService.getSocket().on("DRAWINGDELETED", (data) => {
+      data = JSON.parse(data);
       this.getAllDrawings();
       // console.log("HELLO?????");
-      // data = JSON.parse(data);
       // this.names = [];
       // this.owners = [];
       // this.visibite = [];
@@ -156,20 +157,24 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("VISIBILITYCHANGED", (data) => {
       data=JSON.parse(data);
-      let link = this.BASE_URL + "drawing/getAllDrawings";
-      this.http.get<any>(link).subscribe((data: any) => {
-        this.visibite = [];
-        data.forEach((drawing:any)=>{
-          this.visibite.push(drawing.visibility);
-        });
-      });
+      this.getAllDrawings();
     });
 
     this.socketService.getSocket().on("ALBUMMODIFIED", (data) => {
       data=JSON.parse(data);
       
-    
     });
+
+    this.socketService.getSocket().on("DRAWINGMODIFIED", (data) => {
+      data=JSON.parse(data);
+      this.getAllDrawings();
+    });
+
+    this.socketService.getSocket().on("ROOMMODIFIED", (data) => {
+      data=JSON.parse(data);
+      this.getAllDrawings();
+    });
+
   }
 
 
@@ -177,7 +182,6 @@ export class DessinsComponent implements OnInit {
     this.bool = true;
     let link = this.BASE_URL+ "drawing/getAllDrawings";
     this.socketService.getSocket().on("DRAWINGDELETED",(data)=>{
-      console.log("ADELE");
       data=JSON.parse(data);
       this.http.get<any>(link).subscribe((data: any) => { 
 
@@ -385,6 +389,17 @@ export class DessinsComponent implements OnInit {
       });
   }
 
+  openSettings(element: any): void {
+    if(this.socketService.email == this.owners[this.centerImage]) {
+      this.dialog.open(ModifyDrawingComponent);
+      this.socketService.drawingName = this.names[this.centerImage];
+    }
+    else {
+      console.log("youre not the owner");
+    }
+
+  }
+
   changerPublic(element: any): void {
     let link = this.BASE_URL + "drawing/updateDrawing";
 
@@ -480,9 +495,18 @@ export class DessinsComponent implements OnInit {
     }
 }
 
+
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/ui1.wav";
+    audio.load();
+    audio.play();
+  }
+
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
+    this.playAudio();
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

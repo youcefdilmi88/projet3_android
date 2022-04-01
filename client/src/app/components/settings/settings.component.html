@@ -1,25 +1,27 @@
-<h1>Changer les paramètres</h1>
 
-<form action="/action_page.php">
+<div class="title">
+  <h1>Changer les paramètres</h1>
+</div>
+<div>
+  <p>Choisir la langue: </p>
+  <mat-button-toggle-group id="test" name="langue" aria-label="langue">
+  <mat-button-toggle id="langue" value="french" (change)="onValChange($event.value)">Français</mat-button-toggle>
+  <mat-button-toggle id="langue" value="english" (change)="onValChange($event.value)">English </mat-button-toggle>
+</mat-button-toggle-group>
+  <p>Choisir le thème: </p>
+  <mat-button-toggle-group name="theme" aria-label="theme">
+  <mat-button-toggle id="theme" value="light grey" (change)="onChange($event.value)">Light grey</mat-button-toggle>
+  <mat-button-toggle id="theme" value="dark grey" (change)="onChange($event.value)">Dark grey</mat-button-toggle>
+  <mat-button-toggle id="theme" value="deep purple" (change)="onChange($event.value)">Deep Purple</mat-button-toggle>
+  <mat-button-toggle id="theme" value="light blue" (change)="onChange($event.value)">Ligh blue</mat-button-toggle>
+  <mat-button-toggle id="theme" value="light pink" (change)="onChange($event.value)">Light Pink</mat-button-toggle>
+</mat-button-toggle-group>
+</div>
 
-    <label for="languages">Chosir la langue:</label>
-    <select (change)="language($event)">
-        <option value="1">Français</option>
-        <option value="2">English</option>
-    </select>
-    <br><br>
 
-    <label for="cars">Choisir le thème:</label>
-    <select name="cars" id="cars">
-      <option value="theme2">theme2</option>
-      <option value="theme3">theme3</option>
-      <option value="theme4">theme4</option>
-    </select>
-    <br><br>
+<button mat-raised-button routerLink = "">OK</button>
 
-</form>
 
-<button routerLink = "">OK</button>
 
 
 

@@ -93,6 +93,7 @@ export class ChatComponent implements AfterViewInit {
 
     this.socketService.getSocket().on("MSG", (data)=>{
       data = JSON.parse(data);
+      this.playAudio();
       console.log("socket room " + this.socketService.currentRoom.trim());
       console.log("data room " + data.roomName);
       if (data.roomName == this.socketService.currentRoom.slice(8).trim()) {
@@ -124,6 +125,13 @@ export class ChatComponent implements AfterViewInit {
 
   ngAfterInit() {
     console.log("chat page !");
+  }
+
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/cell_notif.wav";
+    audio.load();
+    audio.play();
   }
 
   leaveDrawing() {
@@ -180,9 +188,17 @@ export class ChatComponent implements AfterViewInit {
     });
   }
 
+  playAudio2(){
+    let audio = new Audio();
+    audio.src = "../../../assets/ui1.wav";
+    audio.load();
+    audio.play();
+  }
+
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
+    this.playAudio2();
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

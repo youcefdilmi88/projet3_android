@@ -335,9 +335,18 @@ export class RoomsComponent implements OnInit {
     this.router.navigate(['/', 'sidenav']);
   }
 
+
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/ui1.wav";
+    audio.load();
+    audio.play();
+  }
+
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
+    this.playAudio();
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

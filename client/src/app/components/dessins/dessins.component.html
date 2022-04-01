@@ -56,6 +56,10 @@
         <button mat-raised-button id="DessinsButtonDelete" class="buto" (click)="deleteDessins($event.target)">
             {{delete}} <span class='special-word'>{{names[this.centerImage]}}</span>
         </button>
+        <button mat-raised-button id="settingsButton" class="buto" (click)="openSettings($event.target)">
+            Modifier <span class='special-word'>{{names[this.centerImage]}}</span>
+        </button>
+        <mat-checkbox> LIKE </mat-checkbox> 
         <!-- <button mat-raised-button id="Visibilite" (click)="changerPublic($event.target)">
             Public <span class='special-word'>{{names[this.centerImage]}}</span>
         </button> -->

@@ -6,6 +6,10 @@ export const French = {
     join : "Rejoindre le chat",
     connection: "Connexion",
     options: "Paramètres",
+    error1: "Vous ne pouvez pas mettre des champs vides", 
+    error2: "Email ou mot de passe invalide",
+    error3: "Ce compte est déjà connecté",
+    error4: "Ce compte n'existe pas",
 
     //new account
     createTitle: "Créer un compte",
@@ -13,6 +17,9 @@ export const French = {
     cancel: "Annuler",
     confirm: "Confirmer",
     create: "Créer votre compte",
+    error5: "Les mots de passes ne correspondent pas",
+    error6: "Ce courriel est déjà pris.",
+
 
     //album
     chooseAlbum: "Choisir un album",
@@ -21,7 +28,7 @@ export const French = {
     goChat: "Accéder au chat",
     open: "Ouvrir",
     delete: "Supprimer",
-
+              
     //dessin
     drawingTitle: "Dessins",
     drawingInput: "Nom du nouveau dessin",
@@ -51,6 +58,10 @@ export const English = {
     join : "Join chat",
     connection: "Connection",
     options: "Settings",
+    error1: "You can not enter an empty value",
+    error2: "Email or password invalid",
+    error3: "This account is already connected",
+    error4: "This account does not exist",
     
     //new account
     createTitle: "Create account",
@@ -58,6 +69,8 @@ export const English = {
     cancel: "Cancel",
     confirm: "Confirm",
     create: "Create account",
+    error5: "The passwords are not identical",
+    error6: "This email is already taken",
 
     //album
     chooseAlbum: "Choose album",

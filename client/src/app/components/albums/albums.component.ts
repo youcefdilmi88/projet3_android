@@ -17,12 +17,14 @@ import { Album } from '@app/classes/Album';
 import { AlbumInterface } from '@app/interfaces/AlbumInterface';
 import { French, English} from '@app/interfaces/Langues';
 import { AlbumTempService } from '@app/services/albumTempService';
-
+// import { RouterOutlet } from '@angular/router';
+// import { fader } from '@assets/animations';
 
 @Component({
   selector: 'app-albums',
   templateUrl: './albums.component.html',
-  styleUrls: ['./albums.component.scss']
+  styleUrls: ['./albums.component.scss'],
+  // animations: [fader],
 })
 
 export class AlbumsComponent implements OnInit {
@@ -110,6 +112,7 @@ export class AlbumsComponent implements OnInit {
         this.albumTempSerivce.albums.set(albumObj.getName() as string, albumObj);
         this.AlbumsNames.push(albums.albumName);
         this.AlbumsVisibilite.push(albums.visibility);
+        console.log(albums.description);
       });
     });
   }
@@ -117,6 +120,10 @@ export class AlbumsComponent implements OnInit {
   createAlbum() {
     this.dialog.open(NewAlbumComponent, { disableClose: false });
   }
+
+  // prepareRoute(outlet: RouterOutlet) {
+  //   return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  // }
 
   defaultRoom() {
     this.socketService.joinRoom('DEFAULT');
@@ -171,6 +178,7 @@ export class AlbumsComponent implements OnInit {
     
     this.http.post<any>(link, {albumName: element.textContent.trim().slice(10), useremail: this.socketService.email}).subscribe((data:any) => {
       if(data.message == "success") {
+        this.playAudio2();
         console.log("ALBUM DELETED");
         this.http.get<any>(link2, {}).subscribe((data:any) => {
           let length = Object.keys(data).length;
@@ -188,9 +196,23 @@ export class AlbumsComponent implements OnInit {
     });
   }  
 
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/ui1.wav";
+    audio.load();
+    audio.play();
+  }
+
+  playAudio2(){
+    let audio = new Audio();
+    audio.src = "../../../assets/bin.wav";
+    audio.load();
+    audio.play();
+  }
+
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
-
+    this.playAudio();
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

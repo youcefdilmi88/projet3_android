@@ -9,11 +9,12 @@ import { DessinsComponent } from './dessins/dessins.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewAccountComponent } from './new-account/new-account.component';
 import { RoomsComponent } from './rooms/rooms.component';
+import { SettingsComponent } from './settings/settings.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 
 const routes: Routes = [
   {
-    path: '', component: MainPageComponent
+    path: '', component: MainPageComponent, data: {animation:'isRight'}
   },
   {
     path: 'chat', component: ChatComponent
@@ -22,7 +23,7 @@ const routes: Routes = [
     path: 'register', component: NewAccountComponent
   },
   {
-    path: 'albums', component: AlbumsComponent
+    path: 'albums', component: AlbumsComponent, data: {animation:'isLeft'}
   },
   {
     path: 'rooms', component: RoomsComponent
@@ -38,6 +39,9 @@ const routes: Routes = [
   },
   {
     path:'avatar',component:AvatarComponent
+  },
+  {
+    path:'settings',component:SettingsComponent
   },
 ];
 

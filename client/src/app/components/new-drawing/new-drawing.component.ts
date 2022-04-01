@@ -41,7 +41,7 @@ export class NewDrawingComponent implements OnInit {
 
   public ellipseAttributes: FilledShape;
 
-  constructor(
+  constructor( 
     public dialogRef: MatDialogRef<NewDrawingComponent>,
     public drawingTempSerivce: DrawingTempService,
     private socketService: SocketService,
@@ -60,7 +60,6 @@ export class NewDrawingComponent implements OnInit {
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
-    console.log("PIPI DE EDWIN");
     this.newDrawing();
     this.form = new FormGroup(
       {

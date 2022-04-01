@@ -23,6 +23,9 @@ export class NewAccountComponent implements OnInit {
   public cancel: string;
   public confirm: string;
   public createTitle: string;
+  public error1: string
+  public error5: string;
+  public error6: string;
 
 
   constructor(
@@ -41,6 +44,9 @@ export class NewAccountComponent implements OnInit {
       this.cancel = French.cancel;
       this.confirm = French.create;
       this.createTitle = French.createTitle;
+      this.error1 = French.error1;
+      this.error5 = French.error5;
+      this.error6 = French.error6;
     }
     else {
       this.emai = English.email;
@@ -49,6 +55,9 @@ export class NewAccountComponent implements OnInit {
       this.cancel = English.cancel;
       this.confirm = English.create;
       this.createTitle = English.createTitle;
+      this.error1 = English.error1;
+      this.error5 = English.error5;
+      this.error6 = English.error6;
     }
   }
 
@@ -64,13 +73,13 @@ export class NewAccountComponent implements OnInit {
         this.mail == "" || this.mail == null) {
 
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Vous ne pouvez pas mettre des champs vides";
+      document.getElementById("error")!.innerHTML = this.error1;
       return false;
     }
 
     else if (this.pass != this.passRepeat) {
       document.getElementById("error")!.style.visibility= "visible";
-      document.getElementById("error")!.innerHTML = "Les mots de passes ne correspondent pas";
+      document.getElementById("error")!.innerHTML = this.error5;
       return false;
     }
     
@@ -86,7 +95,7 @@ export class NewAccountComponent implements OnInit {
         if (data == 404) {
           console.log("404");
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
+          document.getElementById("error")!.innerHTML = this.error6;
         }
         else if (data.message == "success") {
           console.log("SUCC");
@@ -99,7 +108,7 @@ export class NewAccountComponent implements OnInit {
         if( error.error.message == "404 (Not Found)" || error.error.message == "Http failure response for https://projet3-3990-207.herokuapp.com/user/registerUser: 404 Not Found" || error.error.message == "failed") {
           console.log("404");
           document.getElementById("error")!.style.visibility= "visible";
-          document.getElementById("error")!.innerHTML = "Ce courriel est déjà pris.";
+          document.getElementById("error")!.innerHTML = this.error6;
         }
       }
       );
