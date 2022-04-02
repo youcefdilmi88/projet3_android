@@ -249,7 +249,6 @@ class AlbumService {
   }
 
   async updateDrawingInAlbum(album:Album) {
-    let name=album.getName();
     try {
       const filter={albumName:album.getName()};
           const albumUpdate = {
