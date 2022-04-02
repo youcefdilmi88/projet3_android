@@ -131,7 +131,8 @@ class DrawingService {
           this.kickUsersFromDrawing(drawingName);
           albumService.albums.forEach((v,k)=>{
             if(v.getDrawings().indexOf(drawingName)!=-1) {
-              v.removeDrawing(k);      // remove drawing from all albums
+              console.log("key",k);
+              v.removeDrawing(drawingName);      // remove drawing from all albums
               console.log("album with deleted drawing",v.getName());
               console.log(k);
               albumService.updateDrawingInAlbum(v);
