@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SocketService } from '@app/services/socket/socket.service';
 import { catchError } from 'rxjs/operators';
+import { URL } from '../../../../constants';
 
 @Component({
   selector: 'app-modify-drawing',
@@ -11,7 +12,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ModifyDrawingComponent implements OnInit {
 
-  private readonly BASE_URL: string = "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string = URL;
   private isPublic: boolean;
   private visibility: string;
   public drawingNAME: string;

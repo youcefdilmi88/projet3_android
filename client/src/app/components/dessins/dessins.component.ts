@@ -22,6 +22,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
 import { French, English } from '@app/interfaces/Langues';
 import { ModifyDrawingComponent } from '../modify-drawing/modify-drawing.component';
+import { URL } from '../../../../constants';
 
 
 @Component({
@@ -31,7 +32,7 @@ import { ModifyDrawingComponent } from '../modify-drawing/modify-drawing.compone
 })
 export class DessinsComponent implements OnInit {
 
-  private readonly BASE_URL: string = "https://projet3-3990-207.herokuapp.com/";
+  private readonly BASE_URL: string = URL;
   
   imageUrlArray: string[] = [];
   public names:Array<string> = [];
