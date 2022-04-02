@@ -130,7 +130,8 @@ class DrawingService {
           albumService.albums.forEach((v,k)=>{
             if(v.getDrawings().indexOf(drawingName)!=-1) {
               v.removeDrawing(k);      // remove drawing from all albums
-              console.log("album with deleted drawing",v);
+              console.log("album with deleted drawing",v.getName());
+              console.log(k);
               albumService.updateDrawingInAlbum(v);
             }
           });
@@ -279,7 +280,6 @@ class DrawingService {
         this.socketInDrawing[k]=drawing;
       }
     });
-    console.log(this.drawings.get(drawing.getName()));
     drawing.modified=true;
     this.autoSaveDrawing(drawing.getName()).then(()=>{
       let drawingInterface:DrawingInterface={

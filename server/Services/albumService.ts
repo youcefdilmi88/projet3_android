@@ -171,7 +171,6 @@ class AlbumService {
         album.setDescription(description);
         this.albums.delete(oldName);
         this.albums.set(album.getName(),album);
-        console.log(this.albums);
 
         let albumRes:AlbumInterface={
           albumName:album.getName(),
@@ -264,8 +263,8 @@ class AlbumService {
           });
           await albumDoc?.save().then(()=>{
             this.albums[`${album.getName()}`]=album;
-            console.log("**********************************");
-            console.log("before"+this.albums.get(name)?.getDrawings());
+  
+            console.log("after bd update",this.albums.get(album.getName()));
             
             let albumRes:AlbumInterface={
               albumName:album.getName(),
