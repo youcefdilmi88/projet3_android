@@ -263,8 +263,6 @@ class AlbumService {
           });
           await albumDoc?.save().then(()=>{
             this.albums[`${album.getName()}`]=album;
-  
-            console.log("after bd update",this.albums.get(album.getName()));
             
             let albumRes:AlbumInterface={
               albumName:album.getName(),
@@ -277,7 +275,6 @@ class AlbumService {
               requests:album.getRequests()
             }
 
-            console.log("after"+this.albums.get(name)?.getDrawings());
             const message={album:albumRes};
             socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
           }).catch((e:Error)=>{

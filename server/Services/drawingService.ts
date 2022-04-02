@@ -69,8 +69,6 @@ class DrawingService {
         let drawingObj:Drawing=new Drawing(drawing);
         this.drawings.set(drawingObj.getName(),drawingObj);
       });
-      console.log("after load");
-      console.log(this.drawings);
     }).catch((e:Error)=>{
         console.log(e);
     });
@@ -131,10 +129,7 @@ class DrawingService {
           this.kickUsersFromDrawing(drawingName);
           albumService.albums.forEach((v,k)=>{
             if(v.getDrawings().indexOf(drawingName)!=-1) {
-              console.log("key",k);
               v.removeDrawing(drawingName);      // remove drawing from all albums
-              console.log("album with deleted drawing",v.getName());
-              console.log(k);
               albumService.updateDrawingInAlbum(v);
             }
           });

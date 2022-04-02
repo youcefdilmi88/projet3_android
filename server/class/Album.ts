@@ -66,9 +66,7 @@ export class Album {
         console.log(index);
         if (index > -1) {
             this.drawings.splice(index, 1); 
-            console.log("spliced");
         }
-        console.log("in drawing class",this.drawings);
     }
 
     setName(name:String):void {

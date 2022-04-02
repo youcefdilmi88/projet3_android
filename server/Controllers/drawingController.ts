@@ -60,8 +60,6 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
     console.log("created drawing name:"+drawingName);
 
-    console.log(drawingService.drawings.get(drawingName));
-
     if(drawingName && owner && roomName) {
       console.log(drawingService.drawings.has(drawingName));
       if(drawingService.drawings.has(drawingName)) {
