@@ -60,6 +60,8 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
     console.log("created drawing name:"+drawingName);
 
+    console.log(drawingService.drawings.get(drawingName));
+
     if(drawingName && owner && roomName) {
       if(drawingService.drawings.has(drawingName)==false) 
       {
@@ -72,7 +74,6 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
         });
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
       }
-      console.log(drawingService.drawings.get(drawingName));
       return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
     }
     return res.status(404).json({message:HTTPMESSAGE.FAILED});
