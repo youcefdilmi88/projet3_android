@@ -64,18 +64,16 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
     if(drawingName && owner && roomName) {
       console.log(drawingService.drawings.has(drawingName));
-      if(drawingService.drawings.has(drawingName)==false) 
-      {
-        if(roomService.getAllRooms().has(roomName)) 
-        {
-            return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
-        }
-        drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility,date).catch((e:Error)=>{
-                console.log(e);
-        });
-        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+      if(drawingService.drawings.has(drawingName)) {
+        return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
+      } 
+      if(roomService.getAllRooms().has(roomName)) {
+        return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
       }
-      return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
+      drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility,date).catch((e:Error)=>{
+            console.log(e);
+      });
+      return res.status(200).json({message:HTTPMESSAGE.SUCCESS}); 
     }
     return res.status(404).json({message:HTTPMESSAGE.FAILED});
 }
