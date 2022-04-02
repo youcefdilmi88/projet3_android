@@ -69,6 +69,8 @@ class DrawingService {
         let drawingObj:Drawing=new Drawing(drawing);
         this.drawings.set(drawingObj.getName(),drawingObj);
       });
+      console.log("after load");
+      console.log(this.drawings);
     }).catch((e:Error)=>{
         console.log(e);
     });

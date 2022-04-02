@@ -72,6 +72,7 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
         });
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
       }
+      console.log(drawingService.drawings.get(drawingName));
       return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
     }
     return res.status(404).json({message:HTTPMESSAGE.FAILED});
@@ -103,7 +104,6 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
             creationDate:v.getCreationDate()
         }
         drawings.push(drawing);
-        console.log(drawing.drawingName);
     });
     
     return res.status(200).json(drawings);
