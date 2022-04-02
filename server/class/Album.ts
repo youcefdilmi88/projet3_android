@@ -63,9 +63,9 @@ export class Album {
 
     removeDrawing(drawingName:String):void {
         const index = this.drawings.indexOf(drawingName);
-        
         if (index > -1) {
             this.drawings.splice(index, 1); 
+            console.log("spliced");
         }
         console.log("in drawing class",this.drawings);
     }
