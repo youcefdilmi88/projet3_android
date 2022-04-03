@@ -4,10 +4,12 @@ import { checkEllipse, EllipseInterface } from "../Interface/EllipseInterface";
 import { checkLine, LineInterface } from "../Interface/LineInterface";
 import { checkRectangle, RectangleInterface } from "../Interface/RectangleInterface";
 import drawingService from "../Services/drawingService";
+import userService from "../Services/userService";
 import { BaseShape } from "./BaseShape";
 import { Ellipse } from "./Ellipse";
 import { Line } from "./Line";
 import { Rectangle } from "./Rectangle";
+import { User } from "./User";
 
 
 export class Drawing {
@@ -151,11 +153,19 @@ export class Drawing {
     }
 
     setElements(elements:BaseShape[]) {
-        this.elements=elements;
+        this.elementById.clear();
+        elements.forEach((element)=>{
+            this.elementById.set(element.getId(),element);
+        })
     }
 
     setMembers(members:String[]) {
-        this.members=members;
+        this.membersBySocketId.clear();
+        members.forEach((member)=>{
+            let user:User=userService.getUserByUseremail(member) as User;
+            let socketId:string=userService.getSocketIdByUser().get(user) as string;
+            this.membersBySocketId.set(socketId,member);
+        })
     }
 
     setVisibility(visibility:String) {
