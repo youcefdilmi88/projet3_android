@@ -129,10 +129,12 @@ export class ChatComponent implements AfterViewInit {
   }
 
   playAudio(title: string) {
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   leaveDrawing() {

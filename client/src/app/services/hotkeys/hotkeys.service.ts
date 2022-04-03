@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NewDrawingComponent } from 'src/app/components/new-drawing/new-drawing.component';
-import { ExportDialogService } from '../export-dialog/export-dialog.service';
-import { OpenDrawingDialogService } from '../open-drawing-dialog/open-drawing-dialog.service';
-import { SaveDrawingDialogService } from '../save-drawing-dialog/save-drawing-dialog.service';
+//import { NewDrawingComponent } from 'src/app/components/new-drawing/new-drawing.component';
+//import { ExportDialogService } from '../export-dialog/export-dialog.service';
+//import { OpenDrawingDialogService } from '../open-drawing-dialog/open-drawing-dialog.service';
+//import { SaveDrawingDialogService } from '../save-drawing-dialog/save-drawing-dialog.service';
 import { SidenavService } from '../sidenav/sidenav.service';
 import { CopyPasteToolService } from '../tools/copy-paste-tool/copy-paste-tool.service';
 import { DeletingToolService } from '../tools/selection-tool/delete-command/delete-tool.service';
@@ -13,25 +13,41 @@ import { ToolsService } from '../tools/tools.service';
 import { EmitReturn } from './hotkeys-constants';
 import { HotkeysEmitterService } from './hotkeys-emitter/hotkeys-emitter.service';
 import { HotkeysEnablerService } from './hotkeys-enabler.service';
+import { SocketService } from '@app/services/socket/socket.service';
+import { URL } from '../../../../constants';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class HotkeysService {
 
+  private readonly BASE_URL: string = URL;
+
   private toolSelectorList: Map<string, number> = new Map<string, number>();
   hotkey: Map<string, any> = new Map<string, any>();
+
+  private oncounter = 0;
+  private offcounter = 0;
 
   constructor(
     private dialog: MatDialog,
     private sideNavService: SidenavService,
     private toolsService: ToolsService,
-    private saveDrawingDialogService: SaveDrawingDialogService,
-    private exportDialogService: ExportDialogService,
+    //private saveDrawingDialogService: SaveDrawingDialogService,
+    //private exportDialogService: ExportDialogService,
     private copyPasteService: CopyPasteToolService,
     private selectionTool: SelectionToolService,
     private deletingTool: DeletingToolService,
-    private openDrawingService: OpenDrawingDialogService,
+    private socketService: SocketService,
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    //private openDrawingService: OpenDrawingDialogService,
 
     private hotkeysEmitterService: HotkeysEmitterService,
 
@@ -39,12 +55,13 @@ export class HotkeysService {
   ) {
     this.subscribeToHotkeys();
 
+    this.toolSelectorList.set(EmitReturn.PENCIL, ToolIdConstants.PENCIL_ID);
     this.toolSelectorList.set(EmitReturn.RECTANGLE, ToolIdConstants.RECTANGLE_ID);
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);
-    this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
+    //this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
     this.toolSelectorList.set(EmitReturn.SELECTION, ToolIdConstants.SELECTION_ID);
-    this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
-    this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
+    //this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
+    //this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
       this.hotkeysEnablerService.canClick = false;
@@ -65,14 +82,80 @@ export class HotkeysService {
   /// Subscribe au hotkeys pour effectuer l'action associé
   private subscribeToHotkeys(): void {
     this.hotkeysEmitterService.hotkeyEmitter.subscribe((value: EmitReturn) => {
-      const toolId: number | undefined = this.toolSelectorList.get(value);
-      if (toolId || toolId === ToolIdConstants.SELECTION_ID) {
-        this.sideNavService.open();
-        this.sideNavService.isControlMenu = false;
-        this.toolsService.selectTool(toolId);
+      //const toolId: number | undefined = this.toolSelectorList.get(value);
+      if (ToolIdConstants) {
+        switch (value) {
+          case EmitReturn.MUTE:
+            this.socketService.mute = true;
+            if (this.oncounter == 0) {
+              this.snackBar.open('Sound off','', { duration: 3000 });
+            }
+            if (this.oncounter > 0) {
+              this.snackBar.open('Sound is already off, press N to turn it back on','', { duration: 3000 });
+            }
+            this.oncounter++;
+            break;
+
+          case EmitReturn.UNMUTE:
+            this.socketService.mute = false;
+            if (this.offcounter == 0) {
+              this.snackBar.open('Sound on','', { duration: 3000 });
+            }
+            if (this.offcounter > 0) {
+              this.snackBar.open('Press M to mute sound','', { duration: 3000 });
+            }
+            this.offcounter++;
+            break;
+
+          case EmitReturn.CHAT:
+              this.socketService.joinRoom('DEFAULT');
+              this.socketService.currentRoom = 'DEFAULT';
+              let link2 = this.BASE_URL + "room/joinRoom";
+
+              const userObj={
+                useremail:this.socketService.email,
+                nickname:this.socketService.nickname,
+              }
+
+              this.http.post<any>(link2,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
+                catchError(async (err) => console.log("error catched" + err))
+              ).subscribe((data: any) => {
+            
+                if(data.message == "success") {
+                  this.socketService.currentRoom = 'DEFAULT';
+                  console.log("REGARDE MOI BIG:" + this.socketService.currentRoom);
+                  this.router.navigate(['/', 'clavardage']);
+                }
+              });
+              break;
+
+          case EmitReturn.PENCIL:
+              this.sideNavService.open();
+              this.sideNavService.isControlMenu = false;
+              this.toolsService.selectTool(2);
+              break;
+            case EmitReturn.RECTANGLE:
+              this.sideNavService.open();
+              this.sideNavService.isControlMenu = false;
+              this.toolsService.selectTool(3);
+              break;
+            case EmitReturn.ELLIPSE:
+              this.sideNavService.open();
+              this.sideNavService.isControlMenu = false;
+              this.toolsService.selectTool(4);
+              break;
+            case EmitReturn.SELECTION:
+              this.sideNavService.open();
+              this.sideNavService.isControlMenu = false;
+              this.toolsService.selectTool(0);
+              break;
+        }
+        //this.sideNavService.open();
+        //this.sideNavService.isControlMenu = false;
+        //this.toolsService.selectTool(toolId);
       } else {
         switch (value) {
-          case EmitReturn.NEW_DRAWING:
+          /*case EmitReturn.NEW_DRAWING:
             this.dialog.open(NewDrawingComponent, {});
             break;
           case EmitReturn.SAVE_DRAWING:
@@ -83,7 +166,7 @@ export class HotkeysService {
             break;
           case EmitReturn.OPEN_DRAWING:
             this.openDrawingService.openDialog();
-            break;
+            break;*/
           case EmitReturn.COPY:
             this.copyPasteService.copy();
             break;

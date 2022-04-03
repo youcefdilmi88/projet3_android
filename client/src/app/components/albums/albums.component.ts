@@ -17,6 +17,7 @@ import { Album } from '@app/classes/Album';
 import { AlbumInterface } from '@app/interfaces/AlbumInterface';
 import { French, English} from '@app/interfaces/Langues';
 import { AlbumTempService } from '@app/services/albumTempService';
+import { SidenavService } from '@app/services/sidenav/sidenav.service';
 // import { RouterOutlet } from '@angular/router';
 // import { fader } from '@assets/animations';
 
@@ -57,13 +58,17 @@ export class AlbumsComponent implements OnInit {
     private ellipseService:ToolEllipseService,
     private selectionService: SelectionToolService,
     public albumTempSerivce: AlbumTempService,
-  ) { this.hotkeyService.hotkeysListener();}
+    public sidenavService: SidenavService,
+  ) { 
+      this.hotkeyService.hotkeysListener();
+    }
 
   ngOnInit(): void {
     this.pencilService.setUpPencil();
     this.rectangleService.setUpRectangle();
     this.ellipseService.setUpEllipse();
     this.selectionService.setUpSelection();
+    this.sidenavService.reset();
     this.getAllAlbums();
     this.roomListener();
 
@@ -200,10 +205,12 @@ export class AlbumsComponent implements OnInit {
   }  
 
   playAudio(title: string){
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   logout() {

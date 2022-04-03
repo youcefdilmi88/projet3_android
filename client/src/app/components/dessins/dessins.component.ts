@@ -466,10 +466,12 @@ export class DessinsComponent implements OnInit {
 
 
   playAudio(){
-    let audio = new Audio();
-    audio.src = "../../../assets/ui1.wav";
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/ui1.wav";
+      audio.load();
+      audio.play();
+    }
   }
 
   logout() {

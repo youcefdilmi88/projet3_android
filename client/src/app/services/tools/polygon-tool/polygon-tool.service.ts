@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faDrawPolygon, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { ICommand } from 'src/app/interfaces/command.interface';
@@ -298,4 +298,4 @@ export class PolygonToolService implements Tools {
   private angleToRAD(angle: number): number {
     return angle * Math.PI / (COMPLETE_ANGLE / 2);
   }
-}
+}*/

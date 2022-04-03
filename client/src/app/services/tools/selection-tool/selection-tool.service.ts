@@ -40,6 +40,7 @@ export class SelectionToolService implements Tools {
   private ctrlG: SVGGElement;
   private object: SVGElement;
   private rectSelection: SVGPolygonElement;
+  private identif: string;
 
   private rectInversement: SVGRectElement;
   private firstInvObj: SVGElement | null;
@@ -73,11 +74,14 @@ export class SelectionToolService implements Tools {
     this.socketService.getSocket().on("STARTSELECT", (data)=>{
       data=JSON.parse(data);
 
+      this.identif = data.identif;
+
       this.tmpX = data.off.x;
       this.tmpY = data.off.y;
-      const obj = this.drawingService.getObject(Number(data.identif));
+      const obj = this.drawingService.getObject((data.identif));
 
       this.object = obj!;
+      console.log(this.object);
 
       if (this.isInside(data.off.x, data.off.y)) {
         this.isIn = true;
@@ -167,7 +171,7 @@ export class SelectionToolService implements Tools {
       data=JSON.parse(data);
 
       if (data.bool == true) {
-        this.drawingService.removeObject(Number(this.object));
+        this.drawingService.removeObject((this.identif));
       }
       this.dom = false;
       this.objects = [];
@@ -187,10 +191,12 @@ export class SelectionToolService implements Tools {
   }
 
   playAudio(title: string) {
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   /// Quand le bouton gauche de la sourie est enfoncé, soit on selectionne un objet, soit on debute une zone de selection
@@ -210,7 +216,7 @@ export class SelectionToolService implements Tools {
         target = target.parentNode as SVGElement;
       }
 
-      const obj = this.drawingService.getObject(Number(target.id));
+      const obj = this.drawingService.getObject((target.id));
 
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
@@ -250,7 +256,7 @@ export class SelectionToolService implements Tools {
         else if (!this.wasMoved && this.objects.length >= 1 && this.isIn) {
           this.objects = [];
           const target = event.target as SVGElement;
-          const obj = this.drawingService.getObject(Number(target.id));
+          const obj = this.drawingService.getObject((target.id));
           
           if (obj) {
             this.objects.push(obj);

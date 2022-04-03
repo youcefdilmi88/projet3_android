@@ -26,19 +26,22 @@ export class HotkeysEmitterService {
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.d, EmitReturn.DUPLICATE);
     this.hotkeyTranslationMap.set(KeyCodes.delete, EmitReturn.DELETE);
     this.hotkeyTranslationMap.set(CTRL + KeyCodes.a, EmitReturn.SELECTALL);
-    this.hotkeyTranslationMap.set(CTRL + KeyCodes.o, EmitReturn.NEW_DRAWING);
-    this.hotkeyTranslationMap.set(CTRL + KeyCodes.s, EmitReturn.SAVE_DRAWING);
-    this.hotkeyTranslationMap.set(CTRL + KeyCodes.g, EmitReturn.OPEN_DRAWING);
-    this.hotkeyTranslationMap.set(CTRL + KeyCodes.e, EmitReturn.EXPORT_DRAWING);
+    //this.hotkeyTranslationMap.set(CTRL + KeyCodes.o, EmitReturn.NEW_DRAWING);
+    //this.hotkeyTranslationMap.set(CTRL + KeyCodes.s, EmitReturn.SAVE_DRAWING);
+    //this.hotkeyTranslationMap.set(CTRL + KeyCodes.g, EmitReturn.OPEN_DRAWING);
+    //this.hotkeyTranslationMap.set(CTRL + KeyCodes.e, EmitReturn.EXPORT_DRAWING);
+    this.hotkeyTranslationMap.set(KeyCodes.m, EmitReturn.MUTE);
+    this.hotkeyTranslationMap.set(KeyCodes.n, EmitReturn.UNMUTE);
+    this.hotkeyTranslationMap.set(KeyCodes.z, EmitReturn.CHAT);
     this.hotkeyTranslationMap.set(KeyCodes.c, EmitReturn.PENCIL);
-    this.hotkeyTranslationMap.set(KeyCodes.b1, EmitReturn.RECTANGLE);
-    this.hotkeyTranslationMap.set(KeyCodes.np1, EmitReturn.RECTANGLE);
-    this.hotkeyTranslationMap.set(KeyCodes.b2, EmitReturn.ELLIPSE);
-    this.hotkeyTranslationMap.set(KeyCodes.np2, EmitReturn.ELLIPSE);
-    this.hotkeyTranslationMap.set(KeyCodes.b3, EmitReturn.POLYGON);
-    this.hotkeyTranslationMap.set(KeyCodes.np3, EmitReturn.POLYGON);
-    this.hotkeyTranslationMap.set(KeyCodes.l, EmitReturn.LINE);
-    this.hotkeyTranslationMap.set(KeyCodes.e, EmitReturn.ERASER);
+    this.hotkeyTranslationMap.set(KeyCodes.r, EmitReturn.RECTANGLE);
+    this.hotkeyTranslationMap.set(KeyCodes.r, EmitReturn.RECTANGLE);
+    this.hotkeyTranslationMap.set(KeyCodes.e, EmitReturn.ELLIPSE);
+    this.hotkeyTranslationMap.set(KeyCodes.e, EmitReturn.ELLIPSE);
+    //this.hotkeyTranslationMap.set(KeyCodes.b3, EmitReturn.POLYGON);
+    //this.hotkeyTranslationMap.set(KeyCodes.np3, EmitReturn.POLYGON);
+    //this.hotkeyTranslationMap.set(KeyCodes.l, EmitReturn.LINE);
+    //this.hotkeyTranslationMap.set(KeyCodes.e, EmitReturn.ERASER);
     this.hotkeyTranslationMap.set(KeyCodes.s, EmitReturn.SELECTION);
   }
   /// Emet le enum de la fonction de travail associer au hotkey

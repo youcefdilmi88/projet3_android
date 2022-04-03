@@ -3,6 +3,9 @@ import { ToggleDrawerService } from '../toggle-drawer/toggle-drawer.service';
 import { Tools } from '../../interfaces/tools.interface';
 import { ToolsService } from '../tools/tools.service';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { SocketService } from '@app/services/socket/socket.service';
+import { DrawingService } from '../drawing/drawing.service';
+import { RendererProviderService } from '../renderer-provider/renderer-provider.service';
 
 /// Service permettant au sidenav de bien interagir avec les hotkeys et de bien gerer
 /// sa selection d'outil. Vérifie aussi s'il s'agit du menu fichier ou d'outil
@@ -16,10 +19,31 @@ export class SidenavService {
 
   isControlMenu = false;
 
+  public objects: Map<string, SVGElement> =  new Map<string, SVGElement>();
+
   constructor(
     private toggleDrawerService: ToggleDrawerService,
     private toolService: ToolsService,
+    private socketService: SocketService,
+    private drawingService: DrawingService,
+    private rendererService: RendererProviderService,
   ) {
+  }
+
+  reset() {
+    this.socketService.getSocket().on("RESETDRAWING", (data)=>{
+      data=JSON.parse(data);
+      console.log("hmm");
+      this.objects = this.drawingService.getObjectList();
+      this.objects.forEach((SVGElement, number) => {
+      this.drawingService.removeObject(number);
+      });
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.drawingService.getObjectList());
+    });
+  }
+
+  clickreset(): void {
+    this.socketService.getSocket().emit("RESETDRAWING", {});
   }
 
   /// Retourne la liste d'outils
@@ -53,6 +77,7 @@ export class SidenavService {
 
   /// Change la selection d'outil
   selectionChanged(selectedItem: MatButtonToggleChange): void {
+    console.log("changed", selectedItem.value);
     this.toolService.selectTool(selectedItem.value);
     this.isControlMenu = false;
   }

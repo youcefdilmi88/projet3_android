@@ -3,8 +3,11 @@ import { SidenavService } from 'src/app/services/sidenav/sidenav.service';
 import { Tools } from 'src/app/interfaces/tools.interface';
 import { ToolsService } from 'src/app/services/tools/tools.service';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { NewDrawingComponent } from '../../components/new-drawing/new-drawing.component';
-import { MatDialog } from '@angular/material/dialog';
+//import { DrawingService } from '@app/services/drawing/drawing.service';
+//import { RendererProviderService } from '@app/services/renderer-provider/renderer-provider.service';
+//import { SocketService } from '@app/services/socket/socket.service';
+//import { NewDrawingComponent } from '../../components/new-drawing/new-drawing.component';
+//import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sidenav',
@@ -14,7 +17,16 @@ import { MatDialog } from '@angular/material/dialog';
 
 export class SidenavComponent {
 
-  constructor(private dialog: MatDialog, private sideNavService: SidenavService, private toolService: ToolsService) { }
+  public objects: Map<string, SVGElement> =  new Map<string, SVGElement>();
+
+  constructor(
+    //private dialog: MatDialog, 
+    private sideNavService: SidenavService, 
+    private toolService: ToolsService,
+    //private drawingService: DrawingService,
+    //private rendererService: RendererProviderService,
+    //private socketService: SocketService,
+    ) { }
 
   get currentToolId(): number {
     return this.toolService.selectedToolId;
@@ -35,7 +47,14 @@ export class SidenavComponent {
 
   // Reinitialisation du dessin
   openNewDrawing(): void {
-    this.dialog.open(NewDrawingComponent, {});
+    /*this.objects = this.drawingService.getObjectList();
+    this.objects.forEach((SVGElement, number) => {
+      this.drawingService.removeObject(number);
+    });
+    this.rendererService.renderer.removeChild(this.drawingService.drawing, this.drawingService.getObjectList());*/
+    //this.socketService.getSocket().emit("RESETDRAWING", {});
+    this.sideNavService.clickreset();
+    //this.dialog.open(NewDrawingComponent, {});
   }
 
   /// Ouvre le sidenav
@@ -50,6 +69,7 @@ export class SidenavComponent {
 
   /// Changer la selection avec un toggle button
   selectionChanged(selectedItem: MatButtonToggleChange): void {
+    console.log("changed2", selectedItem);
     this.sideNavService.selectionChanged(selectedItem);
   }
 

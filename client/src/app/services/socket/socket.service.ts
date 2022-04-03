@@ -19,6 +19,7 @@ export class SocketService {
   public albumName: string;
   public language = "french";
   public theme = "light grey";
+  public mute = false;
   //private userService: UserService;
 
   constructor() { }

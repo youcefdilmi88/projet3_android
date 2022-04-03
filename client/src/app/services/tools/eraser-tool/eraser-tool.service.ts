@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faEraser } from '@fortawesome/free-solid-svg-icons';
@@ -257,4 +257,4 @@ export class EraserToolService implements Tools {
   private strToNum(str: string | null) {
     return str ? +str.replace(/[^-?\d]+/g, ',').split(',').filter((el) => el !== '') : 0;
   }
-}
+}*/

@@ -8,6 +8,7 @@ import { French, English } from '@app/interfaces/Langues';
 import { SocketService } from '@app/services/socket/socket.service';
 import { RouterOutlet } from '@angular/router';
 import { fader } from '@assets/animations';
+import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 
 
 @Component({
@@ -35,8 +36,11 @@ export class NewAccountComponent implements OnInit {
     private socketService: SocketService,
     public dialog: MatDialog,
     private http: HttpClient,
-    private router: Router
-  ) { }
+    private router: Router,
+    private hotkeyService: HotkeysService,
+  ) {
+    this.hotkeyService.hotkeysListener();
+   }
 
   ngOnInit() {
     if(this.socketService.language == "french") 
@@ -131,10 +135,12 @@ export class NewAccountComponent implements OnInit {
   }
 
   playAudio(title: string){
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   cancelClick(): void {
