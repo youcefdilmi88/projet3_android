@@ -86,6 +86,7 @@ class DrawingService {
         let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
         let id:String=data.id;
         drawing.removeElement(id);
+        this.drawings[`${drawingName}`]=drawing;
         drawing.modified=true;
         this.autoSaveDrawing(drawing.getName());
       }
@@ -100,6 +101,7 @@ class DrawingService {
         let drawingName:String=this.socketInDrawing.get(socket?.id)?.getName() as String;
         let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
         drawing.setElements([] as BaseShape[]);
+        this.drawings[`${drawingName}`]=drawing;
         drawing.modified=true;
         console.log(this.drawings.get(drawing.getName())?.getElementsInterface());
         this.autoSaveDrawing(drawing.getName());
