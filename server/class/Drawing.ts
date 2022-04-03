@@ -181,5 +181,16 @@ export class Drawing {
        }, 1000)
     }
 
+    removeElement(shapeId:String) {
+        this.elements.forEach((element)=>{
+            if(element.getId()==shapeId) {
+                const index=this.elements.indexOf(element);
+                if (index > -1) {
+                    this.elements.splice(index, 1); 
+                }
+            }
+        })
+    }
+
 
 }

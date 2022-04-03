@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import { BaseShape } from "../class/BaseShape";
 import { Drawing } from "../class/Drawing";
 import { User } from "../class/User";
 import { SOCKETEVENT } from "../Constants/socketEvent";
@@ -59,6 +60,9 @@ class DrawingService {
         selectionService.resizeSelect(socket);
         selectionService.deleteSelect(socket);
 
+        this.deleteShape(socket);
+        this.resetDrawing(socket);
+
     })
   }
 
@@ -72,6 +76,34 @@ class DrawingService {
     }).catch((e:Error)=>{
         console.log(e);
     });
+  }
+
+  deleteShape(socket:Socket) {
+    socket.on(SOCKETEVENT.DELETESHAPE,(data)=>{
+      data=JSON.parse(data);
+      if(this.socketInDrawing.has(socket?.id)) {
+        let drawingName:String=this.socketInDrawing.get(socket?.id)?.getName() as String;
+        let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+        let id:String=data.id;
+        drawing.removeElement(id);
+        drawing.modified=true;
+        this.autoSaveDrawing(drawing.getName());
+      }
+      this.getIo().to(this.socketInDrawing.get(socket?.id)?.getName() as string).emit(SOCKETEVENT.DELETESHAPE,JSON.stringify(data));
+    });
+  }
+
+  resetDrawing(socket:Socket) {
+    socket.on(SOCKETEVENT.RESETDRAWING,(data)=>{
+      if(this.socketInDrawing.has(socket?.id)) {
+        let drawingName:String=this.socketInDrawing.get(socket?.id)?.getName() as String;
+        let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+        drawing.setElements([] as BaseShape[]);
+        drawing.modified=true;
+        this.autoSaveDrawing(drawing.getName());
+      }
+      this.getIo().to(this.socketInDrawing.get(socket?.id)?.getName() as string).emit(SOCKETEVENT.RESETDRAWING,JSON.stringify(data));
+    })
   }
 
   async createDrawing(drawingName:String,owner:String,elements:BaseShapeInterface[],roomName:String,members:String[],visibility:String,creationDate:Number) {
