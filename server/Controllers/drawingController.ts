@@ -25,10 +25,6 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
     console.log("join drawing name:"+drawingName);
 
-    console.log(drawingService.drawings.has(drawingName));
-    drawingService.drawings.forEach((v,k)=>{
-        console.log(k);
-    })
     
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
@@ -61,7 +57,6 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     console.log("created drawing name:"+drawingName);
 
     if(drawingName && owner && roomName) {
-      console.log(drawingService.drawings.has(drawingName));
       if(drawingService.drawings.has(drawingName)) {
         return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
       } 

@@ -101,6 +101,7 @@ class DrawingService {
         let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
         drawing.setElements([] as BaseShape[]);
         drawing.modified=true;
+        console.log(this.drawings.get(drawing.getName())?.getElementsInterface());
         this.autoSaveDrawing(drawing.getName());
       }
       this.getIo().to(this.socketInDrawing.get(socket?.id)?.getName() as string).emit(SOCKETEVENT.RESETDRAWING,JSON.stringify(data));
@@ -183,7 +184,6 @@ class DrawingService {
 
   sourceDrawingName(name:String):String {
     let originalName:String=name.slice(7);
-    console.log(originalName);
     return originalName;
   }
 
@@ -194,7 +194,6 @@ class DrawingService {
 
     let socket=socketService.getIo().sockets.sockets.get(socketId);
     console.log("join drawing socket:",socket?.id);
-    console.log("************************");
 
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
       socket?.leave(drawingService.socketInDrawing.get(socket?.id)?.getName() as string);
@@ -331,7 +330,6 @@ class DrawingService {
     if(this.drawings.has(drawingName)) 
     {
      let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
-     console.log(drawing.getElementsInterface());
      if(drawing.modified==true) {
       const filter={drawingName:drawingName};
       const drawingUpdate = {
