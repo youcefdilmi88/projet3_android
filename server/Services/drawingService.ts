@@ -96,6 +96,7 @@ class DrawingService {
   resetDrawing(socket:Socket) {
     socket.on(SOCKETEVENT.RESETDRAWING,(data)=>{
       if(this.socketInDrawing.has(socket?.id)) {
+        console.log(socket?.id);
         let drawingName:String=this.socketInDrawing.get(socket?.id)?.getName() as String;
         let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
         drawing.setElements([] as BaseShape[]);
