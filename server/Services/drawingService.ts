@@ -331,6 +331,7 @@ class DrawingService {
     if(this.drawings.has(drawingName)) 
     {
      let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+     console.log(drawing.getElementsInterface());
      if(drawing.modified==true) {
       const filter={drawingName:drawingName};
       const drawingUpdate = {
