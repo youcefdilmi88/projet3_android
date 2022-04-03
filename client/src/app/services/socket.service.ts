@@ -14,8 +14,7 @@ export class SocketService {
 
   initSocket(): void {
     console.log("socket initiation");
-    this.socket=io(//'https://projet3-3990-207.herokuapp.com/'
-    URL, {
+    this.socket=io(URL, {
       reconnectionAttempts: 2,
       transports : ['websocket'],
     })

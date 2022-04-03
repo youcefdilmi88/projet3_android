@@ -312,7 +312,7 @@ export class RoomsComponent implements OnInit {
               console.error(error);
               console.log(error.status);
               console.log(error.error.message);
-              if( error.error.message == "404 (Not Found)" || data == 404 || error.error.message == "Http failure response for https://projet3-3990-207.herokuapp.com/room/createRoom: 404 Not Found" || error.error.message == "failed") {
+              if( error.error.message == "404 (Not Found)" || data == 404 || error.error.message == "Http failure response for "+this.BASE_URL+"/room/createRoom: 404 Not Found" || error.error.message == "failed") {
                 document.getElementById("error")!.style.visibility = "visible";
                 document.getElementById("error")!.innerHTML = "La salle " + text.trim() + " existe déjà";
               }

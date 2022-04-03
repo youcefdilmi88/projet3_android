@@ -171,7 +171,6 @@ class AlbumService {
         album.setDescription(description);
         this.albums.delete(oldName);
         this.albums.set(album.getName(),album);
-        console.log(this.albums);
 
         let albumRes:AlbumInterface={
           albumName:album.getName(),
@@ -250,7 +249,6 @@ class AlbumService {
   }
 
   async updateDrawingInAlbum(album:Album) {
-    let name=album.getName();
     try {
       const filter={albumName:album.getName()};
           const albumUpdate = {
@@ -264,8 +262,6 @@ class AlbumService {
           });
           await albumDoc?.save().then(()=>{
             this.albums[`${album.getName()}`]=album;
-            console.log("**********************************");
-            console.log("before"+this.albums.get(name)?.getDrawings());
             
             let albumRes:AlbumInterface={
               albumName:album.getName(),
@@ -278,7 +274,6 @@ class AlbumService {
               requests:album.getRequests()
             }
 
-            console.log("after"+this.albums.get(name)?.getDrawings());
             const message={album:albumRes};
             socketService.getIo().emit(SOCKETEVENT.ALBUMMODIFIED,JSON.stringify(message));
           }).catch((e:Error)=>{
