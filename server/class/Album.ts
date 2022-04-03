@@ -68,6 +68,13 @@ export class Album {
         }
     }
 
+    changeDrawingName(oldName:String,newName:String) {
+        const index = this.drawings.indexOf(oldName);
+        if (index > -1) {
+            this.drawings[index]=newName; 
+        }
+    }
+
     setName(name:String):void {
         this.albumName=name;
     }

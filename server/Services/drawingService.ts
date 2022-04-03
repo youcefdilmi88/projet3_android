@@ -97,22 +97,20 @@ class DrawingService {
   resetDrawing(socket:Socket) {
     socket.on(SOCKETEVENT.RESETDRAWING,(data)=>{
       if(this.socketInDrawing.has(socket?.id)) {
-        console.log(socket?.id);
         let drawingName:String=this.socketInDrawing.get(socket?.id)?.getName() as String;
         let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
         drawing.setElements([] as BaseShape[]);
         this.drawings[`${drawingName}`]=drawing;
         drawing.modified=true;
-        console.log(this.drawings.get(drawing.getName())?.getElementsInterface());
         this.autoSaveDrawing(drawing.getName());
       }
       this.getIo().to(this.socketInDrawing.get(socket?.id)?.getName() as string).emit(SOCKETEVENT.RESETDRAWING,JSON.stringify(data));
     })
   }
 
-  async createDrawing(drawingName:String,owner:String,elements:BaseShapeInterface[],roomName:String,members:String[],visibility:String,creationDate:Number) {
+  async createDrawing(drawingName:String,owner:String,elements:BaseShapeInterface[],roomName:String,members:String[],visibility:String,creationDate:Number,likes:String[]) {
     try {
-      const drawing=new DrawingSchema({drawingName:drawingName,owner:owner,elements:elements,roomName:roomName,members:members,visibility:visibility,creationDate:creationDate});
+      const drawing=new DrawingSchema({drawingName:drawingName,owner:owner,elements:elements,roomName:roomName,members:members,visibility:visibility,creationDate:creationDate,likes:likes});
       await drawing.save().then(()=>{
         console.log("drawing saved");
       }).catch((e:Error)=>{
@@ -125,7 +123,8 @@ class DrawingService {
         roomName:roomName,
         members:members,
         visibility:visibility,
-        creationDate:creationDate
+        creationDate:creationDate,
+        likes:likes
       }
       const drawingObj=new Drawing(drawingInterface);
       this.drawings.set(drawingObj.getName(),drawingObj);
@@ -220,7 +219,8 @@ class DrawingService {
       roomName:drawing.roomName,
       members:drawing.getMembers(),
       visibility:drawing.getVisibility(),
-      creationDate:drawing.getCreationDate()
+      creationDate:drawing.getCreationDate(),
+      likes:drawing.getLikes()
     }
 
     const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
@@ -246,7 +246,8 @@ class DrawingService {
       roomName:drawing.roomName,
       members:drawing.getMembers(),
       visibility:drawing.getVisibility(),
-      creationDate:drawing.getCreationDate()
+      creationDate:drawing.getCreationDate(),
+      likes:drawing.getLikes()
     }
 
     const message={useremail:mail,drawing:drawingInterface};
@@ -281,6 +282,13 @@ class DrawingService {
           }
         });
 
+        albumService.albums.forEach((v,k)=>{
+          if(v.getDrawings().indexOf(oldName)!=-1) {
+            v.changeDrawingName(oldName,drawing.getName());
+            albumService.updateDrawingInAlbum(v);
+          }
+        })
+
         let drawingInterface:DrawingInterface={
           drawingName:this.sourceDrawingName(drawing.getName()),
           owner:drawing.getOwner(),
@@ -288,11 +296,13 @@ class DrawingService {
           roomName:drawing.roomName,
           members:drawing.getMembers(),
           visibility:drawing.getVisibility(),
-          creationDate:drawing.getCreationDate()
+          creationDate:drawing.getCreationDate(),
+          likes:drawing.getLikes()
         }
 
         const message={oldName:this.sourceDrawingName(oldName),drawing:drawingInterface};
         socketService.getIo().emit(SOCKETEVENT.DRAWINGMODIFIED,JSON.stringify(message));
+        
       }).catch((e:Error)=>{
         console.log(e);
       });
@@ -321,7 +331,8 @@ class DrawingService {
         roomName:drawing.roomName,
         members:drawing.getMembers(),
         visibility:drawing.getVisibility(),
-        creationDate:drawing.getCreationDate()
+        creationDate:drawing.getCreationDate(),
+        likes:drawing.getLikes()
       }
       socketService.getIo().emit(SOCKETEVENT.VISIBILITYCHANGED,JSON.stringify({drawing:drawingInterface}));
     })
@@ -339,7 +350,8 @@ class DrawingService {
              "owner":drawing.getOwner(),
              "elements":drawing.getElementsInterface(),
              "members":drawing.getMembers(),
-             "visibility":drawing.getVisibility()
+             "visibility":drawing.getVisibility(),
+             "likes":drawing.getLikes()
            }
        };
         try {
@@ -372,7 +384,23 @@ class DrawingService {
     return converted;
   }
 
+  addLikeDrawing(drawingName:String,useremail:String) {
+    let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+    drawing.addLikes(useremail);
+    drawing.modified=true;
+    this.autoSaveDrawing(drawing.getName());
+    const message={drawing:drawing};
+    socketService.getIo().emit(SOCKETEVENT.DRAWINGLIKESCHANGED,JSON.stringify(message));
+  }
 
+  removeLikeDrawing(drawingName:String,useremail:String) {
+    let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
+    drawing.removeLikes(useremail);
+    drawing.modified=true;
+    this.autoSaveDrawing(drawing.getName());
+    const message={drawing:drawing};
+    socketService.getIo().emit(SOCKETEVENT.DRAWINGLIKESCHANGED,JSON.stringify(message));
+  }
 
 }
 

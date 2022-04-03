@@ -21,9 +21,12 @@ export class Drawing {
     public modified:boolean=false;
     private visibility:String;
     private creationDate:Number;
+    private likes:String[];
+ 
 
     elementById:Map<String,BaseShape>;
     membersBySocketId:Map<string,String>;  // socketId and useremail
+
 
     constructor(drawing:DrawingInterface) {
        this.drawingName=drawing.drawingName;
@@ -35,6 +38,8 @@ export class Drawing {
        this.membersBySocketId=new Map<string,String>();
        this.visibility=drawing.visibility;
        this.creationDate=drawing.creationDate;
+       this.likes=drawing.likes;
+
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
@@ -144,6 +149,14 @@ export class Drawing {
         return this.creationDate;
     }
 
+    getLikes():String[] {
+        return this.likes;
+    }
+
+    getNbLikes():Number {
+        return this.likes.length as Number;
+    }
+
     setName(name:String):void {
         this.drawingName=name;
     }
@@ -176,6 +189,11 @@ export class Drawing {
         this.creationDate=date;
     }
 
+    setNbLikes(users:String[]):void {
+        this.likes=users;
+    }
+
+
     removeMember(socketId:string):void {
         this.membersBySocketId.delete(socketId);
     }
@@ -183,6 +201,18 @@ export class Drawing {
     addMember(socketId:string,email:String) {
         this.membersBySocketId.set(socketId,email);
     }
+
+    addLikes(mail:String) {
+      this.likes.push(mail);
+    }
+
+    removeLikes(mail:String) {
+        const index = this.likes.indexOf(mail);
+        if (index > -1) {
+            this.likes.splice(index, 1); 
+        }
+    }
+
     
     async autoSave() {
         await drawingService.autoSaveDrawing(this.drawingName);
