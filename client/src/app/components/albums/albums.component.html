@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html>  
-<body>
-
-
-  
+<body>  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <div class="title">
-            <h1 id="title">{{albumTitle}}</h1>
+        <div id="title3">
+            <h1 id="title4">{{albumTitle}}</h1>
             <button (click)="logout()" class = "btn" id="logout" routerLink = ""><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
         </div>
         <!-- <div class="center_me"> -->
@@ -49,7 +46,7 @@
                 <button mat-raised-button id="albumIDButtonDelete"  (click)="deleteAlbum($event.target)">
                     {{delete}} <span class='special-word'>{{albumName}}</span>
                 </button>
-                <button mat-raised-button id="albumModifier"  >
+                <button mat-raised-button id="albumModifier" (click)="modifyAlbum($event.target)" >
                     Modifier <span class='special-word'>{{albumName}}</span>
                 </button>
                 <!-- <div class="listAlbumsButtons"> -->

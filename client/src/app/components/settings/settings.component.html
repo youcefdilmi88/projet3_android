@@ -1,25 +1,29 @@
 
-<div class="title">
-  <h1>Changer les paramètres</h1>
+<div id="title0">
+  <h1 id="title00">Changer les paramètres</h1>
 </div>
-<div>
+
+<div class="center">
   <p>Choisir la langue: </p>
   <mat-button-toggle-group id="test" name="langue" aria-label="langue">
   <mat-button-toggle id="langue" value="french" (change)="onValChange($event.value)">Français</mat-button-toggle>
   <mat-button-toggle id="langue" value="english" (change)="onValChange($event.value)">English </mat-button-toggle>
 </mat-button-toggle-group>
+
   <p>Choisir le thème: </p>
   <mat-button-toggle-group name="theme" aria-label="theme">
-  <mat-button-toggle id="theme" value="light grey" (change)="onChange($event.value)">Light grey</mat-button-toggle>
-  <mat-button-toggle id="theme" value="dark grey" (change)="onChange($event.value)">Dark grey</mat-button-toggle>
-  <mat-button-toggle id="theme" value="deep purple" (change)="onChange($event.value)">Deep Purple</mat-button-toggle>
-  <mat-button-toggle id="theme" value="light blue" (change)="onChange($event.value)">Ligh blue</mat-button-toggle>
-  <mat-button-toggle id="theme" value="light pink" (change)="onChange($event.value)">Light Pink</mat-button-toggle>
+  <mat-button-toggle id="lightGrey" value="light grey" (change)="onChange($event.value)">Light grey</mat-button-toggle>
+  <mat-button-toggle id="darkGrey" value="dark grey" (change)="onChange($event.value)">Dark grey</mat-button-toggle>
+  <mat-button-toggle id="deepPurple" value="deep purple" (change)="onChange($event.value)">Deep Purple</mat-button-toggle>
+  <mat-button-toggle id="lightBlue" value="light blue" (change)="onChange($event.value)">Ligh blue</mat-button-toggle>
+  <mat-button-toggle id="lightPink" value="light pink" (change)="onChange($event.value)">Light Pink</mat-button-toggle>
 </mat-button-toggle-group>
 </div>
 
+<div  class="center">
+  <button mat-raised-button id="conf" routerLink = "">Confirmer</button>
+</div>
 
-<button mat-raised-button routerLink = "">OK</button>
 
 
 

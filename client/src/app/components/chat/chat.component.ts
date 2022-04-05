@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { URL } from '../../../../constants';
 import { French, English } from '@app/interfaces/Langues';
+import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 
 
 @Component({
@@ -56,6 +57,26 @@ export class ChatComponent implements AfterViewInit {
        this.chatTitle =  English.chatTitle;
        this.roomChange = English.changeRoom;
      }
+     if(this.socketService.theme == "light grey"){
+      document.getElementById("title9")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title9")!.style.color = LightGrey.text;
+    }
+    else if(this.socketService.theme == "dark grey"){
+      document.getElementById("title9")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title9")!.style.color = DarkGrey.text;
+    }
+    else if(this.socketService.theme == "deep purple") {       
+      document.getElementById("title9")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title9")!.style.color = DeepPurple.text;
+    }
+    else if(this.socketService.theme == "light blue") { 
+      document.getElementById("title9")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title9")!.style.color = LightBlue.text;
+    }
+    else if(this.socketService.theme == "light pink") {  
+      document.getElementById("title9")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title9")!.style.color = LightPink.text;
+    }
 
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     console.log("CHECK MOI HEHE:" + this.socketService.currentRoom);
@@ -140,17 +161,20 @@ export class ChatComponent implements AfterViewInit {
     // this.socketService.currentRoom = "randomSHIT";
     let link = this.BASE_URL + "drawing/leaveDrawing";
 
-    this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {
-      if(data.message == "succeful") {
-        console.log("EXITED DRAWING" + data.useremail);
-      }
-    });
+    if(this.router.url == "/sidenav") {
+      this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {
+        if(data.message == "succeful") {
+          console.log("EXITED DRAWING" + data.useremail);
+        }
+      });
+    }
   }
 
   changeRoom(): void {
     //this.dialog.open(RoomsComponent, { disableClose: true });
     this.router.navigate(['/', 'rooms']);
     this.playAudio("ui2.wav");
+    
     this.leaveDrawing();
   }
 
@@ -207,6 +231,6 @@ export class ChatComponent implements AfterViewInit {
       }   
     });
 
-    this.leaveDrawing()
+    this.leaveDrawing();
   }
 }

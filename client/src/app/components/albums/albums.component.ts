@@ -17,8 +17,13 @@ import { Album } from '@app/classes/Album';
 import { AlbumInterface } from '@app/interfaces/AlbumInterface';
 import { French, English} from '@app/interfaces/Langues';
 import { AlbumTempService } from '@app/services/albumTempService';
+import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
+import { ModifyAlbumComponent } from '../modify-album/modify-album.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 // import { RouterOutlet } from '@angular/router';
 // import { fader } from '@assets/animations';
+
+const ONE_SECOND = 1000;
 
 @Component({
   selector: 'app-albums',
@@ -57,6 +62,7 @@ export class AlbumsComponent implements OnInit {
     private ellipseService:ToolEllipseService,
     private selectionService: SelectionToolService,
     public albumTempSerivce: AlbumTempService,
+    private snackBar: MatSnackBar,
   ) { this.hotkeyService.hotkeysListener();}
 
   ngOnInit(): void {
@@ -83,11 +89,67 @@ export class AlbumsComponent implements OnInit {
       this.delete = English.delete;
       this.goChat = English.goChat;
     }
+    if(this.socketService.theme == "light grey"){
+      document.getElementById("createAlbum")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("createAlbum")!.style.color = LightGrey.text;
+      document.getElementById("menuCompte")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("menuCompte")!.style.color = LightGrey.text;
+      document.getElementById("chatRoom")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("chatRoom")!.style.color = LightGrey.text;
+      document.getElementById("title3")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title3")!.style.color = LightGrey.text;
+      document.getElementById("albumModifier")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("albumModifier")!.style.color = LightGrey.text;
+    }
+    else if(this.socketService.theme == "dark grey"){
+      document.getElementById("createAlbum")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("createAlbum")!.style.color = DarkGrey.text;
+      document.getElementById("menuCompte")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("menuCompte")!.style.color = DarkGrey.text;
+      document.getElementById("chatRoom")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("chatRoom")!.style.color = DarkGrey.text;
+      document.getElementById("title3")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title3")!.style.color = DarkGrey.text;
+      document.getElementById("albumModifier")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("albumModifier")!.style.color = DarkGrey.text;
+    }
+    else if(this.socketService.theme == "deep purple") {       
+      document.getElementById("createAlbum")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("createAlbum")!.style.color = DeepPurple.text;
+      document.getElementById("menuCompte")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("menuCompte")!.style.color = DeepPurple.text;
+      document.getElementById("chatRoom")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("chatRoom")!.style.color = DeepPurple.text;
+      document.getElementById("title3")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title3")!.style.color = DeepPurple.text;
+      document.getElementById("albumModifier")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("albumModifier")!.style.color = DeepPurple.text;
+    }
+    else if(this.socketService.theme == "light blue") { 
+      document.getElementById("createAlbum")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("createAlbum")!.style.color = LightBlue.text;
+      document.getElementById("menuCompte")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("menuCompte")!.style.color = LightBlue.text;
+      document.getElementById("chatRoom")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("chatRoom")!.style.color = LightBlue.text;
+      document.getElementById("title3")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title3")!.style.color = LightBlue.text;
+      document.getElementById("albumModifier")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("albumModifier")!.style.color = LightBlue.text;
+    }
+    else if(this.socketService.theme == "light pink") {  
+      document.getElementById("createAlbum")!.style.backgroundColor = LightPink.main;
+      document.getElementById("createAlbum")!.style.color = LightPink.text;
+      document.getElementById("menuCompte")!.style.backgroundColor = LightPink.main;
+      document.getElementById("menuCompte")!.style.color = LightPink.text;
+      document.getElementById("chatRoom")!.style.backgroundColor = LightPink.main;
+      document.getElementById("chatRoom")!.style.color = LightPink.text;
+      document.getElementById("title3")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title3")!.style.color = LightPink.text;
+      document.getElementById("albumModifier")!.style.backgroundColor = LightPink.main;
+      document.getElementById("albumModifier")!.style.color = LightPink.text;
+    }
   }
-
-//   newDrawing() {
-//     this.dialog.open(NewDrawingComponent);
-// }
 
   roomListener() {
     this.socketService.getSocket().on("ALBUMCREATED", (data) => {
@@ -95,6 +157,11 @@ export class AlbumsComponent implements OnInit {
     });
 
     this.socketService.getSocket().on("ALBUMDELETED", (data) => {
+      this.getAllAlbums();
+    });
+
+    this.socketService.getSocket().on("ALBUMNAMECHANGED", (data) => {
+      data=JSON.parse(data);
       this.getAllAlbums();
     });
   }
@@ -114,6 +181,7 @@ export class AlbumsComponent implements OnInit {
         this.AlbumsVisibilite.push(albums.visibility);
         console.log(albums.description);
       });
+      // this.AlbumsNames.sort().reverse();
     });
   }
 
@@ -121,10 +189,6 @@ export class AlbumsComponent implements OnInit {
     this.dialog.open(NewAlbumComponent, { disableClose: false });
     this.playAudio("ui2.wav")
   }
-
-  // prepareRoute(outlet: RouterOutlet) {
-  //   return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
-  // }
 
   defaultRoom() {
     this.socketService.joinRoom('DEFAULT');
@@ -158,11 +222,8 @@ export class AlbumsComponent implements OnInit {
         this.socketService.albumName = element.textContent.trim().slice(7);
         console.log("album name", this.socketService.albumName);
       }
-      else {
-        this.playAudio("error.wav");
-        console.log("response", data);
-      }
     });
+
   }
 
 
@@ -179,25 +240,40 @@ export class AlbumsComponent implements OnInit {
     let link2 = this.BASE_URL + "album/getDrawings/" + element.textContent.trim().slice(10);
     let link3 = this.BASE_URL + "drawing/deleteDrawing";
     
-    this.http.post<any>(link, {albumName: element.textContent.trim().slice(10), useremail: this.socketService.email}).subscribe((data:any) => {
-      if(data.message == "success") {
-        this.playAudio("bin.wav");
-        console.log("ALBUM DELETED");
-        this.http.get<any>(link2, {}).subscribe((data:any) => {
-          let length = Object.keys(data).length;
-          console.log("pp size", length);
-          for (let i = 0; i < length; i++) {
-            this.http.post<any>(link3, {drawingName: data[i].drawingName }).subscribe((data:any) => {
-              console.log("i", data[i].drawingName);
-            });
-          }
-        });
-      }
-      else {
-        console.log("YOU ARE NOT THE CREATOR DUMBASS");
-      }
-    });
+    if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(10))!.getCreator()) {
+      this.http.post<any>(link, {albumName: element.textContent.trim().slice(10), useremail: this.socketService.email}).subscribe((data:any) => {
+        if(data.message == "success") {
+          this.playAudio("bin.wav");
+          console.log("ALBUM DELETED");
+          this.http.get<any>(link2, {}).subscribe((data:any) => {
+            let length = Object.keys(data).length;
+            console.log("pp size", length);
+            for (let i = 0; i < length; i++) {
+              this.http.post<any>(link3, {drawingName: data[i].drawingName }).subscribe((data:any) => {
+                console.log("i", data[i].drawingName);
+              });
+            }
+          });
+        }
+      });
+    }
+    else {
+      this.playAudio("error.wav");
+      this.snackBar.open('Vous n\'êtes pas le créateur de l\'album', '', { duration: ONE_SECOND, });
+    }
   }  
+
+  modifyAlbum(element: any) {
+    if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(9))!.getCreator()) {
+      this.dialog.open(ModifyAlbumComponent);
+      console.log(element.textContent);
+      this.socketService.albumName = element.textContent.trim().slice(9);
+    }
+    else {
+      this.playAudio("error.wav");
+      this.snackBar.open('Vous n\'êtes pas le créateur de l\'album', '', { duration: ONE_SECOND, });
+    }
+  }
 
   playAudio(title: string){
     let audio = new Audio();

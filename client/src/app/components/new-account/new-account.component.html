@@ -4,8 +4,8 @@
         <router-outlet #outlet = "outlet"></router-outlet>
     <body>
 
-        <div class="title">
-            <h1 id="title">{{createTitle}}</h1>
+        <div id="title2">
+            <h1>{{createTitle}}</h1>
         </div>
 
         <div class="outer">
@@ -44,9 +44,9 @@
                         <p id="error">{{error1}}</p>
                     </div>
 
-                    <button mat-raised-button (click)="cancelClick()">{{cancel}}</button>
-                    <button mat-raised-button (click)="closeClick()" >{{confirm}}</button>
-                    <button mat-raised-button (click)="openAvatar()" >Avatar</button>
+                    <button mat-raised-button id="buttonMain5" (click)="cancelClick()">{{cancel}}</button>
+                    <button mat-raised-button id="buttonMain6" (click)="closeClick()" >{{confirm}}</button>
+                    <button mat-raised-button id="buttonMain7" (click)="openAvatar()" >Avatar</button>
 
                 </div>
             </div>
