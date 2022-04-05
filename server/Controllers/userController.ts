@@ -95,8 +95,39 @@ const logoutUser=async(req:Request,res:Response,next:NextFunction)=>{
     return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
 }
 
+const addFriend=async(req:Request,res:Response,next:NextFunction)=>{
+    let newFriend:String=req.body.newFriend as String;
+    let targetUser:String=req.body.targetUser as String;
+
+    let newFriendObj:User=userService.getUsers().find((user)=>user.getUseremail()==newFriend) as User;
+
+    if(userService.getUsers().find((user)=>user.getUseremail()==targetUser) as User) {
+      let user:User=userService.getUsers().find((user)=>user.getUseremail()==targetUser) as User;
+      await userService.addFriend(newFriendObj,user);
+      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+
+    return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
+}
+
+const removeFriend=async(req:Request,res:Response,next:NextFunction)=>{
+   let useremail:String=req.body.useremail as String;
+   let friendToRemove:String=req.body.friendToRemove as String;
+
+   let user:User=userService.getUsers().find((user)=>user.getUseremail()==useremail) as User;
+   if(user.getFriends().indexOf(friendToRemove)!=-1) {
+     await userService.removeFriend(friendToRemove,useremail);
+     return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+   }
+   return res.status(404).json({message:HTTPMESSAGE.FNOTFOUND});
+
+}
+
+
 router.post('/registerUser',createUser);
 router.post('/loginUser',loginUser);
 router.post('/logoutUser',logoutUser);
+router.post('/addFriend',addFriend);
+router.post('/removeFriend',removeFriend);
 
 export=router;

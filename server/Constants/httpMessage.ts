@@ -15,5 +15,6 @@ export enum HTTPMESSAGE {
     UNOTMEMBER="user is not a member",
     UISOWNER="user is owner",
     REQNOTFOUND="request not found",
-    UALREADYLIKE="user already liked"
+    UALREADYLIKE="user already liked",
+    FNOTFOUND="friend not found"
 }

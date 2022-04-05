@@ -28,9 +28,9 @@ class AccountService {
    }
 
    async createAccount(email:String,pass:String,nickName:String) {
-
+    let friends:String[]=[];
     const account=new AccountSchema({useremail:email,password:pass,nickname:nickName});
-    const user=new UserSchema({useremail:email,nickname:nickName,lastLoggedIn:null,lastLoggedOut:null});
+    const user=new UserSchema({useremail:email,nickname:nickName,lastLoggedIn:null,lastLoggedOut:null,friends:friends});
     
     await account.save().catch((e:Error)=>{
       console.log(e);
@@ -41,8 +41,8 @@ class AccountService {
 
     const accountObj=new Account(email,pass,nickName);
     this.accounts.set(email,accountObj);
-
-    const userObj=new User(email,nickName);
+    
+    const userObj=new User(email,nickName,friends);
     userService.getUsers().push(userObj);
   }
 
