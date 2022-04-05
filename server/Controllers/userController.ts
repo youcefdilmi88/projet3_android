@@ -58,7 +58,6 @@ const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
           userService.getLoggedUsers().set(userFound.getUseremail(),userFound);
        
           let defaultRoomName:String=roomService.getDefaultRoom().getRoomName() as String;
-          console.log(defaultRoomName);
           return res.status(200).json({message:HTTPMESSAGE.SUCCESS,user:userFound,currentRoom:defaultRoomName});
         }
         else {

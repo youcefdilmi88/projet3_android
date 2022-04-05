@@ -1,0 +1,19 @@
+<h1>Modifier l'album</h1>
+<div id="info">
+    <div>
+        <mat-form-field class="input" floatLabel="always" appearance="outline">
+            <mat-label>Nouveau nom</mat-label>
+            <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="albumNAME">
+        </mat-form-field> 
+    </div>
+    <div>
+        <mat-form-field class="input" floatLabel="always" appearance="outline">
+            <mat-label>Nouvelle description</mat-label>
+            <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="albumDESCRIPTION">
+        </mat-form-field> 
+    </div>
+    <div>
+        <button mat-raised-button id="Cancel" class="buto" (click)="close()" >Annuler</button>
+        <button mat-raised-button id="confirmer" class="buto" (click)="updateAlbum()">Confirmer</button>
+    </div>
+</div>

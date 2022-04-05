@@ -9,7 +9,7 @@ import { French, English} from '@app/interfaces/Langues';
 import { MatDialog } from '@angular/material/dialog';
 // import { SettingsComponent } from '../settings/settings.component';
 // import { catchError } from 'rxjs/operators';
-import { LightGrey, DarkGrey } from '@app/interfaces/Themes';
+import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { RouterOutlet } from '@angular/router';
 import { fader } from '@assets/animations';
 import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
@@ -39,6 +39,7 @@ export class MainPageComponent implements OnInit{
   public error2: string;
   public error3: string;
   public error4: string;
+
 
   constructor(
     public dialog: MatDialog,
@@ -82,22 +83,65 @@ export class MainPageComponent implements OnInit{
 
   console.log(this.socketService.theme);
     if(this.socketService.theme == "light grey"){
-      const collection = document.getElementsByTagName("button");
-      for (let i = 0; i < collection.length; i++) {
-      collection[i].style.backgroundColor = LightGrey.main;
-      collection[i].style.color = LightGrey.text;
-      //aussi pour le title
-      }
+      document.getElementById("buttonMain")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain")!.style.color = LightGrey.text;
+      document.getElementById("buttonMain2")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain2")!.style.color = LightGrey.text;
+      document.getElementById("buttonMain3")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain3")!.style.color = LightGrey.text;
+      document.getElementById("buttonMain4")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain4")!.style.color = LightGrey.text;
+      document.getElementById("title")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
-      const collection = document.getElementsByTagName("button");
-      for (let i = 0; i < collection.length; i++) {
-      collection[i].style.backgroundColor = DarkGrey.main;
-      collection[i].style.color = DarkGrey.text;
-      //aussi pour le title
-      }
+      document.getElementById("buttonMain")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain")!.style.color = DarkGrey.text;
+      document.getElementById("buttonMain2")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain2")!.style.color = DarkGrey.text;
+      document.getElementById("buttonMain3")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain3")!.style.color = DarkGrey.text;
+      document.getElementById("buttonMain4")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain4")!.style.color = DarkGrey.text;
+      document.getElementById("title")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title")!.style.color = DarkGrey.text;
     }
-
+    else if(this.socketService.theme == "deep purple") {       
+      document.getElementById("buttonMain")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain")!.style.color = DeepPurple.text;
+      document.getElementById("buttonMain2")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain2")!.style.color = DeepPurple.text;
+      document.getElementById("buttonMain3")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain3")!.style.color = DeepPurple.text;
+      document.getElementById("buttonMain4")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain4")!.style.color = DeepPurple.text;
+      document.getElementById("title")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title")!.style.color = DeepPurple.text;
+    }
+    else if(this.socketService.theme == "light blue") { 
+      document.getElementById("buttonMain")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain")!.style.color = LightBlue.text;
+      document.getElementById("buttonMain2")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain2")!.style.color = LightBlue.text;
+      document.getElementById("buttonMain3")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain3")!.style.color = LightBlue.text;
+      document.getElementById("buttonMain4")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain4")!.style.color = LightBlue.text;
+      document.getElementById("title")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title")!.style.color = LightBlue.text;
+    }
+    else if(this.socketService.theme == "light pink") {  
+      document.getElementById("buttonMain")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain")!.style.color = LightPink.text;
+      document.getElementById("buttonMain2")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain2")!.style.color = LightPink.text;
+      document.getElementById("buttonMain3")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain3")!.style.color = LightPink.text;
+      document.getElementById("buttonMain4")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain4")!.style.color = LightPink.text;
+      document.getElementById("title")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title")!.style.color = LightPink.text;
+    }
   }
 
   password: string;
@@ -115,6 +159,11 @@ export class MainPageComponent implements OnInit{
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = this.error1;
       this.playAudio("error.wav");
+      let erreur= document.getElementById("buttonMain2")!;
+      erreur.className = "erreuAnimation";
+      erreur.classList.remove("erreuAnimation");
+      void erreur.offsetWidth;
+      erreur.className = "erreuAnimation";
       return;
     }
     else { 
@@ -140,24 +189,40 @@ export class MainPageComponent implements OnInit{
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = this.error2;
           this.playAudio("error.wav");
+          let erreur= document.getElementById("buttonMain2")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
           return;
         }
         else if(error.error.message=="user already connected") {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = this.error3;
           this.playAudio("error.wav");
+          let erreur= document.getElementById("buttonMain2")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
           return;
         }
         else if(error.error.message=="user not found !") {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = this.error4;
           this.playAudio("error.wav");
+          let erreur= document.getElementById("buttonMain2")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
           return;
         }
       }
       );
     }
   }
+
 
   playAudio(title: string){
     if (this.socketService.mute == false) {

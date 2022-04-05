@@ -234,17 +234,14 @@ class AlbumService {
   }
 
   async addDrawingToAlbum(drawingName:String,albumName:String) {
-    //console.log("*************************");
     this.albums.forEach(async (v,k)=>{
       if(v.getDrawings().indexOf(drawingName)!=-1) {
         v.removeDrawing(drawingName);
-        console.log("cleanup");
         await this.updateDrawingInAlbum(v);
       }
     });
     let album:Album=this.albums.get(albumName) as Album;
     album.addDrawing(drawingName);
-    console.log("add");
     await this.updateDrawingInAlbum(album);
   }
 

@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="wrapper">
-    <div class="title">
+    <div id="title7">
         <button class = "btn" id="back" routerLink = "/albums"><i class="fa fa-chevron-circle-left" aria-hidden="true"style="font-size:50px"></i></button>
-        <h1 id="title">{{roomTitle}}</h1>
+        <h1 id="title8">{{roomTitle}}</h1>
         <button (click)="logout()" class = "btn" id="logout" routerLink = ""><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
     </div>
 
@@ -26,9 +26,9 @@
         <input #roomfilter (click)="find(roomfilter.value)" matInput id="room" type="text" name="room" required >
     </mat-form-field> 
  
-    <button mat-raised-button class="searchRoom" (click)="find(roomfilter.value)">{{finRoom}}</button>
+    <button mat-raised-button id="searchRoom" class="searchRoom" (click)="find(roomfilter.value)">{{finRoom}}</button>
 </div>
-    </div>
+    </div> 
 
     <div class="listRooms" *ngFor="let buttonText of buttonsTexts">
         <div class="listRoomsText">

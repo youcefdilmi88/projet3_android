@@ -4,10 +4,12 @@ import { checkEllipse, EllipseInterface } from "../Interface/EllipseInterface";
 import { checkLine, LineInterface } from "../Interface/LineInterface";
 import { checkRectangle, RectangleInterface } from "../Interface/RectangleInterface";
 import drawingService from "../Services/drawingService";
+import userService from "../Services/userService";
 import { BaseShape } from "./BaseShape";
 import { Ellipse } from "./Ellipse";
 import { Line } from "./Line";
 import { Rectangle } from "./Rectangle";
+import { User } from "./User";
 
 
 export class Drawing {
@@ -19,9 +21,12 @@ export class Drawing {
     public modified:boolean=false;
     private visibility:String;
     private creationDate:Number;
+    private likes:String[] = [];
+ 
 
     elementById:Map<String,BaseShape>;
     membersBySocketId:Map<string,String>;  // socketId and useremail
+
 
     constructor(drawing:DrawingInterface) {
        this.drawingName=drawing.drawingName;
@@ -33,6 +38,8 @@ export class Drawing {
        this.membersBySocketId=new Map<string,String>();
        this.visibility=drawing.visibility;
        this.creationDate=drawing.creationDate;
+       this.likes=drawing.likes;
+
 
        drawing.elements.forEach((element:BaseShapeInterface)=>{
            if(checkLine(element)) {
@@ -142,6 +149,14 @@ export class Drawing {
         return this.creationDate;
     }
 
+    getLikes():String[] {
+        return this.likes;
+    }
+
+    getNbLikes():Number {
+        return this.likes.length as Number;
+    }
+
     setName(name:String):void {
         this.drawingName=name;
     }
@@ -151,11 +166,19 @@ export class Drawing {
     }
 
     setElements(elements:BaseShape[]) {
-        this.elements=elements;
+        this.elementById.clear();
+        elements.forEach((element)=>{
+            this.elementById.set(element.getId(),element);
+        })
     }
 
     setMembers(members:String[]) {
-        this.members=members;
+        this.membersBySocketId.clear();
+        members.forEach((member)=>{
+            let user:User=userService.getUserByUseremail(member) as User;
+            let socketId:string=userService.getSocketIdByUser().get(user) as string;
+            this.membersBySocketId.set(socketId,member);
+        })
     }
 
     setVisibility(visibility:String) {
@@ -166,6 +189,11 @@ export class Drawing {
         this.creationDate=date;
     }
 
+    setNbLikes(users:String[]):void {
+        this.likes=users;
+    }
+
+
     removeMember(socketId:string):void {
         this.membersBySocketId.delete(socketId);
     }
@@ -173,6 +201,18 @@ export class Drawing {
     addMember(socketId:string,email:String) {
         this.membersBySocketId.set(socketId,email);
     }
+
+    addLikes(mail:String) {
+      this.likes.push(mail);
+    }
+
+    removeLikes(mail:String) {
+        const index = this.likes.indexOf(mail);
+        if (index > -1) {
+            this.likes.splice(index, 1); 
+        }
+    }
+
     
     async autoSave() {
         await drawingService.autoSaveDrawing(this.drawingName);
@@ -182,12 +222,9 @@ export class Drawing {
     }
 
     removeElement(shapeId:String) {
-        this.elements.forEach((element)=>{
-            if(element.getId()==shapeId) {
-                const index=this.elements.indexOf(element);
-                if (index > -1) {
-                    this.elements.splice(index, 1); 
-                }
+        this.elementById.forEach((v,k)=>{
+            if(k==shapeId) {
+                this.elementById.delete(k);
             }
         })
     }

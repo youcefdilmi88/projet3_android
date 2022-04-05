@@ -32,6 +32,10 @@ const drawingSchema = new mongoose.Schema({
     creationDate:{
         type:Number,
         required:true
+    },
+    likes:{
+        type:[String],
+        required:true
     }
     
 });

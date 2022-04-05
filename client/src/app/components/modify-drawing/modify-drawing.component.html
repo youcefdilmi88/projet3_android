@@ -10,8 +10,9 @@
         <label for="checkbox">Public: </label>
         <input type="checkbox" id="checkbox" (change)="toggleEditable($event)">
     </div>
-    <div>
+    <div id="updateButtons">
+        <button mat-raised-button id="annulerDrawing" class="buto" (click)="cancelUpdate()">Annuler</button>
         <button mat-raised-button id="confirmer" class="buto" (click)="updateDrawing()">Confirmer</button>
     </div>
 </div>
-
+ 

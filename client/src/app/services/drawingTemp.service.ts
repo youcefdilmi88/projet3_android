@@ -7,7 +7,7 @@ import { Drawing } from "@app/classes/Drawing";
   export class DrawingTempService {
 
     drawings:Map<string,Drawing>; //store le name du drawing, drawing
-
+    
     constructor() {
         this.drawings = new Map<string, Drawing>(); 
     }

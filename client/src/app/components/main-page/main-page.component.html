@@ -2,15 +2,15 @@
 <html>
 
         <body>
-            <div class="title">
-                <h1 id="title">Colorimage</h1>
+            <div id="title">
+                <h1>Colorimage</h1>
             </div>
     
             <div class="outer">
                 <div class="middle">
                     <div class="inner">
     
-                        <h1 id="color">{{connection}}</h1>
+                        <h2 id="color">{{connection}}</h2>
     
                         <main [@routeAnimations] = "prepareRoute(outlet)" class="content">
                             <router-outlet #outlet = "outlet"></router-outlet>
@@ -33,10 +33,10 @@
                             <p id="error">Error</p>
                         </div>
     
-                        <button mat-raised-button (click)="registerClick()">{{creer}}</button>
-                        <button mat-raised-button (click)="closeClick()">{{rejoindre}}</button>
-                        <button mat-raised-button (click)="openSettings()">{{options}}</button>
-                        <button mat-raised-button (click)="avatar()" class="first_button">avatar</button>
+                        <button mat-raised-button id="buttonMain" (click)="registerClick()">{{creer}}</button>
+                        <button mat-raised-button id="buttonMain2" (click)="closeClick()">{{rejoindre}}</button>
+                        <button mat-raised-button id="buttonMain3" (click)="openSettings()">{{options}}</button>
+                        <button mat-raised-button id="buttonMain4" (click)="avatar()" class="first_button">avatar</button>
                         <!-- <button mat-raised-button (click)="closeClick()">Rejoindre le chat</button> -->
     
                     </div>

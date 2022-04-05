@@ -8,6 +8,7 @@ import { French, English } from '@app/interfaces/Langues';
 import { SocketService } from '@app/services/socket/socket.service';
 import { RouterOutlet } from '@angular/router';
 import { fader } from '@assets/animations';
+import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 
 
@@ -66,6 +67,56 @@ export class NewAccountComponent implements OnInit {
       this.error5 = English.error5;
       this.error6 = English.error6;
     }
+    if(this.socketService.theme == "light grey"){
+      document.getElementById("buttonMain5")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain5")!.style.color = LightGrey.text;
+      document.getElementById("buttonMain6")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain6")!.style.color = LightGrey.text;
+      document.getElementById("buttonMain7")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("buttonMain7")!.style.color = LightGrey.text;
+      document.getElementById("title2")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title2")!.style.color = LightGrey.text;
+    }
+    else if(this.socketService.theme == "dark grey"){
+      document.getElementById("buttonMain5")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain5")!.style.color = DarkGrey.text;
+      document.getElementById("buttonMain6")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain6")!.style.color = DarkGrey.text;
+      document.getElementById("buttonMain7")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("buttonMain7")!.style.color = DarkGrey.text;
+      document.getElementById("title2")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title2")!.style.color = DarkGrey.text;
+    }
+    else if(this.socketService.theme == "deep purple") {      
+      document.getElementById("buttonMain5")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain5")!.style.color = DeepPurple.text;
+      document.getElementById("buttonMain6")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain6")!.style.color = DeepPurple.text;
+      document.getElementById("buttonMain7")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("buttonMain7")!.style.color = DeepPurple.text;
+      document.getElementById("title2")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title2")!.style.color = DeepPurple.text;
+    }
+    else if(this.socketService.theme == "light blue") {
+      document.getElementById("buttonMain5")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain5")!.style.color = LightBlue.text;
+      document.getElementById("buttonMain6")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain6")!.style.color = LightBlue.text;
+      document.getElementById("buttonMain7")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("buttonMain7")!.style.color = LightBlue.text;
+      document.getElementById("title2")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title2")!.style.color = LightBlue.text;
+    }
+    else if(this.socketService.theme == "light pink") {
+      document.getElementById("buttonMain5")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain5")!.style.color = LightPink.text;
+      document.getElementById("buttonMain6")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain6")!.style.color = LightPink.text;
+      document.getElementById("buttonMain7")!.style.backgroundColor = LightPink.main;
+      document.getElementById("buttonMain7")!.style.color = LightPink.text;
+      document.getElementById("title2")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title2")!.style.color = LightPink.text;
+    }
   }
 
   pass: string;
@@ -86,6 +137,11 @@ export class NewAccountComponent implements OnInit {
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = this.error1;
       this.playAudio("error.wav");
+      let erreur= document.getElementById("buttonMain6")!;
+      erreur.className = "erreuAnimation";
+      erreur.classList.remove("erreuAnimation");
+      void erreur.offsetWidth;
+      erreur.className = "erreuAnimation";
       return false;
     }
 
@@ -93,6 +149,11 @@ export class NewAccountComponent implements OnInit {
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = this.error5;
       this.playAudio("error.wav");
+      let erreur= document.getElementById("buttonMain6")!;
+      erreur.className = "erreuAnimation";
+      erreur.classList.remove("erreuAnimation");
+      void erreur.offsetWidth;
+      erreur.className = "erreuAnimation";
       return false;
     }
     
@@ -110,6 +171,11 @@ export class NewAccountComponent implements OnInit {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = this.error6;
           this.playAudio("error.wav");
+          let erreur= document.getElementById("buttonMain6")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
           return;
         }
         else if (data.message == "success") {
@@ -126,6 +192,11 @@ export class NewAccountComponent implements OnInit {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = this.error6;
           this.playAudio("error.wav");
+          let erreur= document.getElementById("buttonMain6")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
           return;
         }
       }

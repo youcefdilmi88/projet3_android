@@ -25,10 +25,6 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
     console.log("join drawing name:"+drawingName);
 
-    console.log(drawingService.drawings.has(drawingName));
-    drawingService.drawings.forEach((v,k)=>{
-        console.log(k);
-    })
     
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
@@ -57,18 +53,18 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let members:String[]=[];
     let visibility:String=req.body.visibility as String;
     let date:Number=Date.now();
+    let likes:String[]=[];
 
     console.log("created drawing name:"+drawingName);
 
     if(drawingName && owner && roomName) {
-      console.log(drawingService.drawings.has(drawingName));
       if(drawingService.drawings.has(drawingName)) {
         return res.status(404).json({message:HTTPMESSAGE.DRAWINGEXIST});
       } 
       if(roomService.getAllRooms().has(roomName)) {
         return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
       }
-      drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility,date).catch((e:Error)=>{
+      drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility,date,likes).catch((e:Error)=>{
             console.log(e);
       });
       return res.status(200).json({message:HTTPMESSAGE.SUCCESS}); 
@@ -99,7 +95,8 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
             roomName:v.roomName,
             members:v.getMembers(),
             visibility:v.getVisibility(),
-            creationDate:v.getCreationDate()
+            creationDate:v.getCreationDate(),
+            likes:v.getLikes()
         }
         drawings.push(drawing);
     });
@@ -174,6 +171,40 @@ const getConnectedUserInDrawing=(req:Request,res:Response,next:NextFunction)=>{
     }
     return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND, count:0});
 }
+ 
+const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
+    let useremail:String=req.body.useremail as String;
+    console.log("server drawname", drawingName);
+    console.log("server useremail", useremail);
+
+    console.log("1", drawingService.drawings.get(drawingName)?.getLikes());
+    console.log("2", drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail));
+    console.log("3", drawingService.drawings.get(drawingName));
+
+    if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
+       console.log("EMAIL EXIST");
+        return res.status(404).json({message:HTTPMESSAGE.UALREADYLIKE});
+    }
+
+    if(drawingService.drawings.has(drawingName)) {
+        await drawingService.addLikeDrawing(drawingName,useremail);
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+
+    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+}
+
+const removeLikeDrawing=(req:Request,res:Response,next:NextFunction)=>{
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
+    let useremail:String=req.body.useremail as String;
+
+    if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
+      drawingService.removeLikeDrawing(drawingName,useremail);
+      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+    return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
+}
 
 router.post('/joinDrawing',joinDrawing);
 router.post('/createDrawing',createDrawing);
@@ -183,5 +214,7 @@ router.post('/deleteDrawing',deleteDrawing);
 router.get('/getDrawingByName/:drawingName',getDrawingByName);
 router.post('/updateDrawing',updateDrawing);
 router.get('/getConnectedUser/:roomName',getConnectedUserInDrawing);
+router.post('/like',likeDrawing);
+router.post('/removeLike',removeLikeDrawing);
 
 export=router;

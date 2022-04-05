@@ -23,8 +23,11 @@ import { Pencil } from '@app/services/tools/pencil-tool/pencil.model';
 import { French, English } from '@app/interfaces/Langues';
 import { ModifyDrawingComponent } from '../modify-drawing/modify-drawing.component';
 import { URL } from '../../../../constants';
+import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
+import { DatePipe } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-
+const ONE_SECOND = 1000;
 @Component({
   selector: 'app-dessins',
   templateUrl: './dessins.component.html',
@@ -39,6 +42,8 @@ export class DessinsComponent implements OnInit {
   public owners:Array<string> = [];
   public visibite:Array<string> = [];
   public nbrMembres:Array<number> = [];
+  public creationDate:Array<string> = [];
+  public peopleLiked:Array<string> = [];
   public centerImage: number = 0;
   public leftImage: number = this.imageUrlArray.length - 1;
   public rightImage: number = 1;
@@ -72,6 +77,7 @@ export class DessinsComponent implements OnInit {
     public toolEllipseService: ToolEllipseService,
     public toolRectangleService: ToolRectangleService,
     rendererFactory: RendererFactory2,
+    private snackBar: MatSnackBar,
     // private drawingService: DrawingService,
   ) { 
     this.renderer = rendererFactory.createRenderer(null, null);
@@ -91,7 +97,6 @@ export class DessinsComponent implements OnInit {
       this.drawName = French.drawingName;
       this.numberOfPeople = French.numberOfPeople;
       this.own = French.owner;
-      this.visib = French.visibility;
       this.open = French.open;
       this.delete = French.delete;
     }
@@ -102,9 +107,68 @@ export class DessinsComponent implements OnInit {
       this.drawName = English.drawingName;
       this.numberOfPeople = English.numberOfPeople;
       this.own = English.owner;
-      this.visib = English.visibility;
       this.open = English.open;
       this.delete = English.delete;
+    }
+    if(this.socketService.theme == "light grey"){
+      document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("createRoom")!.style.color = LightGrey.text;
+      document.getElementById("left-arrow")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("left-arrow")!.style.color = LightGrey.text;
+      document.getElementById("right-arrow")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("right-arrow")!.style.color = LightGrey.text;
+      document.getElementById("title5")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title5")!.style.color = LightGrey.text;
+      document.getElementById("settingsButton")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("settingsButton")!.style.color = LightGrey.text;
+    }
+    else if(this.socketService.theme == "dark grey"){
+      document.getElementById("createRoom")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("createRoom")!.style.color = DarkGrey.text;
+      document.getElementById("left-arrow")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("left-arrow")!.style.color = DarkGrey.text;
+      document.getElementById("right-arrow")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("right-arrow")!.style.color = DarkGrey.text;
+      document.getElementById("title5")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title5")!.style.color = DarkGrey.text;
+      document.getElementById("settingsButton")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("settingsButton")!.style.color = DarkGrey.text;
+    }
+    else if(this.socketService.theme == "deep purple") {       
+      document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("createRoom")!.style.color = DeepPurple.text;
+      document.getElementById("left-arrow")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("left-arrow")!.style.color = DeepPurple.text;
+      document.getElementById("right-arrow")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("right-arrow")!.style.color = DeepPurple.text;
+      document.getElementById("title5")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title5")!.style.color = DeepPurple.text;
+      document.getElementById("settingsButton")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("settingsButton")!.style.color = DeepPurple.text;
+    }
+    else if(this.socketService.theme == "light blue") { 
+      document.getElementById("createRoom")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("createRoom")!.style.color = LightBlue.text;
+      document.getElementById("left-arrow")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("left-arrow")!.style.color = LightBlue.text;
+      document.getElementById("right-arrow")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("right-arrow")!.style.color = LightBlue.text;
+      document.getElementById("title5")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title5")!.style.color = LightBlue.text;
+      document.getElementById("settingsButton")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("settingsButton")!.style.color = LightBlue.text;
+    }
+    else if(this.socketService.theme == "light pink") {  
+      document.getElementById("createRoom")!.style.backgroundColor = LightPink.main;
+      document.getElementById("createRoom")!.style.color = LightPink.text;
+      document.getElementById("left-arrow")!.style.backgroundColor = LightPink.main;
+      document.getElementById("left-arrow")!.style.color = LightPink.text;
+      document.getElementById("right-arrow")!.style.backgroundColor = LightPink.main;
+      document.getElementById("right-arrow")!.style.color = LightPink.text;
+      document.getElementById("title5")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title5")!.style.color = LightPink.text;
+      document.getElementById("settingsButton")!.style.backgroundColor = LightPink.main;
+      document.getElementById("settingsButton")!.style.color = LightPink.text;
     }
     
     this.getAllDrawings();
@@ -140,8 +204,6 @@ export class DessinsComponent implements OnInit {
       console.log("JOINED: ", data.drawing.drawingName);
       console.log("members join: ", data.drawing.members);
       this.getAllDrawings();
-      // this.nbrMembres = [];
-
     });
 
     this.socketService.getSocket().on("LEAVEDRAWING", (data) => {
@@ -163,10 +225,10 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("ALBUMMODIFIED", (data) => {
       data=JSON.parse(data);
-      
+      this.getAllDrawings();
     });
-
-    this.socketService.getSocket().on("DRAWINGMODIFIED", (data) => {
+ 
+    this.socketService.getSocket().on("ALBUMNAMECHANGED", (data) => {
       data=JSON.parse(data);
       this.getAllDrawings();
     });
@@ -194,12 +256,14 @@ export class DessinsComponent implements OnInit {
             // pour redirect les personnes dans rooms
             for(var i = 0; i <= length; i++) { 
               console.log(data[i].drawingName);
-              if(this.socketService.currentRoom != data[i].drawingName) {
-                this.router.navigate(['/', 'rooms']);
-              }
-              else if (this.socketService.currentRoom == data[i].drawingName) {
-                this.router.navigate(['/', 'sidenav']);
-                break;
+              if(this.router.url == "/sidenav" || this.router.url == "/clavardage" ) {
+                if(this.socketService.currentRoom != data[i].drawingName) {
+                  this.router.navigate(['/', 'rooms']);
+                }
+                else if (this.socketService.currentRoom == data[i].drawingName) {
+                  this.router.navigate(['/', 'sidenav']);
+                  break;
+                }
               }
             }
           }
@@ -216,8 +280,11 @@ export class DessinsComponent implements OnInit {
       this.names = [];
       this.owners = [];
       this.visibite = [];
+      this.nbrMembres = [];
+      this.creationDate = [];
+      this.peopleLiked = [];
       data.forEach((drawing:any)=>{
-        this.imageUrlArray.push("../../../assets/avatar_1.png");
+        this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
@@ -227,7 +294,14 @@ export class DessinsComponent implements OnInit {
         this.visibite.push(drawing.visibility);
         this.nbrMembres.push(drawing.members.length);
         console.log("memb", drawing.members);
+        const datepipe: DatePipe = new DatePipe('en-CA');
+        let formattedDate = datepipe.transform(drawing.creationDate, 'dd-MM-yyyy HH:mm:ss') as string;
+        console.log("DATE",formattedDate )
+        this.creationDate.push(formattedDate);
+        // this.peopleLiked.push()
+        // console.log("LIKES", drawing.likes);
       });
+
       
     });
   } 
@@ -239,14 +313,6 @@ export class DessinsComponent implements OnInit {
     
     let link = this.BASE_URL + "drawing/joinDrawing";
 
-    // const drawingObj = {
-    //   drawingName:"",
-    //   owner:"",
-    //   elements:BaseShapeInterface[],
-    //   roomName:"",
-    //   members:String[],
-    //   visibility:""
-    // }
     console.log(element.textContent.trim().slice(7));
     this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {
       if(data.message == "success") {
@@ -255,25 +321,6 @@ export class DessinsComponent implements OnInit {
         this.dialog.open(NewDrawingComponent);
         this.router.navigate(['/', 'sidenav']);
         console.log("CREATED CANVAS");
-
-      //   let counter:number = 0;
-      //   let drawingObj = this.drawingTempSerivce.drawings.get(element.textContent.trim().slice(7));
-      //   drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
-      //     counter++;
-      //     if(checkLine(element)) {
-
-      //     }
-      //     if(checkEllipse(element)) {
-      //       this.toolEllipseService.ellipseAttributes = element;
-      //       this.toolEllipseService.renderSVG();
-      //     }
-      //     if(checkRectangle(element)) {
-      //       this.toolRectangleService.rectangleAttributes = element;
-      //       this.toolRectangleService.renderSVG();
-      //     }
-      // });
-
-      // console.log("counter", counter);
 
       let link2 = this.BASE_URL + "room/joinRoom";
 
@@ -315,11 +362,6 @@ export class DessinsComponent implements OnInit {
     let link = this.BASE_URL+"drawing/createDrawing";
     let link5 = this.BASE_URL + "drawing/joinDrawing";
     let link6 = this.BASE_URL + "album/addDrawing";
-    
-    // this.socketService.getSocket().on("DRAWINGCREATED", (data)=> {
-    //   data=JSON.parse(data);
-    //   this.getAllDrawings();
-    // });
 
     this.socketService.getSocket().on("CREATEROOM", (data)=> {
       data=JSON.parse(data);
@@ -372,6 +414,31 @@ export class DessinsComponent implements OnInit {
     }
   }
 
+  like(element: any) {
+    let link = this.BASE_URL + "drawing/like";
+    // let link2 = this.BASE_URL + "drawing/removeLike";
+
+    console.log("read", element.textContent.trim().slice(5));
+    console.log("person", this.socketService.nickname);
+    this.http.post<any>(link,{drawingName: element.textContent.trim().slice(5), useremail: this.socketService.email}).pipe( 
+      catchError(async (err) => console.log("error catched" + err))
+      ).subscribe((data: any) => {
+        console.log("LIKED", data);
+      });
+    // if() {
+
+    // }
+  
+
+    // this.http.post<any>(link2,{drawingName: element.trim().slice(5), useremail: this.socketService.email}).pipe( 
+    //   catchError(async (err) => console.log("error catched" + err))
+    //   ).subscribe((data: any) => {
+    //     console.log("DISLIKED", data);
+    //   });
+
+  }
+
+
   setVisibilityToPrivate(name: string) :  void {
     let link = this.BASE_URL + "drawing/updateDrawing";
 
@@ -389,49 +456,45 @@ export class DessinsComponent implements OnInit {
       });
   }
 
+  //, {height: "350px", width: '350px' }
   openSettings(element: any): void {
     if(this.socketService.email == this.owners[this.centerImage]) {
-      this.dialog.open(ModifyDrawingComponent);
+      this.dialog.open(ModifyDrawingComponent, {width: '380px' });
       this.socketService.drawingName = this.names[this.centerImage];
     }
     else {
+      this.playAudio2();
       console.log("youre not the owner");
+      let erreur= document.getElementById("settingsButton")!;
+      erreur.className = "erreuAnimation";
+      erreur.classList.remove("erreuAnimation");
+      void erreur.offsetWidth;
+      erreur.className = "erreuAnimation";
+      this.snackBar.open('Vous n\'avez pas le droit de modifier', '', { duration: ONE_SECOND, });
+
     }
 
   }
 
-  changerPublic(element: any): void {
-    let link = this.BASE_URL + "drawing/updateDrawing";
-
-    const drawingObj = {
-      drawingName: element.textContent.trim().slice(7),
-      visibility: "public",
-      // visibility: element.textContent.trim().split(' ')[0],
-    }
-
-    this.http.post<any>(link,{useremail: this.socketService.email, drawing: drawingObj}).pipe( 
-      catchError(async (err) => console.log("error catched" + err))
-      ).subscribe((data: any) => {
-        // if(data.message == "success") {
-        //   console.log("CHANGED VISIBILITY");
-        // }
-      });
-  }
 
   // for right button
   rightSideSlide(): void {
-    this.leftImage = this.centerImage;
-    this.centerImage = this.rightImage;
-    if (this.rightImage >= this.imageUrlArray.length - 1) {
-        this.rightImage = 0;
-    } else {
-        this.rightImage++;
+    console.log("names. len", this.names.length);
+    if(this.names.length != 1) {
+      this.leftImage = this.centerImage;
+      this.centerImage = this.rightImage;
+      if (this.rightImage >= this.imageUrlArray.length - 1) {
+          this.rightImage = 0;
+      } else {
+          this.rightImage++;
+      }
+      this.loadImages();
     }
-    this.loadImages();
   }
 
   // for left button
   leftSideSlide(): void {
+    if(this.names.length != 1) {
       this.rightImage = this.centerImage;
       this.centerImage = this.leftImage;
       if (this.leftImage === 0) this.leftImage = this.imageUrlArray.length - 1;
@@ -439,6 +502,8 @@ export class DessinsComponent implements OnInit {
           this.leftImage--;
       }
       this.loadImages();
+    }
+
   }
 
   loadImages(): void {
@@ -473,6 +538,13 @@ export class DessinsComponent implements OnInit {
       audio.load();
       audio.play();
     }
+  }
+
+  playAudio2(){
+    let audio = new Audio();
+    audio.src = "../../../assets/error.wav";
+    audio.load();
+    audio.play();
   }
 
   logout() {

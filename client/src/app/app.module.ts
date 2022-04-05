@@ -40,6 +40,7 @@ import { ClavardageComponent } from './components/clavardage/clavardage.componen
 import { NewAlbumComponent } from './components/new-album/new-album.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ModifyDrawingComponent } from './components/modify-drawing/modify-drawing.component';
+import { ModifyAlbumComponent } from './components/modify-album/modify-album.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { ModifyDrawingComponent } from './components/modify-drawing/modify-drawi
         NewAlbumComponent,
         SettingsComponent,
         ModifyDrawingComponent,
+        ModifyAlbumComponent,
     ],
     imports: [
         BrowserModule,

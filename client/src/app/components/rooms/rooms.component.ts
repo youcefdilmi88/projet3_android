@@ -8,7 +8,7 @@ import { URL } from '../../../../constants';
 import { Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
-import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
+// import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
 import { DrawingTempService } from '@app/services/drawingTemp.service';
 import { Drawing } from '@app/classes/Drawing';
 import { DrawingInterface } from '@app/interfaces/DrawingInterface';
@@ -16,6 +16,7 @@ import { PencilToolService } from '@app/services/tools/pencil-tool/pencil-tool.s
 import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellipse.service';
 import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
 import { French, English } from '@app/interfaces/Langues';
+import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 
 
 @Component({ 
@@ -61,7 +62,7 @@ export class RoomsComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.socketService.language == "french") {
-      this.creaRoom = French.create;
+      this.creaRoom = French.createRoom;
       this.finRoom = French.findRoom;
       this.nameOfNewRoom = French.nameOfNewRoom;
       this.nameOfRoomCreator = French.nameOfRoomCreator;
@@ -70,34 +71,74 @@ export class RoomsComponent implements OnInit {
       this.delete = French.delete;
     }
     else {
-      this.creaRoom = English.create;
+      this.creaRoom = English.createRoom;
       this.finRoom = English.findRoom;
       this.nameOfNewRoom = English.nameOfNewRoom;
       this.nameOfRoomCreator = English.nameOfRoomCreator;
       this.join2 = English.join2;
       this.delete = English.delete;
     }
+    if(this.socketService.theme == "light grey"){
+      document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("createRoom")!.style.color = LightGrey.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("searchRoom")!.style.color = LightGrey.text;
+      document.getElementById("title7")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title7")!.style.color = LightGrey.text;
+    }
+    else if(this.socketService.theme == "dark grey"){
+      document.getElementById("createRoom")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("createRoom")!.style.color = DarkGrey.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("searchRoom")!.style.color = DarkGrey.text;
+      document.getElementById("title7")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title7")!.style.color = DarkGrey.text;
+    }
+    else if(this.socketService.theme == "deep purple") {       
+      document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("createRoom")!.style.color = DeepPurple.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("searchRoom")!.style.color = DeepPurple.text;
+      document.getElementById("title7")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title7")!.style.color = DeepPurple.text;
+    }
+    else if(this.socketService.theme == "light blue") { 
+      document.getElementById("createRoom")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("createRoom")!.style.color = LightBlue.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("searchRoom")!.style.color = LightBlue.text;
+      document.getElementById("title7")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title7")!.style.color = LightBlue.text;
+    }
+    else if(this.socketService.theme == "light pink") {  
+      document.getElementById("createRoom")!.style.backgroundColor = LightPink.main;
+      document.getElementById("createRoom")!.style.color = LightPink.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = LightPink.main;
+      document.getElementById("searchRoom")!.style.color = LightPink.text;
+      document.getElementById("title7")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title7")!.style.color = LightPink.text;
+    }
 
     this.getAllDrawings();
 
-    let link = this.BASE_URL+"room/getAllRooms";
-    this.http.get<any>(link).subscribe((data: any) => {
-      console.log("update 2");
-      let length = Object.keys(data).length;
-      this.numberOfRooms = length;
-      for(var i = 0; i < length; i++) { 
-        //this.list.push(data[i].roomName);
-        // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
-        console.log("TEMP", this.drawingTempSerivce.drawings);
-        console.log("DATA ROOMNAME", data[i].roomName);
-        if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
-          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
-        }
-        else {
-          console.log("A");
-        }
-      }
-    });
+    // let link = this.BASE_URL+"room/getAllRooms";
+    // this.http.get<any>(link).subscribe((data: any) => {
+    //   console.log("update 2");
+    //   let length = Object.keys(data).length;
+    //   this.numberOfRooms = length;
+    //   for(var i = 0; i < length; i++) { 
+    //     //this.list.push(data[i].roomName);
+    //     // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+    //     console.log("TEMP", this.drawingTempSerivce.drawings);
+    //     console.log("DATA ROOMNAME", data[i].roomName);
+    //     if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+    //       this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+    //     }
+    //     else {
+    //       console.log("A");
+    //     }
+    //   }
+    // });
 
     this.roomListener();
     // this.getAllDrawings();
@@ -178,6 +219,24 @@ export class RoomsComponent implements OnInit {
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
       });
+      let link = this.BASE_URL+"room/getAllRooms";
+      this.http.get<any>(link).subscribe((data: any) => {
+        console.log("update 2");
+        let length = Object.keys(data).length;
+        this.numberOfRooms = length;
+        for(var i = 0; i < length; i++) { 
+          //this.list.push(data[i].roomName);
+          // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
+          console.log("TEMP", this.drawingTempSerivce.drawings);
+          console.log("DATA ROOMNAME", data[i].roomName);
+          if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          }
+          else {
+            console.log("A");
+          }
+        }
+      });
     });
     console.log("GOTTEM");
   } 
@@ -189,26 +248,28 @@ export class RoomsComponent implements OnInit {
     this.socketService.currentRoom = element.textContent.trim().slice(8);
     console.log("LOOOK ATTT MEEEE" + element.textContent.trim().slice(8));
     
+ 
+    this.router.navigate(['/', 'clavardage']);
+
+
     // Pour savoir si la salle doit avoir un canvas ou non
-    console.log("ca devrait etre un room: " + element.textContent.trim().slice(8));
-    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
-        console.log("wtf: " + element.textContent.trim().slice(8));
-        this.router.navigate(['/', 'sidenav']);
-        this.dialog.open(NewDrawingComponent);
-    }
-    else {
-      this.router.navigate(['/', 'clavardage']);
-    }
+    // if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
+    //     this.router.navigate(['/', 'sidenav']);
+    //     this.dialog.open(NewDrawingComponent);
+    // }
+    // else {
+    //   this.router.navigate(['/', 'clavardage']);
+    // }
 
-    let link = this.BASE_URL + "drawing/joinDrawing";
+    // let link = this.BASE_URL + "drawing/joinDrawing";
 
-    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(8)}).subscribe((data:any) => {
-      if(data.message == "success") {
-        console.log("join dessins:" + element.textContent.trim().slice(8));
-        this.router.navigate(['/', 'sidenav']);
-        this.dialog.open(NewDrawingComponent);
-      }
-    });
+    // this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(8)}).subscribe((data:any) => {
+    //   if(data.message == "success") {
+    //     console.log("join dessins:" + element.textContent.trim().slice(8));
+    //     this.router.navigate(['/', 'sidenav']);
+    //     this.dialog.open(NewDrawingComponent);
+    //   }
+    // });
 
     // Route JoinRoom
     let link2 = this.BASE_URL + "room/joinRoom";

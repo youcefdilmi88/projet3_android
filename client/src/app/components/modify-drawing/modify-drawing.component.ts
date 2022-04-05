@@ -14,7 +14,7 @@ export class ModifyDrawingComponent implements OnInit {
 
   private readonly BASE_URL: string = URL;
   private isPublic: boolean;
-  private visibility: string;
+  private visibility: string; 
   public drawingNAME: string;
 
   constructor(
@@ -22,7 +22,7 @@ export class ModifyDrawingComponent implements OnInit {
     private socketService: SocketService,
     private http: HttpClient,
   ) { }
-
+ 
   ngOnInit(): void {
     
   }
@@ -31,10 +31,12 @@ export class ModifyDrawingComponent implements OnInit {
     if ( event.target.checked ) {
         this.isPublic = true; 
    }
-}
+} 
 
   updateDrawing() {
     let link = this.BASE_URL + "drawing/updateDrawing";
+    let link2 = this.BASE_URL + "album/addDrawing";
+
     
     console.log(this.socketService.drawingName);
 
@@ -50,13 +52,23 @@ export class ModifyDrawingComponent implements OnInit {
     visibility: this.visibility,
     }
 
-    if(this.drawingNAME == '') {
+    if(this.drawingNAME == undefined) {
       // changer la visibilité
       this.http.post<any>(link,{useremail: this.socketService.email, drawing: drawingObj}).pipe( 
         catchError(async (err) => console.log("error catched" + err))
         ).subscribe((data: any) => {
           if(data.message == "success") {
             console.log("CHANGED VISIBILITY");
+
+            if(this.visibility == "public") {
+              this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName: "a" }).subscribe((data:any) => {
+                if (data.message == "success") {
+                  console.log("dessin ajoute a album " + this.socketService.albumName);
+                }
+              });
+            }
+
+
           }
       });
     }
@@ -67,9 +79,24 @@ export class ModifyDrawingComponent implements OnInit {
         ).subscribe((data: any) => {
           if(data.message == "success") {
             console.log("CHANGED NAME AND VISIBLITY");
+
+            if(this.visibility == "public") {
+              this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName: "a" }).subscribe((data:any) => {
+                if (data.message == "success") {
+                  console.log("dessin ajoute a album " + this.socketService.albumName);
+                }
+              });
+            }
+
           }
         });
     }
+    this.dialogRef.close();
+
+  }
+
+  cancelUpdate() {
+    this.dialogRef.close();
   }
 
 }
