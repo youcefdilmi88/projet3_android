@@ -21,7 +21,7 @@ export class Drawing {
     public modified:boolean=false;
     private visibility:String;
     private creationDate:Number;
-    private likes:String[];
+    private likes:String[] = [];
  
 
     elementById:Map<String,BaseShape>;
