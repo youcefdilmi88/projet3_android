@@ -40,7 +40,6 @@ export class SelectionToolService implements Tools {
   private ctrlG: SVGGElement;
   private object: SVGElement;
   private rectSelection: SVGPolygonElement;
-  private identif: string;
 
   private rectInversement: SVGRectElement;
   private firstInvObj: SVGElement | null;
@@ -53,6 +52,7 @@ export class SelectionToolService implements Tools {
   private isIn = false;
 
   public dom = false;
+  private identif: string;
 
   renderer: Renderer2
 
@@ -74,22 +74,22 @@ export class SelectionToolService implements Tools {
     this.socketService.getSocket().on("STARTSELECT", (data)=>{
       data=JSON.parse(data);
 
-      this.identif = data.identif;
-
       this.tmpX = data.off.x;
       this.tmpY = data.off.y;
       console.log(this.tmpX);
       console.log(this.tmpY);
       const obj = this.drawingService.getObject((data.identif));
 
+      this.identif = data.identif;
+
       this.object = obj!;
       console.log(this.object);
 
       if (this.isInside(data.off.x, data.off.y)) {
+        console.log("true 1");
         this.isIn = true;
         if (!this.selectionTransformService.hasCommand()) {
           this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
-          console.log("case 3");
         }
       }
       else {
@@ -107,12 +107,12 @@ export class SelectionToolService implements Tools {
         if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
           this.objects.push(obj!);
           this.setSelection();
+          console.log("true 2");
           this.isIn = true;
 
           this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
           this.rendererService.renderer.appendChild(this.drawingService.drawing, this.rectSelection);
           this.rendererService.renderer.appendChild(this.drawingService.drawing, this.ctrlG);
-          console.log("case 4");
           return;
         }
       }
@@ -122,6 +122,7 @@ export class SelectionToolService implements Tools {
       this.rendererService.renderer.appendChild(this.drawingService.drawing, this.ctrlG);
       this.removeInversement();
       this.selectionTransformService.endCommand();
+      console.log("true ?", data.inside);
       this.isIn = data.inside;
 
       const allObject: SVGElement[] = [];
@@ -146,20 +147,19 @@ export class SelectionToolService implements Tools {
       data=JSON.parse(data);
 
       this.wasMoved = true;
+      console.log("resize", data.inside);
       if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
         this.selectionTransformService.resize(data.x, data.y, data.off);
-        console.log("x", data.x);
-        console.log("y", data.y);
-        console.log("off", data.off);
         this.setSelection();
         return;
       }
       if (this.isIn) {
+        console.log("translaye", this.isIn);
         if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.TRANSLATE) {
           this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
         }
-        this.setSelection();
         this.selectionTransformService.translate(data.x, data.y);
+        this.setSelection();
       }
       else {
         //this.setSizeOfSelectionArea(data.x, data.y, this.rectSelection);
@@ -174,11 +174,27 @@ export class SelectionToolService implements Tools {
       this.isIn = false;
     });
 
-    this.socketService.getSocket().on("DELETESELECT", (data)=>{
+    /*this.socketService.getSocket().on("DELETESELECT", (data)=>{
       data=JSON.parse(data);
 
       if (data.bool == true) {
-        this.drawingService.removeObject((this.identif));
+        //this.drawingService.removeObject((this.object));
+      }
+      this.dom = false;
+      this.objects = [];
+      this.hasSelectedItems = false;
+  
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.objects);
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.rectSelection);
+      this.rendererService.renderer.removeChild(this.drawingService.drawing, this.ctrlG);
+      this.rendererService.renderer.setAttribute(this.rectSelection, 'points', '');
+    });*/
+
+    this.socketService.getSocket().on("DELETESHAPE",(data)=>{
+      data=JSON.parse(data);
+
+      if (data.bool == true) {
+        this.drawingService.removeObject(this.identif);
       }
       this.dom = false;
       this.objects = [];
@@ -194,12 +210,6 @@ export class SelectionToolService implements Tools {
 
     this.socketService.getSocket().on("ENDSELECT", (data)=>{
       data=JSON.parse(data);
-    });
-
-    this.socketService.getSocket().on("DELETESHAPE",(data)=>{
-      data=JSON.parse(data);
-
-      this.playAudio("bin.wav");
     });
   }
 
@@ -233,16 +243,17 @@ export class SelectionToolService implements Tools {
 
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
+          console.log("true pressed");
           this.isIn = true;
           if (!this.selectionTransformService.hasCommand()) {
             this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
+            console.log("the real deal");
             this.socketService.getSocket().emit("STARTSELECT", JSON.stringify({ off: offset, identif: target.id, inside: true }));
-            console.log("case 1");
           }
         }
         else {
+          console.log("the real deal 2");
             this.socketService.getSocket().emit("STARTSELECT", JSON.stringify({ off: offset, identif: target.id, inside: false }));
-            console.log("case 2");
         }
       } 
       else {
@@ -311,17 +322,21 @@ export class SelectionToolService implements Tools {
         this.wasMoved = true;
 
         if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
+          console.log("hm")
           this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: false }));
           return;
         }
 
         if (this.isIn) {
+          console.log("gim");
           if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.TRANSLATE) {
             //this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
           }
           this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: true }));
         } 
         else {
+          this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
+          this.isIn = false;
           this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: offset.x, y: offset.y, off: offset, inside: false }));
         }
       } 
@@ -587,9 +602,9 @@ export class SelectionToolService implements Tools {
   }
 
   removeSelectionCollab(): void {
-    this.socketService.getSocket().emit("DELETESELECT", JSON.stringify({ bool: this.dom }));
+    //this.socketService.getSocket().emit("DELETESELECT", JSON.stringify({ bool: this.dom }));
 
-    this.socketService.getSocket().emit("DELETESHAPE", JSON.stringify({ id: this.identif }));
+    this.socketService.getSocket().emit("DELETESHAPE", JSON.stringify({ id: this.identif, bool: this.dom }));
   }
 
   /// Methode pour cacher la selection en gardant en memoire les element
@@ -677,7 +692,7 @@ export class SelectionToolService implements Tools {
 
   /// Selectionne tous les objets du dessin.
   selectAll(): void {
-    this.removeSelection();
+    //this.removeSelection();
     this.drawingService.getObjectList().forEach((value) => {
       if (value.tagName.toLowerCase() !== 'defs') {
         this.objects.push(value);
@@ -693,7 +708,7 @@ export class SelectionToolService implements Tools {
 
   /// Applique une selection sur une liste d'objets fourni.
   setNewSelection(newSelectionList: SVGElement[]): void {
-    this.removeSelection();
+    //this.removeSelection();
     newSelectionList.forEach((value) => {
       if (value.tagName.toLowerCase() !== 'defs') {
         this.objects.push(value);

@@ -164,7 +164,7 @@ export class NewAccountComponent implements OnInit {
       let email = (<HTMLInputElement>document.getElementById("mail")).value;
       let username = (<HTMLInputElement>document.getElementById("name")).value;
       let pass = (<HTMLInputElement>document.getElementById("pass")).value;
-      this.http.post<any>(link,{useremail: email, password: pass, nickname: username}).subscribe((data: any) => {
+      this.http.post<any>(link,{useremail: email, password: pass, nickname: username, avatar: "1"}).subscribe((data: any) => {
         console.log(data);
         if (data == 404) {
           console.log("404");
