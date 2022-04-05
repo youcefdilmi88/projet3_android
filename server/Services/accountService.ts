@@ -29,10 +29,10 @@ class AccountService {
 
    }
 
-   async createAccount(email:String,pass:String,nickName:String,avatar:String) {
-    let friends:String[]=[];
+   async createAccount(email:String,pass:String,nickName:String) {
+
     const account=new AccountSchema({useremail:email,password:pass,nickname:nickName});
-    const user=new UserSchema({useremail:email,nickname:nickName,lastLoggedIn:null,lastLoggedOut:null,friends:friends,avatar:avatar});
+    const user=new UserSchema({useremail:email,nickname:nickName,lastLoggedIn:null,lastLoggedOut:null});
     
     await account.save().catch((e:Error)=>{
       console.log(e);
@@ -43,8 +43,8 @@ class AccountService {
 
     const accountObj=new Account(email,pass,nickName);
     this.accounts.set(email,accountObj);
-    
-    const userObj=new User(email,nickName,friends,avatar);
+
+    const userObj=new User(email,nickName);
     userService.getUsers().push(userObj);
     
     albumService.albums.forEach(async (v,k)=>{
