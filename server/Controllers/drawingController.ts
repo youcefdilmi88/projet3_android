@@ -179,11 +179,16 @@ const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     console.log("server useremail", useremail);
 
     if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
+       console.log("EMAIL EXIST");
         return res.status(404).json({message:HTTPMESSAGE.UALREADYLIKE});
     }
 
-    await drawingService.addLikeDrawing(drawingName,useremail);
-    return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    if(drawingService.drawings.has(drawingName)) {
+        await drawingService.addLikeDrawing(drawingName,useremail);
+        return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    }
+
+    return res.status(404).json({message:HTTPMESSAGE.FAILED});
 }
 
 const removeLikeDrawing=(req:Request,res:Response,next:NextFunction)=>{
