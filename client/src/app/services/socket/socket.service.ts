@@ -22,6 +22,7 @@ export class SocketService {
   public language = "french";
   public theme = "light grey";
   public mute = false;
+  public avatarNumber: string;
   //private userService: UserService;
 
   constructor() { }

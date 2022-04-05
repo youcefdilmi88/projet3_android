@@ -51,7 +51,7 @@
         <p>{{drawName}} {{names[this.centerImage]}}</p>
         <p>{{numberOfPeople}} {{nbrMembres[this.centerImage]}}</p>
         <p>{{own}} {{owners[this.centerImage]}}</p>
-        <p>Nombre de like: </p>
+        <p>Nombre de like: {{nbrLiked[this.centerImage]}} </p>
         <p>Date de création: {{creationDate[this.centerImage]}}</p>
         <button mat-raised-button id="DessinsButtonOpen" class="buto" (click)="openDessins($event.target)">
             {{open}} <span class='special-word'>{{names[this.centerImage]}}</span>
@@ -63,7 +63,7 @@
             Modifier <span class='special-word'>{{names[this.centerImage]}}</span>
         </button>
         <button mat-raised-button id="likeButton" class="buto" (click)="like($event.target)" >
-            Like <span class='special-word'>{{names[this.centerImage]}}</span>
+            Aimer <span class='special-word'>{{names[this.centerImage]}}</span>
         </button>
         <!-- <button mat-raised-button id="Visibilite" (click)="changerPublic($event.target)">
             Public <span class='special-word'>{{names[this.centerImage]}}</span>

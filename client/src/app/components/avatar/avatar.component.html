@@ -1,4 +1,4 @@
-<input #image type="file" class="file-input"
+<!-- <input #image type="file" class="file-input"
        (change)="processFile(image)" #fileUpload>
 
 <div class="file-upload">
@@ -10,4 +10,12 @@
         <mat-icon>attach_file</mat-icon>
     </button>
 
-</div>
+</div> -->
+
+<h1>Choisir un avatar</h1>
+
+
+<button mat-raised-button id="avatar1" value="avatar1" (click)="image($event.target)" ><span class='special-word'>1</span></button>
+<button mat-raised-button id="avatar2" value="avatar2" (click)="image($event.target)" ><span class='special-word'>2</span></button>
+<button mat-raised-button id="avatar3" value="avatar3" (click)="image($event.target)" ><span class='special-word'>3</span></button>
+<button mat-raised-button id="avatar4" value="avatar4" (click)="image($event.target)" ><span class='special-word'>4</span></button>
