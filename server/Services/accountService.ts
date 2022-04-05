@@ -1,7 +1,9 @@
 import { Account } from "../class/Account";
 import { User } from "../class/User";
+import { VISIBILITY } from "../Constants/visibility";
 import AccountSchema from "../Entities/AccountSchema";
 import UserSchema from "../Entities/UserSchema";
+import albumService from "./albumService";
 import databaseService from "./databaseService";
 import userService from "./userService";
 
@@ -44,6 +46,11 @@ class AccountService {
     
     const userObj=new User(email,nickName,friends,avatar);
     userService.getUsers().push(userObj);
+    albumService.albums.forEach(async (v,k)=>{
+      if(v.getVisibility()==VISIBILITY.PUBLIC && v.getMembers().indexOf(userObj.getUseremail())==-1) {
+        await albumService.addMemberToAlbum(k,userObj.getUseremail());
+      }
+    })
   }
 
   getAccounts():Map<String,Account> {

@@ -124,7 +124,7 @@ const getDrawingByName=async (req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=req.params.drawingName as String;
     if(drawingService.drawings.has(drawingName)) {
         let drawing;
-        await DrawingSchema.findOne({drawingName:drawingName}).then((data)=>{
+        await DrawingSchema.drawingSchema.findOne({drawingName:drawingName}).then((data)=>{
           drawing=data;
       }).catch((e:Error)=>{console.log(e)});
       return res.status(200).json({drawing:drawing});

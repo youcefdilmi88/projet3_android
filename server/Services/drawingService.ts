@@ -69,7 +69,7 @@ class DrawingService {
   async loadAllDrawings() {
     this.drawings.clear();
     await databaseService.getAllDrawings().then((drawings)=>{
-      drawings.forEach((drawing)=>{
+      drawings.forEach((drawing: DrawingInterface)=>{
         let drawingObj:Drawing=new Drawing(drawing);
         this.drawings.set(drawingObj.getName(),drawingObj);
       });
@@ -110,7 +110,7 @@ class DrawingService {
 
   async createDrawing(drawingName:String,owner:String,elements:BaseShapeInterface[],roomName:String,members:String[],visibility:String,creationDate:Number,likes:String[]) {
     try {
-      const drawing=new DrawingSchema({drawingName:drawingName,owner:owner,elements:elements,roomName:roomName,members:members,visibility:visibility,creationDate:creationDate,likes:likes});
+      const drawing=new DrawingSchema.drawingSchema({drawingName:drawingName,owner:owner,elements:elements,roomName:roomName,members:members,visibility:visibility,creationDate:creationDate,likes:likes});
       await drawing.save().then(()=>{
         console.log("drawing saved");
       }).catch((e:Error)=>{
@@ -158,7 +158,7 @@ class DrawingService {
 
   async deleteDrawing(drawingName:String) {
     try {
-        await DrawingSchema.deleteOne({drawingName:drawingName}).then((data)=>{
+        await DrawingSchema.drawingSchema.deleteOne({drawingName:drawingName}).then((data)=>{
           console.log(data);
           this.drawings.delete(drawingName);
           this.kickUsersFromDrawing(drawingName);
@@ -265,8 +265,8 @@ class DrawingService {
            }
        };
     try {
-      let drawingDoc=await DrawingSchema.findOne(filter);
-      await DrawingSchema.updateOne(filter,drawingUpdate).catch((e:Error)=>{
+      let drawingDoc=await DrawingSchema.drawingSchema.findOne(filter);
+      await DrawingSchema.drawingSchema.updateOne(filter,drawingUpdate).catch((e:Error)=>{
         console.log(e);
       });
       await drawingDoc?.save().then(()=>{
@@ -355,8 +355,8 @@ class DrawingService {
            }
        };
         try {
-           let drawingDoc=await DrawingSchema.findOne(filter);
-           await DrawingSchema.updateOne(filter,drawingUpdate).catch((e:Error)=>{
+           let drawingDoc=await DrawingSchema.drawingSchema.findOne(filter);
+           await DrawingSchema.drawingSchema.updateOne(filter,drawingUpdate).catch((e:Error)=>{
              console.log(e);
            });
            await drawingDoc?.save().then(()=>{
