@@ -1,4 +1,4 @@
-/*import { Renderer2 } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { Point } from 'src/app/model/point.model';
 import { DrawingService } from '../../drawing/drawing.service';
@@ -75,7 +75,7 @@ export class PolygonCommand implements ICommand {
     /// Retrait du polygo dans le dessin
     undo(): void {
         if (this.polygon) {
-            this.drawingService.removeObject(Number(this.polygon.id));
+            this.drawingService.removeObject((this.polygon.id));
         }
     }
-}*/
+}

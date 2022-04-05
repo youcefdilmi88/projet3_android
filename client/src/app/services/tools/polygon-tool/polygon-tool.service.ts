@@ -1,4 +1,4 @@
-/*import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faDrawPolygon, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { ICommand } from 'src/app/interfaces/command.interface';
@@ -61,6 +61,7 @@ export class PolygonToolService implements Tools {
   /// Quand le bouton de la souris est enfoncé, on crée un polygone regulier et convex.
   /// On le retourne en sortie et il est inséré dans l'objet courant de l'outil.
   onPressed(event: MouseEvent): void {
+    console.log(this.borderId);
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
       this.border = this.rendererService.renderer.createElement('rect', 'svg');
       this.rendererService.renderer.setStyle(this.border, 'stroke', `rgba(0, 0, 0, 1)`);
@@ -109,7 +110,7 @@ export class PolygonToolService implements Tools {
   onRelease(event: MouseEvent): ICommand | void {
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
       if (this.border) {
-        this.drawingService.removeObject(this.borderId);
+        this.drawingService.removeObject("yeeha");
         this.borderId = 0;
       }
       if (this.polygonCommand) {
@@ -298,4 +299,4 @@ export class PolygonToolService implements Tools {
   private angleToRAD(angle: number): number {
     return angle * Math.PI / (COMPLETE_ANGLE / 2);
   }
-}*/
+}

@@ -58,10 +58,10 @@ export class HotkeysService {
     this.toolSelectorList.set(EmitReturn.PENCIL, ToolIdConstants.PENCIL_ID);
     this.toolSelectorList.set(EmitReturn.RECTANGLE, ToolIdConstants.RECTANGLE_ID);
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);
-    //this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
+    this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
     this.toolSelectorList.set(EmitReturn.SELECTION, ToolIdConstants.SELECTION_ID);
-    //this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
-    //this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
+    this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
+    this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
       this.hotkeysEnablerService.canClick = false;

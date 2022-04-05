@@ -10,7 +10,7 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         height: 'height',
     },
 
-    /*line: {
+    line: {
         primaryColor: 'stroke',
         primaryOpacity: 'stroke-opacity',
         secondaryColor: 'none',
@@ -19,7 +19,7 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         y: 'y',
         width: 'width',
         height: 'height',
-    },*/
+    },
 
     rectangle: {
         primaryColor: 'fill',
@@ -54,7 +54,7 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
       height: 'height',
   },
 
-    /*polygon: {
+    polygon: {
         primaryColor: 'fill',
         primaryOpacity: 'fill-opacity',
         secondaryColor: 'stroke',
@@ -63,6 +63,6 @@ export const OBJECT_ATTRIBUTE_STRUCTURE: Record<string, Record<string, string>> 
         y: 'none',
         width: 'none',
         height: 'none',
-    },*/
+    },
 
 };

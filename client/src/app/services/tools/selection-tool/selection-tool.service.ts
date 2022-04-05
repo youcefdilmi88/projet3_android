@@ -78,6 +78,8 @@ export class SelectionToolService implements Tools {
 
       this.tmpX = data.off.x;
       this.tmpY = data.off.y;
+      console.log(this.tmpX);
+      console.log(this.tmpY);
       const obj = this.drawingService.getObject((data.identif));
 
       this.object = obj!;
@@ -87,6 +89,7 @@ export class SelectionToolService implements Tools {
         this.isIn = true;
         if (!this.selectionTransformService.hasCommand()) {
           this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
+          console.log("case 3");
         }
       }
       else {
@@ -109,6 +112,7 @@ export class SelectionToolService implements Tools {
           this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
           this.rendererService.renderer.appendChild(this.drawingService.drawing, this.rectSelection);
           this.rendererService.renderer.appendChild(this.drawingService.drawing, this.ctrlG);
+          console.log("case 4");
           return;
         }
       }
@@ -144,6 +148,9 @@ export class SelectionToolService implements Tools {
       this.wasMoved = true;
       if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
         this.selectionTransformService.resize(data.x, data.y, data.off);
+        console.log("x", data.x);
+        console.log("y", data.y);
+        console.log("off", data.off);
         this.setSelection();
         return;
       }
@@ -151,11 +158,11 @@ export class SelectionToolService implements Tools {
         if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.TRANSLATE) {
           this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
         }
-        this.selectionTransformService.translate(data.x, data.y);
         this.setSelection();
+        this.selectionTransformService.translate(data.x, data.y);
       }
       else {
-        this.setSizeOfSelectionArea(data.x, data.y, this.rectSelection);
+        //this.setSizeOfSelectionArea(data.x, data.y, this.rectSelection);
       }
     });
 
@@ -187,6 +194,12 @@ export class SelectionToolService implements Tools {
 
     this.socketService.getSocket().on("ENDSELECT", (data)=>{
       data=JSON.parse(data);
+    });
+
+    this.socketService.getSocket().on("DELETESHAPE",(data)=>{
+      data=JSON.parse(data);
+
+      this.playAudio("bin.wav");
     });
   }
 
@@ -224,10 +237,12 @@ export class SelectionToolService implements Tools {
           if (!this.selectionTransformService.hasCommand()) {
             this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
             this.socketService.getSocket().emit("STARTSELECT", JSON.stringify({ off: offset, identif: target.id, inside: true }));
+            console.log("case 1");
           }
         }
         else {
             this.socketService.getSocket().emit("STARTSELECT", JSON.stringify({ off: offset, identif: target.id, inside: false }));
+            console.log("case 2");
         }
       } 
       else {
@@ -311,7 +326,7 @@ export class SelectionToolService implements Tools {
         }
       } 
       else if (event.buttons === 2) {
-        this.setSizeOfSelectionArea(offset.x, offset.y, this.rectInversement);
+        //this.setSizeOfSelectionArea(offset.x, offset.y, this.rectInversement);
       }
     }
   }
@@ -366,7 +381,7 @@ export class SelectionToolService implements Tools {
   }
 
   /// Methode qui applique un redimensionnement au rectangle de selection ou d'inversement.
-  private setSizeOfSelectionArea(x: number, y: number, rectUsing: SVGElement): void {
+  /*private setSizeOfSelectionArea(x: number, y: number, rectUsing: SVGElement): void {
     let recX = this.tmpX + this.recStrokeWidth / 2;
     let recY = this.tmpY + this.recStrokeWidth / 2;
     let width = x - this.tmpX - this.recStrokeWidth;
@@ -409,7 +424,7 @@ export class SelectionToolService implements Tools {
         this.rendererService.renderer.setAttribute(this.ctrlPoints[i], 'y', `${this.pointsList[i].y + 0.5 - this.pointsSideLength / 2}`);
       }
     }
-  }
+  }*/
 
   pickupTool(): void {
     return;
@@ -573,6 +588,8 @@ export class SelectionToolService implements Tools {
 
   removeSelectionCollab(): void {
     this.socketService.getSocket().emit("DELETESELECT", JSON.stringify({ bool: this.dom }));
+
+    this.socketService.getSocket().emit("DELETESHAPE", JSON.stringify({ id: this.identif }));
   }
 
   /// Methode pour cacher la selection en gardant en memoire les element
