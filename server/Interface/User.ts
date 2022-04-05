@@ -3,5 +3,6 @@ export interface UserInterface {
     nickname:String,
     lastLoggedIn:Number,
     lastLoggedOut:Number,
-    friends:String[]
+    friends:String[],
+    avatar:String
 }

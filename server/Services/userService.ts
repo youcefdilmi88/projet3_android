@@ -23,7 +23,7 @@ class UserService {
        this.users=[];
        await databaseService.getAllUsers().then((users)=>{
            users.forEach((user)=>{
-               let userObj=new User(user.useremail,user.nickname,user.friends);
+               let userObj=new User(user.useremail,user.nickname,user.friends,user.avatar);
                userObj.setLastLoggedIn(user.lastLoggedIn);
                userObj.setLastLoggedOut(user.lastLoggedOut);
                this.users.push(userObj);

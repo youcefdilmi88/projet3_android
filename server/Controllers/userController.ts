@@ -18,7 +18,7 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
   req.body.useremail=req.body.useremail as String;
 
     console.log("does account exists ? "+accountService.getAccounts().has(req.body.useremail as String));
-    if(req.body.useremail && req.body.password && req.body.nickname) {
+    if(req.body.useremail && req.body.password && req.body.nickname && req.body.avatar) {
       if(accountService.getAccounts().has(req.body.useremail)) {
          console.log("user already exists");
          const message={message:HTTPMESSAGE.FAILED};
@@ -27,7 +27,7 @@ const createUser=async (req:Request,res:Response,next:NextFunction)=>{
      const salt=await bcrypt.genSalt();
      const hashedPassword=await bcrypt.hash(req.body.password,salt);
   
-     accountService.createAccount(req.body.useremail,hashedPassword,req.body.nickname);
+     accountService.createAccount(req.body.useremail,hashedPassword,req.body.nickname,req.body.avatar);
      const message={message:HTTPMESSAGE.SUCCESS};
      return res.status(200).json(message);
   }

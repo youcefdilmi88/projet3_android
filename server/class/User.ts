@@ -4,12 +4,14 @@ export class User {
     private lastLoggedIn:Number;
     private lastLoggedOut:Number;
     private friends:String[]=[];
+    private avatar:String;
    
 
-    constructor(useremail:String,nickname:String,friends:String[]) {
+    constructor(useremail:String,nickname:String,friends:String[],avatar:String) {
         this.useremail=useremail;
         this.nickname=nickname;
         this.friends=friends;
+        this.avatar=avatar;
     }
 
     getUseremail():String {
@@ -33,6 +35,10 @@ export class User {
         return this.friends;
     }
 
+    getAvatar():String {
+        return this.avatar;
+    }
+
     setUseremail(useremail:String):void {
         this.useremail=useremail;
     }
@@ -51,6 +57,10 @@ export class User {
 
     setFriends(friends:String[]):void {
         this.friends=friends;
+    }
+
+    setAvatar(avatar:String):void {
+        this.avatar=avatar;
     }
 
     addFriend(friend:String) {
