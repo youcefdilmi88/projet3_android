@@ -43,6 +43,7 @@ export class DessinsComponent implements OnInit {
   public visibite:Array<string> = [];
   public nbrMembres:Array<number> = [];
   public creationDate:Array<string> = [];
+  public nbrLiked:Array<number> = [];
   public peopleLiked:Array<string> = [];
   public centerImage: number = 0;
   public leftImage: number = this.imageUrlArray.length - 1;
@@ -238,6 +239,11 @@ export class DessinsComponent implements OnInit {
       this.getAllDrawings();
     });
 
+    this.socketService.getSocket().on("DRAWINGLIKESCHANGED", (data) => {
+      data=JSON.parse(data);
+      this.getAllDrawings();
+    });
+
   }
 
 
@@ -282,27 +288,25 @@ export class DessinsComponent implements OnInit {
       this.visibite = [];
       this.nbrMembres = [];
       this.creationDate = [];
+      this.nbrLiked = [];
       this.peopleLiked = [];
+
       data.forEach((drawing:any)=>{
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
         this.names.push(drawing.drawingName); 
-        console.log("drawing names:", this.names);
         this.owners.push(drawing.owner);
         this.visibite.push(drawing.visibility);
         this.nbrMembres.push(drawing.members.length);
-        console.log("memb", drawing.members);
         const datepipe: DatePipe = new DatePipe('en-CA');
         let formattedDate = datepipe.transform(drawing.creationDate, 'dd-MM-yyyy HH:mm:ss') as string;
-        console.log("DATE",formattedDate )
         this.creationDate.push(formattedDate);
-        // this.peopleLiked.push(drawing.likes)
-        // console.log("LIKES", drawing.likes);
+        this.nbrLiked.push(drawing.likes.length);
+        this.peopleLiked.push(drawing.likes);
       });
 
-      
     });
   } 
 
@@ -416,25 +420,27 @@ export class DessinsComponent implements OnInit {
 
   like(element: any) {
     let link = this.BASE_URL + "drawing/like";
-    // let link2 = this.BASE_URL + "drawing/removeLike";
+    let link2 = this.BASE_URL + "drawing/removeLike";
 
-    console.log("read", element.textContent.trim().slice(5));
-    console.log("person", this.socketService.nickname);
-    this.http.post<any>(link,{drawingName: element.textContent.trim().slice(5), useremail: this.socketService.email}).pipe( 
-      catchError(async (err) => console.log("error catched" + err))
-      ).subscribe((data: any) => {
-        console.log("LIKED", data);
-      });
-    // if() {
-
-    // }
+    console.log("WISS", this.peopleLiked);
+    console.log("LMAO");
+    if(!this.peopleLiked.includes(this.socketService.email)) {
+      this.http.post<any>(link,{drawingName: element.textContent.trim().slice(6), useremail: this.socketService.email}).pipe( 
+        catchError(async (err) => console.log("error catched" + err))
+        ).subscribe((data: any) => {
+          console.log("LIKED");
+        });
+    }
+    else {
+      this.http.post<any>(link2,{drawingName: element.trim().slice(6), useremail: this.socketService.email}).pipe( 
+        catchError(async (err) => console.log("error catched" + err))
+        ).subscribe((data: any) => {
+          console.log("DISLIKED", data);
+        });
+    }
   
 
-    // this.http.post<any>(link2,{drawingName: element.trim().slice(5), useremail: this.socketService.email}).pipe( 
-    //   catchError(async (err) => console.log("error catched" + err))
-    //   ).subscribe((data: any) => {
-    //     console.log("DISLIKED", data);
-    //   });
+
 
   }
 

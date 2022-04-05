@@ -181,6 +181,7 @@ export class AlbumsComponent implements OnInit {
           this.socketService.albumName = data.album.albumName;
         }
       }
+      this.getAllAlbums();
     });
   }
 
@@ -234,6 +235,7 @@ export class AlbumsComponent implements OnInit {
     let link = this.BASE_URL + "album/joinAlbum";
     let link2 = this.BASE_URL + "album/addRequest";
 
+    console.log(this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers());
     if(this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers().includes(this.socketService.email)) {
       this.http.post<any>(link, {albumName: element.textContent.trim().slice(7), useremail: this.socketService.email}).subscribe((data:any) => { 
         if(data.message == "success") {
@@ -249,6 +251,8 @@ export class AlbumsComponent implements OnInit {
       this.http.post<any>(link2, {newMember: this.socketService.email, albumName: element.textContent.trim().slice(7)}).subscribe((data:any) => { 
         if(data.message == "success") {
           console.log("REQUESTED");
+          this.playAudio("email.wav");
+          this.snackBar.open('Demande envoyée !', '', { duration: ONE_SECOND, });
         }
       });
     }
@@ -258,11 +262,22 @@ export class AlbumsComponent implements OnInit {
   quitAlbum(element: any) {
     let link = this.BASE_URL + "album/leaveAlbum";
 
-    this.http.post<any>(link, {albumName: element.textContent.trim().slice(8), member: this.socketService.email}).subscribe((data:any) => { 
-      if(data.message == "success") {
-        console.log("quit");
-      }
-    });
+    if(!this.albumTempSerivce.albums.get(element.textContent.trim().slice(8))!.getMembers().includes(this.socketService.email)) {
+      this.playAudio("error.wav");
+      this.snackBar.open('Vous n\'êtes pas membre de l\'album !', '', { duration: ONE_SECOND, });
+    }
+    else if (this.albumTempSerivce.albums.get(element.textContent.trim().slice(8))!.getCreator() == this.socketService.email) {
+      this.playAudio("error.wav");
+      this.snackBar.open('Vous êtes le créateur de l\'album !', '', { duration: ONE_SECOND, });
+    }
+    else {
+      this.http.post<any>(link, {albumName: element.textContent.trim().slice(8), member: this.socketService.email}).subscribe((data:any) => { 
+        if(data.message == "success") {
+          console.log("quit");
+        }
+      });
+    }
+
   }
 
 
