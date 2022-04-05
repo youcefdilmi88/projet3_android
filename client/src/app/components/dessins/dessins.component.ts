@@ -43,6 +43,7 @@ export class DessinsComponent implements OnInit {
   public visibite:Array<string> = [];
   public nbrMembres:Array<number> = [];
   public creationDate:Array<string> = [];
+  public peopleLiked:Array<string> = [];
   public centerImage: number = 0;
   public leftImage: number = this.imageUrlArray.length - 1;
   public rightImage: number = 1;
@@ -281,6 +282,7 @@ export class DessinsComponent implements OnInit {
       this.visibite = [];
       this.nbrMembres = [];
       this.creationDate = [];
+      this.peopleLiked = [];
       data.forEach((drawing:any)=>{
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
@@ -296,6 +298,8 @@ export class DessinsComponent implements OnInit {
         let formattedDate = datepipe.transform(drawing.creationDate, 'dd-MM-yyyy HH:mm:ss') as string;
         console.log("DATE",formattedDate )
         this.creationDate.push(formattedDate);
+        // this.peopleLiked.push()
+        // console.log("LIKES", drawing.likes);
       });
 
       
@@ -421,7 +425,9 @@ export class DessinsComponent implements OnInit {
       ).subscribe((data: any) => {
         console.log("LIKED", data);
       });
+    // if() {
 
+    // }
   
 
     // this.http.post<any>(link2,{drawingName: element.trim().slice(5), useremail: this.socketService.email}).pipe( 

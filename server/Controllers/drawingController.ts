@@ -180,7 +180,7 @@ const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 
     console.log("1", drawingService.drawings.get(drawingName)?.getLikes());
     console.log("2", drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail));
-    console.log("3", drawingService.drawings.get(drawingName)?);
+    console.log("3", drawingService.drawings.get(drawingName));
     if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
        console.log("EMAIL EXIST");
         return res.status(404).json({message:HTTPMESSAGE.UALREADYLIKE});
