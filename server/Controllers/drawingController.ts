@@ -173,7 +173,7 @@ const getConnectedUserInDrawing=(req:Request,res:Response,next:NextFunction)=>{
 }
  
 const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
-    let drawingName:String=req.body.drawingName as String;
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
     console.log("server drawname", drawingName);
     console.log("server useremail", useremail);
@@ -181,6 +181,7 @@ const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     console.log("1", drawingService.drawings.get(drawingName)?.getLikes());
     console.log("2", drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail));
     console.log("3", drawingService.drawings.get(drawingName));
+
     if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
        console.log("EMAIL EXIST");
         return res.status(404).json({message:HTTPMESSAGE.UALREADYLIKE});
@@ -195,7 +196,7 @@ const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 }
 
 const removeLikeDrawing=(req:Request,res:Response,next:NextFunction)=>{
-    let drawingName:String=req.body.drawingName as String;
+    let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
 
     if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {

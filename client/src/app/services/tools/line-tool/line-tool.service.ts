@@ -1,4 +1,4 @@
-/*import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { faProjectDiagram, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { ICommand } from 'src/app/interfaces/command.interface';
@@ -201,4 +201,4 @@ export class LineToolService implements Tools {
       }
     }
   }
-}*/
+}

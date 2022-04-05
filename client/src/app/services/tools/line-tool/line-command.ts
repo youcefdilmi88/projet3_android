@@ -123,10 +123,10 @@ export class LineCommand implements ICommand {
     /// Retrait de la ligne et des marker du dessin
     undo(): void {
         if (this.line) {
-            this.drawingService.removeObject(Number(this.line.id));
+            this.drawingService.removeObject((this.line.id));
         }
         if (this.markerDefs) {
-            this.drawingService.removeObject(Number(this.markerDefs.id));
+            this.drawingService.removeObject((this.markerDefs.id));
         }
     }
 }

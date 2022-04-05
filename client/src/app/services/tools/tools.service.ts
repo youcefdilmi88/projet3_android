@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { ICommand } from 'src/app/interfaces/command.interface';
 import { CommandInvokerService } from 'src/app/services/command-invoker/command-invoker.service';
 import { DrawingService } from '../drawing/drawing.service';
-// import { EraserToolService } from './eraser-tool/eraser-tool.service';
+//import { EraserToolService } from './eraser-tool/eraser-tool.service';
 import { Tools } from '../../interfaces/tools.interface';
-// import { LineToolService } from './line-tool/line-tool.service';
+//import { LineToolService } from './line-tool/line-tool.service';
 import { PencilToolService } from './pencil-tool/pencil-tool.service';
-// import { PolygonToolService } from './polygon-tool/polygon-tool.service';
+//import { PolygonToolService } from './polygon-tool/polygon-tool.service';
 import { SelectionToolService } from './selection-tool/selection-tool.service';
 import { ToolEllipseService } from './tool-ellipse/tool-ellipse.service';
 import { ToolIdConstants } from './tool-id-constants';
@@ -28,10 +28,10 @@ export class ToolsService {
     private pencilTool: PencilToolService,
     private rectangleTool: ToolRectangleService,
     private ellipseTool: ToolEllipseService,
-    // private polygonService: PolygonToolService,
-    // private lineTool: LineToolService,
+    //private polygonService: PolygonToolService,
+    //private lineTool: LineToolService,
     private selectionTool: SelectionToolService,
-    // private eraserTool: EraserToolService,
+    //private eraserTool: EraserToolService,
 
     private commandInvoker: CommandInvokerService,
   ) {
@@ -44,10 +44,10 @@ export class ToolsService {
     this.tools.set(this.pencilTool.id, this.pencilTool);
     this.tools.set(this.rectangleTool.id, this.rectangleTool);
     this.tools.set(this.ellipseTool.id, this.ellipseTool);
-    // this.tools.set(this.polygonService.id, this.polygonService);
-    // this.tools.set(this.lineTool.id, this.lineTool);
+    //this.tools.set(this.polygonService.id, this.polygonService);
+    //this.tools.set(this.lineTool.id, this.lineTool);
     this.tools.set(this.selectionTool.id, this.selectionTool);
-    // this.tools.set(this.eraserTool.id, this.eraserTool);
+    //this.tools.set(this.eraserTool.id, this.eraserTool);
   }
 
   /// Selectionner un outil avec son id
