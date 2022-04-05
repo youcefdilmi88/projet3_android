@@ -18,6 +18,7 @@ export class SocketService {
   public drawingName: string;
   public albumName: string;
   public onGoing: boolean;
+  public memberRequest: string;
   public language = "french";
   public theme = "light grey";
   public mute = false;

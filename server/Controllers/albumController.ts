@@ -120,7 +120,7 @@ const acceptRequestInAlbum=(req:Request,res:Response,next:NextFunction)=>{
   let albumName:String=req.body.albumName as String;
   let request:String=req.body.request as String;
 
-  if(albumService.albums.get(albumName)?.getRequests().indexOf(request)!=-1) {
+  if(albumService.albums.get(albumName)?.getRequests().indexOf(request)==-1) {
     return res.status(404).json({message:HTTPMESSAGE.REQNOTFOUND});
   } 
 

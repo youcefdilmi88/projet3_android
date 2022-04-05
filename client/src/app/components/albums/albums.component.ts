@@ -21,6 +21,7 @@ import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/inte
 import { ModifyAlbumComponent } from '../modify-album/modify-album.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SidenavService } from '@app/services/sidenav/sidenav.service';
+import { AcceptRequestComponent } from '../accept-request/accept-request.component';
 // import { RouterOutlet } from '@angular/router';
 // import { fader } from '@assets/animations';
 
@@ -47,8 +48,7 @@ export class AlbumsComponent implements OnInit {
   public open: string;
   public delete: string;
   public goChat: string;
-  
- 
+
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
 
@@ -170,6 +170,18 @@ export class AlbumsComponent implements OnInit {
       data=JSON.parse(data);
       this.getAllAlbums();
     });
+
+    this.socketService.getSocket().on("ALBUMMODIFIED", (data) => {
+      data=JSON.parse(data);
+      console.log(data.album.requests);
+      if(data.album.requests.length > 0) {
+        if(data.album.members.includes(this.socketService.email)) {
+          this.dialog.open(AcceptRequestComponent);
+          this.socketService.memberRequest = data.album.requests[0];
+          this.socketService.albumName = data.album.albumName;
+        }
+      }
+    });
   }
 
   getAllAlbums() {
@@ -220,37 +232,28 @@ export class AlbumsComponent implements OnInit {
 
   openAlbum(element: any) {
     let link = this.BASE_URL + "album/joinAlbum";
+    let link2 = this.BASE_URL + "album/addRequest";
 
-
-    // console.log("wis", this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers());
-    for(let i = 0; i < this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers().length; i++) {
-      if(this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers()[i] != this.socketService.email) {
-        console.log("not member");
-      }
-      else if (this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers()[i] == this.socketService.email) {
-        this.http.post<any>(link, {albumName: element.textContent.trim().slice(7), useremail: this.socketService.email}).subscribe((data:any) => { 
-          if(data.message == "success") {
-            this.router.navigate(['/', 'dessins']);
-            this.playAudio("ui2.wav");
-            this.socketService.albumName = element.textContent.trim().slice(7);
-            console.log("album name", this.socketService.albumName);
-          }
-        });
-        break;
-      }
+    if(this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers().includes(this.socketService.email)) {
+      this.http.post<any>(link, {albumName: element.textContent.trim().slice(7), useremail: this.socketService.email}).subscribe((data:any) => { 
+        if(data.message == "success") {
+          this.router.navigate(['/', 'dessins']);
+          this.playAudio("ui2.wav");
+          this.socketService.albumName = element.textContent.trim().slice(7);
+          console.log("album name", this.socketService.albumName);
+        }
+      });
     }
- 
-
-
-
+    else {
+      // REQUEST JOIN ALBUM
+      this.http.post<any>(link2, {newMember: this.socketService.email, albumName: element.textContent.trim().slice(7)}).subscribe((data:any) => { 
+        if(data.message == "success") {
+          console.log("REQUESTED");
+        }
+      });
+    }
 
   }
-
-
-//   params={
-//     albumName:"",
-//     member:""
-//  }
 
   quitAlbum(element: any) {
     let link = this.BASE_URL + "album/leaveAlbum";
@@ -262,13 +265,6 @@ export class AlbumsComponent implements OnInit {
     });
   }
 
-  // let link2 = this.BASE_URL + "drawing/deleteDrawing";
-
-  // this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
-  //   if (data.message == "success") {
-  //     console.log("DELETE DRAWING IS " + data);
-  //   }
-  // });
 
   deleteAlbum(element: any) : void {
     let link = this.BASE_URL + "album/deleteAlbum";

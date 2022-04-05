@@ -8,7 +8,7 @@ import { URL } from '../../../../constants';
 import { Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WelcomeDialogComponent } from '../welcome-dialog/welcome-dialog/welcome-dialog.component';
-// import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
+import { NewDrawingComponent } from '../new-drawing/new-drawing.component';
 import { DrawingTempService } from '@app/services/drawingTemp.service';
 import { Drawing } from '@app/classes/Drawing';
 import { DrawingInterface } from '@app/interfaces/DrawingInterface';
@@ -249,27 +249,28 @@ export class RoomsComponent implements OnInit {
     console.log("LOOOK ATTT MEEEE" + element.textContent.trim().slice(8));
     
  
-    this.router.navigate(['/', 'clavardage']);
+    // this.router.navigate(['/', 'clavardage']);
 
 
     // Pour savoir si la salle doit avoir un canvas ou non
-    // if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
-    //     this.router.navigate(['/', 'sidenav']);
-    //     this.dialog.open(NewDrawingComponent);
-    // }
-    // else {
-    //   this.router.navigate(['/', 'clavardage']);
-    // }
+    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
+      this.router.navigate(['/', 'sidenav']);
+      this.dialog.open(NewDrawingComponent);
+    }
+    else {
+      this.router.navigate(['/', 'clavardage']);
+    }
 
-    // let link = this.BASE_URL + "drawing/joinDrawing";
+    
+    let link = this.BASE_URL + "drawing/joinDrawing";
 
-    // this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(8)}).subscribe((data:any) => {
-    //   if(data.message == "success") {
-    //     console.log("join dessins:" + element.textContent.trim().slice(8));
-    //     this.router.navigate(['/', 'sidenav']);
-    //     this.dialog.open(NewDrawingComponent);
-    //   }
-    // });
+    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: this.socketService.drawingName}).subscribe((data:any) => {
+      if(data.message == "success") {
+        console.log("join dessins:" + element.textContent.trim().slice(8));
+        this.router.navigate(['/', 'sidenav']);
+        this.dialog.open(NewDrawingComponent);
+      }
+    });
 
     // Route JoinRoom
     let link2 = this.BASE_URL + "room/joinRoom";
@@ -332,7 +333,9 @@ export class RoomsComponent implements OnInit {
         if (data[i].roomName == text.trim() || data[i].creator == text.trim()) {
           console.log("GOT IN!");
           // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];
-          this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+          }
         }
       }
     });

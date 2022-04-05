@@ -177,6 +177,10 @@ export class ChatComponent implements AfterViewInit {
     this.router.navigate(['/', 'rooms']);
     this.playAudio("ui2.wav");
     
+    if(this.router.url == "/sidenav") {
+      this.socketService.drawingName = this.socketService.currentRoom;
+    }
+
     this.leaveDrawing();
   }
 
@@ -210,7 +214,7 @@ export class ChatComponent implements AfterViewInit {
     this.input.nativeElement.focus();
   }
 
-  public userDataCall() {
+  public userDataCall() { 
     let link=this.BASE_URL + "userData/msg";
 
     this.http.post<any>(link,{ msg:"sjdakjsd",user:"admin" }).subscribe((data: any) => {

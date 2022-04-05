@@ -48,7 +48,7 @@ export class NewAlbumComponent implements OnInit {
 
     let link = this.BASE_URL + "album/createAlbum";
     
-    this.http.post<any>(link, {albumName: this.name.trim(), creator: this.socketService.email, visibility:"public", description: this.description}).subscribe((data:any) => {
+    this.http.post<any>(link, {albumName: this.name.trim(), creator: this.socketService.email, visibility:"private", description: this.description}).subscribe((data:any) => {
       if(data.message == "success") {
         console.log("ALBUM CREATED");
         this.playAudio("ui1.wav");

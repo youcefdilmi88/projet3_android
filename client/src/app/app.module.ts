@@ -41,6 +41,7 @@ import { NewAlbumComponent } from './components/new-album/new-album.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ModifyDrawingComponent } from './components/modify-drawing/modify-drawing.component';
 import { ModifyAlbumComponent } from './components/modify-album/modify-album.component';
+import { AcceptRequestComponent } from './components/accept-request/accept-request.component';
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import { ModifyAlbumComponent } from './components/modify-album/modify-album.com
         SettingsComponent,
         ModifyDrawingComponent,
         ModifyAlbumComponent,
+        AcceptRequestComponent,
     ],
     imports: [
         BrowserModule,

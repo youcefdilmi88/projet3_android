@@ -71,6 +71,7 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
 
+  
     console.log("AVANT");
     console.log("LOL", this.socketService.currentRoom);
     let drawingObj = this.drawingTempSerivce.drawings.get(this.socketService.currentRoom);
