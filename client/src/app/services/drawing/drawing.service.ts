@@ -22,10 +22,10 @@ export class DrawingService {
   height = 0;
   drawing: SVGElement;
 
-  private objectList: Map<number, SVGElement>;
+  private objectList: Map<string, SVGElement>;
 
   constructor() {
-    this.objectList = new Map<number, SVGElement>();
+    this.objectList = new Map<string, SVGElement>();
   }
   get rgbColorString(): string {
     return 'rgb(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ')';
@@ -39,16 +39,16 @@ export class DrawingService {
     return (this.saved || !this.isCreated);
   }
 
-  getObjectList(): Map<number, SVGElement> {
+  getObjectList(): Map<string, SVGElement> {
     return this.objectList;
   }
 
-  get objects(): Map<number, SVGElement> {
+  get objects(): Map<string, SVGElement> {
     return this.objectList;
   }
 
   /// Retrait d'un objet selon son ID
-  removeObject(id: number): void {
+  removeObject(id: string): void {
     this.renderer.removeChild(this.drawing, this.objectList.get(id));
     this.saved = false;
     this.objectList.delete(id);
@@ -56,13 +56,17 @@ export class DrawingService {
 
   /// Ajout d'un objet dans la map d'objet du dessin
   addObject(obj: SVGElement): number {
+    console.log("added!");
     this.saved = false;
+    console.log("obj id", obj.id);
     if (!obj.id) {
       this.lastObjectId++;
       this.renderer.setProperty(obj, 'id', this.lastObjectId);
+      console.log("hmm", this.lastObjectId);
     }
     const id: number = Number(obj.id);
-    this.objectList.set(id, obj);
+    console.log("id", id);
+    this.objectList.set(obj.id, obj);
     console.log(this.drawing);
     console.log(obj);
     this.renderer.insertBefore(this.drawing, obj, document.getElementById('gridRect') as Element as SVGElement);
@@ -70,7 +74,7 @@ export class DrawingService {
   }
 
   /// Récupère un objet selon son id dans la map d'objet
-  getObject(id: number): SVGElement | undefined {
+  getObject(id: string): SVGElement | undefined {
     return this.objectList.get(id);
   }
 
@@ -141,7 +145,7 @@ export class DrawingService {
       if (lastId === 'gridRect' || lastId === 'gridDefs') {
         toDelete.push(this.drawing.children.item(i) as SVGElement);
       } else {
-        this.objectList.set(Number(lastId), this.drawing.children.item(i) as SVGElement);
+        this.objectList.set((lastId), this.drawing.children.item(i) as SVGElement);
         if (Number(lastId) > this.lastObjectId) {
           this.lastObjectId = Number(lastId);
         }

@@ -8,5 +8,6 @@ export interface DrawingInterface {
     members:string[],
     visibility:string,
     creationDate:number;
+    likes:String[]; 
 }
 

@@ -56,7 +56,9 @@ export class RoomsComponent implements OnInit {
     public pencilToolService: PencilToolService,
     public toolEllipseService: ToolEllipseService,
     public toolRectangleService: ToolRectangleService,
-  ) { this.hotkeyService.hotkeysListener();}
+  ) { 
+    this.hotkeyService.hotkeysListener();
+  }
 
   ngOnInit(): void {
     if(this.socketService.language == "french") {
@@ -398,10 +400,12 @@ export class RoomsComponent implements OnInit {
 
 
   playAudio(){
-    let audio = new Audio();
-    audio.src = "../../../assets/ui1.wav";
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/ui1.wav";
+      audio.load();
+      audio.play();
+    }
   }
 
   logout() {

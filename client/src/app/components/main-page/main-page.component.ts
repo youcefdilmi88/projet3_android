@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { RouterOutlet } from '@angular/router';
 import { fader } from '@assets/animations';
+import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 
 
 
@@ -45,8 +46,11 @@ export class MainPageComponent implements OnInit{
     private socketService: SocketService,
     private http: HttpClient,
     private router: Router,
-    private ref:ChangeDetectorRef
-  ) { }
+    private ref:ChangeDetectorRef,
+    private hotkeyService: HotkeysService,
+  ) { 
+    this.hotkeyService.hotkeysListener();
+  }
 
   ngOnInit(): void {
     // setTimeout(() => { this.ngOnInit() }, 100);
@@ -221,10 +225,12 @@ export class MainPageComponent implements OnInit{
 
 
   playAudio(title: string){
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
   
   //("../../../assets/avatar_1.png");

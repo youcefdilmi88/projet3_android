@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PolygonStyle } from 'src/app/model/polygon-style.model';
-import { PolygonToolService } from 'src/app/services/tools/polygon-tool/polygon-tool.service';
+//import { PolygonToolService } from 'src/app/services/tools/polygon-tool/polygon-tool.service';
 
 const FILL_ID = 0;
 const CENTER_ID = 1;
@@ -55,4 +55,4 @@ export class PolygonToolParameterComponent implements OnInit {
   get toolName(): string {
     return this.polygonToolService.toolName;
   }
-}
+}*/

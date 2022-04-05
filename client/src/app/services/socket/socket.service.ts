@@ -20,6 +20,7 @@ export class SocketService {
   public onGoing: boolean;
   public language = "french";
   public theme = "light grey";
+  public mute = false;
   //private userService: UserService;
 
   constructor() { }

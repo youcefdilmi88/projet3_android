@@ -52,6 +52,7 @@ export class ToolsService {
 
   /// Selectionner un outil avec son id
   selectTool(id: number): void {
+    console.log("select tool");
     // appliquer les changements sur l'outil precedent
     const oldTool = this.selectedTool;
     if (oldTool) {
@@ -95,7 +96,8 @@ export class ToolsService {
       if (!tool) {
         return;
       }
-      if (this.isPressed || tool.id === ToolIdConstants.LINE_ID) {
+      //if (this.isPressed || tool.id === ToolIdConstants.LINE_ID) {
+      if (this.isPressed) {
         const command: ICommand | void = tool.onRelease(event);
         if (command) {
           this.commandInvoker.addCommand(command);
@@ -112,7 +114,8 @@ export class ToolsService {
       if (!tool) {
         return;
       }
-      if (this.isPressed || tool.id === ToolIdConstants.LINE_ID || tool.id === ToolIdConstants.ERASER_ID) {
+      //if (this.isPressed || tool.id === ToolIdConstants.LINE_ID || tool.id === ToolIdConstants.ERASER_ID) {
+        if (this.isPressed) {
         tool.onMove(event);
       }
     }
@@ -126,7 +129,8 @@ export class ToolsService {
         if (!tool) {
           return;
         }
-        if (this.isPressed || tool.id === ToolIdConstants.LINE_ID
+        if (this.isPressed 
+          //|| tool.id === ToolIdConstants.LINE_ID
           || tool.id === ToolIdConstants.SELECTION_ID) {
           tool.onKeyDown(event);
         }
@@ -139,7 +143,8 @@ export class ToolsService {
         if (!tool) {
           return;
         }
-        if (this.isPressed || tool.id === ToolIdConstants.LINE_ID
+        if (this.isPressed 
+          //|| tool.id === ToolIdConstants.LINE_ID
           ||  tool.id === ToolIdConstants.SELECTION_ID) {
           tool.onKeyUp(event);
         }

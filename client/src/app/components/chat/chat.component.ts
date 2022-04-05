@@ -150,10 +150,12 @@ export class ChatComponent implements AfterViewInit {
   }
 
   playAudio(title: string) {
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   leaveDrawing() {
@@ -220,7 +222,9 @@ export class ChatComponent implements AfterViewInit {
     let link = this.BASE_URL + "user/logoutUser";
 
     this.playAudio("ui1.wav");
-    this.socketService.disconnectSocket();
+    // this.socketService.disconnectSocket();
+
+    this.leaveDrawing();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(
       catchError(async (err) => console.log("error catched" + err))
@@ -230,7 +234,5 @@ export class ChatComponent implements AfterViewInit {
         console.log("sayonara");
       }   
     });
-
-    this.leaveDrawing();
   }
 }

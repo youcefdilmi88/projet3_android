@@ -63,9 +63,15 @@ export class Album {
 
     removeDrawing(drawingName:String):void {
         const index = this.drawings.indexOf(drawingName);
-        console.log(index);
         if (index > -1) {
             this.drawings.splice(index, 1); 
+        }
+    }
+
+    changeDrawingName(oldName:String,newName:String) {
+        const index = this.drawings.indexOf(oldName);
+        if (index > -1) {
+            this.drawings[index]=newName; 
         }
     }
 

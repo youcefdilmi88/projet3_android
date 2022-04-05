@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { EraserToolService } from 'src/app/services/tools/eraser-tool/eraser-tool.service';
 
@@ -24,4 +24,4 @@ export class EraserToolParameterComponent implements OnInit {
   get eraserWidth(): number {
     return this.eraserToolService.parameters.value.eraserSize;
   }
-}
+}*/

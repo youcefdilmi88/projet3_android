@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 import { SocketService } from '@app/services/socket/socket.service';
 import { URL } from '../../../../constants';
+
 
 @Component({
   selector: 'app-new-album',
@@ -23,16 +25,21 @@ export class NewAlbumComponent implements OnInit {
     public dialogRef: MatDialogRef<NewAlbumComponent>,
     private socketService: SocketService,
     private http: HttpClient,
-  ) { }
+    private hotkeyService: HotkeysService,
+  ) { 
+    this.hotkeyService.hotkeysListener();
+  }
 
   ngOnInit(): void {
   }
 
   playAudio(title: string){
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   createAlbum() : void  {

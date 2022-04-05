@@ -96,7 +96,6 @@ export class DessinsComponent implements OnInit {
       this.drawName = French.drawingName;
       this.numberOfPeople = French.numberOfPeople;
       this.own = French.owner;
-      this.visib = French.visibility;
       this.open = French.open;
       this.delete = French.delete;
     }
@@ -107,7 +106,6 @@ export class DessinsComponent implements OnInit {
       this.drawName = English.drawingName;
       this.numberOfPeople = English.numberOfPeople;
       this.own = English.owner;
-      this.visib = English.visibility;
       this.open = English.open;
       this.delete = English.delete;
     }
@@ -412,6 +410,29 @@ export class DessinsComponent implements OnInit {
     }
   }
 
+  like(element: any) {
+    let link = this.BASE_URL + "drawing/like";
+    // let link2 = this.BASE_URL + "drawing/removeLike";
+
+    console.log("read", element.textContent.trim().slice(5));
+    console.log("person", this.socketService.nickname);
+    this.http.post<any>(link,{drawingName: element.textContent.trim().slice(5), useremail: this.socketService.email}).pipe( 
+      catchError(async (err) => console.log("error catched" + err))
+      ).subscribe((data: any) => {
+        console.log("LIKED", data);
+      });
+
+  
+
+    // this.http.post<any>(link2,{drawingName: element.trim().slice(5), useremail: this.socketService.email}).pipe( 
+    //   catchError(async (err) => console.log("error catched" + err))
+    //   ).subscribe((data: any) => {
+    //     console.log("DISLIKED", data);
+    //   });
+
+  }
+
+
   setVisibilityToPrivate(name: string) :  void {
     let link = this.BASE_URL + "drawing/updateDrawing";
 
@@ -505,10 +526,12 @@ export class DessinsComponent implements OnInit {
 
 
   playAudio(){
-    let audio = new Audio();
-    audio.src = "../../../assets/ui1.wav";
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/ui1.wav";
+      audio.load();
+      audio.play();
+    }
   }
 
   playAudio2(){

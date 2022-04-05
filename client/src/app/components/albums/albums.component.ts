@@ -20,6 +20,7 @@ import { AlbumTempService } from '@app/services/albumTempService';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { ModifyAlbumComponent } from '../modify-album/modify-album.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SidenavService } from '@app/services/sidenav/sidenav.service';
 // import { RouterOutlet } from '@angular/router';
 // import { fader } from '@assets/animations';
 
@@ -63,13 +64,18 @@ export class AlbumsComponent implements OnInit {
     private selectionService: SelectionToolService,
     public albumTempSerivce: AlbumTempService,
     private snackBar: MatSnackBar,
-  ) { this.hotkeyService.hotkeysListener();}
+    public sidenavService: SidenavService, 
+  ) { 
+      this.hotkeyService.hotkeysListener();
+      this.hotkeyService.hotkeysListener();
+    }
 
   ngOnInit(): void {
     this.pencilService.setUpPencil();
     this.rectangleService.setUpRectangle();
     this.ellipseService.setUpEllipse();
     this.selectionService.setUpSelection();
+    this.sidenavService.reset();
     this.getAllAlbums();
     this.roomListener();
 
@@ -227,6 +233,21 @@ export class AlbumsComponent implements OnInit {
   }
 
 
+//   params={
+//     albumName:"",
+//     member:""
+//  }
+
+  quitAlbum(element: any) {
+    let link = this.BASE_URL + "album/leaveAlbum";
+
+    this.http.post<any>(link, {albumName: element.textContent.trim().slice(8), member: this.socketService.email}).subscribe((data:any) => { 
+      if(data.message == "success") {
+        console.log("quit");
+      }
+    });
+  }
+
   // let link2 = this.BASE_URL + "drawing/deleteDrawing";
 
   // this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
@@ -276,10 +297,12 @@ export class AlbumsComponent implements OnInit {
   }
 
   playAudio(title: string){
-    let audio = new Audio();
-    audio.src = "../../../assets/" + title;
-    audio.load();
-    audio.play();
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   logout() {

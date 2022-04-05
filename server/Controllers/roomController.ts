@@ -78,7 +78,6 @@ const createRoom=(req:Request,res:Response,next:NextFunction)=>{
     
     roomService.createRoom(roomName,creator,members,messages).then(()=>{
         const message={message:"room created"};
-        console.log("new room event sent");
         socketService.getIo().emit(SOCKETEVENT.CREATEROOM,JSON.stringify(message));
     }).catch((e:Error)=>{
         console.log(e);
@@ -88,9 +87,6 @@ const createRoom=(req:Request,res:Response,next:NextFunction)=>{
 
 const deleteRoom=(req:Request,res:Response,next:NextFunction)=>{
    let roomName:String=req.body.roomName as String;
-   console.log("room to delete:");
-   console.log(roomName);
-   console.log("");
    if(roomService.getAllRooms().has(roomName)==false) {
      return res.status(404).json({message:HTTPMESSAGE.FAILED});
    }
