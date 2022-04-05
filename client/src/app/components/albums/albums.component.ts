@@ -221,14 +221,28 @@ export class AlbumsComponent implements OnInit {
   openAlbum(element: any) {
     let link = this.BASE_URL + "album/joinAlbum";
 
-    this.http.post<any>(link, {albumName: element.textContent.trim().slice(7), useremail: this.socketService.email}).subscribe((data:any) => { 
-      if(data.message == "success") {
-        this.router.navigate(['/', 'dessins']);
-        this.playAudio("ui2.wav");
-        this.socketService.albumName = element.textContent.trim().slice(7);
-        console.log("album name", this.socketService.albumName);
+
+    // console.log("wis", this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers());
+    for(let i = 0; i < this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers().length; i++) {
+      if(this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers()[i] != this.socketService.email) {
+        console.log("not member");
       }
-    });
+      else if (this.albumTempSerivce.albums.get(element.textContent.trim().slice(7))!.getMembers()[i] == this.socketService.email) {
+        this.http.post<any>(link, {albumName: element.textContent.trim().slice(7), useremail: this.socketService.email}).subscribe((data:any) => { 
+          if(data.message == "success") {
+            this.router.navigate(['/', 'dessins']);
+            this.playAudio("ui2.wav");
+            this.socketService.albumName = element.textContent.trim().slice(7);
+            console.log("album name", this.socketService.albumName);
+          }
+        });
+        break;
+      }
+    }
+ 
+
+
+
 
   }
 

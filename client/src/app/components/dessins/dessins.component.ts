@@ -298,7 +298,7 @@ export class DessinsComponent implements OnInit {
         let formattedDate = datepipe.transform(drawing.creationDate, 'dd-MM-yyyy HH:mm:ss') as string;
         console.log("DATE",formattedDate )
         this.creationDate.push(formattedDate);
-        // this.peopleLiked.push()
+        // this.peopleLiked.push(drawing.likes)
         // console.log("LIKES", drawing.likes);
       });
 
