@@ -41,13 +41,18 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
             if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
                 let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
                 console.log(drawing.getPassword());
-                if(await bcrypt.compare(await req.body.password as string,drawing.getPassword() as string)) {
-                    console.log("password",drawing.getPassword() as string);
-                    drawingService.joinDrawing(drawingName,useremail);
-                    if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
-                      roomService.joinRoom(drawing.roomName,useremail);
-                    }
+                try {
+                  if(await bcrypt.compare(await req.body.password as string,drawing.getPassword() as string)) {
+                     console.log("password",drawing.getPassword() as string);
+                     drawingService.joinDrawing(drawingName,useremail);
+                     if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+                       roomService.joinRoom(drawing.roomName,useremail);
+                     }
                     return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+                  }
+                }
+                catch(e) {
+                    console.log(e);
                 }
                 return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
             }
