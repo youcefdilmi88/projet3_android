@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response }  from "express";
 import { Album } from "../class/Album";
 import { Drawing } from "../class/Drawing";
-import { ProtectedDrawing } from "../class/ProtectedDrawing";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { VISIBILITY } from "../Constants/visibility";
 import { AlbumInterface } from "../Interface/AlbumInterface";
@@ -227,7 +226,7 @@ const getDrawingsFromAlbum=(req:Request,res:Response,next:NextFunction)=>{
          drawings.push(drawingInterface);
         }
         if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
-          let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
+          let drawing=drawingService.drawings.get(drawingName);
           let drawingInterface:ProtectedDrawingInterface={
             drawingName:drawingService.sourceDrawingName(drawing.getName()),
             owner:drawing.getOwner(),
@@ -237,7 +236,7 @@ const getDrawingsFromAlbum=(req:Request,res:Response,next:NextFunction)=>{
             visibility:drawing.getVisibility(),
             creationDate:drawing.getCreationDate(),
             likes:drawing.getLikes(),
-            password:drawing.getPassword()
+            password:drawing.password
           }
           drawings.push(drawingInterface);
         }
