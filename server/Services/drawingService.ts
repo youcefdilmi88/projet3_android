@@ -24,12 +24,12 @@ import userService from "./userService";
 class DrawingService {
 
   private io:Server;
-  public drawings:Map<String,Drawing>;  // drawingName and Drawing
-  public socketInDrawing:Map<string,Drawing>;
+  public drawings:Map<String,any>;  // drawingName and Drawing
+  public socketInDrawing:Map<string,any>;
   
   constructor() { 
-    this.drawings=new Map<String,Drawing>();
-    this.socketInDrawing=new Map<string,Drawing>();
+    this.drawings=new Map<String,any>();
+    this.socketInDrawing=new Map<string,any>();
     this.loadAllDrawings();
   }
 
@@ -72,9 +72,15 @@ class DrawingService {
   async loadAllDrawings() {
     this.drawings.clear();
     await databaseService.getAllDrawings().then((drawings)=>{
-      drawings.forEach((drawing: DrawingInterface)=>{
-        let drawingObj:Drawing=new Drawing(drawing);
-        this.drawings.set(drawingObj.getName(),drawingObj);
+      drawings.forEach((drawing:any)=>{
+        if(drawing.visibility==VISIBILITY.PUBLIC || drawing.visibility==VISIBILITY.PRIVATE) {
+          let drawingObj:Drawing=new Drawing(drawing);
+          this.drawings.set(drawingObj.getName(),drawingObj);
+        }
+        if(drawing.visibility==VISIBILITY.PROTECTED) {
+          let drawingObj:ProtectedDrawing=new ProtectedDrawing(drawing);
+          this.drawings.set(drawingObj.getName(),drawingObj);
+        }
       });
     }).catch((e:Error)=>{
         console.log(e);
@@ -126,7 +132,7 @@ class DrawingService {
 
     let drawingObj=new Drawing(drawingDoc as DrawingInterface);
 
-    if(drawing.visibility==VISIBILITY.PUBLIC) {
+    if(drawing.visibility==VISIBILITY.PUBLIC || drawing.visibility==VISIBILITY.PRIVATE) {
       try {
         await drawingDoc.save().then(()=>{
           console.log("drawing saved");
@@ -153,14 +159,25 @@ class DrawingService {
         password:drawing.password
       });
                    
-      let base:Drawing=new ProtectedDrawing(drawingDoc as ProtectedDrawingInterface);
-      let protectedDrawingObj=base as ProtectedDrawing;
-      protectedDrawingObj.setPassword(drawingDoc.password);
+      let proDrawingInterface={
+        drawingName:drawing.drawingName,
+        owner:drawing.owner,
+        elements:drawing.elements,
+        roomName:drawing.roomName,
+        members:drawing.members,
+        visibility:drawing.visibility,
+        creationDate:drawing.creationDate,
+        likes:drawing.likes,
+        password:drawing.password
+      } as ProtectedDrawingInterface;
 
+      let proDrawingObj:ProtectedDrawing=new ProtectedDrawing(proDrawingInterface);
+      console.log(proDrawingObj);
+  
       try {
         await drawingDoc.save().then(()=>{
           console.log("drawing saved");
-          this.drawings.set(protectedDrawingObj.getName(),protectedDrawingObj);
+          this.drawings.set(proDrawingObj.getName(),proDrawingObj);
         }).catch((e:Error)=>{
           console.log(e);
         });
@@ -228,7 +245,7 @@ class DrawingService {
     return originalName;
   }
 
-  joinDrawing(drawingName:String,useremail:String) {
+  async joinDrawing(drawingName:String,useremail:String) {
 
     let user:User=userService.getUserByUseremail(useremail) as User;
     let socketId:string=userService.getSocketIdByUser().get(user) as string;
@@ -245,53 +262,112 @@ class DrawingService {
     socket?.join(drawingName as string);
     roomService.joinRoom(this.sourceDrawingName(drawingName),useremail);
 
-    let drawing:Drawing=this.drawings.get(drawingName) as Drawing;
-
-    drawing.addMember(socket?.id as string,useremail);
-  
-    this.drawings[`${drawing.getName()}`]=drawing;
-    this.socketInDrawing.set(socket?.id as string,drawing);
-    
-    let drawingInterface:DrawingInterface={
-      drawingName:this.sourceDrawingName(drawing.getName()),
-      owner:drawing.getOwner(),
-      elements:drawing.getElementsInterface(),
-      roomName:drawing.roomName,
-      members:drawing.getMembers(),
-      visibility:drawing.getVisibility(),
-      creationDate:drawing.getCreationDate(),
-      likes:drawing.getLikes()
+    let drawing:any={};
+    if(this.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PUBLIC || this.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PRIVATE) {
+      drawing=this.drawings.get(drawingName) as Drawing;
+      let drawingInterface:any={
+        drawingName:this.sourceDrawingName(drawing.getName()),
+        owner:drawing.getOwner(),
+        elements:drawing.getElementsInterface(),
+        roomName:drawing.roomName,
+        members:drawing.getMembers(),
+        visibility:drawing.getVisibility(),
+        creationDate:drawing.getCreationDate(),
+        likes:drawing.getLikes()
+      }
+      drawing.addMember(socket?.id as string,useremail);
+      drawing.modified=true;
+      await this.autoSaveDrawing(drawing.getName());
+      this.drawings[`${drawing.getName()}`]=drawing;
+      this.socketInDrawing.set(socket?.id as string,drawing);
+      const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
+      socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification));
+    }
+    if(this.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
+      drawing=this.drawings.get(drawingName) as ProtectedDrawing;
+      let drawingInterface:any={
+        drawingName:this.sourceDrawingName(drawing.getName()),
+        owner:drawing.getOwner(),
+        elements:drawing.getElementsInterface(),
+        roomName:drawing.roomName,
+        members:drawing.getMembers(),
+        visibility:drawing.getVisibility(),
+        creationDate:drawing.getCreationDate(),
+        likes:drawing.getLikes()
+      }
+      drawingInterface["password"]=drawing.getPassword();
+      drawing.addMember(socket?.id as string,useremail);
+      drawing.modified=true;
+      await this.autoSaveDrawing(drawing.getName());
+      this.drawings[`${drawing.getName()}`]=drawing;
+      this.socketInDrawing.set(socket?.id as string,drawing);
+      const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
+      socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification));
     }
 
-    const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
-    socketService.getIo().emit(SOCKETEVENT.JOINDRAWING,JSON.stringify(joinDrawingNotification));
   }
 
-  leaveDrawing(socket:Socket,mail:String) {
-    let drawing:Drawing=this.socketInDrawing.get(socket?.id as string) as Drawing;
-    console.log("leave drawing:"+drawing.getName());
-    socket?.leave(drawing.getName() as string);
-    roomService.leaveRoom(socket,this.sourceDrawingName(drawing.getName()),mail);
-    drawingService.socketInDrawing.delete(socket?.id as string);
-    
-    drawing.removeMember(socket?.id as string);
-
-    this.drawings[`${drawing.getName()}`]=drawing;
-    this.socketInDrawing.set(socket?.id as string,drawing);
-
-    let drawingInterface:DrawingInterface={
-      drawingName:this.sourceDrawingName(drawing.getName()),
-      owner:drawing.getOwner(),
-      elements:drawing.getElementsInterface(),
-      roomName:drawing.roomName,
-      members:drawing.getMembers(),
-      visibility:drawing.getVisibility(),
-      creationDate:drawing.getCreationDate(),
-      likes:drawing.getLikes()
+  async leaveDrawing(socket:Socket,mail:String) {
+    let drawing:any={};
+    console.log(this.socketInDrawing.get(socket?.id as string).getVisibility());
+    if(this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PUBLIC || this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PRIVATE) {
+      drawing=this.socketInDrawing.get(socket?.id as string) as Drawing;
+      let drawingInterface:any={
+        drawingName:this.sourceDrawingName(drawing.getName()),
+        owner:drawing.getOwner(),
+        elements:drawing.getElementsInterface(),
+        roomName:drawing.roomName,
+        members:drawing.getMembers(),
+        visibility:drawing.getVisibility(),
+        creationDate:drawing.getCreationDate(),
+        likes:drawing.getLikes()
+      }
+      console.log("leave drawing:"+drawing.getName());
+      socket?.leave(drawing.getName() as string);
+      roomService.leaveRoom(socket,this.sourceDrawingName(drawing.getName()),mail);
+      drawingService.socketInDrawing.delete(socket?.id as string);
+      
+      drawing.removeMember(socket?.id as string);
+      drawing.modified=true;
+      await this.autoSaveDrawing(drawing.getName());
+  
+      this.drawings[`${drawing.getName()}`]=drawing;
+      this.socketInDrawing.set(socket?.id as string,drawing);
+  
+      const message={useremail:mail,drawing:drawingInterface};
+      socketService.getIo().emit(SOCKETEVENT.LEAVEDRAWING,JSON.stringify(message));
     }
 
-    const message={useremail:mail,drawing:drawingInterface};
-    socketService.getIo().emit(SOCKETEVENT.LEAVEDRAWING,JSON.stringify(message));
+    if(this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PROTECTED) {
+      drawing=this.socketInDrawing.get(socket?.id as string) as ProtectedDrawing;
+      let drawingInterface:any={
+        drawingName:this.sourceDrawingName(drawing.getName()),
+        owner:drawing.getOwner(),
+        elements:drawing.getElementsInterface(),
+        roomName:drawing.roomName,
+        members:drawing.getMembers(),
+        visibility:drawing.getVisibility(),
+        creationDate:drawing.getCreationDate(),
+        likes:drawing.getLikes()
+      }
+      drawingInterface["password"]=drawing.getPassword();
+      console.log("leave drawing:"+drawing.getName());
+      socket?.leave(drawing.getName() as string);
+      roomService.leaveRoom(socket,this.sourceDrawingName(drawing.getName()),mail);
+      drawingService.socketInDrawing.delete(socket?.id as string);
+      
+      drawing.removeMember(socket?.id as string);
+      drawing.modified=true;
+      this.autoSaveDrawing(drawing.getName());
+  
+      this.drawings[`${drawing.getName()}`]=drawing;
+      this.socketInDrawing.set(socket?.id as string,drawing);
+  
+      const message={useremail:mail,drawing:drawingInterface};
+      socketService.getIo().emit(SOCKETEVENT.LEAVEDRAWING,JSON.stringify(message));
+    }
+
+   
   }
 
   async overwriteDrawingName(newName:String,drawing:Drawing) {

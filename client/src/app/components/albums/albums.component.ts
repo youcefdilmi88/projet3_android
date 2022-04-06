@@ -49,6 +49,11 @@ export class AlbumsComponent implements OnInit {
   public delete: string;
   public goChat: string;
 
+  private request: string;
+  private iscreator: string;
+  private notcreator: string;
+  private notmember: string
+
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
 
@@ -86,6 +91,10 @@ export class AlbumsComponent implements OnInit {
      this.open = French.open;
      this.delete = French.delete;
      this.goChat = French.goChat;
+     this.request = French.request;
+     this.iscreator = French.iscreator;
+     this.notcreator = French.notcreator;
+     this.notmember = French.notmember;
     }
     else {
       this.albumTitle =  English.chooseAlbum;
@@ -94,6 +103,10 @@ export class AlbumsComponent implements OnInit {
       this.open = English.open;
       this.delete = English.delete;
       this.goChat = English.goChat;
+      this.request = English.request;
+      this.iscreator = English.iscreator;
+      this.notcreator = English.notcreator;
+      this.notmember = English.notmember;
     }
     if(this.socketService.theme == "light grey"){
       document.getElementById("createAlbum")!.style.backgroundColor = LightGrey.main;
@@ -252,7 +265,7 @@ export class AlbumsComponent implements OnInit {
         if(data.message == "success") {
           console.log("REQUESTED");
           this.playAudio("email.wav");
-          this.snackBar.open('Demande envoyée !', '', { duration: ONE_SECOND, });
+          this.snackBar.open(this.request, '', { duration: ONE_SECOND, });
         }
       });
     }
@@ -264,11 +277,11 @@ export class AlbumsComponent implements OnInit {
 
     if(!this.albumTempSerivce.albums.get(element.textContent.trim().slice(8))!.getMembers().includes(this.socketService.email)) {
       this.playAudio("error.wav");
-      this.snackBar.open('Vous n\'êtes pas membre de l\'album !', '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.notmember, '', { duration: ONE_SECOND, });
     }
     else if (this.albumTempSerivce.albums.get(element.textContent.trim().slice(8))!.getCreator() == this.socketService.email) {
       this.playAudio("error.wav");
-      this.snackBar.open('Vous êtes le créateur de l\'album !', '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.iscreator, '', { duration: ONE_SECOND, });
     }
     else {
       this.http.post<any>(link, {albumName: element.textContent.trim().slice(8), member: this.socketService.email}).subscribe((data:any) => { 
@@ -305,7 +318,7 @@ export class AlbumsComponent implements OnInit {
     }
     else {
       this.playAudio("error.wav");
-      this.snackBar.open('Vous n\'êtes pas le créateur de l\'album', '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.notcreator, '', { duration: ONE_SECOND, });
     }
   }  
 
@@ -317,7 +330,7 @@ export class AlbumsComponent implements OnInit {
     }
     else {
       this.playAudio("error.wav");
-      this.snackBar.open('Vous n\'êtes pas le créateur de l\'album', '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.notcreator, '', { duration: ONE_SECOND, });
     }
   }
 

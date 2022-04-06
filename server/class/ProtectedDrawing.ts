@@ -6,9 +6,12 @@ export class ProtectedDrawing extends Drawing {
     private password:String;
 
     constructor(drawing:ProtectedDrawingInterface) {
+        console.log("in protected",drawing);
+        
         const base={
             drawingName:drawing.drawingName,
             owner:drawing.owner,
+            elements:drawing.elements,
             roomName:drawing.roomName,
             members:drawing.members,
             visibility:drawing.visibility,
@@ -19,8 +22,6 @@ export class ProtectedDrawing extends Drawing {
         super(
           base
         );
-
-        console.log("in protected",drawing);
 
         this.password=drawing.password;
     }

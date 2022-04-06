@@ -202,14 +202,14 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("JOINDRAWING", (data) => {
       data = JSON.parse(data);
-      console.log("JOINED: ", data.drawing.drawingName);
-      console.log("members join: ", data.drawing.members);
+      //console.log("JOINED: ", data.drawing.drawingName);
+      //console.log("members join: ", data.drawing.members);
       this.getAllDrawings();
     });
 
     this.socketService.getSocket().on("LEAVEDRAWING", (data) => {
       data = JSON.parse(data);
-      console.log("members left: ", data.drawing.members);
+      //console.log("members left: ", data.drawing.members);
       this.getAllDrawings();
     });
 
@@ -294,6 +294,7 @@ export class DessinsComponent implements OnInit {
       data.forEach((drawing:any)=>{
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
+        console.log("obj", drawingObj);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
         this.names.push(drawing.drawingName); 
@@ -317,14 +318,14 @@ export class DessinsComponent implements OnInit {
     
     let link = this.BASE_URL + "drawing/joinDrawing";
 
-    console.log(element.textContent.trim().slice(7));
-    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {
+    //console.log(element.textContent.trim().slice(7));
+    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7), password: "123"}).subscribe((data:any) => {
       if(data.message == "success") {
-        console.log("CA MARCHE OPEN");
-        console.log("join dessins:" + element.textContent.trim().slice(7));
+        //console.log("CA MARCHE OPEN");
+        //console.log("join dessins:" + element.textContent.trim().slice(7));
         this.dialog.open(NewDrawingComponent);
         this.router.navigate(['/', 'sidenav']);
-        console.log("CREATED CANVAS");
+        //console.log("CREATED CANVAS");
 
       let link2 = this.BASE_URL + "room/joinRoom";
 
@@ -339,7 +340,7 @@ export class DessinsComponent implements OnInit {
       
           if(data.message == "success") {
             this.socketService.currentRoom = element.textContent.trim().slice(7);
-            console.log("current room;" + this.socketService.currentRoom);
+            //console.log("current room;" + this.socketService.currentRoom);
           }
         });
       }
@@ -380,12 +381,14 @@ export class DessinsComponent implements OnInit {
   deleteDessins(element: any): void {
     this.bool = false;
     // if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(10))) {
-      console.log("delete dessins:"+ element.textContent.trim().slice(10));
+      //console.log("delete dessins:"+ element.textContent.trim().slice(10));
       let link2 = this.BASE_URL + "drawing/deleteDrawing";
+
+      this.playAudio("bin.wav");
 
       this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
         if (data.message == "success") {
-          console.log("DELETE DRAWING IS " + data);
+          //console.log("DELETE DRAWING IS " + data);
         }
       });
     // }
@@ -400,18 +403,17 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("CREATEROOM", (data)=> {
       data=JSON.parse(data);
-      console.log(data.message);
+      //console.log(data.message);
     });
 
     text.trim();
     if (text.trim() != '') {
-      console.log("cant create");
+      //console.log("cant create");
       this.http.post<any>(link,{drawingName: this.drawing.trim(), owner: this.socketService.email, visibility: "private"}).subscribe((data: any) => { 
-        console.log(data);
+        //console.log(data);
         if (data.message == "success") {
-          console.log("CREATE DRAWING: " + data.message);
-          
-          this.http.post<any>(link5, {useremail: this.socketService.email, drawingName: this.drawing.trim()}).subscribe((data:any) => {
+          //console.log("CREATE DRAWING: " + data.message);
+          this.http.post<any>(link5, {password: "123", useremail: this.socketService.email, drawingName: this.drawing.trim()}).subscribe((data:any) => {
             if(data.message == "success") {
               this.router.navigate(['/', 'sidenav']);
               this.dialog.open(NewDrawingComponent);
@@ -420,7 +422,7 @@ export class DessinsComponent implements OnInit {
 
           this.http.post<any>(link6, {drawingName: this.drawing.trim(), useremail: this.socketService.email, albumName: this.socketService.albumName }).subscribe((data:any) => {
             if (data.message == "success") {
-              console.log("dessin ajoute a album " + this.socketService.albumName);
+              //console.log("dessin ajoute a album " + this.socketService.albumName);
             }
           });
 
@@ -440,7 +442,7 @@ export class DessinsComponent implements OnInit {
         
             if(data.message == "success") {
               this.socketService.currentRoom = this.drawing.trim();
-              console.log("REGARDE MOI BIG:" + this.socketService.currentRoom);
+              //console.log("REGARDE MOI BIG:" + this.socketService.currentRoom);
             }
           });
           //------------------------------------------------------------
@@ -503,8 +505,8 @@ export class DessinsComponent implements OnInit {
       this.socketService.drawingName = this.names[this.centerImage];
     }
     else {
-      this.playAudio2();
-      console.log("youre not the owner");
+      this.playAudio("error.wav");
+      //.log("youre not the owner");
       let erreur= document.getElementById("settingsButton")!;
       erreur.className = "erreuAnimation";
       erreur.classList.remove("erreuAnimation");
@@ -519,7 +521,7 @@ export class DessinsComponent implements OnInit {
 
   // for right button
   rightSideSlide(): void {
-    console.log("names. len", this.names.length);
+    //console.log("names. len", this.names.length);
     if(this.names.length != 1) {
       this.leftImage = this.centerImage;
       this.centerImage = this.rightImage;
@@ -571,26 +573,19 @@ export class DessinsComponent implements OnInit {
 }
 
 
-  playAudio(){
+  playAudio(title: string){
     if (this.socketService.mute == false) {
       let audio = new Audio();
-      audio.src = "../../../assets/ui1.wav";
+      audio.src = "../../../assets/" + title;
       audio.load();
       audio.play();
     }
   }
 
-  playAudio2(){
-    let audio = new Audio();
-    audio.src = "../../../assets/error.wav";
-    audio.load();
-    audio.play();
-  }
-
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
-    this.playAudio();
+    this.playAudio("ui1.wav");
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(
@@ -598,7 +593,7 @@ export class DessinsComponent implements OnInit {
     ).subscribe((data: any) => {
 
       if (data.message == "success") {
-        console.log("sayonara");
+        //console.log("sayonara");
       }   
     });
   }

@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { ICommand } from '../../interfaces/command.interface';
 import { DrawingService } from '../drawing/drawing.service';
-import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
+//import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
 
 /// Cette classe permet de faire l'invocation des undo et redo des commandes
 @Injectable({
@@ -16,7 +16,7 @@ export class CommandInvokerService {
   commandCallEmitter = new EventEmitter<string>();
 
   constructor(
-    private selectionService: SelectionToolService,
+    //private selectionService: SelectionToolService,
     private drawingService: DrawingService,
   ) {
     this.drawingService.drawingEmit.subscribe(() => {
@@ -57,7 +57,7 @@ export class CommandInvokerService {
   undo(): void {
     if (this.canUndo) {
       const undoneCommand = this.commandsList.pop() as ICommand;
-      this.selectionService.removeSelection();
+      //this.selectionService.removeSelection();
       undoneCommand.undo();
       this.undonedCommandsList.push(undoneCommand);
       this.commandCallEmitter.emit('undo');
@@ -69,7 +69,7 @@ export class CommandInvokerService {
   redo(): void {
     if (this.canRedo) {
       const redoneCommand = this.undonedCommandsList.pop() as ICommand;
-      this.selectionService.removeSelection();
+      //this.selectionService.removeSelection();
       redoneCommand.execute();
       this.commandsList.push(redoneCommand);
       this.commandCallEmitter.emit('redo');

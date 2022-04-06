@@ -304,6 +304,7 @@ export class RoomsComponent implements OnInit {
           console.log("TESTING" + data);
           console.log("PIPI");
           console.log("ICITE", this.socketService.currentRoom);
+          this.playAudio("bin.wav");
         }
       });
     }
@@ -316,6 +317,7 @@ export class RoomsComponent implements OnInit {
         if (data.message == "success") {
           console.log("look at me " + data.message);
           this.socketService.currentRoom = "randomSHIT"; //IMPORTANT NE PAS ENLEVER
+          this.playAudio("bin.wav");
         }
       });
     }
@@ -402,10 +404,10 @@ export class RoomsComponent implements OnInit {
   }
 
 
-  playAudio(){
+  playAudio(title: string) {
     if (this.socketService.mute == false) {
       let audio = new Audio();
-      audio.src = "../../../assets/ui1.wav";
+      audio.src = "../../../assets/" + title;
       audio.load();
       audio.play();
     }
@@ -414,7 +416,7 @@ export class RoomsComponent implements OnInit {
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
-    this.playAudio();
+    this.playAudio("ui1.wav");
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

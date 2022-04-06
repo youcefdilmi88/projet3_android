@@ -3,11 +3,13 @@ export class User {
     private nickname:String;
     private lastLoggedIn:Number;
     private lastLoggedOut:Number;
+    // private avatar:String;
    
 
-    constructor(useremail:String,nickname:String) {
+    constructor(useremail:String,nickname:String,/*avatar:String*/) {
         this.useremail=useremail;
         this.nickname=nickname;
+       // this.avatar=avatar;
     }
 
     getUseremail():String {
@@ -27,6 +29,10 @@ export class User {
         return this.lastLoggedOut;
     }
 
+   /* getAvatar():String {
+        return this.avatar;
+    }*/
+
     setUseremail(useremail:String):void {
         this.useremail=useremail;
     }
@@ -42,5 +48,9 @@ export class User {
     setLastLoggedOut(time:Number):void {
         this.lastLoggedOut=time;
     }
+
+   /* setAvatar(avatar:String):void {
+        this.avatar=avatar;
+    }*/
 
 }

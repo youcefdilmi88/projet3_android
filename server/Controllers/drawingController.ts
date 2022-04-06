@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Socket } from "socket.io";
 import { Drawing } from "../class/Drawing";
+import { ProtectedDrawing } from "../class/ProtectedDrawing";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
@@ -8,6 +9,7 @@ import { VISIBILITY } from "../Constants/visibility";
 import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
+import { ProtectedDrawingInterface } from "../Interface/ProtectedDrawingInterface";
 import drawingService from "../Services/drawingService";
 import roomService from "../Services/roomService";
 import socketService from "../Services/socketService";
@@ -17,7 +19,7 @@ const router = express.Router();
 
 let bcrypt=require("bcryptjs");
 
-const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
+const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
 
@@ -27,19 +29,48 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let socket=socketService.getIo().sockets.sockets.get(socketId);
 
     console.log("join drawing name:"+drawingName);
+    console.log(req.body);
 
-    
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
 
         if(drawing.membersBySocketId.has(socket?.id as string)==false) {
             // join drawing and chat associated
-            drawingService.joinDrawing(drawingName,useremail);
-
-            if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
-              roomService.joinRoom(drawing.roomName,useremail);
+           
+            console.log(drawingService.drawings.get(drawingName)?.getVisibility());
+            if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
+                let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
+                let password:string="";
+                if(req.body.password!==undefined) {
+                 password=req.body.password as string;
+                }
+                 console.log(password);
+                 console.log(drawing.getPassword());
+                 try {
+                   if(await bcrypt.compare(password,drawing.getPassword() as string)) {
+                      console.log("password",drawing.getPassword() as string);
+                      await drawingService.joinDrawing(drawingName,useremail);
+                      if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+                        roomService.joinRoom(drawing.roomName,useremail);
+                      }
+                      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+                    }
+                 }
+                 catch(e) {
+                     console.log(e);
+                 }
+                 return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
+                
             }
-            return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+            if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PUBLIC || drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PRIVATE) {
+              await drawingService.joinDrawing(drawingName,useremail);
+
+              if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+               roomService.joinRoom(drawing.roomName,useremail);
+              }
+              return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+            }
+            return res.status(404).json({message:HTTPMESSAGE.FAILED});
         }
         return res.status(404).json({message:HTTPMESSAGE.UCONNECTED});
     }
@@ -65,7 +96,7 @@ const createDrawing=async (req:Request,res:Response,next:NextFunction)=>{
         roomName:roomName,
         members:members,
         visibility:visibility,
-        date:date,
+        creationDate:date,
         likes:likes
     }
 
@@ -106,24 +137,42 @@ const deleteDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
 const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
     let drawings:DrawingInterface[]=[];
+    console.log(drawingService.drawings);
     drawingService.drawings.forEach((v,k)=>{
-        let drawing:DrawingInterface={
-            drawingName:drawingService.sourceDrawingName(v.getName()),
-            owner:v.getOwner(),
-            elements:v.getElementsInterface(),
-            roomName:v.roomName,
-            members:v.getMembers(),
-            visibility:v.getVisibility(),
-            creationDate:v.getCreationDate(),
-            likes:v.getLikes()
+       if(v.getVisibility()==VISIBILITY.PUBLIC || v.getVisibility()==VISIBILITY.PRIVATE) {
+          let drawing={
+             drawingName:drawingService.sourceDrawingName(v.getName()),
+             owner:v.getOwner(),
+             elements:v.getElementsInterface(),
+             roomName:v.roomName,
+             members:v.getMembers(),
+             visibility:v.getVisibility(),
+             creationDate:v.getCreationDate(),
+             likes:v.getLikes()
+          }
+          drawings.push(drawing);
         }
-        drawings.push(drawing);
+        if(v.getVisibility()==VISIBILITY.PROTECTED) {
+            console.log("protected",v.password)
+            let drawing:ProtectedDrawingInterface={
+                drawingName:drawingService.sourceDrawingName(v.getName()),
+                owner:v.getOwner(),
+                elements:v.getElementsInterface(),
+                roomName:v.roomName,
+                members:v.getMembers(),
+                visibility:v.getVisibility(),
+                creationDate:v.getCreationDate(),
+                likes:v.getLikes(),
+                password:v.password
+            }
+            drawings.push(drawing);
+        }
     });
     
     return res.status(200).json(drawings);
 }
 
-const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
+const leaveDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 
     let useremail:String=req.body.useremail as String;
     let user:User=userService.getUserByUseremail(useremail) as User;
@@ -132,7 +181,8 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
 
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
-        drawingService.leaveDrawing(socket,useremail);
+        console.log("call func");
+        await drawingService.leaveDrawing(socket,useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
   

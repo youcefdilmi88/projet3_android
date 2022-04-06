@@ -19,6 +19,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { French, English } from '@app/interfaces/Langues';
 
 
 @Injectable({
@@ -31,8 +32,8 @@ export class HotkeysService {
   private toolSelectorList: Map<string, number> = new Map<string, number>();
   hotkey: Map<string, any> = new Map<string, any>();
 
-  private oncounter = 0;
-  private offcounter = 0;
+  private on: string;
+  private off: string;
 
   constructor(
     private dialog: MatDialog,
@@ -79,32 +80,38 @@ export class HotkeysService {
     });
   }
 
+  playAudio(title: string){
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
+  }
+
   /// Subscribe au hotkeys pour effectuer l'action associé
   private subscribeToHotkeys(): void {
     this.hotkeysEmitterService.hotkeyEmitter.subscribe((value: EmitReturn) => {
       //const toolId: number | undefined = this.toolSelectorList.get(value);
       if (ToolIdConstants) {
+        if(this.socketService.language == "french") {
+          this.on = French.on;
+          this.off = French.off;
+        }  
+        else {
+          this.on = English.on;
+          this.off = English.off;
+        }
         switch (value) {
           case EmitReturn.MUTE:
             this.socketService.mute = true;
-            if (this.oncounter == 0) {
-              this.snackBar.open('Sound off','', { duration: 3000 });
-            }
-            if (this.oncounter > 0) {
-              this.snackBar.open('Sound is already off, press N to turn it back on','', { duration: 3000 });
-            }
-            this.oncounter++;
+              this.snackBar.open(this.off,'', { duration: 3000 });
             break;
 
           case EmitReturn.UNMUTE:
             this.socketService.mute = false;
-            if (this.offcounter == 0) {
-              this.snackBar.open('Sound on','', { duration: 3000 });
-            }
-            if (this.offcounter > 0) {
-              this.snackBar.open('Press M to mute sound','', { duration: 3000 });
-            }
-            this.offcounter++;
+            this.snackBar.open(this.on,'', { duration: 3000 });
+            this.playAudio("bell.wav");
             break;
 
           case EmitReturn.CHAT:
