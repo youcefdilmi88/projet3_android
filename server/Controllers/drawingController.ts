@@ -35,7 +35,9 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 
         if(drawing.membersBySocketId.has(socket?.id as string)==false) {
             // join drawing and chat associated
-            if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PROTECTED && drawingService.drawings.get(drawingName)?.password!=undefined) {
+            console.log(req.body.password);
+            console.log(drawingService.drawings.get(drawingName)?.visibility);
+            if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PROTECTED) {
                 console.log(drawingService.drawings.get(drawingName)?.password);
                 if(await bcrypt.compare(req.body.password, drawingService.drawings.get(drawingName)?.password as string)) {
                     console.log("password",drawingService.drawings.get(drawingName)?.password as string);

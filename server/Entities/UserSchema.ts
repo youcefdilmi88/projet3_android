@@ -17,7 +17,11 @@ const userSchema = new mongoose.Schema({
     },
     lastLoggedOut:{
         type:Number
-    }
+    },
+    /*avatar:{
+        type:String,
+        required:true
+    }*/
 });
 
 export=mongoose.model<UserInterface>('userSchema',userSchema);
