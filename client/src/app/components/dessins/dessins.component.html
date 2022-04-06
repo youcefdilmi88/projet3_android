@@ -6,6 +6,7 @@
         <button class = "btn" id="logout" (click)="logout()" routerLink = ""><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
     </div> 
 
+    <div class="subtext-container">
     <div>
         <mat-form-field class="input" floatLabel="always" appearance="outline">
             <mat-label>{{drawingInput}}</mat-label>
@@ -13,6 +14,15 @@
         </mat-form-field> 
      
         <button mat-raised-button id="createRoom" class="buto" (click)="createDrawing(drawingname.value)">{{creaDrawing}}</button>
+    </div>
+    <div>
+        <mat-form-field class="inputFind" floatLabel="always" appearance="outline">
+            <mat-label>Trouver un dessin</mat-label>
+            <input #findDraw matInput id="findDraw" type="text" name="findDraw" required>
+        </mat-form-field> 
+     
+        <button mat-raised-button id="findDrawButton" class="buto" (click)="find(findDraw.value)">Recherche</button>
+    </div>
     </div>
     <!-- <div> 
 
@@ -63,7 +73,7 @@
             Modifier <span class='special-word'>{{names[this.centerImage]}}</span>
         </button>
         <button mat-raised-button id="likeButton" class="buto" (click)="like($event.target)" >
-            Aimer <span class='special-word'>{{names[this.centerImage]}}</span>
+            <span class='special-word'>{{names[this.centerImage]}}</span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
         </button>
         <!-- <button mat-raised-button id="Visibilite" (click)="changerPublic($event.target)">
             Public <span class='special-word'>{{names[this.centerImage]}}</span>

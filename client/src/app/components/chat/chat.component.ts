@@ -177,9 +177,9 @@ export class ChatComponent implements AfterViewInit {
     this.router.navigate(['/', 'rooms']);
     this.playAudio("ui2.wav");
     
-    if(this.router.url == "/sidenav") {
-      this.socketService.drawingName = this.socketService.currentRoom;
-    }
+    // if(this.router.url == "/sidenav") {
+    //   this.socketService.drawingName = this.socketService.currentRoom;
+    // }
 
     this.leaveDrawing();
   }

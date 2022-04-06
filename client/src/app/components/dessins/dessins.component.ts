@@ -346,6 +346,37 @@ export class DessinsComponent implements OnInit {
     });
   }
 
+  find(text: string) {
+    let link = this.BASE_URL + "album/getDrawings/" + this.socketService.albumName;
+    this.http.get<any>(link).subscribe((data: any) => {
+      this.drawingTempSerivce.drawings.clear();
+      this.names = [];
+      this.owners = [];
+      this.visibite = [];
+      this.nbrMembres = [];
+      this.creationDate = [];
+      this.nbrLiked = [];
+      this.peopleLiked = [];
+
+      data.forEach((drawing:any)=>{
+        this.imageUrlArray.push("../../../assets/color.png");
+        let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
+        this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
+        if(drawing.drawingName == text.trim() || drawing.owner == text.trim()) {
+          this.names.push(drawing.drawingName); 
+          this.owners.push(drawing.owner);
+          this.visibite.push(drawing.visibility);
+          this.nbrMembres.push(drawing.members.length);
+          const datepipe: DatePipe = new DatePipe('en-CA');
+          let formattedDate = datepipe.transform(drawing.creationDate, 'dd-MM-yyyy HH:mm:ss') as string;
+          this.creationDate.push(formattedDate);
+          this.nbrLiked.push(drawing.likes.length);
+          this.peopleLiked.push(drawing.likes);
+        }
+      });
+    });
+  }
+
   deleteDessins(element: any): void {
     this.bool = false;
     // if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(10))) {
@@ -423,26 +454,29 @@ export class DessinsComponent implements OnInit {
     let link2 = this.BASE_URL + "drawing/removeLike";
 
     console.log("WISS", this.peopleLiked);
-    console.log("LMAO");
-    if(!this.peopleLiked.includes(this.socketService.email)) {
-      this.http.post<any>(link,{drawingName: element.textContent.trim().slice(6), useremail: this.socketService.email}).pipe( 
+    console.log("LMAO", this.socketService.email);
+    console.log(this.peopleLiked[0].includes(this.socketService.email));
+    if(!this.peopleLiked[0].includes(this.socketService.email)) {
+      this.http.post<any>(link,{drawingName: element.textContent.trim(), useremail: this.socketService.email}).pipe( 
         catchError(async (err) => console.log("error catched" + err))
         ).subscribe((data: any) => {
           console.log("LIKED");
+          const up = document.getElementById("likeButton");
+          up!.className="fa fa-thumbs-o-up"
         });
     }
     else {
-      this.http.post<any>(link2,{drawingName: element.trim().slice(6), useremail: this.socketService.email}).pipe( 
+      this.http.post<any>(link2,{drawingName: element.textContent.trim(), useremail: this.socketService.email}).pipe( 
         catchError(async (err) => console.log("error catched" + err))
         ).subscribe((data: any) => {
           console.log("DISLIKED", data);
+          console.log("WISS", this.peopleLiked);
+          const down = document.getElementById("likeButton");
+          down!.className="fa fa-thumbs-o-down"
         });
     }
-  
-
-
-
   }
+
 
 
   setVisibilityToPrivate(name: string) :  void {

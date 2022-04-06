@@ -42,6 +42,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ModifyDrawingComponent } from './components/modify-drawing/modify-drawing.component';
 import { ModifyAlbumComponent } from './components/modify-album/modify-album.component';
 import { AcceptRequestComponent } from './components/accept-request/accept-request.component';
+import { ProfilComponent } from './components/profil/profil.component';
 
 
 @NgModule({
@@ -81,6 +82,7 @@ import { AcceptRequestComponent } from './components/accept-request/accept-reque
         ModifyDrawingComponent,
         ModifyAlbumComponent,
         AcceptRequestComponent,
+        ProfilComponent,
     ],
     imports: [
         BrowserModule,

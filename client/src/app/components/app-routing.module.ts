@@ -8,6 +8,7 @@ import { ClavardageComponent } from './clavardage/clavardage.component';
 import { DessinsComponent } from './dessins/dessins.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewAccountComponent } from './new-account/new-account.component';
+import { ProfilComponent } from './profil/profil.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
@@ -42,6 +43,9 @@ const routes: Routes = [
   },
   {
     path:'settings',component:SettingsComponent
+  },
+  {
+    path:'profil',component:ProfilComponent
   },
 ];
 
