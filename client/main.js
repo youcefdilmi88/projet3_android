@@ -10,13 +10,25 @@ const {
   function initWindow() {
     appWindow = new BrowserWindow({
       // fullscreen: true,
-      height: 1920,
-      width: 1080,
+      height: 1080,
+      width: 1920,
       resizable: false,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        webSecurity: false
       }
     })
+
+    appWindow.loadFile('/src/assets/bell.wav')
+    appWindow.loadFile('/src/assets/bin.wav')
+    appWindow.loadFile('/src/assets/cell_notif.wav')
+    appWindow.loadFile('/src/assets/email.wav')
+    appWindow.loadFile('/src/assets/error.wav')
+    appWindow.loadFile('/src/assets/error.wav')
+    appWindow.loadFile('/src/assets/msg.wav')
+    appWindow.loadFile('/src/assets/notif.wav')
+    appWindow.loadFile('/src/assets/ui1.wav')
+    appWindow.loadFile('/src/assets/ui2.wav')
   
     // Electron Build Path
     appWindow.loadURL(
