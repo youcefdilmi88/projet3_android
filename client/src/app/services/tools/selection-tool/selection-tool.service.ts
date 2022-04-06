@@ -747,4 +747,3 @@ export class SelectionToolService implements Tools {
     return (this.drawingService.drawing as SVGSVGElement).getBoundingClientRect().left;
   }
 }
-
