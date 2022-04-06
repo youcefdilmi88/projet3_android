@@ -81,6 +81,7 @@ export class SelectionToolService implements Tools {
       const obj = this.drawingService.getObject((data.identif));
 
       this.identif = data.identif;
+      console.log("id", this.identif);
 
       this.object = obj!;
       console.log(this.object);
@@ -98,7 +99,7 @@ export class SelectionToolService implements Tools {
         this.ctrlPoints.forEach((point) => {
           newid = data.identif + `${counter++}`;
           this.rendererService.renderer.setAttribute(point, 'id', newid as string);
-          this.controlPoints.set(newid, point);
+          //this.controlPoints.set(newid, point);
           this.rendererService.renderer.setAttribute(point, 'x', data.off.x.toString() + 'px');
           this.rendererService.renderer.setAttribute(point, 'y', data.off.y.toString() + 'px');
         });
@@ -132,29 +133,27 @@ export class SelectionToolService implements Tools {
         }
       });
 
-      const rectBox = this.rectSelection.getBoundingClientRect();
+      //const rectBox = this.rectSelection.getBoundingClientRect();
 
-      allObject.forEach((obj) => {
-        const box = obj.getBoundingClientRect();
+      /*allObject.forEach((obj) => {
+        //const box = obj.getBoundingClientRect();
         console.log("rectbox", rectBox);
         this.objects.splice(this.objects.indexOf(obj, 0), 1);
-        console.log("box", box);
+        //console.log("box", box);
         this.objects.push(obj);
-      });
+      });*/
     });
 
     this.socketService.getSocket().on("DRAWSELECT", (data)=>{
       data=JSON.parse(data);
 
       this.wasMoved = true;
-      console.log("resize", data.inside);
       if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
         this.selectionTransformService.resize(data.x, data.y, data.off);
         this.setSelection();
         return;
       }
       if (this.isIn) {
-        console.log("translaye", this.isIn);
         if (this.selectionTransformService.getCommandType() !== SelectionCommandConstants.TRANSLATE) {
           this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
         }
@@ -317,6 +316,7 @@ export class SelectionToolService implements Tools {
   /// Avec le droit, on modifie la dimension du rectangle d'inversement.
   onMove(event: MouseEvent): void {
     const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
+    let bruh = {x: 0, y: 0};
     if (this.drawingService.drawing) {
       if (event.buttons === 1) {
         this.wasMoved = true;
@@ -337,7 +337,7 @@ export class SelectionToolService implements Tools {
         else {
           this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
           this.isIn = false;
-          this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: offset.x, y: offset.y, off: offset, inside: false }));
+          this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: offset.x, y: offset.y, off: bruh, inside: false }));
         }
       } 
       else if (event.buttons === 2) {
@@ -497,6 +497,7 @@ export class SelectionToolService implements Tools {
 
   /// Methode qui calcule la surface que le rectangle de selection doit prendre en fonction des objets selectionnes.
   private setSelection(): void {
+    console.log("suspicions");
     if (this.hasSelection()) {
       this.hasSelectedItems = true;
       this.rendererService.renderer.setAttribute(this.rectSelection, 'transform', ``);

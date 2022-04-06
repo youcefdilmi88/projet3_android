@@ -1,27 +1,27 @@
 
 <div id="title0">
-  <h1 id="title00">Changer les paramètres</h1>
+  <h1 id="title00">{{change}}</h1>
 </div>
 
 <div class="center">
-  <p>Choisir la langue: </p>
+  <p>{{parameter}} </p>
   <mat-button-toggle-group id="test" name="langue" aria-label="langue">
   <mat-button-toggle id="langue" value="french" (change)="onValChange($event.value)">Français</mat-button-toggle>
   <mat-button-toggle id="langue" value="english" (change)="onValChange($event.value)">English </mat-button-toggle>
 </mat-button-toggle-group>
 
-  <p>Choisir le thème: </p>
+  <p>{{theme}} </p>
   <mat-button-toggle-group name="theme" aria-label="theme">
-  <mat-button-toggle id="lightGrey" value="light grey" (change)="onChange($event.value)">Light grey</mat-button-toggle>
-  <mat-button-toggle id="darkGrey" value="dark grey" (change)="onChange($event.value)">Dark grey</mat-button-toggle>
-  <mat-button-toggle id="deepPurple" value="deep purple" (change)="onChange($event.value)">Deep Purple</mat-button-toggle>
-  <mat-button-toggle id="lightBlue" value="light blue" (change)="onChange($event.value)">Ligh blue</mat-button-toggle>
-  <mat-button-toggle id="lightPink" value="light pink" (change)="onChange($event.value)">Light Pink</mat-button-toggle>
+  <mat-button-toggle id="lightGrey" value="light grey" (change)="onChange($event.value)">{{Light_grey}}</mat-button-toggle>
+  <mat-button-toggle id="darkGrey" value="dark grey" (change)="onChange($event.value)">{{Dark_grey}}</mat-button-toggle>
+  <mat-button-toggle id="deepPurple" value="deep purple" (change)="onChange($event.value)">{{Deep_Purple}}</mat-button-toggle>
+  <mat-button-toggle id="lightBlue" value="light blue" (change)="onChange($event.value)">{{Ligh_blue}}</mat-button-toggle>
+  <mat-button-toggle id="lightPink" value="light pink" (change)="onChange($event.value)">{{Light_Pink}}</mat-button-toggle>
 </mat-button-toggle-group>
 </div>
 
 <div  class="center">
-  <button mat-raised-button id="conf" routerLink = "">Confirmer</button>
+  <button mat-raised-button id="conf" routerLink = "">{{confirm}}</button>
 </div>
 
 

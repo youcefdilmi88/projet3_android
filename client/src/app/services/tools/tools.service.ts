@@ -81,7 +81,7 @@ export class ToolsService {
       }
 
       if (tool.id !== ToolIdConstants.SELECTION_ID) {
-        this.selectionTool.removeSelectionCollab();
+        //this.selectionTool.removeSelectionCollab();
       }
 
       tool.onPressed(event);

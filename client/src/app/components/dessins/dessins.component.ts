@@ -294,6 +294,7 @@ export class DessinsComponent implements OnInit {
       data.forEach((drawing:any)=>{
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
+        console.log("obj", drawingObj);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
         this.names.push(drawing.drawingName); 
@@ -318,7 +319,7 @@ export class DessinsComponent implements OnInit {
     let link = this.BASE_URL + "drawing/joinDrawing";
 
     //console.log(element.textContent.trim().slice(7));
-    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {
+    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7), password: "123"}).subscribe((data:any) => {
       if(data.message == "success") {
         //console.log("CA MARCHE OPEN");
         //console.log("join dessins:" + element.textContent.trim().slice(7));
@@ -352,6 +353,8 @@ export class DessinsComponent implements OnInit {
       //console.log("delete dessins:"+ element.textContent.trim().slice(10));
       let link2 = this.BASE_URL + "drawing/deleteDrawing";
 
+      this.playAudio("bin.wav");
+
       this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
         if (data.message == "success") {
           //console.log("DELETE DRAWING IS " + data);
@@ -379,8 +382,7 @@ export class DessinsComponent implements OnInit {
         //console.log(data);
         if (data.message == "success") {
           //console.log("CREATE DRAWING: " + data.message);
-          
-          this.http.post<any>(link5, {useremail: this.socketService.email, drawingName: this.drawing.trim()}).subscribe((data:any) => {
+          this.http.post<any>(link5, {password: "123", useremail: this.socketService.email, drawingName: this.drawing.trim()}).subscribe((data:any) => {
             if(data.message == "success") {
               this.router.navigate(['/', 'sidenav']);
               this.dialog.open(NewDrawingComponent);
@@ -438,10 +440,6 @@ export class DessinsComponent implements OnInit {
           console.log("DISLIKED", data);
         });
     }
-  
-
-
-
   }
 
 
@@ -469,7 +467,7 @@ export class DessinsComponent implements OnInit {
       this.socketService.drawingName = this.names[this.centerImage];
     }
     else {
-      this.playAudio2();
+      this.playAudio("error.wav");
       //.log("youre not the owner");
       let erreur= document.getElementById("settingsButton")!;
       erreur.className = "erreuAnimation";
@@ -537,26 +535,19 @@ export class DessinsComponent implements OnInit {
 }
 
 
-  playAudio(){
+  playAudio(title: string){
     if (this.socketService.mute == false) {
       let audio = new Audio();
-      audio.src = "../../../assets/ui1.wav";
+      audio.src = "../../../assets/" + title;
       audio.load();
       audio.play();
     }
   }
 
-  playAudio2(){
-    let audio = new Audio();
-    audio.src = "../../../assets/error.wav";
-    audio.load();
-    audio.play();
-  }
-
   logout() {
     let link = this.BASE_URL + "user/logoutUser";
 
-    this.playAudio();
+    this.playAudio("ui1.wav");
     this.socketService.disconnectSocket();
 
     this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(

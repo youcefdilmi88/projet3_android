@@ -28,6 +28,10 @@ export const French = {
     goChat: "Accéder au chat",
     open: "Ouvrir",
     delete: "Supprimer",
+    request: "Demande envoyée!",
+    notmember: "Vous n\'êtes pas membre de l\'album!",
+    iscreator: "Vous êtes le créateur de l\'album!",
+    notcreator: "Vous n\'êtes pas le créateur de l\'album",
               
     //dessin
     drawingTitle: "Dessins",
@@ -47,7 +51,24 @@ export const French = {
     findRoom: "Trouver une salle",
     nameOfNewRoom: "Nom de la nouvelle salle",
     nameOfRoomCreator: "Nom de la salle/créateur",
-    join2: "Joindre"
+    join2: "Joindre",
+
+    //snackbar
+    on: "Son activé",
+    off: "Son désactivé",
+
+    //settings
+    change: "Changer les paramètres",
+    parameter: "Choisir la langue:",
+    theme: "Choisir le thème",
+    confirm2: "Confirmer",
+
+    //theme
+    Light_grey: "Gris pâle",
+    Dark_grey: "Gris foncé",
+    Deep_Purple: "Mauve profond",
+    Ligh_blue: "Bleu pâle",
+    Light_Pink: "Rose pâle",
 }
 
 export const English = {
@@ -79,6 +100,10 @@ export const English = {
     goChat: "Access chat",
     open: "Open  ",
     delete: "Delete   ",
+    request: "Request sent!",
+    notmember: "You are not member of this album!",
+    iscreator: "You are the creator of this album!",
+    notcreator: "You are not the creator of this album",
 
     //dessin
     drawingTitle: "Drawing",
@@ -99,4 +124,21 @@ export const English = {
     nameOfNewRoom: "Name of new room",
     nameOfRoomCreator: "Name of room/creator",
     join2: "Join   ",
+
+    //snackbar
+    on: "Sound on",
+    off: "Sound off",
+
+    //settings
+    change: "Change settings",
+    parameter: "Choose language:",
+    theme: "Choose theme",
+    confirm2: "Confirm",
+
+    //theme
+    Light_grey: "Light grey",
+    Dark_grey: "Dark grey",
+    Deep_Purple: "Deep purple",
+    Ligh_blue: "Light blue",
+    Light_Pink: "Light pink",
 }

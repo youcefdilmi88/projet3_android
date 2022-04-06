@@ -165,7 +165,8 @@ export class ChatComponent implements AfterViewInit {
 
     if(this.router.url == "/sidenav") {
       this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {
-        if(data.message == "succeful") {
+        console.log("response", data);
+        if(data.message == "success") {
           console.log("EXITED DRAWING" + data.useremail);
         }
       });
