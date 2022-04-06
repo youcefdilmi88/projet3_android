@@ -3,15 +3,11 @@ export class User {
     private nickname:String;
     private lastLoggedIn:Number;
     private lastLoggedOut:Number;
-    private friends:String[]=[];
-    private avatar:String;
    
 
-    constructor(useremail:String,nickname:String,friends:String[],avatar:String) {
+    constructor(useremail:String,nickname:String) {
         this.useremail=useremail;
         this.nickname=nickname;
-        this.friends=friends;
-        this.avatar=avatar;
     }
 
     getUseremail():String {
@@ -31,14 +27,6 @@ export class User {
         return this.lastLoggedOut;
     }
 
-    getFriends():String[] {
-        return this.friends;
-    }
-
-    getAvatar():String {
-        return this.avatar;
-    }
-
     setUseremail(useremail:String):void {
         this.useremail=useremail;
     }
@@ -53,26 +41,6 @@ export class User {
 
     setLastLoggedOut(time:Number):void {
         this.lastLoggedOut=time;
-    }
-
-    setFriends(friends:String[]):void {
-        this.friends=friends;
-    }
-
-    setAvatar(avatar:String):void {
-        this.avatar=avatar;
-    }
-
-    addFriend(friend:String) {
-        this.friends.push(friend);
-    }
-
-    removeFriend(friend:String) {
-        const index = this.friends.indexOf(friend);
-        
-        if (index > -1) {
-            this.friends.splice(index, 1); 
-        }
     }
 
 }

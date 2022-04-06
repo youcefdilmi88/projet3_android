@@ -60,7 +60,7 @@ class DatabaseService {
     }
 
     async getAllDrawings() {
-        return await DrawingSchema.find({}).then((data)=>{
+        return await DrawingSchema.drawingSchema.find({}).then((data)=>{
             return data as Array<DrawingInterface>;
         })
     }

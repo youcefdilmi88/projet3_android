@@ -4,6 +4,7 @@ import { Drawing } from "../class/Drawing";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
+import { VISIBILITY } from "../Constants/visibility";
 import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
@@ -13,6 +14,8 @@ import socketService from "../Services/socketService";
 import userService from "../Services/userService";
 
 const router = express.Router();
+
+let bcrypt=require("bcryptjs");
 
 const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
@@ -45,7 +48,7 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
 }
 
-const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
+const createDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String; 
     let owner:String=req.body.owner as String;
     let elements:BaseShapeInterface[]=[];
@@ -54,6 +57,17 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let visibility:String=req.body.visibility as String;
     let date:Number=Date.now();
     let likes:String[]=[];
+
+    let drawing={
+        drawingName:drawingName,
+        owner:owner,
+        elements:elements,
+        roomName:roomName,
+        members:members,
+        visibility:visibility,
+        date:date,
+        likes:likes
+    }
 
     console.log("created drawing name:"+drawingName);
 
@@ -64,7 +78,12 @@ const createDrawing=(req:Request,res:Response,next:NextFunction)=>{
       if(roomService.getAllRooms().has(roomName)) {
         return res.status(404).json({message:HTTPMESSAGE.ROOMEXIST});
       }
-      drawingService.createDrawing(drawingName,owner,elements,roomName,members,visibility,date,likes).catch((e:Error)=>{
+      if(drawing.visibility==VISIBILITY.PROTECTED && req.body.password!=undefined) {
+        const salt=await bcrypt.genSalt();
+        const hashedPassword=await bcrypt.hash(req.body.password,salt);
+        drawing["password"]=hashedPassword;
+      }
+      drawingService.createDrawing(drawing).catch((e:Error)=>{
             console.log(e);
       });
       return res.status(200).json({message:HTTPMESSAGE.SUCCESS}); 
@@ -124,7 +143,7 @@ const getDrawingByName=async (req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=req.params.drawingName as String;
     if(drawingService.drawings.has(drawingName)) {
         let drawing;
-        await DrawingSchema.findOne({drawingName:drawingName}).then((data)=>{
+        await DrawingSchema.drawingSchema.findOne({drawingName:drawingName}).then((data)=>{
           drawing=data;
       }).catch((e:Error)=>{console.log(e)});
       return res.status(200).json({drawing:drawing});

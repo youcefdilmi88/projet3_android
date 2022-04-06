@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { DrawingInterface } from '../Interface/DrawingInterface';
 
+const options = { discriminatorKey: 'kind' };
 
 const drawingSchema = new mongoose.Schema({
     
@@ -38,6 +38,13 @@ const drawingSchema = new mongoose.Schema({
         required:true
     }
     
-});
+},options);
 
-export=mongoose.model<DrawingInterface>('drawingSchema',drawingSchema);
+const Drawing = mongoose.model('drawingSchema', drawingSchema);
+
+const protectedDrawingSchema=Drawing.discriminator('protectedDrawingSchema',new mongoose.Schema({password:String},options));
+
+export default module.exports={
+  drawingSchema:Drawing,
+  protectedDrawingSchema:protectedDrawingSchema
+}  
