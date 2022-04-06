@@ -30,7 +30,6 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 
     console.log("join drawing name:"+drawingName);
 
-    
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
 
@@ -40,22 +39,25 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
             console.log(drawingService.drawings.get(drawingName)?.getVisibility());
             if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
                 let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
-                let password:string=req.body.password as string;
-                console.log(drawing.getPassword());
-                try {
-                  if(await bcrypt.compare(password,drawing.getPassword() as string)) {
-                     console.log("password",drawing.getPassword() as string);
-                     drawingService.joinDrawing(drawingName,useremail);
-                     if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
-                       roomService.joinRoom(drawing.roomName,useremail);
-                     }
-                    return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
-                  }
+                if(req.body.password!==undefined) {
+                 let password:string=req.body.password as string;
+                 console.log(password);
+                 console.log(drawing.getPassword());
+                 try {
+                   if(await bcrypt.compare(password,drawing.getPassword() as string)) {
+                      console.log("password",drawing.getPassword() as string);
+                      drawingService.joinDrawing(drawingName,useremail);
+                      if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+                        roomService.joinRoom(drawing.roomName,useremail);
+                      }
+                      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+                    }
+                 }
+                 catch(e) {
+                     console.log(e);
+                 }
+                 return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
                 }
-                catch(e) {
-                    console.log(e);
-                }
-                return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
             }
             if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PUBLIC || drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PRIVATE) {
               drawingService.joinDrawing(drawingName,useremail);
