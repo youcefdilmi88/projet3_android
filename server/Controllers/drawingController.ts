@@ -37,8 +37,8 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
             // join drawing and chat associated
             if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PROTECTED && drawingService.drawings.get(drawingName)?.password!=undefined) {
                 console.log(drawingService.drawings.get(drawingName)?.password);
-                if(await bcrypt.compare(req.body.password, drawingService.drawings.get(drawingName)?.getPassword() as string)) {
-                    console.log("password",drawingService.drawings.get(drawingName)?.getPassword() as string);
+                if(await bcrypt.compare(req.body.password, drawingService.drawings.get(drawingName)?.password as string)) {
+                    console.log("password",drawingService.drawings.get(drawingName)?.password as string);
                     drawingService.joinDrawing(drawingName,useremail);
                     if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
                       roomService.joinRoom(drawing.roomName,useremail);
@@ -138,7 +138,7 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
           drawings.push(drawing);
         }
         if(v.getVisibility()==VISIBILITY.PROTECTED) {
-            console.log("protected",v.getPassword())
+            console.log("protected",v.password)
             let drawing:ProtectedDrawingInterface={
                 drawingName:drawingService.sourceDrawingName(v.getName()),
                 owner:v.getOwner(),
@@ -148,7 +148,7 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
                 visibility:v.getVisibility(),
                 creationDate:v.getCreationDate(),
                 likes:v.getLikes(),
-                password:v.getPassword()
+                password:v.password
             }
             drawings.push(drawing);
         }
