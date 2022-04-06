@@ -36,13 +36,14 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 
         if(drawing.membersBySocketId.has(socket?.id as string)==false) {
             // join drawing and chat associated
-            console.log(req.body.password);
+           
             console.log(drawingService.drawings.get(drawingName)?.getVisibility());
             if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
                 let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
+                let password:string=req.body.password as string;
                 console.log(drawing.getPassword());
                 try {
-                  if(await bcrypt.compare(await req.body.password as string,drawing.getPassword() as string)) {
+                  if(await bcrypt.compare(password,drawing.getPassword() as string)) {
                      console.log("password",drawing.getPassword() as string);
                      drawingService.joinDrawing(drawingName,useremail);
                      if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
