@@ -46,9 +46,12 @@ class AccountService {
     
     const userObj=new User(email,nickName,friends,avatar);
     userService.getUsers().push(userObj);
+    
     albumService.albums.forEach(async (v,k)=>{
-      if(v.getVisibility()==VISIBILITY.PUBLIC && v.getMembers().indexOf(userObj.getUseremail())==-1) {
-        await albumService.addMemberToAlbum(k,userObj.getUseremail());
+      if(v.getVisibility()==VISIBILITY.PUBLIC) {
+        if(v.getMembers().indexOf(email)==-1) {
+          await albumService.addMemberToAlbum(k,userObj.getUseremail());
+        }        
       }
     })
   }
