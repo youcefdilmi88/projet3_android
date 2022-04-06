@@ -41,7 +41,7 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
             if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
                 let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
                 console.log(drawing.getPassword());
-                if(await bcrypt.compare(req.body.password,drawing.getPassword())) {
+                if(await bcrypt.compare(await req.body.password,drawing.getPassword())) {
                     console.log("password",drawing.getPassword() as string);
                     drawingService.joinDrawing(drawingName,useremail);
                     if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
