@@ -6,7 +6,6 @@ export class ProtectedDrawing extends Drawing {
     private password:String;
 
     constructor(drawing:ProtectedDrawingInterface) {
-        console.log("in protected",drawing);
         
         const base={
             drawingName:drawing.drawingName,
