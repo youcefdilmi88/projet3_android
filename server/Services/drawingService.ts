@@ -126,7 +126,7 @@ class DrawingService {
 
     let drawingObj=new Drawing(drawingDoc as DrawingInterface);
 
-    if(drawing.visibility==VISIBILITY.PUBLIC) {
+    if(drawing.visibility==VISIBILITY.PUBLIC || drawing.visibility==VISIBILITY.PRIVATE) {
       try {
         await drawingDoc.save().then(()=>{
           console.log("drawing saved");
