@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Socket } from "socket.io";
 import { Drawing } from "../class/Drawing";
+import { ProtectedDrawing } from "../class/ProtectedDrawing";
 import { User } from "../class/User";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { SOCKETEVENT } from "../Constants/socketEvent";
@@ -38,8 +39,9 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
             console.log(req.body.password);
             console.log(drawingService.drawings.get(drawingName)?.visibility);
             if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PROTECTED) {
-                console.log(drawingService.drawings.get(drawingName)?.password);
-                if(await bcrypt.compare(req.body.password, drawingService.drawings.get(drawingName)?.password as string)) {
+                let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
+                console.log(drawing.getPassword());
+                if(await bcrypt.compare(req.body.password, drawing.getPassword() as string)) {
                     console.log("password",drawingService.drawings.get(drawingName)?.password as string);
                     drawingService.joinDrawing(drawingName,useremail);
                     if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted

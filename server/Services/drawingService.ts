@@ -72,9 +72,15 @@ class DrawingService {
   async loadAllDrawings() {
     this.drawings.clear();
     await databaseService.getAllDrawings().then((drawings)=>{
-      drawings.forEach((drawing: DrawingInterface)=>{
-        let drawingObj:Drawing=new Drawing(drawing);
-        this.drawings.set(drawingObj.getName(),drawingObj);
+      drawings.forEach((drawing:any)=>{
+        if(drawing.visibility==VISIBILITY.PUBLIC || drawing.visibility==VISIBILITY.PRIVATE) {
+          let drawingObj:Drawing=new Drawing(drawing);
+          this.drawings.set(drawingObj.getName(),drawingObj);
+        }
+        if(drawing.visibility==VISIBILITY.PROTECTED) {
+          let drawingObj:ProtectedDrawing=new ProtectedDrawing(drawing);
+          this.drawings.set(drawingObj.getName(),drawingObj);
+        }
       });
     }).catch((e:Error)=>{
         console.log(e);
