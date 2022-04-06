@@ -308,6 +308,8 @@ class DrawingService {
   }
 
   async leaveDrawing(socket:Socket,mail:String) {
+    console.log(socket?.id);
+    console.log(mail);
     let drawing:any={};
   
     if(this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PUBLIC && this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PUBLIC) {

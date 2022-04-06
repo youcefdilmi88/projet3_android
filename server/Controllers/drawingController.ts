@@ -181,6 +181,7 @@ const leaveDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
 
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
+        console.log("call func");
         await drawingService.leaveDrawing(socket,useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
