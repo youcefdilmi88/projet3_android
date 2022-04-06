@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema({
     },
     lastLoggedOut:{
         type:Number
+    },
+    friends:{
+        type:[String],
+        required:true
+    },
+    avatar:{
+        type:String,
+        required:true
     }
 });
 

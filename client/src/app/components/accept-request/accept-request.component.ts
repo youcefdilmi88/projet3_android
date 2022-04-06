@@ -14,6 +14,7 @@ export class AcceptRequestComponent implements OnInit {
 
   private readonly BASE_URL: string = URL;
 
+  public memReq: string;
 
   constructor(
     public dialogRef: MatDialogRef<AcceptRequestComponent>,
@@ -23,20 +24,16 @@ export class AcceptRequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.roomListener();
+    this.memReq = this.socketService.memberRequest;
   }
 
   roomListener() {
     this.socketService.getSocket().on("ALBUMMODIFIED", (data) => {
       data=JSON.parse(data);
       console.log(data.album);
+      this.dialogRef.close();
     });
   }
-
-  // params={ 
-  //   "useremail":"",  // email du membre
-  //   "request":"",  // email du dude qui veut joindre
-  //   "albumName":"" 
-  // }
 
   acceptRequest() {
     let link = this.BASE_URL + "album/acceptRequest";
