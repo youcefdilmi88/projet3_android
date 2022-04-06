@@ -49,7 +49,7 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
                  try {
                    if(await bcrypt.compare(password,drawing.getPassword() as string)) {
                       console.log("password",drawing.getPassword() as string);
-                      drawingService.joinDrawing(drawingName,useremail);
+                      await drawingService.joinDrawing(drawingName,useremail);
                       if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
                         roomService.joinRoom(drawing.roomName,useremail);
                       }
@@ -63,7 +63,7 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
                 
             }
             if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PUBLIC || drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PRIVATE) {
-              drawingService.joinDrawing(drawingName,useremail);
+              await drawingService.joinDrawing(drawingName,useremail);
 
               if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
                roomService.joinRoom(drawing.roomName,useremail);
@@ -172,7 +172,7 @@ const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
     return res.status(200).json(drawings);
 }
 
-const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
+const leaveDrawing=async (req:Request,res:Response,next:NextFunction)=>{
 
     let useremail:String=req.body.useremail as String;
     let user:User=userService.getUserByUseremail(useremail) as User;
@@ -181,7 +181,7 @@ const leaveDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let socket:Socket=socketService.getIo().sockets.sockets.get(socketId) as Socket;
 
     if(drawingService.socketInDrawing.has(socket?.id as string)) {
-        drawingService.leaveDrawing(socket,useremail);
+        await drawingService.leaveDrawing(socket,useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
     }
   

@@ -245,7 +245,7 @@ class DrawingService {
     return originalName;
   }
 
-  joinDrawing(drawingName:String,useremail:String) {
+  async joinDrawing(drawingName:String,useremail:String) {
 
     let user:User=userService.getUserByUseremail(useremail) as User;
     let socketId:string=userService.getSocketIdByUser().get(user) as string;
@@ -277,7 +277,7 @@ class DrawingService {
       }
       drawing.addMember(socket?.id as string,useremail);
       drawing.modified=true;
-      this.autoSaveDrawing(drawing.getName());
+      await this.autoSaveDrawing(drawing.getName());
       this.drawings[`${drawing.getName()}`]=drawing;
       this.socketInDrawing.set(socket?.id as string,drawing);
       const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
@@ -298,7 +298,7 @@ class DrawingService {
       drawingInterface["password"]=drawing.getPassword();
       drawing.addMember(socket?.id as string,useremail);
       drawing.modified=true;
-      this.autoSaveDrawing(drawing.getName());
+      await this.autoSaveDrawing(drawing.getName());
       this.drawings[`${drawing.getName()}`]=drawing;
       this.socketInDrawing.set(socket?.id as string,drawing);
       const joinDrawingNotification={useremail:useremail,drawing:drawingInterface};
@@ -307,7 +307,7 @@ class DrawingService {
 
   }
 
-  leaveDrawing(socket:Socket,mail:String) {
+  async leaveDrawing(socket:Socket,mail:String) {
     let drawing:any={};
   
     if(this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PUBLIC && this.socketInDrawing.get(socket?.id as string).getVisibility()==VISIBILITY.PUBLIC) {
@@ -329,7 +329,7 @@ class DrawingService {
       
       drawing.removeMember(socket?.id as string);
       drawing.modified=true;
-      this.autoSaveDrawing(drawing.getName());
+      await this.autoSaveDrawing(drawing.getName());
   
       this.drawings[`${drawing.getName()}`]=drawing;
       this.socketInDrawing.set(socket?.id as string,drawing);
