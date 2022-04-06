@@ -29,6 +29,7 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     let socket=socketService.getIo().sockets.sockets.get(socketId);
 
     console.log("join drawing name:"+drawingName);
+    console.log(req.body);
 
     if(drawingService.drawings.has(drawingName)) {
         let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
@@ -39,8 +40,10 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
             console.log(drawingService.drawings.get(drawingName)?.getVisibility());
             if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
                 let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
+                let password:string="";
                 if(req.body.password!==undefined) {
-                 let password:string=req.body.password as string;
+                 password=req.body.password as string;
+                }
                  console.log(password);
                  console.log(drawing.getPassword());
                  try {
@@ -57,7 +60,7 @@ const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
                      console.log(e);
                  }
                  return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
-                }
+                
             }
             if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PUBLIC || drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PRIVATE) {
               drawingService.joinDrawing(drawingName,useremail);
