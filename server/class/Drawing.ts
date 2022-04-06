@@ -15,7 +15,7 @@ import { User } from "./User";
 export class Drawing {
     private drawingName:String;
     private owner:String;
-    private elements:BaseShape[];  // shapeId and Shape
+    public elements:BaseShape[]=[];  // shapeId and Shape
     public roomName:String;
     public members:String[];
     public modified:boolean=false;
@@ -33,7 +33,6 @@ export class Drawing {
        this.owner=drawing.owner;
        this.roomName=drawing.roomName;
        this.members=drawing.members;
-       this.elements=[];
        this.elementById=new Map<String,BaseShape>();
        this.membersBySocketId=new Map<string,String>();
        this.visibility=drawing.visibility;
