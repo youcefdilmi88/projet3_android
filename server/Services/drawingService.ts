@@ -24,12 +24,12 @@ import userService from "./userService";
 class DrawingService {
 
   private io:Server;
-  public drawings:Map<String,Drawing>;  // drawingName and Drawing
-  public socketInDrawing:Map<string,Drawing>;
+  public drawings:Map<String,any>;  // drawingName and Drawing
+  public socketInDrawing:Map<string,any>;
   
   constructor() { 
-    this.drawings=new Map<String,Drawing>();
-    this.socketInDrawing=new Map<string,Drawing>();
+    this.drawings=new Map<String,any>();
+    this.socketInDrawing=new Map<string,any>();
     this.loadAllDrawings();
   }
 
@@ -126,7 +126,7 @@ class DrawingService {
 
     let drawingObj=new Drawing(drawingDoc as DrawingInterface);
 
-    if(drawing.visibility==VISIBILITY.PUBLIC) {
+    if(drawing.visibility==VISIBILITY.PUBLIC || drawing.visibility==VISIBILITY.PRIVATE) {
       try {
         await drawingDoc.save().then(()=>{
           console.log("drawing saved");
@@ -153,14 +153,25 @@ class DrawingService {
         password:drawing.password
       });
                    
-      let base:Drawing=new ProtectedDrawing(drawingDoc as ProtectedDrawingInterface);
-      let protectedDrawingObj=base as ProtectedDrawing;
-      protectedDrawingObj.setPassword(drawingDoc.password);
+      let proDrawingInterface={
+        drawingName:drawing.drawingName,
+        owner:drawing.owner,
+        elements:drawing.elements,
+        roomName:drawing.roomName,
+        members:drawing.members,
+        visibility:drawing.visibility,
+        creationDate:drawing.creationDate,
+        likes:drawing.likes,
+        password:drawing.password
+      } as ProtectedDrawingInterface;
 
+      let proDrawingObj:ProtectedDrawing=new ProtectedDrawing(proDrawingInterface);
+      console.log(proDrawingObj);
+  
       try {
         await drawingDoc.save().then(()=>{
           console.log("drawing saved");
-          this.drawings.set(protectedDrawingObj.getName(),protectedDrawingObj);
+          this.drawings.set(proDrawingObj.getName(),proDrawingObj);
         }).catch((e:Error)=>{
           console.log(e);
         });

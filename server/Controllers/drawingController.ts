@@ -8,6 +8,7 @@ import { VISIBILITY } from "../Constants/visibility";
 import DrawingSchema from "../Entities/DrawingSchema";
 import { BaseShapeInterface } from "../Interface/BaseShapeInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
+import { ProtectedDrawingInterface } from "../Interface/ProtectedDrawingInterface";
 import drawingService from "../Services/drawingService";
 import roomService from "../Services/roomService";
 import socketService from "../Services/socketService";
@@ -17,7 +18,7 @@ const router = express.Router();
 
 let bcrypt=require("bcryptjs");
 
-const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
+const joinDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
 
@@ -34,12 +35,27 @@ const joinDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
         if(drawing.membersBySocketId.has(socket?.id as string)==false) {
             // join drawing and chat associated
-            drawingService.joinDrawing(drawingName,useremail);
-
-            if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
-              roomService.joinRoom(drawing.roomName,useremail);
+            if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PROTECTED && drawingService.drawings.get(drawingName)?.password!=undefined) {
+                console.log(drawingService.drawings.get(drawingName)?.password);
+                if(await bcrypt.compare(req.body.password, drawingService.drawings.get(drawingName)?.getPassword() as string)) {
+                    console.log("password",drawingService.drawings.get(drawingName)?.getPassword() as string);
+                    drawingService.joinDrawing(drawingName,useremail);
+                    if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+                      roomService.joinRoom(drawing.roomName,useremail);
+                    }
+                    return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+                }
+                return res.status(404).json({message:HTTPMESSAGE.PASSNOTMATCH});
             }
-            return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+            if(drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PUBLIC || drawingService.drawings.get(drawingName)?.visibility==VISIBILITY.PRIVATE) {
+              drawingService.joinDrawing(drawingName,useremail);
+
+              if(roomService.getAllRooms().has(drawing.roomName)) { // if room associated with chat is not deleted
+               roomService.joinRoom(drawing.roomName,useremail);
+              }
+              return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+            }
+            return res.status(404).json({message:HTTPMESSAGE.FAILED});
         }
         return res.status(404).json({message:HTTPMESSAGE.UCONNECTED});
     }
@@ -65,7 +81,7 @@ const createDrawing=async (req:Request,res:Response,next:NextFunction)=>{
         roomName:roomName,
         members:members,
         visibility:visibility,
-        date:date,
+        creationDate:date,
         likes:likes
     }
 
@@ -106,18 +122,36 @@ const deleteDrawing=(req:Request,res:Response,next:NextFunction)=>{
 
 const getAllDrawings=(req:Request,res:Response,next:NextFunction)=>{
     let drawings:DrawingInterface[]=[];
+    console.log(drawingService.drawings);
     drawingService.drawings.forEach((v,k)=>{
-        let drawing:DrawingInterface={
-            drawingName:drawingService.sourceDrawingName(v.getName()),
-            owner:v.getOwner(),
-            elements:v.getElementsInterface(),
-            roomName:v.roomName,
-            members:v.getMembers(),
-            visibility:v.getVisibility(),
-            creationDate:v.getCreationDate(),
-            likes:v.getLikes()
+       if(v.getVisibility()==VISIBILITY.PUBLIC || v.getVisibility()==VISIBILITY.PRIVATE) {
+          let drawing={
+             drawingName:drawingService.sourceDrawingName(v.getName()),
+             owner:v.getOwner(),
+             elements:v.getElementsInterface(),
+             roomName:v.roomName,
+             members:v.getMembers(),
+             visibility:v.getVisibility(),
+             creationDate:v.getCreationDate(),
+             likes:v.getLikes()
+          }
+          drawings.push(drawing);
         }
-        drawings.push(drawing);
+        if(v.getVisibility()==VISIBILITY.PROTECTED) {
+            console.log("protected",v.getPassword())
+            let drawing:ProtectedDrawingInterface={
+                drawingName:drawingService.sourceDrawingName(v.getName()),
+                owner:v.getOwner(),
+                elements:v.getElementsInterface(),
+                roomName:v.roomName,
+                members:v.getMembers(),
+                visibility:v.getVisibility(),
+                creationDate:v.getCreationDate(),
+                likes:v.getLikes(),
+                password:v.getPassword()
+            }
+            drawings.push(drawing);
+        }
     });
     
     return res.status(200).json(drawings);

@@ -1,10 +1,12 @@
 import express, { NextFunction, Request, Response }  from "express";
 import { Album } from "../class/Album";
 import { Drawing } from "../class/Drawing";
+import { ProtectedDrawing } from "../class/ProtectedDrawing";
 import { HTTPMESSAGE } from "../Constants/httpMessage";
 import { VISIBILITY } from "../Constants/visibility";
 import { AlbumInterface } from "../Interface/AlbumInterface";
 import { DrawingInterface } from "../Interface/DrawingInterface";
+import { ProtectedDrawingInterface } from "../Interface/ProtectedDrawingInterface";
 import albumService from "../Services/albumService";
 import drawingService from "../Services/drawingService";
 import userService from "../Services/userService";
@@ -210,18 +212,35 @@ const getDrawingsFromAlbum=(req:Request,res:Response,next:NextFunction)=>{
     if(albumService.albums.has(albumName)) {
       let album:Album=albumService.albums.get(albumName) as Album;
       album.getDrawings().forEach((drawingName)=>{
-        let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
-        let drawingInterface:DrawingInterface={
-          drawingName:drawingService.sourceDrawingName(drawing.getName()),
-          owner:drawing.getOwner(),
-          elements:drawing.getElementsInterface(),
-          roomName:drawing.roomName,
-          members:drawing.getMembers(),
-          visibility:drawing.getVisibility(),
-          creationDate:drawing.getCreationDate(),
-          likes:drawing.getLikes()
+        if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PUBLIC || drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PRIVATE) {
+          let drawing:Drawing=drawingService.drawings.get(drawingName) as Drawing;
+          let drawingInterface:DrawingInterface={
+            drawingName:drawingService.sourceDrawingName(drawing.getName()),
+            owner:drawing.getOwner(),
+            elements:drawing.getElementsInterface(),
+            roomName:drawing.roomName,
+            members:drawing.getMembers(),
+            visibility:drawing.getVisibility(),
+            creationDate:drawing.getCreationDate(),
+            likes:drawing.getLikes()
+          }
+         drawings.push(drawingInterface);
         }
-        drawings.push(drawingInterface);
+        if(drawingService.drawings.get(drawingName)?.getVisibility()==VISIBILITY.PROTECTED) {
+          let drawing:ProtectedDrawing=drawingService.drawings.get(drawingName) as ProtectedDrawing;
+          let drawingInterface:ProtectedDrawingInterface={
+            drawingName:drawingService.sourceDrawingName(drawing.getName()),
+            owner:drawing.getOwner(),
+            elements:drawing.getElementsInterface(),
+            roomName:drawing.roomName,
+            members:drawing.getMembers(),
+            visibility:drawing.getVisibility(),
+            creationDate:drawing.getCreationDate(),
+            likes:drawing.getLikes(),
+            password:drawing.getPassword()
+          }
+          drawings.push(drawingInterface);
+        }
       });
       return res.status(200).json(drawings);
     } 
