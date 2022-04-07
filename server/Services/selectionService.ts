@@ -72,6 +72,14 @@ export class SelectionService {
   }
 
 
+  downSelect(socket:Socket) {
+    socket.on("DOWNSELECT",(data)=>{
+      data=JSON.parse(data);
+      drawingService.getIo().to(drawingService.socketInDrawing.get(socket?.id)?.getName() as string).emit("DOWNSELECT",JSON.stringify(data));
+      //console.log("data x " + data.x);
+    })
+  }
+
 }
 
 const selectionService=new SelectionService();

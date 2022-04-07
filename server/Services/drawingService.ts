@@ -62,6 +62,7 @@ class DrawingService {
         selectionService.endSelect(socket);
         selectionService.resizeSelect(socket);
         selectionService.deleteSelect(socket);
+        selectionService.downSelect(socket);
 
         this.deleteShape(socket);
         this.resetDrawing(socket);

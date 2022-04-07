@@ -247,32 +247,39 @@ const likeDrawing=async (req:Request,res:Response,next:NextFunction)=>{
     console.log("server drawname", drawingName);
     console.log("server useremail", useremail);
 
-    console.log("1", drawingService.drawings.get(drawingName)?.getLikes());
-    console.log("2", drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail));
-    console.log("3", drawingService.drawings.get(drawingName));
-
-    if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
-       console.log("EMAIL EXIST");
-        return res.status(404).json({message:HTTPMESSAGE.UALREADYLIKE});
-    }
-
     if(drawingService.drawings.has(drawingName)) {
+
+      let drawing=drawingService.getDrawingOrProtectedInstance(drawingName);
+      console.log("drawing found like",drawing.getName());
+
+      if(drawing.getLikes().indexOf(useremail)!=-1) {
+        console.log("EMAIL EXIST");
+         return res.status(404).json({message:HTTPMESSAGE.UALREADYLIKE});
+      }
+
+      if(drawingService.drawings.has(drawingName)) {
         await drawingService.addLikeDrawing(drawingName,useremail);
         return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+      }
+      return res.status(404).json({message:HTTPMESSAGE.FAILED});
     }
-
-    return res.status(404).json({message:HTTPMESSAGE.FAILED});
+    return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND});
 }
 
 const removeLikeDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
 
-    if(drawingService.drawings.get(drawingName)?.getLikes().indexOf(useremail)!=-1) {
-      drawingService.removeLikeDrawing(drawingName,useremail);
-      return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+    if(drawingService.drawings.has(drawingName)) {
+        let drawing=drawingService.getDrawingOrProtectedInstance(drawingName);
+        console.log("drawing found unlike",drawing.getName());
+        if(drawing.indexOf(useremail)!=-1) {
+          drawingService.removeLikeDrawing(drawingName,useremail);
+          return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
+        }
+        return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
     }
-    return res.status(404).json({message:HTTPMESSAGE.UNOTFOUND});
+    return res.status(404).json({message:HTTPMESSAGE.DNOTFOUND});
 }
 
 router.post('/joinDrawing',joinDrawing);
