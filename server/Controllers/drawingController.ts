@@ -270,10 +270,12 @@ const removeLikeDrawing=(req:Request,res:Response,next:NextFunction)=>{
     let drawingName:String=drawingService.addonDrawingName(req.body.drawingName) as String;
     let useremail:String=req.body.useremail as String;
 
+    console.log("server drawname", drawingName);
+    console.log("server useremail", useremail);
     if(drawingService.drawings.has(drawingName)) {
         let drawing=drawingService.getDrawingOrProtectedInstance(drawingName);
         console.log("drawing found unlike",drawing.getName());
-        if(drawing.indexOf(useremail)!=-1) {
+        if(drawing.getLikes().indexOf(useremail)!=-1) {
           drawingService.removeLikeDrawing(drawingName,useremail);
           return res.status(200).json({message:HTTPMESSAGE.SUCCESS});
         }
