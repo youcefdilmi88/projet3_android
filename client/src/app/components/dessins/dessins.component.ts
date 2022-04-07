@@ -68,6 +68,8 @@ export class DessinsComponent implements OnInit {
   public open: string;
   public delete: string;
 
+  public cpt = 0;
+
   constructor(
     public dialog: MatDialog,
     private router: Router,
@@ -114,6 +116,8 @@ export class DessinsComponent implements OnInit {
     if(this.socketService.theme == "light grey"){
       document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
       document.getElementById("createRoom")!.style.color = LightGrey.text;
+      document.getElementById("findDrawButton")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("findDrawButton")!.style.color = LightGrey.text;
       document.getElementById("left-arrow")!.style.backgroundColor = LightGrey.main;
       document.getElementById("left-arrow")!.style.color = LightGrey.text;
       document.getElementById("right-arrow")!.style.backgroundColor = LightGrey.main;
@@ -126,6 +130,8 @@ export class DessinsComponent implements OnInit {
     else if(this.socketService.theme == "dark grey"){
       document.getElementById("createRoom")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("createRoom")!.style.color = DarkGrey.text;
+      document.getElementById("findDrawButton")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("findDrawButton")!.style.color = DarkGrey.text;
       document.getElementById("left-arrow")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("left-arrow")!.style.color = DarkGrey.text;
       document.getElementById("right-arrow")!.style.backgroundColor = DarkGrey.main;
@@ -138,6 +144,8 @@ export class DessinsComponent implements OnInit {
     else if(this.socketService.theme == "deep purple") {       
       document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("createRoom")!.style.color = DeepPurple.text;
+      document.getElementById("findDrawButton")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("findDrawButton")!.style.color = DeepPurple.text;
       document.getElementById("left-arrow")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("left-arrow")!.style.color = DeepPurple.text;
       document.getElementById("right-arrow")!.style.backgroundColor = DeepPurple.main;
@@ -150,6 +158,8 @@ export class DessinsComponent implements OnInit {
     else if(this.socketService.theme == "light blue") { 
       document.getElementById("createRoom")!.style.backgroundColor = LightBlue.main;
       document.getElementById("createRoom")!.style.color = LightBlue.text;
+      document.getElementById("findDrawButton")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("findDrawButton")!.style.color = LightBlue.text;
       document.getElementById("left-arrow")!.style.backgroundColor = LightBlue.main;
       document.getElementById("left-arrow")!.style.color = LightBlue.text;
       document.getElementById("right-arrow")!.style.backgroundColor = LightBlue.main;
@@ -162,6 +172,8 @@ export class DessinsComponent implements OnInit {
     else if(this.socketService.theme == "light pink") {  
       document.getElementById("createRoom")!.style.backgroundColor = LightPink.main;
       document.getElementById("createRoom")!.style.color = LightPink.text;
+      document.getElementById("findDrawButton")!.style.backgroundColor = LightPink.main;
+      document.getElementById("findDrawButton")!.style.color = LightPink.text;
       document.getElementById("left-arrow")!.style.backgroundColor = LightPink.main;
       document.getElementById("left-arrow")!.style.color = LightPink.text;
       document.getElementById("right-arrow")!.style.backgroundColor = LightPink.main;
@@ -294,7 +306,7 @@ export class DessinsComponent implements OnInit {
       data.forEach((drawing:any)=>{
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
-        console.log("obj", drawingObj);
+        // console.log("obj", drawingObj);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
         this.names.push(drawing.drawingName); 
@@ -310,7 +322,6 @@ export class DessinsComponent implements OnInit {
 
     });
   } 
-
 
   openDessins(element: any): void { 
     this.socketService.joinRoom(element.textContent.trim().slice(7));
@@ -364,6 +375,17 @@ export class DessinsComponent implements OnInit {
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         if(drawing.drawingName == text.trim() || drawing.owner == text.trim()) {
+          this.names.push(drawing.drawingName); 
+          this.owners.push(drawing.owner);
+          this.visibite.push(drawing.visibility);
+          this.nbrMembres.push(drawing.members.length);
+          const datepipe: DatePipe = new DatePipe('en-CA');
+          let formattedDate = datepipe.transform(drawing.creationDate, 'dd-MM-yyyy HH:mm:ss') as string;
+          this.creationDate.push(formattedDate);
+          this.nbrLiked.push(drawing.likes.length);
+          this.peopleLiked.push(drawing.likes);
+        }
+        else if (text.trim() == "") {
           this.names.push(drawing.drawingName); 
           this.owners.push(drawing.owner);
           this.visibite.push(drawing.visibility);
@@ -455,29 +477,33 @@ export class DessinsComponent implements OnInit {
     let link = this.BASE_URL + "drawing/like";
     let link2 = this.BASE_URL + "drawing/removeLike";
 
-    console.log("WISS", this.peopleLiked);
     console.log("LMAO", this.socketService.email);
-    console.log(this.peopleLiked[0].includes(this.socketService.email));
-    if(!this.peopleLiked[0].includes(this.socketService.email)) {
-      this.http.post<any>(link,{drawingName: element.textContent.trim(), useremail: this.socketService.email}).pipe( 
+    console.log("DRAWLIKE", this.names[this.centerImage]);
+    console.log(!this.peopleLiked[this.cpt].includes(this.socketService.email));
+    console.log("WISS", this.peopleLiked);
+    console.log("WISS0", this.peopleLiked[0]);
+
+
+    if(!this.peopleLiked[this.cpt].includes(this.socketService.email)) {
+      this.http.post<any>(link,{useremail: this.socketService.email, drawingName: this.names[this.centerImage]}).pipe( 
+      //this.http.post<any>(link,{useremail: this.socketService.email, drawingName: element.textContent.trim().slice(2) }).pipe( 
         catchError(async (err) => console.log("error catched" + err))
         ).subscribe((data: any) => {
           console.log("LIKED");
-          const up = document.getElementById("likeButton");
-          up!.className="fa fa-thumbs-o-up"
         });
     }
     else {
-      this.http.post<any>(link2,{drawingName: element.textContent.trim(), useremail: this.socketService.email}).pipe( 
+      console.log("REMOVE", this.socketService.email);
+      console.log("REMOVE", this.names[this.centerImage]);
+      this.http.post<any>(link2,{useremail: this.socketService.email, drawingName: this.names[this.centerImage]}).pipe( 
+        // this.http.post<any>(link2,{useremail: this.socketService.email, drawingName: "}).pipe( 
         catchError(async (err) => console.log("error catched" + err))
         ).subscribe((data: any) => {
           console.log("DISLIKED", data);
-          console.log("WISS", this.peopleLiked);
-          const down = document.getElementById("likeButton");
-          down!.className="fa fa-thumbs-o-down"
         });
     }
   }
+
 
 
 
@@ -530,6 +556,7 @@ export class DessinsComponent implements OnInit {
       } else {
           this.rightImage++;
       }
+      this.cpt++;
       this.loadImages();
     }
   }
@@ -543,6 +570,7 @@ export class DessinsComponent implements OnInit {
       else {
           this.leftImage--;
       }
+      this.cpt--;
       this.loadImages();
     }
 

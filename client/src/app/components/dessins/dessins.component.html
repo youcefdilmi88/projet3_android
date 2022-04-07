@@ -63,18 +63,21 @@
         <p>{{own}} {{owners[this.centerImage]}}</p>
         <p>Nombre de like: {{nbrLiked[this.centerImage]}} </p>
         <p>Date de création: {{creationDate[this.centerImage]}}</p>
-        <button mat-raised-button id="DessinsButtonOpen" class="buto" (click)="openDessins($event.target)">
-            {{open}} <span class='special-word'>{{names[this.centerImage]}}</span>
-        </button>
-        <button mat-raised-button id="DessinsButtonDelete" class="buto" (click)="deleteDessins($event.target)">
-            {{delete}} <span class='special-word'>{{names[this.centerImage]}}</span>
-        </button>
-        <button mat-raised-button id="settingsButton" class="buto" (click)="openSettings($event.target)">
-            Modifier <span class='special-word'>{{names[this.centerImage]}}</span>
-        </button>
-        <button mat-raised-button id="likeButton" class="buto" (click)="like($event.target)" >
-            <span class='special-word'>{{names[this.centerImage]}}</span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-        </button>
+        <div class="subtext-container2">
+            <button mat-raised-button id="DessinsButtonOpen" class="buto" (click)="openDessins($event.target)">
+                {{open}} <span class='special-word'>{{names[this.centerImage]}}</span>
+            </button>
+            <button mat-raised-button id="DessinsButtonDelete" class="buto" (click)="deleteDessins($event.target)">
+                {{delete}} <span class='special-word'>{{names[this.centerImage]}}</span>
+            </button>
+            <button mat-raised-button id="settingsButton" class="buto" (click)="openSettings($event.target)">
+                Propriétés <span class='special-word'>{{names[this.centerImage]}}</span>
+            </button>
+            <button mat-raised-button id="likeButton" class="buto" (click)="like($event.target)">
+                <span class='special-word'>{{names[this.centerImage]}}</span><i class="fa fa-thumbs-o-up"></i>
+            </button>
+        </div>
+
         <!-- <button mat-raised-button id="Visibilite" (click)="changerPublic($event.target)">
             Public <span class='special-word'>{{names[this.centerImage]}}</span>
         </button> -->

@@ -3,14 +3,30 @@
 }
 
 #title100 {
-    background-color: #592bc7;
-    color: azure;
+    // background-color: #592bc7;
+    // color: azure;
 }
-
 
 #title101 {
     margin-left: 50px;
     display: inline-block;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--light-color);
+    color: var(--dark-color-a);
+    border: 0;
+    font-size: 17px;
+}
+
+#infoProfil {
+    border-style: solid;
+    border-color: black;
+    border-radius: 50px;
+    text-align: center;
+
 }
 
 #logout {

@@ -39,6 +39,7 @@ export class AlbumsComponent implements OnInit {
   private readonly BASE_URL: string = URL;
   public AlbumsNames:Array<string> = [];
   public AlbumsVisibilite:Array<string> = [];
+  public AlbumsCreationDate:Array<number> = [];
   public compteur:number = 0;
   public numberOfAlbums: number;
 
@@ -53,6 +54,11 @@ export class AlbumsComponent implements OnInit {
   private iscreator: string;
   private notcreator: string;
   private notmember: string
+
+  public toggleSortAlpha = true;
+  public toggleSortCreation = true;
+  public order:Array<number> = [];
+  public kk = false;;
 
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
@@ -117,6 +123,10 @@ export class AlbumsComponent implements OnInit {
       document.getElementById("chatRoom")!.style.color = LightGrey.text;
       document.getElementById("title3")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title3")!.style.color = LightGrey.text;
+      document.getElementById("sortAlpha")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("sortAlpha")!.style.color = LightGrey.text;
+      document.getElementById("sortCreate")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("sortCreate")!.style.color = LightGrey.text;
       document.getElementById("albumModifier")!.style.backgroundColor = LightGrey.main;
       document.getElementById("albumModifier")!.style.color = LightGrey.text;
     }
@@ -129,6 +139,10 @@ export class AlbumsComponent implements OnInit {
       document.getElementById("chatRoom")!.style.color = DarkGrey.text;
       document.getElementById("title3")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("title3")!.style.color = DarkGrey.text;
+      document.getElementById("sortAlpha")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("sortAlpha")!.style.color = DarkGrey.text;
+      document.getElementById("sortCreate")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("sortCreate")!.style.color = DarkGrey.text;
       document.getElementById("albumModifier")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("albumModifier")!.style.color = DarkGrey.text;
     }
@@ -141,6 +155,10 @@ export class AlbumsComponent implements OnInit {
       document.getElementById("chatRoom")!.style.color = DeepPurple.text;
       document.getElementById("title3")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("title3")!.style.color = DeepPurple.text;
+      document.getElementById("sortAlpha")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("sortAlpha")!.style.color = DeepPurple.text;
+      document.getElementById("sortCreate")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("sortCreate")!.style.color = DeepPurple.text;
       document.getElementById("albumModifier")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("albumModifier")!.style.color = DeepPurple.text;
     }
@@ -153,6 +171,10 @@ export class AlbumsComponent implements OnInit {
       document.getElementById("chatRoom")!.style.color = LightBlue.text;
       document.getElementById("title3")!.style.backgroundColor = LightBlue.main;
       document.getElementById("title3")!.style.color = LightBlue.text;
+      document.getElementById("sortAlpha")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("sortAlpha")!.style.color = LightBlue.text;
+      document.getElementById("sortCreate")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("sortCreate")!.style.color = LightBlue.text;
       document.getElementById("albumModifier")!.style.backgroundColor = LightBlue.main;
       document.getElementById("albumModifier")!.style.color = LightBlue.text;
     }
@@ -165,6 +187,10 @@ export class AlbumsComponent implements OnInit {
       document.getElementById("chatRoom")!.style.color = LightPink.text;
       document.getElementById("title3")!.style.backgroundColor = LightPink.main;
       document.getElementById("title3")!.style.color = LightPink.text;
+      document.getElementById("sortAlpha")!.style.backgroundColor = LightPink.main;
+      document.getElementById("sortAlpha")!.style.color = LightPink.text;
+      document.getElementById("sortCreate")!.style.backgroundColor = LightPink.main;
+      document.getElementById("sortCreate")!.style.color = LightPink.text;
       document.getElementById("albumModifier")!.style.backgroundColor = LightPink.main;
       document.getElementById("albumModifier")!.style.color = LightPink.text;
     }
@@ -206,15 +232,63 @@ export class AlbumsComponent implements OnInit {
       this.numberOfAlbums = length;
       this.AlbumsNames = [];
       this.AlbumsVisibilite = [];
+      this.AlbumsCreationDate = [];
       data.forEach((albums:any)=>{
         let albumObj:Album = new Album(albums as AlbumInterface);
         this.albumTempSerivce.albums.set(albumObj.getName() as string, albumObj);
         this.AlbumsNames.push(albums.albumName);
         this.AlbumsVisibilite.push(albums.visibility);
+        this.AlbumsCreationDate.push(albums.dateCreation);
         console.log(albums.description);
       });
-      // this.AlbumsNames.sort().reverse();
+
+      if(this.kk) {
+        this.AlbumsNames = [];
+        for(let i = 0; i < this.order.length; i++) {
+          data.forEach((albums:any)=>{
+            let albumObj:Album = new Album(albums as AlbumInterface);
+            this.albumTempSerivce.albums.set(albumObj.getName() as string, albumObj);
+            if(this.order[i] == albums.dateCreation) {
+              this.AlbumsNames.push(albums.albumName);
+            }
+          });
+        }
+        this.kk = false;
+      }
+    
+
     });
+  }
+
+  sortAlpha() {
+    if(this.toggleSortAlpha) {
+      this.AlbumsNames.sort();
+      this.snackBar.open("Trié en ordre alphabéthique ascendant", '', { duration: ONE_SECOND, });
+      this.toggleSortAlpha = false;
+    }
+    else {
+      this.AlbumsNames.sort().reverse();
+      this.snackBar.open("Trié en ordre alphabéthique descendant", '', { duration: ONE_SECOND, });
+      this.toggleSortAlpha = true;
+    }
+  }
+
+  sortCreation() {
+    if(this.toggleSortCreation) {
+      this.order = this.AlbumsCreationDate.sort();
+      this.kk = true;
+      this.getAllAlbums();
+      this.snackBar.open("Trié en ordre de création ascendant", '', { duration: ONE_SECOND, });
+      this.toggleSortCreation = false;
+    }
+    else {
+      this.order = this.AlbumsCreationDate.sort().reverse();
+      this.kk = true;
+      this.getAllAlbums();
+      this.snackBar.open("Trié en ordre de création descendant", '', { duration: ONE_SECOND, });
+
+      this.toggleSortCreation = true;
+    }
   }
 
   createAlbum() {

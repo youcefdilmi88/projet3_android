@@ -43,6 +43,7 @@ import { ModifyDrawingComponent } from './components/modify-drawing/modify-drawi
 import { ModifyAlbumComponent } from './components/modify-album/modify-album.component';
 import { AcceptRequestComponent } from './components/accept-request/accept-request.component';
 import { ProfilComponent } from './components/profil/profil.component';
+import { UsersComponent } from './components/users/users.component';
 
 
 @NgModule({
@@ -83,6 +84,7 @@ import { ProfilComponent } from './components/profil/profil.component';
         ModifyAlbumComponent,
         AcceptRequestComponent,
         ProfilComponent,
+        UsersComponent,
     ],
     imports: [
         BrowserModule,

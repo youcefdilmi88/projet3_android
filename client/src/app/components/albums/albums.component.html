@@ -12,6 +12,8 @@
                     <button mat-raised-button id="createAlbum" (click)="createAlbum()">{{creaAlbum}}</button>
                     <button mat-raised-button id="menuCompte" routerLink="/profil">{{accoutMenu}}</button>
                     <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">{{goChat}}</button> 
+                    <button mat-raised-button id="sortAlpha" (click)="sortAlpha()"><i class="fa fa-sort-alpha-asc"></i></button>
+                    <button mat-raised-button id="sortCreate" (click)="sortCreation()"><i class= "fa fa-sort-numeric-asc"></i></button>
                 </div>
         <!-- </div> -->
 
@@ -36,7 +38,7 @@
 
         <div class="SectionAlbums" *ngFor="let albumName of AlbumsNames; let i = index">
             <div class="listAlbums"> 
-                <p> Album: {{AlbumsVisibilite[i]}} </p>
+                <!-- <p> Album: {{AlbumsVisibilite[i]}} </p> -->
                 <div id="albumCover" class="albums">
                     {{albumName}}
                 </div>

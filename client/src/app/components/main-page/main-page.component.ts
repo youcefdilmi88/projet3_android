@@ -89,10 +89,8 @@ export class MainPageComponent implements OnInit{
       document.getElementById("buttonMain2")!.style.color = LightGrey.text;
       document.getElementById("buttonMain3")!.style.backgroundColor = LightGrey.main;
       document.getElementById("buttonMain3")!.style.color = LightGrey.text;
-      document.getElementById("buttonMain4")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("buttonMain4")!.style.color = LightGrey.text;
-      document.getElementById("title")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("title")!.style.color = LightGrey.text;
+      document.getElementById("title01")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("title01")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
       document.getElementById("buttonMain")!.style.backgroundColor = DarkGrey.main;
@@ -101,10 +99,8 @@ export class MainPageComponent implements OnInit{
       document.getElementById("buttonMain2")!.style.color = DarkGrey.text;
       document.getElementById("buttonMain3")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("buttonMain3")!.style.color = DarkGrey.text;
-      document.getElementById("buttonMain4")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("buttonMain4")!.style.color = DarkGrey.text;
-      document.getElementById("title")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("title")!.style.color = DarkGrey.text;
+      document.getElementById("title01")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("title01")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {       
       document.getElementById("buttonMain")!.style.backgroundColor = DeepPurple.main;
@@ -113,10 +109,8 @@ export class MainPageComponent implements OnInit{
       document.getElementById("buttonMain2")!.style.color = DeepPurple.text;
       document.getElementById("buttonMain3")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("buttonMain3")!.style.color = DeepPurple.text;
-      document.getElementById("buttonMain4")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("buttonMain4")!.style.color = DeepPurple.text;
-      document.getElementById("title")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("title")!.style.color = DeepPurple.text;
+      document.getElementById("title01")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("title01")!.style.color = DeepPurple.text;
     }
     else if(this.socketService.theme == "light blue") { 
       document.getElementById("buttonMain")!.style.backgroundColor = LightBlue.main;
@@ -125,10 +119,8 @@ export class MainPageComponent implements OnInit{
       document.getElementById("buttonMain2")!.style.color = LightBlue.text;
       document.getElementById("buttonMain3")!.style.backgroundColor = LightBlue.main;
       document.getElementById("buttonMain3")!.style.color = LightBlue.text;
-      document.getElementById("buttonMain4")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("buttonMain4")!.style.color = LightBlue.text;
-      document.getElementById("title")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("title")!.style.color = LightBlue.text;
+      document.getElementById("title01")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("title01")!.style.color = LightBlue.text;
     }
     else if(this.socketService.theme == "light pink") {  
       document.getElementById("buttonMain")!.style.backgroundColor = LightPink.main;
@@ -137,10 +129,8 @@ export class MainPageComponent implements OnInit{
       document.getElementById("buttonMain2")!.style.color = LightPink.text;
       document.getElementById("buttonMain3")!.style.backgroundColor = LightPink.main;
       document.getElementById("buttonMain3")!.style.color = LightPink.text;
-      document.getElementById("buttonMain4")!.style.backgroundColor = LightPink.main;
-      document.getElementById("buttonMain4")!.style.color = LightPink.text;
-      document.getElementById("title")!.style.backgroundColor = LightPink.main;
-      document.getElementById("title")!.style.color = LightPink.text;
+      document.getElementById("title01")!.style.backgroundColor = LightPink.main;
+      document.getElementById("title01")!.style.color = LightPink.text;
     }
   }
 
@@ -170,6 +160,15 @@ export class MainPageComponent implements OnInit{
       let link=this.BASE_URL+"user/loginUser";
     
       this.http.post<any>(link,{useremail:this.email,password:this.password}).subscribe((data: any) => {
+        this.socketService.userObj = {
+          useremail: data.user.useremail,
+          nickname: data.user.nickname,
+          lastLoggedIn: data.user.lastLoggedIn,
+          lastLoggedOut: data.user.lastLoggedOut,
+          friends: data.user.friends,
+          avatar: data.user.avatar, 
+        };
+        console.log("EDWIN EST GROS:",  this.socketService.userObj);
         console.log("message:"+data.message);
         console.log("first:"+data.currentRoom);
         if(data.message=="success") {

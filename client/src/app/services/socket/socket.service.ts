@@ -22,7 +22,16 @@ export class SocketService {
   public language = "french";
   public theme = "light grey";
   public mute = false;
-  public avatarNumber: string;
+  public avatarNumber = "";
+  public userObj = {
+    useremail: "",
+    nickname:"",
+    lastLoggedIn: 0,
+    lastLoggedOut: 0,
+    friends: [],
+    avatar: this.avatarNumber , 
+  }
+  public test: string;
   //private userService: UserService;
 
   constructor() { }

@@ -1,3 +1,5 @@
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
 <mat-sidenav-container class="container">
     <mat-sidenav
         mode="side"
@@ -48,7 +50,13 @@
     <mat-divider></mat-divider>
     <div> 
         <button (click)="openNewDrawing()">
-            Réinitialiser
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div> 
+        <button (click)="openUsers()">
+            <i class="fa fa-users"></i>
         </button>
     </div>
 <!------------->
@@ -60,4 +68,6 @@
     <mat-sidenav-content>
         <app-parameter-menu [selectId]="selectedParameter"></app-parameter-menu>
     </mat-sidenav-content>
+
+
 </mat-sidenav-container>
