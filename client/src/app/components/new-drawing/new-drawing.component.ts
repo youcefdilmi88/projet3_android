@@ -20,6 +20,8 @@ import { checkLine } from '@app/interfaces/LineInterface';
 import { checkEllipse } from '@app/interfaces/EllipseInterface';
 import { checkRectangle } from '@app/interfaces/RectangleInterface';
 import { Point } from 'src/app/model/point.model';
+import { SelectionToolService } from '@app/services/tools/selection-tool/selection-tool.service';
+import { SidenavService } from '@app/services/sidenav/sidenav.service';
 
 // const ONE_SECOND = 1000;
 @Component({
@@ -53,13 +55,20 @@ export class NewDrawingComponent implements OnInit {
     public pencilToolService: PencilToolService,
     public toolEllipseService: ToolEllipseService,
     public toolRectangleService: ToolRectangleService,
+    private selectionService: SelectionToolService,
     rendererFactory: RendererFactory2,
+    public sidenavService: SidenavService, 
   ) { 
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
+    this.pencilToolService.setUpPencil();
+    this.toolRectangleService.setUpRectangle();
+    this.toolEllipseService.setUpEllipse();
+    this.selectionService.setUpSelection();
+    this.sidenavService.reset();
     this.newDrawing();
     this.form = new FormGroup(
       {
@@ -78,6 +87,7 @@ export class NewDrawingComponent implements OnInit {
     drawingObj?.getElementsInterface().forEach((element:BaseShapeInterface)=>{
       console.log("FOREACHE");
       if(checkLine(element)) {
+        this.pencilToolService.pencil = element;
         if(element.pointsList != undefined) {
           this.pencil3 = this.renderer.createElement('path', 'svg');
           this.renderer.setAttribute(this.pencil3,'id',element.id as string);
@@ -90,6 +100,8 @@ export class NewDrawingComponent implements OnInit {
           this.renderer.setStyle(this.pencil3, 'fillOpacity', element.fillOpacity);
           this.renderer.setStyle(this.pencil3, 'strokeOpacity', element.strokeOpacity);
           this.drawingService.addObject(this.pencil3);
+          this.pencilToolService.objects.set(element.id, this.pencil3);
+          this.pencilToolService.shapes.set(element.id, element);
           let index = element.pointsList.length;
           for(let i = 0; i < element.pointsList.length; i++) {
             if(i < index) {

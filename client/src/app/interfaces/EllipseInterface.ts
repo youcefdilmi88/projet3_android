@@ -6,6 +6,8 @@ export interface EllipseInterface extends BaseShapeInterface {
     width:number;
     height:number;
     type:string;
+    finalX: number;
+    finalY: number;
 }
 
 export function checkEllipse(object:any):object is EllipseInterface {

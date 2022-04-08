@@ -38,10 +38,13 @@ export class ToolEllipseService implements Tools {
   private y: number;
   private finalX: number;
   private finalY: number;
+  private xnegatif = false;
+  private ynegatif = false;
 
   private moving: boolean = false;
 
   public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
+  public shapes: Map<string, FilledShape> =  new Map<string, FilledShape>();
   initPoints: Map<string, Point> =  new Map<string, Point>();
 
   renderer: Renderer2;
@@ -140,6 +143,7 @@ export class ToolEllipseService implements Tools {
     this.renderer.setStyle(this.ellipse2, 'strokeOpacity', this.ellipseAttributes!.strokeOpacity);
     this.drawingService.addObject(this.ellipse2);
     this.objects.set(this.ellipseAttributes!.id, this.ellipse2);
+    this.shapes.set(this.ellipseAttributes.id, this.ellipseAttributes);
     this.initPoints.set(this.ellipseAttributes!.id, {x: this.ellipseAttributes.x, y: this.ellipseAttributes.y });
     //console.log("ca dessine un ellipse");
 }
@@ -201,6 +205,22 @@ export class ToolEllipseService implements Tools {
     this.ellipseAttributes.height = +height!;
     this.ellipseAttributes.width = +width!;
 
+    if (this.xnegatif == true) {
+      this.ellipseAttributes.x = this.ellipseAttributes.x - this.ellipseAttributes.width/2;
+    }
+    else {
+      this.ellipseAttributes.x = this.ellipseAttributes.x + this.ellipseAttributes.width/2
+    }
+    if (this.ynegatif == true) {
+      this.ellipseAttributes.y = this.ellipseAttributes.y - this.ellipseAttributes.height/2;
+    }
+    else {
+      this.ellipseAttributes.y = this.ellipseAttributes.y + this.ellipseAttributes.height/2;
+    }
+
+    this.ynegatif = false;
+    this.xnegatif = false;
+
     if(this.ellipseAttributes?.height! > 1 || this.ellipseAttributes?.width! > 1) {
     this.socketService.getSocket().emit("ENDELLIPSE", JSON.stringify(this.ellipseAttributes));
     }
@@ -244,6 +264,7 @@ export class ToolEllipseService implements Tools {
 
     if (mouseX < startX) {
         newX = mouseX;
+        this.xnegatif = true;
     } 
     else {
         newX = startX
@@ -251,6 +272,7 @@ export class ToolEllipseService implements Tools {
 
     if (mouseY < startY) {
         newY = mouseY;
+        this.ynegatif = true;
     } 
     else {
         newY = startY;

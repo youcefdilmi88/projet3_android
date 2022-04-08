@@ -13,7 +13,8 @@ export class SelectionToolParameterComponent {
   constructor(
     private selectionService: SelectionToolService,
     //private deletingService: DeletingToolService,
-    private copyPasteService: CopyPasteToolService) { }
+    private copyPasteService: CopyPasteToolService) { 
+    }
 
   get toolName(): string {
     return this.selectionService.toolName;
