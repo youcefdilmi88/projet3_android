@@ -471,7 +471,7 @@ export class SelectionToolService implements Tools {
     if (this.drawingService.drawing) {
       if (event.buttons === 1) {
         this.wasMoved = true;
-
+        this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: false }));
         if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
           console.log("hm")
           this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: false }));

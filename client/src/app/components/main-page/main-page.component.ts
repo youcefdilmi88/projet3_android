@@ -176,6 +176,7 @@ export class MainPageComponent implements OnInit{
           this.socketService.email = this.email;
           this.socketService.nickname = data.user.nickname;
           this.socketService.currentRoom=data.currentRoom;
+          this.socketService.avatarNumber = data.user.avatar;
           this.socketService.initSocket();
           this.router.navigate(['/', 'albums']);          
           this.playAudio("notif.wav");

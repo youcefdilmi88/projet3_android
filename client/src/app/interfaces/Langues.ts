@@ -19,6 +19,7 @@ export const French = {
     create: "Créer votre compte",
     error5: "Les mots de passes ne correspondent pas",
     error6: "Ce courriel est déjà pris.",
+    error7: "Veuillez choisir un avatar",
 
 
     //album
@@ -92,6 +93,7 @@ export const English = {
     create: "Create account",
     error5: "The passwords are not identical",
     error6: "This email is already taken",
+    error7: "Please choose an avatar",
 
     //album
     chooseAlbum: "Choose album",

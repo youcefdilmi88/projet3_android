@@ -15,6 +15,60 @@
 //     line-height: 500px;  
 // }
 
+#avatar1 {
+    background: url(../../../assets/av1.png);
+    width: 100px;
+    height: 100px;
+  }
+
+  #avatar1:focus {
+    backdrop-filter: blur(10px);
+      filter: blur(4px);
+      transition: 0.5s ease;
+  }
+  
+  #avatar2 {
+    background: url(../../../assets/av2.png);
+    width: 100px;
+    height: 100px;
+  }
+
+  #avatar2:focus {
+    backdrop-filter: blur(10px);
+      filter: blur(4px);
+      transition: 0.5s ease;
+  }
+  
+  #avatar3 {
+    background: url(../../../assets/av3.png);
+    width: 100px;
+    height: 100px;
+  }
+
+  #avatar3:focus {
+    backdrop-filter: blur(10px);
+      filter: blur(4px);
+      transition: 0.5s ease;
+  }
+  
+  #avatar4 {
+    background: url(../../../assets/av4.png);
+    width: 100px;
+    height: 100px;
+  }
+
+  #avatar4:focus {
+    backdrop-filter: blur(10px);
+      filter: blur(4px);
+      transition: 0.5s ease;
+  }
+  
+  #avatar0 {
+    background: url(../../../assets/avatar0.png);
+    width: 100px;
+    height: 100px;
+  }
+
 .outer {
     display: table;
     position: absolute;

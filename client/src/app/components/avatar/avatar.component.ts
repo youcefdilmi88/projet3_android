@@ -27,6 +27,9 @@ export class AvatarComponent implements OnInit {
 
   image(element: any) {
     this.socketService.avatarNumber = element.textContent.trim();
+    switch(element) {
+      case ("1"): 
+    }
     console.log(element.textContent.trim());
     this.dialogRef.close();
   }

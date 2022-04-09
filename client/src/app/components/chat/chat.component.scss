@@ -211,21 +211,42 @@ a {
 
 .chat-messages {
 	position: relative;
+	//border: 3px solid orange;
+	//height: 800px;
+}
+
+.message-icon {
+	position: relative;
+	width: 50px;
+	left: 0;
+	//border: 3px solid blue;
 }
 
 .message-area {
+	position: relative;
 	white-space: pre-wrap;
-	width: 900px;
-	top: 0;
+	width: 800px;
+	//left: 50px;
+	//top: -1000px;
+	//bottom: 1283px;
+	//border: 3px solid red;
 }
 
 .message-others {
+	position: relative;
 	white-space: pre-wrap;
-	width: 900px;
+	width: 800px;
+	//border: 3px solid green;
 }
 
 .right {
 	position: absolute;
 	right: 50px;
 	top: 29px;
+}
+
+.left {
+	position: absolute;
+	left: 90px;
+	top: 30px;
 }
