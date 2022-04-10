@@ -6,7 +6,13 @@
             <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="drawingNAME">
         </mat-form-field> 
     </div>
-    <div id="visib">
+    <div *ngIf="showMe == true">
+        <mat-form-field class="input" floatLabel="always" appearance="outline" class="opt">
+            <mat-label>Nouveau mot de pass</mat-label>
+            <input #drawingNewPass matInput id="drawing2" type="text" name="drawing2" required [(ngModel)]="drawingNEWPASS">
+        </mat-form-field> 
+    </div>
+    <div id="visib" *ngIf="showMe == false">
         <label for="checkbox">Modifier la visibilité </label>
         <!-- <input type="checkbox" id="checkbox" (change)="toggleEditable($event)"> -->
         <mat-slide-toggle [formControl]="autoRenew" (change)="onChange()"></mat-slide-toggle>
@@ -28,8 +34,8 @@
         </mat-form-field>
         </div>
         </div>
-
     </div>
+
     <div id="updateButtons">
         <button mat-raised-button id="annulerDrawing" class="buto" (click)="cancelUpdate()">ANNULER</button>
         <button mat-raised-button id="confirmer" class="buto" (click)="updateDrawing()">MODIFIER</button>

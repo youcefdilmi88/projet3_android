@@ -54,9 +54,19 @@ export class UsersComponent implements OnInit {
   }
 
   roomListener() {
-    this.socketService.getSocket().on("FMODIFIED", (data) => {
+    this.socketService.getSocket().on("friends modified", (data) => {
       data=JSON.parse(data);
       console.log("HERE");
+      if (data.user1.useremail == this.socketService.email) {
+        this.socketService.userObj.friends = data.user1.friends;
+        console.log("user", this.socketService.userObj.friends);
+        console.log("obj", data.user1.friends);
+      }
+      else if (data.user2.useremail == this.socketService.email){
+        this.socketService.userObj.friends = data.user2.friends;
+        console.log("user", this.socketService.userObj.friends);
+        console.log("obj", data.user1.friends);
+      }
     });
   }
 

@@ -57,14 +57,19 @@
 } 
 
 #roomIDButton {
-    width: 50%;
+    width: 33%;
     float: left;
     margin-bottom: 15px;
     background-color: #adebad;
 }
 
+#roomIDQuitterButton {
+    width: 33%;
+    margin-bottom: 15px;
+}
+
 #roomIDButtonDelete {
-    width: 50%;
+    width: 33%;
     float: right;
     margin-bottom: 15px;
     background-color: #ff9999;
@@ -106,4 +111,23 @@
     position: relative;
     display: flex;
     flex-direction: column;
-  }
+}
+
+#CreerCanal {
+    float: left;
+    width: 50%;
+    height: 50px;
+}
+
+#filtrerCanaux {
+    float: right;
+    width: 50%;
+    height: 50px;
+}
+
+.subtext-container2 {
+    width: 100%;
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

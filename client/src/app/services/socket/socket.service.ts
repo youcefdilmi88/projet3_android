@@ -36,6 +36,7 @@ export class SocketService {
   public he: number;
   public avatar2: string;
   public avatarClick = false;
+  public isProtected: boolean;
   //private userService: UserService;
 
   constructor() { }

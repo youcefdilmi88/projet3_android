@@ -249,9 +249,10 @@ export class ChatComponent implements AfterViewInit {
         console.log("response", data);
         if(data.message == "success") {
           console.log("EXITED DRAWING" + data.useremail);
+          this.playAudio("ui2.wav");
         }
       });
-      this.router.navigate(['/', 'dessins']);
+      // this.router.navigate(['/', 'dessins']);
     }
   }
 
@@ -259,7 +260,7 @@ export class ChatComponent implements AfterViewInit {
     //this.dialog.open(RoomsComponent, { disableClose: true });
     this.router.navigate(['/', 'rooms']);
     this.playAudio("ui2.wav");
-    
+    console.log("bing me there");
     // if(this.router.url == "/sidenav") {
     //   this.socketService.drawingName = this.socketService.currentRoom;
     // }

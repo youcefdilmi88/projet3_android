@@ -261,16 +261,19 @@ export class NewAccountComponent implements OnInit {
 
   showAvatar() {
     if(this.socketService.avatarNumber == "1") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar1.png)";
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av1.png)";
     }
     else if(this.socketService.avatarNumber == "2") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar2.png)";
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av2.png)";
     }
     else if(this.socketService.avatarNumber == "3") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar3.png)";
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av3.png)";
     }
     else if(this.socketService.avatarNumber == "4") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar4.png)";
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av4.png)";
+    }
+    else if(this.socketService.avatarNumber == "5") {
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av5.png)";
     }
   }
 
@@ -282,7 +285,7 @@ export class NewAccountComponent implements OnInit {
     this.dialog.open(AvatarComponent, { disableClose: true });
     this.playAudio("ui2.wav");
 
-    await this.sleep(4000);
+    await this.sleep(3000);
     this.showAvatar();
   }
 

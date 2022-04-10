@@ -64,6 +64,7 @@ export class ProfilComponent implements OnInit {
     this.nickname = this.socketService.userObj.nickname;
     this.lastLoggedIn = formattedDate1;
     this.lastLoggedOut = formattedDate2;
+    
     this.friends = this.socketService.userObj.friends;
 
     console.log("FRIENDS", this.friends);
@@ -90,11 +91,20 @@ export class ProfilComponent implements OnInit {
 
 
   roomListener() {
-    this.socketService.getSocket().on("FMODIFIED", (data) => {
+    this.socketService.getSocket().on("friends modified", (data) => {
       data=JSON.parse(data);
       console.log("wiss", data);
       //to do
-      
+      if (data.user1.useremail == this.socketService.email) {
+        this.socketService.userObj.friends = data.user1.friends;
+        console.log("user", this.socketService.userObj.friends);
+        console.log("obj", data.user1.friends);
+      }
+      else if (data.user2.useremail == this.socketService.email) {
+        this.socketService.userObj.friends = data.user2.friends;
+        console.log("user", this.socketService.userObj.friends);
+        console.log("obj", data.user1.friends);
+      }
     });
   }
 
@@ -111,9 +121,16 @@ export class ProfilComponent implements OnInit {
     let link = this.BASE_URL + "user/removeFriend";
 
     console.log("WISS", element.textContent.trim().slice(18));
-    this.http.post<any>(link, {useremail: this.socketService.email, friendToRemove: element.textContent.trim().slice(18)}).subscribe((data:any) => { 
-      if(data.message == "success") {
-        console.log("removed friend");
+    this.socketService.userObj.friends.forEach((val, i) => {
+      if (val == element.textContent.trim().slice(18)) {
+        console.log("bye bye", this.socketService.userObj.friends[i]);
+        console.log("bye bitch", element.textContent.trim().slice(18));
+        this.socketService.userObj.friends.splice(i, 1);
+        this.http.post<any>(link, {useremail: this.socketService.email, friendToRemove: element.textContent.trim().slice(18)}).subscribe((data:any) => { 
+          if(data.message == "success") {
+            console.log("removed friend", data);
+          }
+        });
       }
     });
   }

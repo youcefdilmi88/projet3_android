@@ -32,7 +32,18 @@ export class AvatarComponent implements OnInit {
     this.socketService.avatarNumber = element.textContent.trim();
     this.socketService.avatarClick = true;
     console.log(element.textContent.trim());
+    this.playAudio("ui2.wav");
     this.dialogRef.close();
+  }
+
+
+  playAudio(title: string){
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
   // onFileSelected(event:any) {

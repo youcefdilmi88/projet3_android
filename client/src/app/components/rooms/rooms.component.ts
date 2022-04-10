@@ -79,42 +79,42 @@ export class RoomsComponent implements OnInit {
       this.delete = English.delete;
     }
     if(this.socketService.theme == "light grey"){
-      document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("createRoom")!.style.color = LightGrey.text;
-      document.getElementById("searchRoom")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("searchRoom")!.style.color = LightGrey.text;
+      // document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
+      // document.getElementById("createRoom")!.style.color = LightGrey.text;
+      // document.getElementById("searchRoom")!.style.backgroundColor = LightGrey.main;
+      // document.getElementById("searchRoom")!.style.color = LightGrey.text;
       document.getElementById("title7")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title7")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
-      document.getElementById("createRoom")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("createRoom")!.style.color = DarkGrey.text;
-      document.getElementById("searchRoom")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("searchRoom")!.style.color = DarkGrey.text;
+      // document.getElementById("createRoom")!.style.backgroundColor = DarkGrey.main;
+      // document.getElementById("createRoom")!.style.color = DarkGrey.text;
+      // document.getElementById("searchRoom")!.style.backgroundColor = DarkGrey.main;
+      // document.getElementById("searchRoom")!.style.color = DarkGrey.text;
       document.getElementById("title7")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("title7")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {       
-      document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("createRoom")!.style.color = DeepPurple.text;
-      document.getElementById("searchRoom")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("searchRoom")!.style.color = DeepPurple.text;
+      // document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
+      // document.getElementById("createRoom")!.style.color = DeepPurple.text;
+      // document.getElementById("searchRoom")!.style.backgroundColor = DeepPurple.main;
+      // document.getElementById("searchRoom")!.style.color = DeepPurple.text;
       document.getElementById("title7")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("title7")!.style.color = DeepPurple.text;
     }
     else if(this.socketService.theme == "light blue") { 
-      document.getElementById("createRoom")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("createRoom")!.style.color = LightBlue.text;
-      document.getElementById("searchRoom")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("searchRoom")!.style.color = LightBlue.text;
+      // document.getElementById("createRoom")!.style.backgroundColor = LightBlue.main;
+      // document.getElementById("createRoom")!.style.color = LightBlue.text;
+      // document.getElementById("searchRoom")!.style.backgroundColor = LightBlue.main;
+      // document.getElementById("searchRoom")!.style.color = LightBlue.text;
       document.getElementById("title7")!.style.backgroundColor = LightBlue.main;
       document.getElementById("title7")!.style.color = LightBlue.text;
     }
     else if(this.socketService.theme == "light pink") {  
-      document.getElementById("createRoom")!.style.backgroundColor = LightPink.main;
-      document.getElementById("createRoom")!.style.color = LightPink.text;
-      document.getElementById("searchRoom")!.style.backgroundColor = LightPink.main;
-      document.getElementById("searchRoom")!.style.color = LightPink.text;
+      // document.getElementById("createRoom")!.style.backgroundColor = LightPink.main;
+      // document.getElementById("createRoom")!.style.color = LightPink.text;
+      // document.getElementById("searchRoom")!.style.backgroundColor = LightPink.main;
+      // document.getElementById("searchRoom")!.style.color = LightPink.text;
       document.getElementById("title7")!.style.backgroundColor = LightPink.main;
       document.getElementById("title7")!.style.color = LightPink.text;
     }
@@ -177,42 +177,44 @@ export class RoomsComponent implements OnInit {
   }
 
   roomListener() {
-    let link2 = this.BASE_URL+"room/getAllRooms";
+    // let link2 = this.BASE_URL+"room/getAllRooms";
     this.socketService.getSocket().on("ROOMDELETED",(data)=>{
       data=JSON.parse(data);
-      this.buttonsTexts = [];
-      this.http.get<any>(link2).subscribe((data: any) => {
-        let length = Object.keys(data).length;
-        this.numberOfRooms = length;        
-        // pour update les rooms buttons
-        for(var i = 0; i <= length; i++) { 
-          if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
-            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
-          }
-        }
-        console.log("update 1");
-      });
+      // this.buttonsTexts = [];
+      // this.http.get<any>(link2).subscribe((data: any) => {
+      //   let length = Object.keys(data).length;
+      //   this.numberOfRooms = length;        
+      //   // pour update les rooms buttons
+      //   for(var i = 0; i <= length; i++) { 
+      //     if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+      //       this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+      //     }
+      //   }
+      //   console.log("update 1");
+      // });
+      this.getAllDrawings();
     });
 
     this.socketService.getSocket().on("CREATEROOM",(data)=>{
       data=JSON.parse(data);
-      this.buttonsTexts = [];
-      this.http.get<any>(link2).subscribe((data: any) => {
-        let length = Object.keys(data).length;
-        this.numberOfRooms = length;
-        for(var i = 0; i <= length; i++) { 
-          if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
-            this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
-          }
-        }
-      });
-      this.input.nativeElement.value = ' ';
+      // this.buttonsTexts = [];
+      // this.http.get<any>(link2).subscribe((data: any) => {
+      //   let length = Object.keys(data).length;
+      //   this.numberOfRooms = length;
+      //   for(var i = 0; i <= length; i++) { 
+      //     if(!this.drawingTempSerivce.drawings.has(data[i].roomName)) {
+      //       this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}`];
+      //     }
+      //   }
+      // });
+      // this.input.nativeElement.value = ' ';
+      this.getAllDrawings();
      });
 
   }
 
   getAllDrawings() {
-    let link = this.BASE_URL + "drawing/getAllDrawings";
+    let link = this.BASE_URL + "drawing/getAllDrawings";  
     this.http.get<any>(link).subscribe((data: any) => {
       this.drawingTempSerivce.drawings.clear();
       data.forEach((drawing:any)=>{
@@ -224,6 +226,7 @@ export class RoomsComponent implements OnInit {
         console.log("update 2");
         let length = Object.keys(data).length;
         this.numberOfRooms = length;
+        this.buttonsTexts = [];
         for(var i = 0; i < length; i++) { 
           //this.list.push(data[i].roomName);
           // this.buttonsTexts = [...this.buttonsTexts, `${data[i].roomName}, (par ${data[i].creator})`];

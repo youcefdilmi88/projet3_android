@@ -44,9 +44,19 @@ export class AcceptRequestComponent implements OnInit {
     this.http.post<any>(link, {useremail: this.socketService.email, request: this.socketService.memberRequest, albumName: this.socketService.albumName}).subscribe((data:any) => { 
       if(data.message == "success") {
           console.log("ACCEPTED");
+          this.playAudio("ui2.wav");
         }
     });
       this.dialogRef.close();
+  }
+
+  playAudio(title: string){
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
   }
 
 }

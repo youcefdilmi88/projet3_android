@@ -240,7 +240,6 @@ export class AlbumsComponent implements OnInit {
         this.AlbumsNames.push(albums.albumName);
         this.AlbumsVisibilite.push(albums.visibility);
         this.AlbumsCreationDate.push(albums.dateCreation);
-        console.log(albums.description);
       });
 
       this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });

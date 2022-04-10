@@ -540,8 +540,12 @@ export class DessinsComponent implements OnInit {
   //, {height: "350px", width: '350px' }
   openSettings(element: any): void {
     if(this.socketService.email == this.owners[this.centerImage]) {
+      this.socketService.isProtected = false;
       this.dialog.open(ModifyDrawingComponent, {width: '380px' });
       this.socketService.drawingName = this.names[this.centerImage];
+      if(this.visibite[this.centerImage] == "protected") {
+        this.socketService.isProtected = true;
+      }
     }
     else {
       this.playAudio("error.wav");

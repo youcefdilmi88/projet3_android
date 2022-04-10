@@ -10,14 +10,20 @@
         {{ roomName }}
     </div> -->
 
-    <div class="subtext-container">
+    <div class="subtext-container2">
+        <button mat-raised-button id="CreerCanal">Créer un canal</button>
+        <button mat-raised-button id="filtrerCanaux" >Filtrer les canaux</button>
+    </div>
+
+
+    <!-- <div class="subtext-container">
+
 <div>
     <mat-form-field class="input" floatLabel="always" appearance="outline">
         <mat-label>{{nameOfNewRoom}}</mat-label>
         <input #roomname matInput id="room" type="text" name="room" required [(ngModel)]="room">
     </mat-form-field> 
  
-    <!-- <button mat-raised-button id="createRoom" (click)="create(roomname.value)">{{creaRoom}}</button> -->
     <button mat-raised-button id="createRoom" (click)="create(roomname.value)"><i class="fa fa-plus"></i></button>
 </div>
 <div> 
@@ -27,11 +33,10 @@
         <input #roomfilter (click)="find(roomfilter.value)" matInput id="room" type="text" name="room" required >
     </mat-form-field> 
  
-    <!-- <button mat-raised-button id="searchRoom" class="searchRoom" (click)="find(roomfilter.value)">{{finRoom}}</button> -->
     <button mat-raised-button id="searchRoom" class="searchRoom" (click)="find(roomfilter.value)"><i class="fa fa-search"></i></button>
 
 </div>
-    </div> 
+    </div>  -->
 
     <div class="listRooms" *ngFor="let buttonText of buttonsTexts">
         <div class="listRoomsText">
@@ -42,6 +47,9 @@
         <div class="listRoomsButtons">
             <button mat-raised-button id="roomIDButton" (click)="changeRoom($event.target)" >
                 {{join2}} <span class='special-word'>{{buttonText}}</span>
+            </button>
+            <button mat-raised-button id="roomIDQuitterButton" >
+                Quitter <span class='special-word'>{{buttonText}}</span>
             </button>
             <button mat-raised-button id="roomIDButtonDelete" (click)="deleteRoom($event.target)">
                 {{delete}} <span class='special-word'>{{buttonText}}</span>

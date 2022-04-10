@@ -20,7 +20,8 @@ export class ModifyDrawingComponent implements OnInit {
   // private isPublic: boolean;
   private visibility: string; 
   public drawingNAME: string;
-  public visibility2: string
+  public visibility2: string;
+  public showMe: boolean;
 
   public AlbumsNamesPriv:Array<string> = [];
   public moveAlbumName: string;
@@ -33,6 +34,8 @@ export class ModifyDrawingComponent implements OnInit {
   ) { }
  
   ngOnInit(): void {
+    this.showMe = this.socketService.isProtected;
+    console.log("lis moi", this.showMe ); 
     let link = this.BASE_URL + "album/getAlbums";
     this.http.get<any>(link).subscribe((data: any) => {
       this.albumTempSerivce.albums.clear();
@@ -73,62 +76,116 @@ export class ModifyDrawingComponent implements OnInit {
     this.moveAlbumName = value;
   }
 
+  public drawingNEWPASS: string;
+
   updateDrawing() {
     let link = this.BASE_URL + "drawing/updateDrawing";
     let link2 = this.BASE_URL + "album/addDrawing";
+    let link3 = this.BASE_URL + "drawing/changePassword";
 
     const drawingObj = {
     drawingName: this.socketService.drawingName,
     visibility: this.visibility,
     }
 
-    if(this.drawingNAME == undefined) {
-      // changer la visibilité
-      this.http.post<any>(link,{useremail: this.socketService.email, drawing: drawingObj}).pipe( 
-        catchError(async (err) => console.log("error catched" + err))
-        ).subscribe((data: any) => {
-          if(data.message == "success") {
-            console.log("CHANGED VISIBILITY");
+    const drawingObj2 = {
+      drawingName: this.socketService.drawingName,
+      visibility: "protected",
+      }
 
-            if(this.visibility == "public") {
-              this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName: "PUBLIC" }).subscribe((data:any) => {
-                if (data.message == "success") {
-                  console.log("dessin ajoute a album " + this.socketService.albumName);
-                }
-              });
-            }
-            else if(this.visibility == "private") {
-              console.log("ARRIVE ICI?");
-              this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName:  this.moveAlbumName}).subscribe((data:any) => {
-                if (data.message == "success") {
-                  console.log("dessin ajoute a album " + this.socketService.albumName);
-                }
-              });
-            }
-
-
-          }
-      });
-    }
-    else {
-      //changer le nom et la visibilité
-      this.http.post<any>(link,{newName: this.drawingNAME, useremail: this.socketService.email, drawing: drawingObj}).pipe( 
-        catchError(async (err) => console.log("error catched" + err))
-        ).subscribe((data: any) => {
-          if(data.message == "success") {
-            console.log("CHANGED NAME AND VISIBLITY");
-
-            if(this.visibility == "public") {
-              this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName: "a" }).subscribe((data:any) => {
-                if (data.message == "success") {
-                  console.log("dessin ajoute a album " + this.socketService.albumName);
-                }
-              });
-            }
-
+    if(this.showMe) {
+      if(this.drawingNAME == undefined || this.drawingNAME == "") {
+        //route pour change pass
+        console.log("pass drawing name", this.socketService.drawingName);
+        console.log("new pass", this.drawingNEWPASS);
+        this.http.post<any>(link3,{ useremail: this.socketService.email, drawingName: this.socketService.drawingName, newPassword: this.drawingNEWPASS  }).subscribe((data:any) => {
+          if (data.message == "success") {
+            console.log("changed password");
           }
         });
+      }
+      else if (this.drawingNEWPASS == undefined || this.drawingNEWPASS == ""){
+        // juste name
+        this.http.post<any>(link,{useremail: this.socketService.email, newName: this.drawingNAME, drawing: drawingObj2}).pipe( 
+          catchError(async (err) => console.log("error catched" + err))
+          ).subscribe((data: any) => {
+            if(data.message == "success") {
+              console.log("changed only name");
+            }
+          });
+      }
+      else {
+        // les deux
+        this.http.post<any>(link3, {useremail: this.socketService.email, drawingName: this.socketService.drawingName, newPassword: this.drawingNEWPASS }).subscribe((data:any) => {
+          if (data.message == "success") {
+            console.log("changed password");
+          }
+        });
+
+        this.http.post<any>(link,{useremail: this.socketService.email, newName: this.drawingNAME, drawing: drawingObj2}).pipe( 
+          catchError(async (err) => console.log("error catched" + err))
+          ).subscribe((data: any) => {
+            if(data.message == "success") {
+              console.log("changed only name");
+            }
+          });
+      }
     }
+    else {
+      if(this.drawingNAME == undefined) {
+        // changer la visibilité
+        this.http.post<any>(link,{useremail: this.socketService.email, drawing: drawingObj}).pipe( 
+          catchError(async (err) => console.log("error catched" + err))
+          ).subscribe((data: any) => {
+            if(data.message == "success") {
+              console.log("CHANGED VISIBILITY");
+  
+              if(this.visibility == "public") {
+                this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName: "PUBLIC" }).subscribe((data:any) => {
+                  if (data.message == "success") {
+                    console.log("dessin ajoute a album " + this.socketService.albumName);
+                  }
+                });
+              }
+              else if(this.visibility == "private") {
+                this.http.post<any>(link2, {drawingName: this.socketService.drawingName, useremail: this.socketService.email, albumName:  this.moveAlbumName}).subscribe((data:any) => {
+                  if (data.message == "success") {
+                    console.log("dessin ajoute a album " + this.socketService.albumName);
+                  }
+                });
+              }
+  
+  
+            }
+        });
+      }
+      else {
+        //changer le nom et la visibilité
+        this.http.post<any>(link,{useremail: this.socketService.email, newName: this.drawingNAME, drawing: drawingObj}).pipe( 
+          catchError(async (err) => console.log("error catched" + err))
+          ).subscribe((data: any) => {
+            if(data.message == "success") {
+              console.log("CHANGED NAME AND VISIBLITY");
+  
+              if(this.visibility == "public") {
+                this.http.post<any>(link2, {drawingName: this.drawingNAME, useremail: this.socketService.email, albumName: "PUBLIC" }).subscribe((data:any) => {
+                  if (data.message == "success") {
+                    console.log("dessin ajoute a album " + this.socketService.albumName);
+                  }
+                });
+              }
+              else if(this.visibility == "private") {
+                this.http.post<any>(link2, {drawingName: this.drawingNAME, useremail: this.socketService.email, albumName:  this.moveAlbumName}).subscribe((data:any) => {
+                  if (data.message == "success") {
+                    console.log("dessin ajoute a album " + this.socketService.albumName);
+                  }
+                });
+              }
+            }
+          });
+      }
+    }
+
     this.dialogRef.close();
 
   }
