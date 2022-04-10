@@ -34,6 +34,7 @@ export class PencilToolService implements Tools {
   private moving: boolean = false;
 
   public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
+  public shapes: Map<string, Pencil> =  new Map<string, Pencil>();
 
   renderer: Renderer2;
 
@@ -116,6 +117,7 @@ export class PencilToolService implements Tools {
     this.renderer.setStyle(this.pencil3, 'strokeOpacity', this.pencil!.strokeOpacity);
     this.drawingService.addObject(this.pencil3);
     this.objects.set(this.pencil!.id, this.pencil3);
+    this.shapes.set(this.pencil?.id!, this.pencil!);
   }
 
   addPointToLine(point: Point, id: string): void {

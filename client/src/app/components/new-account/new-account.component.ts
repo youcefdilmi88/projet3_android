@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,7 +21,11 @@ import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 
 export class NewAccountComponent implements OnInit {
 
+  @ViewChild('avatar1') avatar1: HTMLElement;
+
   private readonly BASE_URL: string = URL;
+  // private clickavatar: boolean = false;
+
   public emai: string;
   public password: string;
   public repeatPass: string;
@@ -31,6 +35,7 @@ export class NewAccountComponent implements OnInit {
   public error1: string
   public error5: string;
   public error6: string;
+  public error7: string;
 
 
   constructor(
@@ -56,6 +61,7 @@ export class NewAccountComponent implements OnInit {
       this.error1 = French.error1;
       this.error5 = French.error5;
       this.error6 = French.error6;
+      this.error7 = French.error7;
     }
     else {
       this.emai = English.email;
@@ -67,6 +73,7 @@ export class NewAccountComponent implements OnInit {
       this.error1 = English.error1;
       this.error5 = English.error5;
       this.error6 = English.error6;
+      this.error7 = English.error7;
     }
     if(this.socketService.theme == "light grey"){
       // document.getElementById("buttonMain5")!.style.backgroundColor = LightGrey.main;
@@ -129,6 +136,12 @@ export class NewAccountComponent implements OnInit {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 
+  image(element: any) {
+    this.socketService.avatarNumber = element.textContent.trim();
+    this.playAudio("ui2.wav");
+    // this.clickavatar = true;
+  }
+
   closeClick(): boolean {
     if (this.passRepeat == "" || this.passRepeat == null ||
         this.pass == "" || this.pass == null ||
@@ -156,8 +169,20 @@ export class NewAccountComponent implements OnInit {
       erreur.className = "erreuAnimation";
       return false;
     }
+
+    // else if (this.clickavatar == false) {
+    //   document.getElementById("error")!.style.visibility= "visible";
+    //   document.getElementById("error")!.innerHTML = this.error7;
+    //   this.playAudio("error.wav");
+    //   let erreur= document.getElementById("buttonMain6")!;
+    //   erreur.className = "erreuAnimation";
+    //   erreur.classList.remove("erreuAnimation");
+    //   void erreur.offsetWidth;
+    //   erreur.className = "erreuAnimation";
+    //   return false;
+    // }
     
-    else if (this.socketService.avatarNumber == null || this.socketService.avatarNumber == "") {
+    else if (this.socketService.avatarNumber == null || this.socketService.avatarNumber == "" || this.socketService.avatarClick == false) {
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = "Vous n'avez pas choisi d'avatar";
       this.playAudio("error.wav");
@@ -192,6 +217,8 @@ export class NewAccountComponent implements OnInit {
         }
         else if (data.message == "success") {
           console.log("SUCC");
+          // this.clickavatar = false;
+          this.socketService.avatarClick = false;
           this.router.navigate([""]);
           this.playAudio("notif.wav");
         }

@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
-import { catchError } from 'rxjs/operators';
+// import { catchError } from 'rxjs/operators';
 import { URL } from '../../../../constants';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { DatePipe } from '@angular/common';
+import { LogoutComponent } from '../logout/logout.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 
@@ -27,6 +29,7 @@ export class ProfilComponent implements OnInit {
   constructor(
     private socketService: SocketService,
     private http: HttpClient,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -90,6 +93,8 @@ export class ProfilComponent implements OnInit {
     this.socketService.getSocket().on("FMODIFIED", (data) => {
       data=JSON.parse(data);
       console.log("wiss", data);
+      //to do
+      
     });
   }
 
@@ -115,19 +120,20 @@ export class ProfilComponent implements OnInit {
 
   
   logout() {
-    let link = this.BASE_URL + "user/logoutUser";
+    // let link = this.BASE_URL + "user/logoutUser";
 
-    this.playAudio();
-    this.socketService.disconnectSocket();
+    // this.playAudio();
+    // this.socketService.disconnectSocket();
 
-    this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(
-      catchError(async (err) => console.log("error catched" + err))
-    ).subscribe((data: any) => {
+    // this.http.post<any>(link,{ useremail: this.socketService.email }).pipe(
+    //   catchError(async (err) => console.log("error catched" + err))
+    // ).subscribe((data: any) => {
 
-      if (data.message == "success") {
-        console.log("sayonara");
-      }   
-    });
+    //   if (data.message == "success") {
+    //     console.log("sayonara");
+    //   }   
+    // });
+    this.dialog.open(LogoutComponent);
   }
 
   

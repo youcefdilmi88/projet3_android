@@ -35,6 +35,7 @@ export class SocketService {
   public clickedDrawing: string;
   public he: number;
   public avatar2: string;
+  public avatarClick = false;
   //private userService: UserService;
 
   constructor() { }

@@ -14,6 +14,13 @@ import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
 import { SelectionCommandConstants } from './command-type-constant';
 import { SelectionTransformService } from './selection-transform.service';
 import { SocketService } from '@app/services/socket/socket.service';
+import { ToolRectangleService } from '../tool-rectangle/tool-rectangle.service';
+import { ToolEllipseService } from '../tool-ellipse/tool-ellipse.service';
+import { PencilToolService } from '../pencil-tool/pencil-tool.service';
+//import { FilledShape } from '../tool-rectangle/filed-shape.model';
+import { Pencil } from '../pencil-tool/pencil.model';
+import { EllipseInterface } from '@app/interfaces/EllipseInterface';
+import { RectangleInterface } from '@app/interfaces/RectangleInterface';
 
 
 @Injectable({
@@ -51,8 +58,56 @@ export class SelectionToolService implements Tools {
   private wasMoved = false;
   private isIn = false;
 
+  private movTranslateX: number = 0;
+  private movTranslateY: number = 0;
+  private movResizeX: number = 0;
+  private movResizeY: number = 0;
+
   public dom = false;
   private identif: string;
+
+  private rectangleAttributes: RectangleInterface = {
+    id: "",
+    user: "",
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    type: "rectangle",
+    finalX: 0,
+    finalY: 0,
+    strokeWidth: 0,
+    fill: 'none',
+    stroke: 'none',
+    fillOpacity: 'none',
+    strokeOpacity: 'none',
+  };
+  private ellipseAttributes: EllipseInterface = {
+    id: "",
+    user: "",
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    type: "ellipse",
+    finalX: 0,
+    finalY: 0,
+    strokeWidth: 0,
+    fill: 'none',
+    stroke: 'none',
+    fillOpacity: 'none',
+    strokeOpacity: 'none',
+  };
+  private pencil: Pencil | null = {
+    id: "",
+    user: "",
+    pointsList:[],
+    strokeWidth: 0,
+    fill: 'none',
+    stroke: 'none',
+    fillOpacity: 'none',
+    strokeOpacity: 'none',
+  }
 
   renderer: Renderer2
 
@@ -63,6 +118,9 @@ export class SelectionToolService implements Tools {
     private rendererService: RendererProviderService,
     private selectionTransformService: SelectionTransformService,
     private socketService: SocketService,
+    private rectangleService: ToolRectangleService,
+    private ellipseService: ToolEllipseService,
+    private pencilService: PencilToolService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
     this.setRectInversement();
@@ -72,6 +130,7 @@ export class SelectionToolService implements Tools {
 
   setUpSelection() {
     this.socketService.getSocket().on("STARTSELECT", (data)=>{
+      console.log("START SELECT");
       data=JSON.parse(data);
 
       this.tmpX = data.off.x;
@@ -84,6 +143,9 @@ export class SelectionToolService implements Tools {
 
       this.object = obj!;
       console.log(this.object);
+
+      console.log("oof x", data.off.x);
+      console.log("oof y", data.off.y);
 
       if (this.isInside(data.off.x, data.off.y)) {
         console.log("true 1");
@@ -131,25 +193,19 @@ export class SelectionToolService implements Tools {
           allObject.push(value);
         }
       });
-
-      const rectBox = this.rectSelection.getBoundingClientRect();
-
-      allObject.forEach((obj) => {
-        const box = obj.getBoundingClientRect();
-        console.log("rectbox", rectBox);
-        this.objects.splice(this.objects.indexOf(obj, 0), 1);
-        console.log("box", box);
-        this.objects.push(obj);
-      });
     });
 
     this.socketService.getSocket().on("DRAWSELECT", (data)=>{
       data=JSON.parse(data);
+      console.log("DRAW SELECT");
 
       this.wasMoved = true;
-      console.log("resize", data.inside);
+      console.log("mouse x", data.x);
+      console.log("mouse y", data.y);
       if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
         this.selectionTransformService.resize(data.x, data.y, data.off);
+        this.movResizeX = this.movResizeX + data.x;
+        this.movResizeY = this.movResizeY + data.y;
         this.setSelection();
         return;
       }
@@ -159,6 +215,8 @@ export class SelectionToolService implements Tools {
           this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
         }
         this.selectionTransformService.translate(data.x, data.y);
+        this.movTranslateX = this.movTranslateX + data.x;
+        this.movTranslateY = this.movTranslateY + data.y;
         this.setSelection();
       }
       else {
@@ -168,6 +226,7 @@ export class SelectionToolService implements Tools {
 
     this.socketService.getSocket().on("SIZESELECT", (data)=>{
       data=JSON.parse(data);
+      console.log("SIZE SELECT");
 
       const obj = this.controlPoints.get(data.identif);
       this.selectionTransformService.createCommand(SelectionCommandConstants.RESIZE, this.rectSelection, this.objects, data.off, obj as SVGRectElement,);
@@ -210,7 +269,20 @@ export class SelectionToolService implements Tools {
 
     this.socketService.getSocket().on("ENDSELECT", (data)=>{
       data=JSON.parse(data);
+
+      console.log("END SELECT", data);
+      //console.log("pencil", this.pencil);
+      //console.log("ellipse", this.ellipseAttributes);
+      //console.log("rectangle", this.rectangleAttributes);
     });
+  }
+
+  reinit() {
+    this.objects = [];
+    this.rendererService.renderer.removeChild(this.drawingService.drawing, this.objects);
+    this.rendererService.renderer.removeChild(this.drawingService.drawing, this.rectSelection);
+    this.rendererService.renderer.removeChild(this.drawingService.drawing, this.ctrlG);
+    this.rendererService.renderer.setAttribute(this.rectSelection, 'points', '');
   }
 
   playAudio(title: string) {
@@ -229,6 +301,8 @@ export class SelectionToolService implements Tools {
     if ((event.button === RIGHT_CLICK || event.button === LEFT_CLICK) && this.drawingService.drawing) {
       const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
       let target = event.target as SVGElement;
+      console.log("ON PRESSED");
+      this.socketService.getSocket().emit("DOWNSELECT", JSON.stringify({ off: offset, identif: target.id, inside: true }));
 
       if (this.ctrlPoints.includes(target as SVGRectElement)) {
         this.socketService.getSocket().emit("SIZESELECT", JSON.stringify({ off: offset, identif: target.id }));
@@ -274,23 +348,29 @@ export class SelectionToolService implements Tools {
   /// et on recherche les objets a l'interieur. Avec le droit, on termine la zone d'inversement et on inverse
   /// la selection des objets se situant a l'interieur.
   onRelease(event: MouseEvent): ICommand | void {
+    const obj = this.drawingService.getObject((this.identif));
+    
     if ((event.button === RIGHT_CLICK || event.button === LEFT_CLICK) && this.drawingService.drawing) {
       if (event.button === LEFT_CLICK) {
         if (this.wasMoved && !this.hasSelectedItems) {
+          console.log("end1");
           //this.findObjects(this.rectSelection, event.button);
         }
         else if (!this.wasMoved && this.objects.length >= 1 && this.isIn) {
+          console.log("end2");
           this.objects = [];
           const target = event.target as SVGElement;
           const obj = this.drawingService.getObject((target.id));
           
           if (obj) {
+            console.log("end3");
             this.objects.push(obj);
             this.selectionTransformService.createCommand(SelectionCommandConstants.TRANSLATE, this.rectSelection, this.objects);
           }
         }
       } 
       else {
+        console.log("end4");
         this.findObjects(this.rectInversement, event.button);
       }
       if (this.objects.length > 0) {
@@ -303,10 +383,80 @@ export class SelectionToolService implements Tools {
       let returnRectangleCommand;
       if (this.wasMoved) {
         if (this.selectionTransformService.hasCommand()) {
+          console.log("end5");
           returnRectangleCommand = this.selectionTransformService.getCommand();
           this.selectionTransformService.endCommand();
+          
+          this.pencilService.objects.forEach((SVGGraphicsElement, string) =>{
+            if (string ==  this.identif) {
+              this.pencil = {
+                id:  this.identif,
+                user: this.pencilService.pencil?.user!,
+                pointsList: this.pencilService.shapes.get(this.identif)!.pointsList,
+                strokeWidth: +obj?.getAttribute('stroke-width')?.slice(0, -2)!,
+                fill: this.pencilService.shapes.get(this.identif)!.fill,
+                stroke: this.pencilService.shapes.get(this.identif)!.stroke,
+                fillOpacity: this.pencilService.shapes.get(this.identif)!.fillOpacity,
+                strokeOpacity: this.pencilService.shapes.get(this.identif)!.strokeOpacity,
+              }
+              console.log("pencil", this.pencil);
+            }
+          });
+
+          this.rectangleService.objects.forEach((SVGGraphicsElement, string) =>{
+            if (string == this.identif) {
+              //this.rectangleAttributes.x = +obj?.getAttribute('x')?.slice(0, -2)!;
+              this.rectangleAttributes = {
+                id: this.identif,
+                user: this.rectangleService.rectangleAttributes.user,
+                x: +obj?.getAttribute('x')?.slice(0, -2)! + this.movTranslateX,
+                y: +obj?.getAttribute('y')?.slice(0, -2)! + this.movTranslateY,
+                width: Math.abs(+obj?.getAttribute('width')?.slice(0, -2)! + this.movResizeX),
+                height: Math.abs(+obj?.getAttribute('height')?.slice(0, -2)! + this.movResizeY),
+                type: "rectangle",
+                finalX: this.rectangleService.shapes.get(this.identif)!.finalX,
+                finalY: this.rectangleService.shapes.get(this.identif)!.finalY,
+                strokeWidth: +obj?.getAttribute('stroke-width')?.slice(0, -2)!,
+                fill: this.rectangleService.shapes.get(this.identif)!.fill,
+                stroke: this.rectangleService.shapes.get(this.identif)!.stroke,
+                fillOpacity: this.rectangleService.shapes.get(this.identif)!.fillOpacity,
+                strokeOpacity: this.rectangleService.shapes.get(this.identif)!.strokeOpacity
+              }
+              this.socketService.getSocket().emit("ENDSELECT", JSON.stringify(this.rectangleAttributes));
+              console.log("rectangle", this.rectangleAttributes);
+            }
+          });
+
+          this.ellipseService.objects.forEach((SVGGraphicsElement, string) =>{
+            if (string == this.identif) {
+              this.ellipseAttributes = {
+                id: this.identif,
+                user: this.ellipseService.ellipseAttributes.user,
+                x: (+obj?.getAttribute('cx')?.slice(0, -2)! - +obj?.getAttribute('width')?.slice(0, -2)!/2 + this.movResizeX) + this.movTranslateX,
+                y: (+obj?.getAttribute('cy')?.slice(0, -2)! - +obj?.getAttribute('height')?.slice(0, -2)!/2 + this.movResizeY) + this.movTranslateY,
+                width: +obj?.getAttribute('width')?.slice(0, -2)! + this.movResizeX,
+                height: +obj?.getAttribute('height')?.slice(0, -2)! + this.movResizeY,
+                type: "ellipse",
+                finalX: this.ellipseService.shapes.get(this.identif)!.finalX,
+                finalY: this.ellipseService.shapes.get(this.identif)!.finalY,
+                strokeWidth: this.ellipseService.shapes.get(this.identif)!.strokeWidth,
+                fill: this.ellipseService.shapes.get(this.identif)!.fill,
+                stroke: this.ellipseService.shapes.get(this.identif)!.stroke,
+                fillOpacity: this.ellipseService.shapes.get(this.identif)!.fillOpacity,
+                strokeOpacity: this.ellipseService.shapes.get(this.identif)!.strokeOpacity
+              }
+              this.socketService.getSocket().emit("ENDSELECT", JSON.stringify(this.ellipseAttributes));
+              console.log("ellipse", this.ellipseAttributes);
+            }
+          });
+
+          this.movResizeX = 0;
+          this.movResizeY = 0;
+          this.movTranslateX = 0;
+          this.movTranslateY = 0;
         }
         this.wasMoved = false;
+        console.log("end6");
         return returnRectangleCommand;
       }
     }
@@ -317,10 +467,11 @@ export class SelectionToolService implements Tools {
   /// Avec le droit, on modifie la dimension du rectangle d'inversement.
   onMove(event: MouseEvent): void {
     const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
+    //this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: false }));
     if (this.drawingService.drawing) {
       if (event.buttons === 1) {
         this.wasMoved = true;
-
+        this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: false }));
         if (this.selectionTransformService.getCommandType() === SelectionCommandConstants.RESIZE) {
           console.log("hm")
           this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: event.movementX, y: event.movementY, off: offset, inside: false }));
@@ -336,8 +487,8 @@ export class SelectionToolService implements Tools {
         } 
         else {
           this.selectionTransformService.setCommandType(SelectionCommandConstants.NONE);
-          this.isIn = false;
-          this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: offset.x, y: offset.y, off: offset, inside: false }));
+          //this.isIn = false;
+          //this.socketService.getSocket().emit("DRAWSELECT", JSON.stringify({ x: offset.x, y: offset.y, off: offset, inside: false }));
         }
       } 
       else if (event.buttons === 2) {

@@ -6,6 +6,9 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { SocketService } from '@app/services/socket/socket.service';
 import { DrawingService } from '../drawing/drawing.service';
 import { RendererProviderService } from '../renderer-provider/renderer-provider.service';
+import { SelectionToolService } from '../tools/selection-tool/selection-tool.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReinitComponent } from '@app/components/reinit/reinit.component';
 
 /// Service permettant au sidenav de bien interagir avec les hotkeys et de bien gerer
 /// sa selection d'outil. Vérifie aussi s'il s'agit du menu fichier ou d'outil
@@ -27,6 +30,8 @@ export class SidenavService {
     private socketService: SocketService,
     private drawingService: DrawingService,
     private rendererService: RendererProviderService,
+    private selectionService: SelectionToolService,
+    public dialog: MatDialog,
   ) {
   }
 
@@ -39,13 +44,18 @@ export class SidenavService {
       this.drawingService.removeObject(number);
       });
       this.rendererService.renderer.removeChild(this.drawingService.drawing, this.drawingService.getObjectList());
+      this.selectionService.reinit();
     });
   }
 
   clickreset(): void {
-    this.socketService.getSocket().emit("RESETDRAWING", {});
+    this.dialog.open(ReinitComponent);
   }
 
+  click(): void {
+    this.socketService.getSocket().emit("RESETDRAWING", {});
+  }
+  
   /// Retourne la liste d'outils
   get toolList(): Map<number, Tools> {
     return this.toolService.tools;

@@ -37,11 +37,14 @@ export class ToolRectangleService implements Tools {
   private y: number;
   private finalX: number;
   private finalY: number;
+  private xnegatif = false;
+  private ynegatif = false;
 
   private moving: boolean = false;
 
 
   public objects: Map<string, SVGGraphicsElement> =  new Map<string, SVGGraphicsElement>();
+  public shapes: Map<string, FilledShape> =  new Map<string, FilledShape>();
   initPoints: Map<string, Point> =  new Map<string, Point>();
 
   renderer: Renderer2;
@@ -144,6 +147,7 @@ export class ToolRectangleService implements Tools {
       this.renderer.setStyle(this.rectangle2, 'strokeOpacity', this.rectangleAttributes!.strokeOpacity);
       this.drawingService.addObject(this.rectangle2);
       this.objects.set(this.rectangleAttributes!.id, this.rectangle2);
+      this.shapes.set(this.rectangleAttributes.id, this.rectangleAttributes);
       this.initPoints.set(this.rectangleAttributes!.id, {x: this.rectangleAttributes.x, y: this.rectangleAttributes.y });
 
       // console.log("RENDERSVG TOOLS");
@@ -197,6 +201,16 @@ export class ToolRectangleService implements Tools {
     this.rectangleAttributes.height = +height!;
     this.rectangleAttributes.width = +width!;
 
+    if (this.xnegatif == true) {
+      this.rectangleAttributes.x = this.rectangleAttributes.x - this.rectangleAttributes.width;
+    }
+    if (this.ynegatif == true) {
+      this.rectangleAttributes.y = this.rectangleAttributes.y - this.rectangleAttributes.height;
+    }
+
+    this.ynegatif = false;
+    this.xnegatif = false;
+
     if(this.rectangleAttributes?.height! > 1 || this.rectangleAttributes?.width! > 1) {
       this.socketService.getSocket().emit("ENDRECTANGLE", JSON.stringify(this.rectangleAttributes));
     }
@@ -239,6 +253,7 @@ export class ToolRectangleService implements Tools {
 
     if (mouseX < startX) {
         newX = mouseX;
+        this.xnegatif = true;
     } 
     else {
         newX = startX
@@ -246,6 +261,7 @@ export class ToolRectangleService implements Tools {
 
     if (mouseY < startY) {
         newY = mouseY;
+        this.ynegatif = true;
     } 
     else {
         newY = startY;

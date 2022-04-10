@@ -5,6 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { SocketService } from '@app/services/socket/socket.service';
 import { URL } from '../../../../constants';
 
+
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',
@@ -29,6 +30,7 @@ export class AvatarComponent implements OnInit {
 
   image(element: any) {
     this.socketService.avatarNumber = element.textContent.trim();
+    this.socketService.avatarClick = true;
     console.log(element.textContent.trim());
     this.dialogRef.close();
   }

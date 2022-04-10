@@ -46,6 +46,7 @@ import { ProfilComponent } from './components/profil/profil.component';
 import { UsersComponent } from './components/users/users.component';
 import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
 import { EnterPasswordComponent } from './components/enter-password/enter-password.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { EnterPasswordComponent } from './components/enter-password/enter-passwo
         UsersComponent,
         CreateDrawingComponent,
         EnterPasswordComponent,
+        LogoutComponent,
     ],
     imports: [
         BrowserModule,
