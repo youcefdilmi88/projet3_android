@@ -1,6 +1,7 @@
 // import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+// import { Router } from '@angular/router';
 import { SocketService } from '@app/services/socket/socket.service';
 import { URL } from '../../../../constants';
 
@@ -19,6 +20,7 @@ export class AvatarComponent implements OnInit {
     // private http: HttpClient,
     public dialogRef: MatDialogRef<AvatarComponent>,
     private socketService: SocketService,
+    // private router: Router,
     ) {}
 
   ngOnInit(): void {

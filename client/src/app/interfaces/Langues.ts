@@ -16,7 +16,7 @@ export const French = {
     repeat: "Répétez votre mot de passe",
     cancel: "Annuler",
     confirm: "Confirmer",
-    create: "Créer votre compte",
+    create: "Créer mon compte",
     error5: "Les mots de passes ne correspondent pas",
     error6: "Ce courriel est déjà pris.",
 

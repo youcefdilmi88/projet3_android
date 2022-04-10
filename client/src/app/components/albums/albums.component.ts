@@ -242,6 +242,8 @@ export class AlbumsComponent implements OnInit {
         console.log(albums.description);
       });
 
+      this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
+
       if(this.kk) {
         this.AlbumsNames = [];
         for(let i = 0; i < this.order.length; i++) {
@@ -252,22 +254,23 @@ export class AlbumsComponent implements OnInit {
               this.AlbumsNames.push(albums.albumName);
             }
           });
+          this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
         }
         this.kk = false;
       }
-    
-
     });
   }
 
   sortAlpha() {
     if(this.toggleSortAlpha) {
       this.AlbumsNames.sort();
+      this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
       this.snackBar.open("Trié en ordre alphabéthique ascendant", '', { duration: ONE_SECOND, });
       this.toggleSortAlpha = false;
     }
     else {
       this.AlbumsNames.sort().reverse();
+      this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
       this.snackBar.open("Trié en ordre alphabéthique descendant", '', { duration: ONE_SECOND, });
       this.toggleSortAlpha = true;
     }
@@ -357,10 +360,16 @@ export class AlbumsComponent implements OnInit {
       this.playAudio("error.wav");
       this.snackBar.open(this.iscreator, '', { duration: ONE_SECOND, });
     }
+    else if (this.albumTempSerivce.albums.get(element.textContent.trim().slice(8))!.getVisibility() == "public") {
+      this.playAudio("error.wav");
+      this.snackBar.open("Vous ne pouvez pas quitté un album public", '', { duration: ONE_SECOND, });
+    }
     else {
       this.http.post<any>(link, {albumName: element.textContent.trim().slice(8), member: this.socketService.email}).subscribe((data:any) => { 
         if(data.message == "success") {
           console.log("quit");
+          this.playAudio("ui2.wav");
+          this.snackBar.open("Vous avez quitté l'album", '', { duration: ONE_SECOND, });
         }
       });
     }

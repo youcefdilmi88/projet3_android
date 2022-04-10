@@ -44,6 +44,7 @@ export class NewAccountComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.showAvatar();
     if(this.socketService.language == "french") 
     {
       this.emai = French.email;
@@ -68,52 +69,52 @@ export class NewAccountComponent implements OnInit {
       this.error6 = English.error6;
     }
     if(this.socketService.theme == "light grey"){
-      document.getElementById("buttonMain5")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("buttonMain5")!.style.color = LightGrey.text;
+      // document.getElementById("buttonMain5")!.style.backgroundColor = LightGrey.main;
+      // document.getElementById("buttonMain5")!.style.color = LightGrey.text;
       document.getElementById("buttonMain6")!.style.backgroundColor = LightGrey.main;
       document.getElementById("buttonMain6")!.style.color = LightGrey.text;
-      document.getElementById("buttonMain7")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("buttonMain7")!.style.color = LightGrey.text;
+      // document.getElementById("buttonMain7")!.style.backgroundColor = LightGrey.main;
+      // document.getElementById("buttonMain7")!.style.color = LightGrey.text;
       document.getElementById("title2")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title2")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
-      document.getElementById("buttonMain5")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("buttonMain5")!.style.color = DarkGrey.text;
+      // document.getElementById("buttonMain5")!.style.backgroundColor = DarkGrey.main;
+      // document.getElementById("buttonMain5")!.style.color = DarkGrey.text;
       document.getElementById("buttonMain6")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("buttonMain6")!.style.color = DarkGrey.text;
-      document.getElementById("buttonMain7")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("buttonMain7")!.style.color = DarkGrey.text;
+      // document.getElementById("buttonMain7")!.style.backgroundColor = DarkGrey.main;
+      // document.getElementById("buttonMain7")!.style.color = DarkGrey.text;
       document.getElementById("title2")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("title2")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {      
-      document.getElementById("buttonMain5")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("buttonMain5")!.style.color = DeepPurple.text;
+      // document.getElementById("buttonMain5")!.style.backgroundColor = DeepPurple.main;
+      // document.getElementById("buttonMain5")!.style.color = DeepPurple.text;
       document.getElementById("buttonMain6")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("buttonMain6")!.style.color = DeepPurple.text;
-      document.getElementById("buttonMain7")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("buttonMain7")!.style.color = DeepPurple.text;
+      // document.getElementById("buttonMain7")!.style.backgroundColor = DeepPurple.main;
+      // document.getElementById("buttonMain7")!.style.color = DeepPurple.text;
       document.getElementById("title2")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("title2")!.style.color = DeepPurple.text;
     }
     else if(this.socketService.theme == "light blue") {
-      document.getElementById("buttonMain5")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("buttonMain5")!.style.color = LightBlue.text;
+      // document.getElementById("buttonMain5")!.style.backgroundColor = LightBlue.main;
+      // document.getElementById("buttonMain5")!.style.color = LightBlue.text;
       document.getElementById("buttonMain6")!.style.backgroundColor = LightBlue.main;
       document.getElementById("buttonMain6")!.style.color = LightBlue.text;
-      document.getElementById("buttonMain7")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("buttonMain7")!.style.color = LightBlue.text;
+      // document.getElementById("buttonMain7")!.style.backgroundColor = LightBlue.main;
+      // document.getElementById("buttonMain7")!.style.color = LightBlue.text;
       document.getElementById("title2")!.style.backgroundColor = LightBlue.main;
       document.getElementById("title2")!.style.color = LightBlue.text;
     }
     else if(this.socketService.theme == "light pink") {
-      document.getElementById("buttonMain5")!.style.backgroundColor = LightPink.main;
-      document.getElementById("buttonMain5")!.style.color = LightPink.text;
+      // document.getElementById("buttonMain5")!.style.backgroundColor = LightPink.main;
+      // document.getElementById("buttonMain5")!.style.color = LightPink.text;
       document.getElementById("buttonMain6")!.style.backgroundColor = LightPink.main;
       document.getElementById("buttonMain6")!.style.color = LightPink.text;
-      document.getElementById("buttonMain7")!.style.backgroundColor = LightPink.main;
-      document.getElementById("buttonMain7")!.style.color = LightPink.text;
+      // document.getElementById("buttonMain7")!.style.backgroundColor = LightPink.main;
+      // document.getElementById("buttonMain7")!.style.color = LightPink.text;
       document.getElementById("title2")!.style.backgroundColor = LightPink.main;
       document.getElementById("title2")!.style.color = LightPink.text;
     }
@@ -144,7 +145,6 @@ export class NewAccountComponent implements OnInit {
       erreur.className = "erreuAnimation";
       return false;
     }
-
     else if (this.pass != this.passRepeat) {
       document.getElementById("error")!.style.visibility= "visible";
       document.getElementById("error")!.innerHTML = this.error5;
@@ -157,10 +157,21 @@ export class NewAccountComponent implements OnInit {
       return false;
     }
     
+    else if (this.socketService.avatarNumber == null || this.socketService.avatarNumber == "") {
+      document.getElementById("error")!.style.visibility= "visible";
+      document.getElementById("error")!.innerHTML = "Vous n'avez pas choisi d'avatar";
+      this.playAudio("error.wav");
+      let erreur= document.getElementById("buttonMain6")!;
+      erreur.className = "erreuAnimation";
+      erreur.classList.remove("erreuAnimation");
+      void erreur.offsetWidth;
+      erreur.className = "erreuAnimation";
+      return false;
+    }
     else {
-
       let link=this.BASE_URL+"user/registerUser";
 
+      console.log("AVATAR", this.socketService.avatarNumber);
       let email = (<HTMLInputElement>document.getElementById("mail")).value;
       let username = (<HTMLInputElement>document.getElementById("name")).value;
       let pass = (<HTMLInputElement>document.getElementById("pass")).value;
@@ -193,6 +204,7 @@ export class NewAccountComponent implements OnInit {
           document.getElementById("error")!.style.visibility= "visible";
           document.getElementById("error")!.innerHTML = this.error6;
           this.playAudio("error.wav");
+          console.log("HEIN???");
           let erreur= document.getElementById("buttonMain6")!;
           erreur.className = "erreuAnimation";
           erreur.classList.remove("erreuAnimation");
@@ -220,9 +232,31 @@ export class NewAccountComponent implements OnInit {
     this.playAudio("ui2.wav");
   }
 
-  openAvatar(): void {
+  showAvatar() {
+    if(this.socketService.avatarNumber == "1") {
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar1.png)";
+    }
+    else if(this.socketService.avatarNumber == "2") {
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar2.png)";
+    }
+    else if(this.socketService.avatarNumber == "3") {
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar3.png)";
+    }
+    else if(this.socketService.avatarNumber == "4") {
+      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/avatar4.png)";
+    }
+  }
+
+  sleep(ms:any) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async openAvatar(): Promise<void> {
     this.dialog.open(AvatarComponent, { disableClose: true });
     this.playAudio("ui2.wav");
+
+    await this.sleep(4000);
+    this.showAvatar();
   }
 
 }

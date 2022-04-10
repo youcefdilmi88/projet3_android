@@ -17,6 +17,7 @@ export class ProfilComponent implements OnInit {
 
   private readonly BASE_URL: string = URL;
 
+  public avatar: string;
   public useremail: string;
   public nickname: string;
   public lastLoggedIn: string;
@@ -29,6 +30,8 @@ export class ProfilComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.roomListener();
+
     if(this.socketService.theme == "light grey"){
       document.getElementById("title100")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title100")!.style.color = LightGrey.text;    }
@@ -53,13 +56,42 @@ export class ProfilComponent implements OnInit {
     const loggedOut: DatePipe = new DatePipe('en-CA');
     let formattedDate2 = loggedOut.transform(this.socketService.userObj.lastLoggedOut, 'dd-MM-yyyy HH:mm:ss') as string;
 
+    this.avatar = this.socketService.userObj.avatar;
     this.useremail = this.socketService.userObj.useremail;
     this.nickname = this.socketService.userObj.nickname;
     this.lastLoggedIn = formattedDate1;
     this.lastLoggedOut = formattedDate2;
+    this.friends = this.socketService.userObj.friends;
+
+    console.log("FRIENDS", this.friends);
+  
+    console.log(this.avatar);
+    if(this.avatar == "1") {
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar1.png)";
+      this.socketService.avatar2 = "1";
+    }
+    else if(this.avatar == "2") {
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar2.png)";
+      this.socketService.avatar2 = "2";
+    }
+    else if(this.avatar == "3") {
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar3.png)";
+      this.socketService.avatar2 = "3";
+    }
+    else if(this.avatar == "4") {
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar4.png)";
+      this.socketService.avatar2 = "4";
+    }
     
   }
 
+
+  roomListener() {
+    this.socketService.getSocket().on("FMODIFIED", (data) => {
+      data=JSON.parse(data);
+      console.log("wiss", data);
+    });
+  }
 
   playAudio(){
     if (this.socketService.mute == false) {
@@ -68,6 +100,17 @@ export class ProfilComponent implements OnInit {
       audio.load();
       audio.play();
     }
+  }
+
+  removeFriend(element: any) {
+    let link = this.BASE_URL + "user/removeFriend";
+
+    console.log("WISS", element.textContent.trim().slice(18));
+    this.http.post<any>(link, {useremail: this.socketService.email, friendToRemove: element.textContent.trim().slice(18)}).subscribe((data:any) => { 
+      if(data.message == "success") {
+        console.log("removed friend");
+      }
+    });
   }
 
   

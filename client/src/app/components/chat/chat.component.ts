@@ -170,6 +170,7 @@ export class ChatComponent implements AfterViewInit {
           console.log("EXITED DRAWING" + data.useremail);
         }
       });
+      this.router.navigate(['/', 'dessins']);
     }
   }
 

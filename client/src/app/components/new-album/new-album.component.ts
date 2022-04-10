@@ -43,21 +43,28 @@ export class NewAlbumComponent implements OnInit {
   }
 
   createAlbum() : void  {
-    console.log("name", this.name);
-    console.log("description", this.description);
-
     let link = this.BASE_URL + "album/createAlbum";
     
-    this.http.post<any>(link, {albumName: this.name.trim(), creator: this.socketService.email, visibility:"private", description: this.description}).subscribe((data:any) => {
-      if(data.message == "success") {
-        console.log("ALBUM CREATED");
-        this.playAudio("ui1.wav");
-      }
-      else {
-        this.playAudio("error.wav");
-      }
-    });
-    this.dialogRef.close();
+    if(this.name == null || this.description == null) {
+      document.getElementById("errorAlbum")!.style.visibility= "visible";
+    }
+    else {
+      this.http.post<any>(link, {albumName: this.name.trim(), creator: this.socketService.email, visibility:"private", description: this.description}).subscribe((data:any) => {
+        if(data.message == "success") {
+          console.log("ALBUM CREATED");
+          this.playAudio("ui1.wav");
+        }
+        else {
+          this.playAudio("error.wav");
+        }
+      });
+      this.dialogRef.close();
+    }
+
   }    
+
+  close() {
+    this.dialogRef.close();
+  }
 
 }

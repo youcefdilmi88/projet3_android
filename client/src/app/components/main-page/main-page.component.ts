@@ -15,7 +15,6 @@ import { fader } from '@assets/animations';
 import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 
 
-
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -24,7 +23,6 @@ import { HotkeysService } from '@app/services/hotkeys/hotkeys.service';
 })
 
 export class MainPageComponent implements OnInit{
-
 
   private readonly BASE_URL: string = URL;
   //"https://projet3-3990-207.herokuapp.com/";

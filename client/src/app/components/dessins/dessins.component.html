@@ -8,12 +8,13 @@
 
     <div class="subtext-container">
     <div>
-        <mat-form-field class="input" floatLabel="always" appearance="outline">
+        <!-- <mat-form-field class="input" floatLabel="always" appearance="outline">
             <mat-label>{{drawingInput}}</mat-label>
             <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="drawing">
-        </mat-form-field> 
+        </mat-form-field>  -->
      
-        <button mat-raised-button id="createRoom" class="buto" (click)="createDrawing(drawingname.value)">{{creaDrawing}}</button>
+        <!-- <button mat-raised-button id="createRoom" class="buto" (click)="createDrawing(drawingname.value)">{{creaDrawing}}</button> -->
+        <button mat-raised-button id="createRoom" class="buto" (click)="openCreate()">Créer un dessin</button>
     </div>
     <div>
         <mat-form-field class="inputFind" floatLabel="always" appearance="outline">
@@ -21,7 +22,7 @@
             <input #findDraw matInput id="findDraw" type="text" name="findDraw" required>
         </mat-form-field> 
      
-        <button mat-raised-button id="findDrawButton" class="buto" (click)="find(findDraw.value)">Recherche</button>
+        <button mat-raised-button id="findDrawButton" class="buto" (click)="find(findDraw.value)"><i class="fa fa-search"></i></button>
     </div>
     </div>
     <!-- <div> 

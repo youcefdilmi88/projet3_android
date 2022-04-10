@@ -44,6 +44,8 @@ import { ModifyAlbumComponent } from './components/modify-album/modify-album.com
 import { AcceptRequestComponent } from './components/accept-request/accept-request.component';
 import { ProfilComponent } from './components/profil/profil.component';
 import { UsersComponent } from './components/users/users.component';
+import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
+import { EnterPasswordComponent } from './components/enter-password/enter-password.component';
 
 
 @NgModule({
@@ -85,6 +87,8 @@ import { UsersComponent } from './components/users/users.component';
         AcceptRequestComponent,
         ProfilComponent,
         UsersComponent,
+        CreateDrawingComponent,
+        EnterPasswordComponent,
     ],
     imports: [
         BrowserModule,

@@ -28,10 +28,13 @@ export class SocketService {
     nickname:"",
     lastLoggedIn: 0,
     lastLoggedOut: 0,
-    friends: [],
+    friends: [""],
     avatar: this.avatarNumber , 
   }
   public test: string;
+  public clickedDrawing: string;
+  public he: number;
+  public avatar2: string;
   //private userService: UserService;
 
   constructor() { }

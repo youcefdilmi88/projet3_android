@@ -6,11 +6,7 @@ export class ProtectedDrawing extends Drawing {
     private password:String;
 
     constructor(drawing:ProtectedDrawingInterface) {
-<<<<<<< HEAD
-        
-=======
        
->>>>>>> staging
         const base={
             drawingName:drawing.drawingName,
             owner:drawing.owner,

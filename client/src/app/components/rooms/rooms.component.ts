@@ -238,7 +238,6 @@ export class RoomsComponent implements OnInit {
         }
       });
     });
-    console.log("GOTTEM");
   } 
 
   room: string;
@@ -249,17 +248,17 @@ export class RoomsComponent implements OnInit {
     console.log("LOOOK ATTT MEEEE" + element.textContent.trim().slice(8));
     
  
-    // this.router.navigate(['/', 'clavardage']);
+    this.router.navigate(['/', 'clavardage']);
 
 
-    // Pour savoir si la salle doit avoir un canvas ou non
-    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
-      this.router.navigate(['/', 'sidenav']);
-      this.dialog.open(NewDrawingComponent);
-    }
-    else {
-      this.router.navigate(['/', 'clavardage']);
-    }
+    // // Pour savoir si la salle doit avoir un canvas ou non
+    // if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
+    //   this.router.navigate(['/', 'sidenav']);
+    //   this.dialog.open(NewDrawingComponent);
+    // }
+    // else {
+    //   this.router.navigate(['/', 'clavardage']);
+    // }
 
     
     let link = this.BASE_URL + "drawing/joinDrawing";

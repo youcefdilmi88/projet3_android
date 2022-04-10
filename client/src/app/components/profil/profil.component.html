@@ -7,12 +7,62 @@
         <button (click)="logout()" class = "btn" id="logout" routerLink = ""><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
     </div>
  
-    <div id="infoProfil">
-        <p> Avatar: </p>
-        <p> UserEmail: {{useremail}}</p>
-        <p> Nickname: {{nickname}}</p>
-        <p> LastLoggedIn: {{lastLoggedIn}}</p>
-        <p> LastLoggedOut: {{lastLoggedOut}}</p>
-        <p> Friends: </p>
-    </div>
+    <!-- <div id="big">
+        <div id="avatarDiv">
+            <div id="avatar"><span class='special-word'>.</span></div>
+        </div>
+        <div id="infoProfil">
+            <p> UserEmail: {{useremail}}</p>
+            <p> Nickname: {{nickname}}</p>
+            <p> LastLoggedIn: {{lastLoggedIn}}</p>
+            <p> LastLoggedOut: {{lastLoggedOut}}</p>
+    
+            <div class="listUsers" *ngFor="let users of friends">
+                <div class="listUsersText">
+                    <p id="userID" >
+                        {{users}}
+                    </p> 
+                </div>
+    
+                <div class="listUsersButtons">
+                    <button mat-raised-button id="userIDButton"  (click)="removeFriend($event.target)">
+                        Enlever comme ami <span class='special-word'>{{users}}</span>
+                    </button>
+                </div>
+    
+            </div>
+    
+        </div> -->
+ 
+        <div class="row">
+            <div class="column">
+                <div id="avatar"><span class='special-word'>.</span></div>
+            </div>
+            <div class="column2">
+                <div id="infoProfil">
+                    <p> Courriel: {{useremail}}</p>
+                    <p> Pseudo: {{nickname}}</p>
+                    <p> Dernière connexion: {{lastLoggedIn}}</p>
+                    <p> Dernière déconnexion: {{lastLoggedOut}}</p>
+                    <p> Liste d'amis</p>
+                    <div class="listUsers" *ngFor="let users of friends">
+                        <div class="listUsersText">
+                            <p id="userID" >
+                                {{users}}
+                            </p> 
+                        </div>
+            
+                        <div class="listUsersButtons">
+                            <button mat-raised-button id="userIDButton"  (click)="removeFriend($event.target)">
+                                Enlever comme ami <span class='special-word'>{{users}}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <!-- </div> -->
 </div>

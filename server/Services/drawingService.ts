@@ -419,36 +419,7 @@ class DrawingService {
       });
 
       await roomService.updateRoomName(this.sourceDrawingName(newName),this.sourceDrawingName(oldName)).then(()=>{
-<<<<<<< HEAD
-         let drawingInterface:any={};
-         if(drawing.getVisibility()==VISIBILITY.PUBLIC || drawing.getVisibility()==VISIBILITY.PRIVATE) {
-            drawingInterface={
-             drawingName:this.sourceDrawingName(drawing.getName()),
-             owner:drawing.getOwner(),
-             elements:drawing.getElementsInterface(),
-             roomName:drawing.roomName,
-             members:drawing.getMembers(),
-             visibility:drawing.getVisibility(),
-             creationDate:drawing.getCreationDate(),
-             likes:drawing.getLikes()
-          } as DrawingInterface;
-         }
-         if(drawing.getVisibility()==VISIBILITY.PROTECTED) {
-            drawingInterface={
-              drawingName:this.sourceDrawingName(drawing.getName()),
-              owner:drawing.getOwner(),
-              elements:drawing.getElementsInterface(),
-              roomName:drawing.roomName,
-              members:drawing.getMembers(),
-              visibility:drawing.getVisibility(),
-              creationDate:drawing.getCreationDate(),
-              likes:drawing.getLikes(),
-              password:drawing.getPassword()
-            } as ProtectedDrawingInterface;
-          }
-=======
         let drawingInterface=this.getDrawingOrProtectedInterface(drawing.getName());
->>>>>>> staging
         const message={oldName:this.sourceDrawingName(oldName),drawing:drawingInterface};
         socketService.getIo().emit(SOCKETEVENT.DRAWINGMODIFIED,JSON.stringify(message));
       }).catch((e:Error)=>{

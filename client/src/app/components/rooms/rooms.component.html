@@ -17,7 +17,8 @@
         <input #roomname matInput id="room" type="text" name="room" required [(ngModel)]="room">
     </mat-form-field> 
  
-    <button mat-raised-button id="createRoom" (click)="create(roomname.value)">{{creaRoom}}</button>
+    <!-- <button mat-raised-button id="createRoom" (click)="create(roomname.value)">{{creaRoom}}</button> -->
+    <button mat-raised-button id="createRoom" (click)="create(roomname.value)"><i class="fa fa-plus"></i></button>
 </div>
 <div> 
 
@@ -26,7 +27,9 @@
         <input #roomfilter (click)="find(roomfilter.value)" matInput id="room" type="text" name="room" required >
     </mat-form-field> 
  
-    <button mat-raised-button id="searchRoom" class="searchRoom" (click)="find(roomfilter.value)">{{finRoom}}</button>
+    <!-- <button mat-raised-button id="searchRoom" class="searchRoom" (click)="find(roomfilter.value)">{{finRoom}}</button> -->
+    <button mat-raised-button id="searchRoom" class="searchRoom" (click)="find(roomfilter.value)"><i class="fa fa-search"></i></button>
+
 </div>
     </div> 
 

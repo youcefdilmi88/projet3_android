@@ -26,6 +26,8 @@ import { URL } from '../../../../constants';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
+import { EnterPasswordComponent } from '../enter-password/enter-password.component';
 
 const ONE_SECOND = 1000;
 @Component({
@@ -93,6 +95,7 @@ export class DessinsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.socketService.he = this.cpt;
     if(this.socketService.language == "french") {
       this.drawingTitle = French.drawingTitle;
       this.drawingInput = French.drawingInput;
@@ -196,6 +199,7 @@ export class DessinsComponent implements OnInit {
 
     this.socketService.getSocket().on("DRAWINGDELETED", (data) => {
       data = JSON.parse(data);
+      console.log("UPDATED?");
       this.getAllDrawings();
       // console.log("HELLO?????");
       // this.names = [];
@@ -326,17 +330,19 @@ export class DessinsComponent implements OnInit {
   openDessins(element: any): void { 
     this.socketService.joinRoom(element.textContent.trim().slice(7));
     this.socketService.currentRoom = element.textContent.trim().slice(7);
-    
+   
     let link = this.BASE_URL + "drawing/joinDrawing";
+  
+    this.socketService.clickedDrawing = element.textContent.trim().slice(7);
 
-    //console.log(element.textContent.trim().slice(7));
-    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7), password: "123"}).subscribe((data:any) => {
+    if(this.visibite[this.centerImage] == "protected") {
+      this.dialog.open(EnterPasswordComponent);
+    }
+    else {
+    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {
       if(data.message == "success") {
-        //console.log("CA MARCHE OPEN");
-        //console.log("join dessins:" + element.textContent.trim().slice(7));
         this.dialog.open(NewDrawingComponent);
         this.router.navigate(['/', 'sidenav']);
-        //console.log("CREATED CANVAS");
 
       let link2 = this.BASE_URL + "room/joinRoom";
 
@@ -351,11 +357,11 @@ export class DessinsComponent implements OnInit {
       
           if(data.message == "success") {
             this.socketService.currentRoom = element.textContent.trim().slice(7);
-            //console.log("current room;" + this.socketService.currentRoom);
           }
         });
       }
     });
+    }
   }
 
   find(text: string) {
@@ -371,10 +377,11 @@ export class DessinsComponent implements OnInit {
       this.peopleLiked = [];
 
       data.forEach((drawing:any)=>{
+        console.log("SAD", data.length);
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
-        if(drawing.drawingName == text.trim() || drawing.owner == text.trim()) {
+        if(drawing.drawingName == text.trim() || drawing.owner == text.trim() || drawing.drawingName.includes(text.trim())) {
           this.names.push(drawing.drawingName); 
           this.owners.push(drawing.owner);
           this.visibite.push(drawing.visibility);
@@ -416,6 +423,10 @@ export class DessinsComponent implements OnInit {
     // }
   } 
 
+  openCreate() {
+    this.dialog.open(CreateDrawingComponent, { disableClose: true, width: '30%' });
+  }
+
   drawing: string;
 
   createDrawing(text: string) {
@@ -431,11 +442,11 @@ export class DessinsComponent implements OnInit {
     text.trim();
     if (text.trim() != '') {
       //console.log("cant create");
-      this.http.post<any>(link,{drawingName: this.drawing.trim(), owner: this.socketService.email, visibility: "private"}).subscribe((data: any) => { 
+      this.http.post<any>(link,{drawingName: this.drawing.trim(), owner: this.socketService.email, visibility: "protected", password: "123"}).subscribe((data: any) => { 
         //console.log(data);
         if (data.message == "success") {
           //console.log("CREATE DRAWING: " + data.message);
-          this.http.post<any>(link5, {password: "123", useremail: this.socketService.email, drawingName: this.drawing.trim()}).subscribe((data:any) => {
+          this.http.post<any>(link5, {useremail: this.socketService.email, drawingName: this.drawing.trim(), password: "123"}).subscribe((data:any) => {
             if(data.message == "success") {
               this.router.navigate(['/', 'sidenav']);
               this.dialog.open(NewDrawingComponent);
@@ -479,7 +490,7 @@ export class DessinsComponent implements OnInit {
 
     console.log("LMAO", this.socketService.email);
     console.log("DRAWLIKE", this.names[this.centerImage]);
-    console.log(!this.peopleLiked[this.cpt].includes(this.socketService.email));
+    // console.log(!this.peopleLiked[this.cpt].includes(this.socketService.email));
     console.log("WISS", this.peopleLiked);
     console.log("WISS0", this.peopleLiked[0]);
 
@@ -557,6 +568,7 @@ export class DessinsComponent implements OnInit {
           this.rightImage++;
       }
       this.cpt++;
+      this.socketService.he = this.cpt;
       this.loadImages();
     }
   }
@@ -571,6 +583,7 @@ export class DessinsComponent implements OnInit {
           this.leftImage--;
       }
       this.cpt--;
+      this.socketService.he = this.cpt;
       this.loadImages();
     }
 
