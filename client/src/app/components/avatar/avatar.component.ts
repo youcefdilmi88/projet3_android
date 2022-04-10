@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { SocketService } from '@app/services/socket/socket.service';
 import { URL } from '../../../../constants';
 
+
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',

@@ -70,6 +70,16 @@ export const French = {
     Deep_Purple: "Mauve profond",
     Ligh_blue: "Bleu pâle",
     Light_Pink: "Rose pâle",
+
+    //logout
+    quit: "Quitter",
+    leave: "Êtes-vous certain de vouloir quitter l'application?",
+    logout: "Déconnection",
+
+    //reinit
+    reinit: "Réinitialisation",
+    certain: "Êtes-vous certain de vouloir réinitialier le dessin? Toute modification sera perdu",
+    init: "Réinitialiser"
 }
 
 export const English = {
@@ -143,4 +153,14 @@ export const English = {
     Deep_Purple: "Deep purple",
     Ligh_blue: "Light blue",
     Light_Pink: "Light pink",
+
+    //logout
+    quit: "Quit",
+    leave: "Are you sure you want to leave the application?",
+    logout: "Logout",
+
+    //reinit
+    reinit: "Reinitialisation",
+    certain: "Are yo sure you want to reinitialise the drawing? All changes will be lost",
+    init: "Reinitialise"
 }

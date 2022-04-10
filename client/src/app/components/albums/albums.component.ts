@@ -22,6 +22,7 @@ import { ModifyAlbumComponent } from '../modify-album/modify-album.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SidenavService } from '@app/services/sidenav/sidenav.service';
 import { AcceptRequestComponent } from '../accept-request/accept-request.component';
+import { LogoutComponent } from '../logout/logout.component';
 // import { RouterOutlet } from '@angular/router';
 // import { fader } from '@assets/animations';
 
@@ -344,7 +345,7 @@ export class AlbumsComponent implements OnInit {
   }
 
   logout() {
-    let link = this.BASE_URL + "user/logoutUser";
+    /*let link = this.BASE_URL + "user/logoutUser";
     this.playAudio("ui1.wav");
     this.socketService.disconnectSocket();
 
@@ -355,7 +356,9 @@ export class AlbumsComponent implements OnInit {
       if (data.message == "success") {
         console.log("sayonara");
       }   
-    });
+    });*/
+    this.dialog.open(LogoutComponent);
+
   }
 
 }

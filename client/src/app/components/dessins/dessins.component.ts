@@ -26,6 +26,8 @@ import { URL } from '../../../../constants';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LogoutComponent } from '../logout/logout.component';
+
 
 const ONE_SECOND = 1000;
 @Component({
@@ -583,7 +585,7 @@ export class DessinsComponent implements OnInit {
   }
 
   logout() {
-    let link = this.BASE_URL + "user/logoutUser";
+    /*let link = this.BASE_URL + "user/logoutUser";
 
     this.playAudio("ui1.wav");
     this.socketService.disconnectSocket();
@@ -595,7 +597,8 @@ export class DessinsComponent implements OnInit {
       if (data.message == "success") {
         //console.log("sayonara");
       }   
-    });
+    });*/
+    this.dialog.open(LogoutComponent);
   }
 
 }

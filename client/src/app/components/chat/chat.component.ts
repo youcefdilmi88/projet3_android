@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { SocketService } from '@app/services/socket/socket.service';
-import { catchError } from 'rxjs/operators';
+//import { catchError } from 'rxjs/operators';
 //import { RoomsComponent } from '../rooms/rooms.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { URL } from '../../../../constants';
 import { French, English } from '@app/interfaces/Langues';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
+import { Logout2Component } from '../logout2/logout2.component';
 
 
 @Component({
@@ -132,6 +133,12 @@ export class ChatComponent implements AfterViewInit {
               '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
               break;
             }
+            case "5": {
+              console.log("case 5");
+              html = '<div class="message-icon">' + '<img src= "avatar5.png" alt="Italian Trulli">' + '</div>' +
+              '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
+              break;
+            }
           }
           document.getElementById("message-icon")!.innerHTML += `${html}`;
 
@@ -178,6 +185,12 @@ export class ChatComponent implements AfterViewInit {
           case "4": {
             console.log("case 4");
             html = '<div class="message-icon">' + '<img src= "avatar4.png" alt="Italian Trulli">' + '</div>' +
+            '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
+            break;
+          }
+          case "5": {
+            console.log("case 5");
+            html = '<div class="message-icon">' + '<img src= "avatar5.png" alt="Italian Trulli">' + '</div>' +
             '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
             break;
           }
@@ -298,7 +311,7 @@ export class ChatComponent implements AfterViewInit {
   }
 
   logout() {
-    let link = this.BASE_URL + "user/logoutUser";
+    /*let link = this.BASE_URL + "user/logoutUser";
 
     this.playAudio("ui1.wav");
     // this.socketService.disconnectSocket();
@@ -312,6 +325,7 @@ export class ChatComponent implements AfterViewInit {
       if (data.message == "success") {
         console.log("sayonara");
       }   
-    });
+    });*/
+    this.dialog.open(Logout2Component);
   }
 }
