@@ -39,6 +39,7 @@ export class SocketService {
   public isProtected: boolean;
   public filtered: boolean;
   public buttons:Array<string> = [];
+  public members: Array<string>;
   //private userService: UserService;
 
   constructor() { }

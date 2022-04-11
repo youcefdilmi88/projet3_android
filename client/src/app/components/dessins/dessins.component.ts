@@ -71,6 +71,11 @@ export class DessinsComponent implements OnInit {
   public visib: string;
   public open: string;
   public delete: string;
+  public datecrea: string;
+  public lik: string;
+  public prop: string;
+  public findDraw2: string;
+  public placeHolderFindDraw: string;
 
   public cpt = 0;
 
@@ -107,6 +112,11 @@ export class DessinsComponent implements OnInit {
       this.own = French.owner;
       this.open = French.open;
       this.delete = French.delete;
+      this.prop = French.prop;
+      this.datecrea = French.datecrea;
+      this.lik = French.likes;
+      this.findDraw2 = French.findDraw;
+      this.placeHolderFindDraw = French.placeHolderFindDraw;
     }
     else {
       this.drawingTitle = English.drawingTitle;
@@ -117,6 +127,11 @@ export class DessinsComponent implements OnInit {
       this.own = English.owner;
       this.open = English.open;
       this.delete = English.delete;
+      this.prop = English.prop;
+      this.datecrea = English.datecrea;
+      this.lik = English.likes;
+      this.findDraw2 = English.findDraw;
+      this.placeHolderFindDraw = English.placeHolderFindDraw
     }
     if(this.socketService.theme == "light grey"){
       document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
@@ -342,7 +357,7 @@ export class DessinsComponent implements OnInit {
     this.socketService.clickedDrawing = element.textContent.trim().slice(7);
 
     if(this.visibite[this.centerImage] == "protected") {
-      this.dialog.open(EnterPasswordComponent);
+      this.dialog.open(EnterPasswordComponent, { disableClose: false, height: "350px", width: "450px" });
     }
     else {
     this.http.post<any>(link, {useremail: this.socketService.email, drawingName: element.textContent.trim().slice(7)}).subscribe((data:any) => {

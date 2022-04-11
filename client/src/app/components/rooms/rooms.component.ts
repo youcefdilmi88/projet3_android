@@ -51,6 +51,8 @@ export class RoomsComponent implements OnInit {
   public delete: string;
   public leave2: string;
   public quit: string;
+  public alreadyleave: string;
+  private members: Array<string> = [];
 
   constructor(
     public dialog: MatDialog,
@@ -78,16 +80,19 @@ export class RoomsComponent implements OnInit {
       this.delete = French.delete;
       this.leave2 = French.leave2;
       this.quit = French.quit;
+      this.alreadyleave = French.alreadyleave;
     }
     else {
       this.creaRoom = English.createRoom;
       this.finRoom = English.findRoom;
       this.nameOfNewRoom = English.nameOfNewRoom;
       this.nameOfRoomCreator = English.nameOfRoomCreator;
+      this.roomTitle = English.changeRoom;
       this.join2 = English.join2;
       this.delete = English.delete;
       this.leave2 = English.leave2;
       this.quit = English.quit;
+      this.alreadyleave = English.alreadyleave;
     }
     if(this.socketService.theme == "light grey"){
       document.getElementById("CreerCanal")!.style.backgroundColor = LightGrey.main;
@@ -274,16 +279,17 @@ export class RoomsComponent implements OnInit {
     //   this.router.navigate(['/', 'clavardage']);
     // }
 
-    
-    let link = this.BASE_URL + "drawing/joinDrawing";
+    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {   
+      let link = this.BASE_URL + "drawing/joinDrawing";
 
-    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: this.socketService.drawingName}).subscribe((data:any) => {
-      if(data.message == "success") {
-        console.log("join dessins:" + element.textContent.trim().slice(8));
-        this.router.navigate(['/', 'sidenav']);
-        this.dialog.open(NewDrawingComponent);
-      }
-    });
+      this.http.post<any>(link, {useremail: this.socketService.email, drawingName: this.socketService.drawingName}).subscribe((data:any) => {
+        if(data.message == "success") {
+          console.log("join dessins:" + element.textContent.trim().slice(8));
+          this.router.navigate(['/', 'sidenav']);
+          this.dialog.open(NewDrawingComponent);
+        }
+      });
+  }
 
     // Route JoinRoom
     let link2 = this.BASE_URL + "room/joinRoom";
@@ -299,6 +305,17 @@ export class RoomsComponent implements OnInit {
   
       if(data.message == "success") {
         this.socketService.currentRoom = element.textContent.trim().slice(8);
+        let link3 = this.BASE_URL+"room/getAllRooms";
+      this.http.get<any>(link3).subscribe((data: any) => {;
+        let length = Object.keys(data).length;
+        for(var i = 0; i < length; i++) { 
+          if(data[i].roomName == element.textContent.trim().slice(8)) {
+            this.socketService.members = data[i].members;
+            this.socketService.members = this.socketService.members.filter((el, i, a) => i === a.indexOf(el));
+            console.log("members", this.socketService.members);
+          }
+        }
+      });
       }
     });
 
@@ -417,42 +434,36 @@ export class RoomsComponent implements OnInit {
     let link = this.BASE_URL + "room/leaveRoom";
     this.playAudio("ui2.wav");
 
-    if (this.socketService.language == "french") {
-      //SI DRAWING ROOM
-      if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {
-        console.log("dessin room");
-        //this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
-      }
-      else {
-        //ROOM NORMAL
-        console.log("room normal", element.textContent.trim().slice(8));
-        this.http.post<any>(link,{ useremail: this.socketService.email ,roomName: element.textContent.trim().slice(8) }).subscribe((data: any) => { 
-          console.log("quit", data);
-          if (data.message == "success") {
-            console.log("succ");
-            this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
-          }
-        });
-      }
+    //SI DRAWING ROOM
+    if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {
+      console.log("dessin room");
+      //this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
     }
-
     else {
-      //SI DRAWING ROOM
-      if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {
-        console.log("dessin room");
-        //this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
-      }
-      else {
-        //ROOM NORMAL
-        console.log("room normal", element.textContent.trim().slice(8));
-        this.http.post<any>(link,{ useremail: this.socketService.email ,roomName: element.textContent.trim().slice(8) }).subscribe((data: any) => { 
-          console.log("quit", data);
-          if (data.message == "success") {
-            console.log("succ");
-            this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+
+      //ROOM NORMAL
+      let link2 = this.BASE_URL+"room/getAllRooms";
+      this.http.get<any>(link2).subscribe((data: any) => {;
+        let length = Object.keys(data).length;
+        for(var i = 0; i < length; i++) { 
+          if(data[i].roomName == element.textContent.trim().slice(8)) {
+            this.socketService.members = data[i].members;
+            this.socketService.members = this.socketService.members.filter((el, i, a) => i === a.indexOf(el));
+            console.log("data", this.socketService.members);
+            if (this.members.includes(this.socketService.email)) {
+              this.http.post<any>(link,{ useremail: this.socketService.email ,roomName: element.textContent.trim().slice(8) }).subscribe((data: any) => { 
+                if (data.message == "success") {
+                  console.log("succ");
+                  this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+                }
+              });
+            }
+            else {
+              this.snackBar.open(this.alreadyleave + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+            }
           }
-        });
-      }
+        }
+      });
     }
   }
 
@@ -462,7 +473,7 @@ export class RoomsComponent implements OnInit {
   }
 
   createCanal() {
-    this.dialog.open(CreateCanalComponent);
+    this.dialog.open(CreateCanalComponent, { disableClose: false, height: "350px", width: "450px" } );
   }
 
   filterCanal() {

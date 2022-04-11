@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SocketService } from '@app/services/socket/socket.service';
 import { URL } from '../../../../constants';
-
+import { French, English } from '@app/interfaces/Langues';
 
 @Component({
   selector: 'app-accept-request',
@@ -16,6 +16,11 @@ export class AcceptRequestComponent implements OnInit {
 
   public memReq: string;
 
+  requestTitle: string;
+  question: string;
+  accept: string;
+  annuler: string;
+
   constructor(
     public dialogRef: MatDialogRef<AcceptRequestComponent>,
     private http: HttpClient,
@@ -25,6 +30,19 @@ export class AcceptRequestComponent implements OnInit {
   ngOnInit(): void {
     this.roomListener();
     this.memReq = this.socketService.memberRequest;
+
+    if(this.socketService.language == "french") {
+      this.requestTitle = French.requestTitle;
+      this.question = French.question;
+      this.accept = French.accept;
+      this.annuler = French.cancelCreationCanal;
+    }
+    else {
+      this.requestTitle = English.requestTitle;
+      this.question = English.question;
+      this.accept = English.accept;
+      this.annuler = English.cancelCreationCanal;
+    }
   }
 
   roomListener() {
@@ -57,6 +75,10 @@ export class AcceptRequestComponent implements OnInit {
       audio.load();
       audio.play();
     }
+  }
+
+  cancelRequest() {
+    this.dialogRef.close();
   }
 
 }

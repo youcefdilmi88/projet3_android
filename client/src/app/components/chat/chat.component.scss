@@ -103,6 +103,7 @@ a {
 	height: 90%;
 	width: 100%;
 	overflow-y: auto;
+	background-color: #c4bfbf;
 }
 
 .chat-messages .message {
@@ -142,21 +143,23 @@ a {
 
 
 .message-container {
-	width: 60%;
-	word-wrap: break-word;
-	background-color: #4f5d73c7;
-	padding: 7px 10px;
-	border-radius: 10px 10px 10px 0px;
-	margin: 10px 0px;
+    width: 40%;
+    word-wrap: break-word;
+    background-color: #FFFFFF;
+    padding: 7px 10px;
+    border-radius: 10px 10px 10px 0px;
+    margin: 10px 0px;
 }
 
 .my-chat{
-	width: 60%;
-	word-wrap: break-word;
-	background-color: #77b3d4c7;
-	padding: 7px 10px;
-	border-radius: 10px 10px 0px 10px;
-	margin: 5px 0px 5px auto;
+    width: 40%;
+    word-wrap: break-word;
+    background-color: #E9EBF9;
+    padding: 7px 10px;
+    border-radius: 10px 10px 0px 10px;
+    margin: 5px 0px 5px auto;
+    margin-left: 100px;
+    left:-100px;
 }
 
 

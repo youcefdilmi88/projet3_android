@@ -50,6 +50,14 @@ export class AlbumsComponent implements OnInit {
   public open: string;
   public delete: string;
   public goChat: string;
+  public prop: string;
+  public quit: string;
+  filteredAlphaAsc: string;
+  filteredAlphaDes: string;
+  filteredDateAsc: string;
+  filteredDateDesc: string;
+  leavePublicAlbum: string;
+  leftAlbum: string;
 
   private request: string;
   private iscreator: string;
@@ -101,6 +109,14 @@ export class AlbumsComponent implements OnInit {
      this.iscreator = French.iscreator;
      this.notcreator = French.notcreator;
      this.notmember = French.notmember;
+     this.prop = French.prop;
+     this.quit = French.quit;
+     this.filteredAlphaAsc = French.filteredAlphaAsc;
+     this.filteredAlphaDes = French.filteredAlphaDes;
+     this.filteredDateAsc = French.filteredDateAsc;
+     this.filteredDateDesc = French.filteredDateDesc;
+     this.leavePublicAlbum = French.leavePublicAlbum;
+     this.leftAlbum = French.leftAlbum;
     }
     else {
       this.creaAlbum = English.createAlbum;
@@ -112,6 +128,14 @@ export class AlbumsComponent implements OnInit {
       this.iscreator = English.iscreator;
       this.notcreator = English.notcreator;
       this.notmember = English.notmember;
+      this.prop = English.prop;
+      this.quit = English.quit;
+      this.filteredAlphaAsc = English.filteredAlphaAsc;
+      this.filteredAlphaDes = English.filteredAlphaDes;
+      this.filteredDateAsc = English.filteredDateAsc;
+      this.filteredDateDesc = English.filteredDateDesc;
+      this.leavePublicAlbum = English.leavePublicAlbum;
+      this.leftAlbum = English.leftAlbum;
     }
     if(this.socketService.theme == "light grey"){
       document.getElementById("createAlbum")!.style.backgroundColor = LightGrey.main;
@@ -263,13 +287,13 @@ export class AlbumsComponent implements OnInit {
     if(this.toggleSortAlpha) {
       this.AlbumsNames.sort();
       this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
-      this.snackBar.open("Trié en ordre alphabéthique ascendant", '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.filteredAlphaAsc, '', { duration: ONE_SECOND, });
       this.toggleSortAlpha = false;
     }
     else {
       this.AlbumsNames.sort().reverse();
       this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
-      this.snackBar.open("Trié en ordre alphabéthique descendant", '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.filteredAlphaDes, '', { duration: ONE_SECOND, });
       this.toggleSortAlpha = true;
     }
   }
@@ -279,21 +303,21 @@ export class AlbumsComponent implements OnInit {
       this.order = this.AlbumsCreationDate.sort();
       this.kk = true;
       this.getAllAlbums();
-      this.snackBar.open("Trié en ordre de création ascendant", '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.filteredDateAsc, '', { duration: ONE_SECOND, });
       this.toggleSortCreation = false;
     }
     else {
       this.order = this.AlbumsCreationDate.sort().reverse();
       this.kk = true;
       this.getAllAlbums();
-      this.snackBar.open("Trié en ordre de création descendant", '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.filteredDateDesc, '', { duration: ONE_SECOND, });
 
       this.toggleSortCreation = true;
     }
   }
 
   createAlbum() {
-    this.dialog.open(NewAlbumComponent, { disableClose: false });
+    this.dialog.open(NewAlbumComponent, { disableClose: false, height: "390px", width: "450px" });
     this.playAudio("ui2.wav")
   }
 
@@ -360,14 +384,14 @@ export class AlbumsComponent implements OnInit {
     }
     else if (this.albumTempSerivce.albums.get(element.textContent.trim().slice(8))!.getVisibility() == "public") {
       this.playAudio("error.wav");
-      this.snackBar.open("Vous ne pouvez pas quitté un album public", '', { duration: ONE_SECOND, });
+      this.snackBar.open(this.leavePublicAlbum, '', { duration: ONE_SECOND, });
     }
     else {
       this.http.post<any>(link, {albumName: element.textContent.trim().slice(8), member: this.socketService.email}).subscribe((data:any) => { 
         if(data.message == "success") {
           console.log("quit");
           this.playAudio("ui2.wav");
-          this.snackBar.open("Vous avez quitté l'album", '', { duration: ONE_SECOND, });
+          this.snackBar.open(this.leftAlbum, '', { duration: ONE_SECOND, });
         }
       });
     }
@@ -404,10 +428,10 @@ export class AlbumsComponent implements OnInit {
   }  
 
   modifyAlbum(element: any) { 
-    if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(12))!.getCreator()) {
+    if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(11))!.getCreator()) {
       this.dialog.open(ModifyAlbumComponent);
       console.log(element.textContent);
-      this.socketService.albumName = element.textContent.trim().slice(12);
+      this.socketService.albumName = element.textContent.trim().slice(11);
     }
     else {
       this.playAudio("error.wav");

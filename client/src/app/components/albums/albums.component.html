@@ -3,20 +3,16 @@
 <body>  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div id="title3">
-            <h1 id="title4">Colorimage</h1>
+            <h1 id="title4">Albums</h1>
             <button (click)="logout()" class = "btn" id="logout"><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
-            <div class="notifi">
-                <i class="fa fa-comments" aria-hidden="true"style="font-size:50px"></i>
-                <span class="button__badge">.</span>
-              </div>
         </div>
         <!-- <div class="center_me"> -->
 
                 <div class="subtext-container">   
                     <button mat-raised-button id="createAlbum" (click)="createAlbum()">{{creaAlbum}}</button>
                     <button mat-raised-button id="menuCompte" routerLink="/profil">{{accoutMenu}}</button>
-                    <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">{{goChat}}</button> 
-                    <!-- <button mat-raised-button id="chatRoom" routerLink="/rooms">{{goChat}}</button>  -->
+                    <!-- <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">{{goChat}}</button>  -->
+                    <button mat-raised-button id="chatRoom" routerLink="/rooms">{{goChat}}</button> 
                     <button mat-raised-button id="sortAlpha" (click)="sortAlpha()"><i class="fa fa-sort-alpha-asc"></i></button>
                     <button mat-raised-button id="sortCreate" (click)="sortCreation()"><i class= "fa fa-sort-numeric-asc"></i></button>
                 </div>
@@ -54,10 +50,10 @@
                     {{delete}} <span class='special-word'>{{albumName}}</span>
                 </button>
                 <button mat-raised-button id="albumQuitter" (click)="quitAlbum($event.target)">
-                    Quitter <span class='special-word'>{{albumName}}</span> 
+                    {{quit}} <span class='special-word'>{{albumName}}</span> 
                 </button>
                 <button mat-raised-button id="albumModifier" (click)="modifyAlbum($event.target)" >
-                    Préférences <span class='special-word'>{{albumName}}</span>
+                    {{prop}} <span class='special-word'>{{albumName}}</span>
                 </button>
                 <!-- <div class="listAlbumsButtons"> -->
                     <!-- <p> Public Album </p>

@@ -39,6 +39,8 @@ export class ChatComponent implements AfterViewInit {
 
   public currentNickname:String;
 
+  public chatTITLE: string;
+
 
   constructor(
     public dialog: MatDialog,
@@ -49,6 +51,7 @@ export class ChatComponent implements AfterViewInit {
     }
 
   ngAfterViewInit(): void {  
+    this.chatTITLE = this.socketService.currentRoom;
     this.playAudio("ui2.wav")
     if(this.router.url == "/clavardage") {
       document.getElementById("principal")!.style.width = "100%";

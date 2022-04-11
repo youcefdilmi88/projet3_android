@@ -4,10 +4,6 @@
         <button class = "btn" id="back" routerLink = "/albums"><i class="fa fa-chevron-circle-left" aria-hidden="true"style="font-size:50px"></i></button>
         <h1 id="title6">{{drawingTitle}}</h1>
         <button class = "btn" id="logout" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true" style="font-size:50px"></i></button>
-        <div class="notifi">
-            <i class="fa fa-comments" aria-hidden="true"style="font-size:50px"></i>
-            <span class="button__badge">.</span>
-          </div>
     </div> 
 
     <div class="subtext-container">
@@ -18,12 +14,12 @@
         </mat-form-field>  -->
      
         <!-- <button mat-raised-button id="createRoom" class="buto" (click)="createDrawing(drawingname.value)">{{creaDrawing}}</button> -->
-        <button mat-raised-button id="createRoom" class="buto" (click)="openCreate()">Créer un dessin</button>
+        <button mat-raised-button id="createRoom" class="buto" (click)="openCreate()">{{creaDrawing}}</button>
     </div>
     <div>
         <mat-form-field class="inputFind" floatLabel="always" appearance="outline">
-            <mat-label>Trouver un dessin</mat-label>
-            <input #findDraw matInput id="findDraw" type="text" name="findDraw" required>
+            <mat-label>{{findDraw2}}</mat-label>
+            <input #findDraw matInput id="findDraw" type="text" name="findDraw" required placeholder="{{placeHolderFindDraw}}">
         </mat-form-field> 
      
         <button mat-raised-button id="findDrawButton" class="buto" (click)="find(findDraw.value)"><i class="fa fa-search"></i></button>
@@ -66,8 +62,8 @@
         <p>{{drawName}} {{names[this.centerImage]}}</p>
         <p>{{numberOfPeople}} {{nbrMembres[this.centerImage]}}</p>
         <p>{{own}} {{owners[this.centerImage]}}</p>
-        <p>Date de création: {{creationDate[this.centerImage]}}</p>
-        <p>Nombre de like: {{nbrLiked[this.centerImage]}} </p>
+        <p>{{datecrea}} {{creationDate[this.centerImage]}}</p>
+        <p>{{lik}} {{nbrLiked[this.centerImage]}} </p>
         <div class="subtext-container2">
             <button mat-raised-button id="DessinsButtonOpen" class="buto" (click)="openDessins($event.target)">
                 {{open}} <span class='special-word'>{{names[this.centerImage]}}</span>
@@ -76,7 +72,7 @@
                 {{delete}} <span class='special-word'>{{names[this.centerImage]}}</span>
             </button>
             <button mat-raised-button id="settingsButton" class="buto" (click)="openSettings($event.target)">
-                Propriétés <span class='special-word'>{{names[this.centerImage]}}</span>
+                {{prop}} <span class='special-word'>{{names[this.centerImage]}}</span>
             </button>
             <button mat-raised-button id="likeButton" class="buto" (click)="like($event.target)">
                 <span class='special-word'>{{names[this.centerImage]}}</span><i class="fa fa-thumbs-o-up"></i>

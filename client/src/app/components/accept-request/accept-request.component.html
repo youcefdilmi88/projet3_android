@@ -1,5 +1,11 @@
-<h1 mat-dialog-title>Accepter une demande</h1>
+<h1 mat-dialog-title>{{requestTitle}}</h1>
 
-<p>Voulez vous accepter la demande de:  {{memReq}}</p>
+<div>
+    <p>{{question}}  {{memReq}} ? </p>
+</div>
 
-<button mat-raised-button (click)="acceptRequest()" >Accepter</button>
+
+<div id="requ">
+    <button mat-raised-button id="canceltbut" (click)="cancelRequest()" >{{annuler}}</button>
+    <button mat-raised-button id="acceptbut" (click)="acceptRequest()" >{{accept}}</button>
+</div>

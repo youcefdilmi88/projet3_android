@@ -1,13 +1,13 @@
-<h1>Créer un canal</h1>
+<h1>{{creaRoom}}</h1>
 
 <div>
     <mat-form-field class="input" floatLabel="always" appearance="outline">
-        <mat-label>Entrer le nom du nouveau canal</mat-label>
-        <input #roomname matInput id="room" type="text" name="room" required [(ngModel)]="room">
+        <mat-label>{{labelNameCanal}}</mat-label>
+        <input #roomname matInput id="room" type="text" name="room" required [(ngModel)]="room" placeholder="{{placeHolderCreateRoom}}">
     </mat-form-field> 
-    <p id="errorCanal">Vous ne pouvez pas mettre des champs vides</p>
+    <p id="errorCanal">{{error1}}</p>
 </div>
-<div>
-    <button mat-raised-button id="annulerCreateCanal" >Annuler</button>
-    <button mat-raised-button id="createCanal" (click)="create(roomname.value)">Créer</button>
+<div id="createCanalBut"> 
+    <button mat-raised-button id="annulerCreateCanal" (click)="cancelCreate()">{{cancelCreationCanal}}</button>
+    <button mat-raised-button id="createCanal" (click)="create(roomname.value)">{{createConfirmCanal}}</button>
 </div>

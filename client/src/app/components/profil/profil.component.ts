@@ -7,7 +7,7 @@ import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/inte
 import { DatePipe } from '@angular/common';
 import { LogoutComponent } from '../logout/logout.component';
 import { MatDialog } from '@angular/material/dialog';
-
+import { French, English} from '@app/interfaces/Langues';
 
 
 @Component({
@@ -26,6 +26,13 @@ export class ProfilComponent implements OnInit {
   public lastLoggedOut: string;
   public friends: Array<string>;
 
+  profilTitle: string;
+  info1: string;
+  info2: string;
+  info3: string;
+  info4: string;
+  info5: string;
+
   constructor(
     private socketService: SocketService,
     private http: HttpClient,
@@ -34,6 +41,23 @@ export class ProfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.roomListener();
+
+    if(this.socketService.language == "french") {
+      this.profilTitle = French.profilTitle;
+      this.info1 = French.info1;
+      this.info2 = French.info2;
+      this.info3 = French.info3;
+      this.info4 = French.info4;
+      this.info5 = French.info5;
+     }
+     else {
+      this.profilTitle = English.profilTitle;
+       this.info1 = English.info1;
+       this.info2 = English.info2;
+       this.info3 = English.info3;
+       this.info4 = English.info4;
+       this.info5 = English.info5;
+     }
 
     if(this.socketService.theme == "light grey"){
       document.getElementById("title100")!.style.backgroundColor = LightGrey.main;
