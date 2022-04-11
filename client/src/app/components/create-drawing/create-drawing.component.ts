@@ -108,7 +108,7 @@ export class CreateDrawingComponent implements OnInit {
               }
             });
   
-            this.http.post<any>(link6, {drawingName: this.drawing.trim(), useremail: this.socketService.email, albumName: this.socketService.albumName }).subscribe((data:any) => {
+            this.http.post<any>(link6, {drawingName: this.drawing.trim(), useremail: this.socketService.email, albumName: "PUBLIC" }).subscribe((data:any) => {
               if (data.message == "success") {
                 //console.log("dessin ajoute a album " + this.socketService.albumName);
               }

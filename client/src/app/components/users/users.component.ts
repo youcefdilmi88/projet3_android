@@ -44,8 +44,10 @@ export class UsersComponent implements OnInit {
         console.log("obj", drawingObj);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
-        this.activeUsers.push(drawing.members);
-        console.log(this.activeUsers);
+        if(drawing.members != this.socketService.email) {
+          this.activeUsers.push(drawing.members);
+          console.log(this.activeUsers);
+        }
       });
     });
     console.log(this.socketService.userObj.friends);
@@ -87,10 +89,6 @@ export class UsersComponent implements OnInit {
         }
       });
     }
-  }
-
-  closeModal() {
-    this.dialogRef.close();
   }
 
 }

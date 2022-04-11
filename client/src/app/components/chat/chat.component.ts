@@ -23,7 +23,7 @@ export class ChatComponent implements AfterViewInit {
   @ViewChild('message-icon') chatzone: HTMLElement;
   private readonly BASE_URL: string = URL;
 
-  public message = new Array<string>();
+  public message = new Array<any>();
   public others = new Array<string>();
   public time = new Array<string>();
 
@@ -34,6 +34,10 @@ export class ChatComponent implements AfterViewInit {
   public source2: string;
   // chatTitle: "Clavardage",
   // changeRoom: "Changer de salle",
+  public avatarCurrentUser:string;
+  public avatarOtherUser:string;
+
+  public currentNickname:String;
 
 
   constructor(
@@ -82,6 +86,33 @@ export class ChatComponent implements AfterViewInit {
       document.getElementById("title9")!.style.color = LightPink.text;
     }
 
+    switch(this.socketService.avatarNumber) {
+      case "1":{
+        this.avatarCurrentUser="avatar1.png";
+        break;
+      }
+      case "2":{
+        this.avatarCurrentUser="avatar2.png";
+        break;
+      }
+      case "3":{
+        this.avatarCurrentUser="avatar3.png";
+        break;
+      }
+      case "4":{
+        this.avatarCurrentUser="avatar4.png";
+        break;
+      }
+      case "5":{
+        this.avatarCurrentUser="avatar5.png";
+        break;
+      }
+        
+    }
+    console.info("AVATAR NUM FROM SOCKET",this.socketService.avatarNumber);
+    this.avatarCurrentUser="avatar"+this.socketService.avatarNumber+".png";
+    this.currentNickname=this.socketService.nickname;
+
     let link=this.BASE_URL+"message/getRoomMessages/" + `${this.socketService.currentRoom}`;  
     console.log("CHECK MOI HEHE:" + this.socketService.currentRoom);
     this.http.get<any>(link).subscribe((data: any) => {
@@ -93,63 +124,38 @@ export class ChatComponent implements AfterViewInit {
         let formattedDate = datepipe.transform(data[i].time, 'dd-MM-yyyy HH:mm:ss') as string;
 
         if (this.socketService.nickname == data[i].nickname) {
-          var html = '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>' +
-          '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>'
-          document.getElementById("message-icon")!.innerHTML += `${html}`;
 
+          console.info("old msg",this.avatarOtherUser);
+          console.info("old msg current",this.avatarCurrentUser);
+      
           console.log(this.source);
-          this.others.push(formattedDate + '\n' + data[i].nickname + '\n' + data[i].message.replace(/(\r\n|\n|\r)/gm, " ") + '\n');
-          //this.others.push(data[i].nickname);
-          //this.others.push(data[i].message.replace(/(\r\n|\n|\r)/gm, " "));
-          //this.others.push("\n");
-          this.message.push('\n\n\n');
-          //this.message.push("");
-          //this.message.push("");
-          //this.message.push("\n");
-          //this.message.push("\n");
-
+          const msg={
+            time:formattedDate,
+            nickname:data[i].nickname,
+            message:data[i].message.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n',
+            avatar:data[i].avatar
+          } 
+          this.message.push(msg);
+          //this.others.push(formattedDate + '\n' + data[i].nickname + '\n' + data[i].message.replace(/(\r\n|\n|\r)/gm, " ") + '\n');
+ 
         }
 
         if (this.socketService.nickname != data[i].nickname) {
-          let html;
-          switch(data[i].avatar) {
-            case "1": {
-              html = '<div class="message-icon">' + '<img src= "avatar1.png" alt="Italian Trulli">' + '</div>' +
-              '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-              break;
-            }
-            case "2": {
-              html = '<div class="message-icon">' + '<img src= "avatar2.png" alt="Italian Trulli">' + '</div>' +
-              '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-              break;
-            }
-            case "3": {
-              html = '<div class="message-icon">' + '<img src= "avatar3.png" alt="Italian Trulli">' + '</div>' +
-              '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-              break;
-            }
-            case "4": {
-              html = '<div class="message-icon">' + '<img src= "avatar4.png" alt="Italian Trulli">' + '</div>' +
-              '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-              break;
-            }
-            case "5": {
-              console.log("case 5");
-              html = '<div class="message-icon">' + '<img src= "avatar5.png" alt="Italian Trulli">' + '</div>' +
-              '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-              break;
-            }
-          }
-          document.getElementById("message-icon")!.innerHTML += `${html}`;
+   
+          this.avatarOtherUser="avatar"+data[i].avatar+".png";
 
-          this.message.push(formattedDate + '\n' + data[i].nickname + '\n' + data[i].message.replace(/(\r\n|\n|\r)/gm, " ")+ '\n');
-          //this.message.push(data[i].nickname);
-          //this.message.push(data[i].message.replace(/(\r\n|\n|\r)/gm, " "));
-          //this.message.push("\n");
-          this.others.push('\n\n\n');
-          //this.others.push("");
-          //this.others.push("");
-          //this.others.push("\n");
+
+          console.info(this.avatarOtherUser);
+          console.info(this.avatarCurrentUser);
+
+          const msg={
+            time:formattedDate,
+            nickname:data[i].nickname,
+            message:data[i].message.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n',
+            avatar:data[i].avatar
+          } 
+          this.message.push(msg);
+
         }
       }
     });
@@ -161,67 +167,38 @@ export class ChatComponent implements AfterViewInit {
       console.log("data room " + data.roomName);
       console.log("avatar", data.msg.avatar);
       if (data.roomName == this.socketService.currentRoom.trim()) {
-        let html;
+   
         console.log("get in bruh");
-        switch(data.msg.avatar) {
-          case "1": {
-            console.log("case 1");
-            html = '<div class="message-icon">' + '<img src= "avatar1.png" alt="Italian Trulli">' + '</div>' +
-            '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-            break;
-          }
-          case "2": {
-            console.log("case 2");
-            html = '<div class="message-icon">' + '<img src= "avatar2.png" alt="Italian Trulli">' + '</div>' +
-            '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-            break;
-          }
-          case "3": {
-            console.log("case 3");
-            html = '<div class="message-icon">' + '<img src= "avatar3.png" alt="Italian Trulli">' + '</div>' +
-            '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-            break;
-          }
-          case "4": {
-            console.log("case 4");
-            html = '<div class="message-icon">' + '<img src= "avatar4.png" alt="Italian Trulli">' + '</div>' +
-            '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-            break;
-          }
-          case "5": {
-            console.log("case 5");
-            html = '<div class="message-icon">' + '<img src= "avatar5.png" alt="Italian Trulli">' + '</div>' +
-            '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>';
-            break;
-          }
-        }
 
-        //var html = '<div class="message-icon">' + '<img src= "avatar2.png" alt="Italian Trulli">' + '</div>' +
-        //'<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>'
-        document.getElementById("message-icon")!.innerHTML += `${html}`;
+        this.avatarOtherUser="avatar"+data.msg.avatar+".png";
+
+
+        console.info(this.avatarOtherUser);
+        console.info(this.avatarCurrentUser);
+
         const datepipe: DatePipe = new DatePipe('en-CA');
         let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
 
-        this.message.push(formattedDate + '\n' + data.msg.nickname + '\n' + data.msg.message.replace(/(\r\n|\n|\r)/gm, " ")+ '\n');
-        //this.message.push(data.msg.nickname);
-        //this.message.push(data.msg.message.replace(/(\r\n|\n|\r)/gm, " "));
-        //this.message.push("\n");
-        this.others.push('\n\n\n');
-        //this.others.push("");
-        //this.others.push("");
-        //this.others.push("\n");
+        const msg={
+          time:formattedDate,
+          nickname:data.msg.nickname,
+          message:data.msg.message.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n',
+          avatar:data.msg.avatar
+        } 
+        this.message.push(msg);
+
       }
       else if (data.roomName == this.socketService.currentRoom.trim()) {
         const datepipe: DatePipe = new DatePipe('en-CA');
         let formattedDate = datepipe.transform(data.msg.time, 'dd-MM-yyyy HH:mm:ss') as string;
-        this.message.push(formattedDate + '\n' + data.msg.nickname + '\n' + data.msg.message.replace(/(\r\n|\n|\r)/gm, " ") + '\n');
-        //this.message.push(data.msg.nickname);
-        //this.message.push(data.msg.message.replace(/(\r\n|\n|\r)/gm, " "));
-        //this.message.push("\n");
-        this.others.push('\n\n\n');
-        //this.others.push("");
-        //this.others.push("");
-        //this.others.push("\n");
+        const msg={
+          time:formattedDate,
+          nickname:data.msg.nickname,
+          message:data.msg.message.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n',
+          avatar:data.msg.avatar
+        } 
+        this.message.push(msg);
+
       }
     });
   }
@@ -249,10 +226,9 @@ export class ChatComponent implements AfterViewInit {
         console.log("response", data);
         if(data.message == "success") {
           console.log("EXITED DRAWING" + data.useremail);
-          this.playAudio("ui2.wav");
         }
       });
-      // this.router.navigate(['/', 'dessins']);
+      this.router.navigate(['/', 'dessins']);
     }
   }
 
@@ -260,7 +236,7 @@ export class ChatComponent implements AfterViewInit {
     //this.dialog.open(RoomsComponent, { disableClose: true });
     this.router.navigate(['/', 'rooms']);
     this.playAudio("ui2.wav");
-    console.log("bing me there");
+    
     // if(this.router.url == "/sidenav") {
     //   this.socketService.drawingName = this.socketService.currentRoom;
     // }
@@ -282,11 +258,18 @@ export class ChatComponent implements AfterViewInit {
       '<div class="message-icon">' + '<img src= "avatar0.png" alt="Italian Trulli">' + '</div>'
       document.getElementById("message-icon")!.innerHTML += `${html}`;
 
-      this.others.push(formattedDate + '\n' + this.socketService.nickname + '\n' + text.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n');
+      const msgSend={
+        time:formattedDate,
+        nickname:this.socketService.nickname,
+        message:text.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n',
+        avatar:this.avatarCurrentUser
+      } 
+      this.message.push(msgSend);
+      //this.others.push(formattedDate + '\n' + this.socketService.nickname + '\n' + text.toString().trim().replace(/(\r\n|\n|\r)/gm, " ") + '\n');
       //this.others.push(this.socketService.nickname);
       //this.others.push(text.toString().trim().replace(/(\r\n|\n|\r)/gm, " "));
       //this.others.push("\n");
-      this.message.push('\n\n\n');
+      //this.message.push('\n\n\n');
       //this.message.push("");
       //this.message.push("");
       //this.message.push("\n");

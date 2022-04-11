@@ -1,38 +1,19 @@
-
 <div id="title0">
   <h1 id="title00">{{change}}</h1>
 </div>
 
 <div class="center">
-  <p>{{parameter}} </p>
-  <mat-button-toggle-group id="test" name="langue" aria-label="langue">
-  <mat-button-toggle id="langue" value="french" (change)="onValChange($event.value)">Français</mat-button-toggle>
-  <mat-button-toggle id="langue" value="english" (change)="onValChange($event.value)">English </mat-button-toggle>
-</mat-button-toggle-group>
+  <h2>{{parameter}} </h2>
+  <mat-button-toggle id="langue2" value="english" class="all" (change)="onValChange($event.value)" routerLink = "">English </mat-button-toggle>
+  <mat-button-toggle id="langue" value="french" class="all" (change)="onValChange($event.value)" routerLink = "">Français</mat-button-toggle>
 
-  <p>{{theme}} </p>
-  <mat-button-toggle-group name="theme" aria-label="theme">
-  <mat-button-toggle id="lightGrey" value="light grey" (change)="onChange($event.value)">{{Light_grey}}</mat-button-toggle>
-  <mat-button-toggle id="darkGrey" value="dark grey" (change)="onChange($event.value)">{{Dark_grey}}</mat-button-toggle>
-  <mat-button-toggle id="deepPurple" value="deep purple" (change)="onChange($event.value)">{{Deep_Purple}}</mat-button-toggle>
-  <mat-button-toggle id="lightBlue" value="light blue" (change)="onChange($event.value)">{{Ligh_blue}}</mat-button-toggle>
-  <mat-button-toggle id="lightPink" value="light pink" (change)="onChange($event.value)">{{Light_Pink}}</mat-button-toggle>
-</mat-button-toggle-group>
-</div>
+  <h3>{{theme}} </h3>
+  <mat-button-toggle id="lightGrey" value="light grey" class="all" (change)="onChange($event.value)" routerLink = "">{{Light_grey}}</mat-button-toggle>
+  <mat-button-toggle id="darkGrey" value="dark grey" class="all" (change)="onChange($event.value)" routerLink = "">{{Dark_grey}}</mat-button-toggle>
+  <mat-button-toggle id="deepPurple" value="deep purple" class="all" (change)="onChange($event.value)" routerLink = "">{{Deep_Purple}}</mat-button-toggle>
+  <mat-button-toggle id="lightBlue" value="light blue" class="all" (change)="onChange($event.value)" routerLink = "">{{Ligh_blue}}</mat-button-toggle>
+  <mat-button-toggle id="lightPink" value="light pink" class="all" (change)="onChange($event.value)" routerLink = "">{{Light_Pink}}</mat-button-toggle>
 
 <div  class="center">
-  <button mat-raised-button id="conf" routerLink = "">{{confirm}}</button>
+  <mat-button-toggle id="conf" routerLink = "">{{cancel}}</mat-button-toggle>
 </div>
-
-
-
-
-
-
-  
-
-
-
-
-
-

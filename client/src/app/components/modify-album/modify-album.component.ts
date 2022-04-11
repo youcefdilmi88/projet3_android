@@ -38,8 +38,13 @@ export class ModifyAlbumComponent implements OnInit {
 
     console.log("DA");
     console.log("AD", this.albumNAME);
+    if(this.albumNAME == undefined && this.albumDESCRIPTION == undefined) {
+      document.getElementById("errorAlbum")!.style.visibility= "visible";
+      // this.playAudio("error.wav");
+    }
+    else {
     // change seulement la description de l'album
-    if(this.albumNAME == undefined) {
+    if(this.albumNAME == undefined || this.albumNAME == "") {
       this.http.post<any>(link,{useremail: this.socketService.email, album: albumObj}).pipe( 
         catchError(async (err) => console.log("error catched" + err))
         ).subscribe((data: any) => {
@@ -58,6 +63,8 @@ export class ModifyAlbumComponent implements OnInit {
         });
     }
     this.dialogRef.close();
+    }
+
   }
 
   close() {

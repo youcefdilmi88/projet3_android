@@ -1,8 +1,11 @@
 <h1 mat-dialog-title> {{ reinit }} </h1>
 
-<p> {{ certain }} </p>
+<div>
+    <p> {{ certain }} </p>
+</div>
 
-<button mat-raised-button (click)="quit()"> {{ init }}</button>
-
-<button mat-raised-button (click)="annuler()"> {{ cancel }} </button>
+<div id="reinitBut">
+    <button mat-raised-button id="reitniAnnul" (click)="annuler()"> {{ cancel }} </button>
+    <button mat-raised-button (click)="quit()"> {{ init }}</button>
+</div>
 

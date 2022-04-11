@@ -93,6 +93,7 @@ export class Logout2Component implements OnInit {
 
       if (data.message == "success") {
         console.log("sayonara");
+        this.router.navigate(['/', 'main']);
         this.dialogRef.close();
       }   
     });

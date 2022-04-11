@@ -37,6 +37,8 @@ export class SocketService {
   public avatar2: string;
   public avatarClick = false;
   public isProtected: boolean;
+  public filtered: boolean;
+  public buttons:Array<string> = [];
   //private userService: UserService;
 
   constructor() { }

@@ -92,7 +92,6 @@ export class AlbumsComponent implements OnInit {
     this.roomListener();
 
     if(this.socketService.language == "french") {
-     this.albumTitle =  French.chooseAlbum;
      this.creaAlbum = French.createAlbum;
      this.accoutMenu = French.menuCompte;
      this.open = French.open;
@@ -104,7 +103,6 @@ export class AlbumsComponent implements OnInit {
      this.notmember = French.notmember;
     }
     else {
-      this.albumTitle =  English.chooseAlbum;
       this.creaAlbum = English.createAlbum;
       this.accoutMenu = English.menuCompte;
       this.open = English.open;
@@ -405,11 +403,11 @@ export class AlbumsComponent implements OnInit {
     }
   }  
 
-  modifyAlbum(element: any) {
-    if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(9))!.getCreator()) {
+  modifyAlbum(element: any) { 
+    if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(12))!.getCreator()) {
       this.dialog.open(ModifyAlbumComponent);
       console.log(element.textContent);
-      this.socketService.albumName = element.textContent.trim().slice(9);
+      this.socketService.albumName = element.textContent.trim().slice(12);
     }
     else {
       this.playAudio("error.wav");

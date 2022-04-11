@@ -17,7 +17,11 @@ import { ToolEllipseService } from '@app/services/tools/tool-ellipse/tool-ellips
 import { ToolRectangleService } from '@app/services/tools/tool-rectangle/tool-rectangle.service';
 import { French, English } from '@app/interfaces/Langues';
 import { LightGrey, DarkGrey, DeepPurple, LightBlue, LightPink } from '@app/interfaces/Themes';
+import { CreateCanalComponent } from '../create-canal/create-canal.component';
+import { FilterCanalComponent } from '../filter-canal/filter-canal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
+const ONE_SECOND = 1000;
 
 @Component({ 
   selector: 'app-rooms',
@@ -45,6 +49,8 @@ export class RoomsComponent implements OnInit {
   public roomTitle: string;
   public join2: string;
   public delete: string;
+  public leave2: string;
+  public quit: string;
 
   constructor(
     public dialog: MatDialog,
@@ -56,6 +62,7 @@ export class RoomsComponent implements OnInit {
     public pencilToolService: PencilToolService,
     public toolEllipseService: ToolEllipseService,
     public toolRectangleService: ToolRectangleService,
+    private snackBar: MatSnackBar,
   ) { 
     this.hotkeyService.hotkeysListener();
   }
@@ -69,6 +76,8 @@ export class RoomsComponent implements OnInit {
       this.roomTitle = French.changeRoom;
       this.join2 = French.join2;
       this.delete = French.delete;
+      this.leave2 = French.leave2;
+      this.quit = French.quit;
     }
     else {
       this.creaRoom = English.createRoom;
@@ -77,44 +86,46 @@ export class RoomsComponent implements OnInit {
       this.nameOfRoomCreator = English.nameOfRoomCreator;
       this.join2 = English.join2;
       this.delete = English.delete;
+      this.leave2 = English.leave2;
+      this.quit = English.quit;
     }
     if(this.socketService.theme == "light grey"){
-      // document.getElementById("createRoom")!.style.backgroundColor = LightGrey.main;
-      // document.getElementById("createRoom")!.style.color = LightGrey.text;
-      // document.getElementById("searchRoom")!.style.backgroundColor = LightGrey.main;
-      // document.getElementById("searchRoom")!.style.color = LightGrey.text;
+      document.getElementById("CreerCanal")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("CreerCanal")!.style.color = LightGrey.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("searchRoom")!.style.color = LightGrey.text;
       document.getElementById("title7")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title7")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
-      // document.getElementById("createRoom")!.style.backgroundColor = DarkGrey.main;
-      // document.getElementById("createRoom")!.style.color = DarkGrey.text;
-      // document.getElementById("searchRoom")!.style.backgroundColor = DarkGrey.main;
-      // document.getElementById("searchRoom")!.style.color = DarkGrey.text;
+      document.getElementById("CreerCanal")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("CreerCanal")!.style.color = DarkGrey.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("searchRoom")!.style.color = DarkGrey.text;
       document.getElementById("title7")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("title7")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {       
-      // document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
-      // document.getElementById("createRoom")!.style.color = DeepPurple.text;
-      // document.getElementById("searchRoom")!.style.backgroundColor = DeepPurple.main;
-      // document.getElementById("searchRoom")!.style.color = DeepPurple.text;
+      document.getElementById("CreerCanal")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("CreerCanal")!.style.color = DeepPurple.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("searchRoom")!.style.color = DeepPurple.text;
       document.getElementById("title7")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("title7")!.style.color = DeepPurple.text;
     }
     else if(this.socketService.theme == "light blue") { 
-      // document.getElementById("createRoom")!.style.backgroundColor = LightBlue.main;
-      // document.getElementById("createRoom")!.style.color = LightBlue.text;
-      // document.getElementById("searchRoom")!.style.backgroundColor = LightBlue.main;
-      // document.getElementById("searchRoom")!.style.color = LightBlue.text;
+      document.getElementById("CreerCanal")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("CreerCanal")!.style.color = LightBlue.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("searchRoom")!.style.color = LightBlue.text;
       document.getElementById("title7")!.style.backgroundColor = LightBlue.main;
       document.getElementById("title7")!.style.color = LightBlue.text;
     }
     else if(this.socketService.theme == "light pink") {  
-      // document.getElementById("createRoom")!.style.backgroundColor = LightPink.main;
-      // document.getElementById("createRoom")!.style.color = LightPink.text;
-      // document.getElementById("searchRoom")!.style.backgroundColor = LightPink.main;
-      // document.getElementById("searchRoom")!.style.color = LightPink.text;
+      document.getElementById("CreerCanal")!.style.backgroundColor = LightPink.main;
+      document.getElementById("CreerCanal")!.style.color = LightPink.text;
+      document.getElementById("searchRoom")!.style.backgroundColor = LightPink.main;
+      document.getElementById("searchRoom")!.style.color = LightPink.text;
       document.getElementById("title7")!.style.backgroundColor = LightPink.main;
       document.getElementById("title7")!.style.color = LightPink.text;
     }
@@ -401,8 +412,61 @@ export class RoomsComponent implements OnInit {
     this.input.nativeElement.focus();
   }
 
+
+  quitRoom(element: any): void {
+    let link = this.BASE_URL + "room/leaveRoom";
+    this.playAudio("ui2.wav");
+
+    if (this.socketService.language == "french") {
+      //SI DRAWING ROOM
+      if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {
+        console.log("dessin room");
+        //this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+      }
+      else {
+        //ROOM NORMAL
+        console.log("room normal", element.textContent.trim().slice(8));
+        this.http.post<any>(link,{ useremail: this.socketService.email ,roomName: element.textContent.trim().slice(8) }).subscribe((data: any) => { 
+          console.log("quit", data);
+          if (data.message == "success") {
+            console.log("succ");
+            this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+          }
+        });
+      }
+    }
+
+    else {
+      //SI DRAWING ROOM
+      if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(8))) {
+        console.log("dessin room");
+        //this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+      }
+      else {
+        //ROOM NORMAL
+        console.log("room normal", element.textContent.trim().slice(8));
+        this.http.post<any>(link,{ useremail: this.socketService.email ,roomName: element.textContent.trim().slice(8) }).subscribe((data: any) => { 
+          console.log("quit", data);
+          if (data.message == "success") {
+            console.log("succ");
+            this.snackBar.open(this.leave2 + element.textContent.trim().slice(8) , '', { duration: ONE_SECOND, });
+          }
+        });
+      }
+    }
+  }
+
+  
   cancel() {
     this.router.navigate(['/', 'sidenav']);
+  }
+
+  createCanal() {
+    this.dialog.open(CreateCanalComponent);
+  }
+
+  filterCanal() {
+    this.dialog.open(FilterCanalComponent);
   }
 
 

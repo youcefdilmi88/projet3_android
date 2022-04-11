@@ -1,22 +1,22 @@
-<h1 mat-dialog-title>Création d'un album</h1>
+<h1 mat-dialog-title>Créer un album</h1>
 
 <div> 
     <div> 
         <mat-form-field class="search" floatLabel="always" appearance="outline">
             <mat-label>Nom de l'album</mat-label>
-            <input matInput id="album" type="text" name="album" required [(ngModel)]="name" >
+            <input matInput id="album" type="text" name="album" required [(ngModel)]="name" placeholder="Entrez le nom du nouvel album">
         </mat-form-field> 
     </div>
     <div>
         <mat-form-field class="search" floatLabel="always" appearance="outline">
             <mat-label>Déscription</mat-label>
-            <input matInput id="description" type="text" name="description" required [(ngModel)]="description" >
+            <input matInput id="description" type="text" name="description" required [(ngModel)]="description" placeholder="Entrez une courte description">
         </mat-form-field> 
     </div>
         <p id="errorAlbum">Vous ne pouvez pas mettre des champs vides</p>
 </div>
 
- <div>
+ <div id="createAlbumDIV">
     <button mat-raised-button class="searchRoom" (click)="close()" >Annuler</button>
-    <button mat-raised-button class="searchRoom" id="createalbum" (click)="createAlbum()" >Créer l'album</button>
+    <button mat-raised-button class="searchRoom" id="createalbum" (click)="createAlbum()" >Créer</button>
 </div>

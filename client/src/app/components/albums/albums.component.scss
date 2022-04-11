@@ -1,4 +1,5 @@
-body{overflow: scroll;}
+body{overflow: scroll;
+    overflow-x: hidden;}
 
 .title {
     // background-color: #592bc7;
@@ -45,13 +46,14 @@ body{overflow: scroll;}
     // background-color: aqua;
     border-style: solid;
     height: 400px;
-    width: 400px;
-    text-align: center;
+    width: 450px;
+    text-align: right;
 }
 
 #albumCover {
     background-image : url("../../../assets/color.png");
     background-size: cover;
+    font-size: 25px;
 }
 
 .btn {
@@ -117,17 +119,24 @@ mat-label {
 }
 
 #albumIDButton {
-    margin-right: 25px;
+    margin-right: 10px;
     background-color: #adebad;
+    width: 105px;
 }
 
 #albumIDButtonDelete {
-    margin-right: 25px;
+    margin-right: 10px;
     background-color: #ff9999;
+    width: 105px;
 }
 
 #albumQuitter {
-    margin-right: 25px;
+    margin-right: 10px;
+    width: 105px;
+}
+
+#albumModifier {
+    width: 105px;
 }
 
 body {
@@ -143,34 +152,61 @@ body {
     margin: 15px;
     // background-color: #592bc7;
     // color:azure;
-    width: 28%;
+    width: 29%;
+    height: 50px;
 }
 
 #menuCompte {
     margin: 5px;
     background-color: #592bc7;
     color:azure;
-    width: 28%;
+    width: 29%;
+    height: 50px;
 }
 
 #chatRoom {
     margin: 5px;
     background-color: #592bc7;
     color:azure;
-    width: 28%;
+    width: 29%;
+    height: 50px;
 }
 
 #sortAlpha {
     margin: 5px;
+    height: 50px;
 }
 
 #sortCreate {
     margin: 5px;
+    height: 50px;
 }
 
 .special-word { 
     font-size: 0;
 } 
+
+.fa-comments {
+    color: black;
+  }
+
+  .notifi {
+    display: inline-block; /* Inline elements with width and height. TL;DR they make the icon buttons stack from left-to-right instead of top-to-bottom /
+    position: relative; / All 'absolute'ly positioned elements are relative to this one /
+    padding: 2px 5px; / Add some padding so it looks nice */
+    float: right;
+  }
+
+.button__badge {
+    visibility: hidden; //A CHANGER
+    position: absolute;
+    top: 0;
+    right: 0;
+  padding: 1px 9px;
+  border-radius: 50%;
+  background: red;
+  color: red;
+}
 
 .erreuAnimation {
     animation: shake 0.82s cubic-bezier(.36, .07, .19, .97);

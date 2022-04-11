@@ -49,7 +49,8 @@ export class NewAccountComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.showAvatar();
+    // this.showAvatar();
+    document.getElementById("avatarDE")!.style.backgroundImage = "url(../../../assets/avdefault.png)";
     if(this.socketService.language == "french") 
     {
       this.emai = French.email;
@@ -261,19 +262,19 @@ export class NewAccountComponent implements OnInit {
 
   showAvatar() {
     if(this.socketService.avatarNumber == "1") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av1.png)";
+      document.getElementById("avatarDE")!.style.backgroundImage = "url(../../../assets/av1.png)";
     }
     else if(this.socketService.avatarNumber == "2") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av2.png)";
+      document.getElementById("avatarDE")!.style.backgroundImage = "url(../../../assets/av2.png)";
     }
     else if(this.socketService.avatarNumber == "3") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av3.png)";
+      document.getElementById("avatarDE")!.style.backgroundImage = "url(../../../assets/av3.png)";
     }
     else if(this.socketService.avatarNumber == "4") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av4.png)";
+      document.getElementById("avatarDE")!.style.backgroundImage = "url(../../../assets/av4.png)";
     }
     else if(this.socketService.avatarNumber == "5") {
-      document.getElementById("avatar2")!.style.backgroundImage = "url(../../../assets/av5.png)";
+      document.getElementById("avatarDE")!.style.backgroundImage = "url(../../../assets/av5.png)";
     }
   }
 
@@ -285,7 +286,7 @@ export class NewAccountComponent implements OnInit {
     this.dialog.open(AvatarComponent, { disableClose: true });
     this.playAudio("ui2.wav");
 
-    await this.sleep(3000);
+    await this.sleep(2000);
     this.showAvatar();
   }
 

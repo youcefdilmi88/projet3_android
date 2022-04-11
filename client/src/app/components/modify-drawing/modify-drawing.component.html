@@ -3,7 +3,7 @@
     <div>
         <mat-form-field class="input" floatLabel="always" appearance="outline" class="opt">
             <mat-label>Nouveau nom</mat-label>
-            <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="drawingNAME">
+            <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="drawingNAME" placeholder="Modifier le nom du dessin">
         </mat-form-field> 
     </div>
     <div *ngIf="showMe == true">

@@ -145,6 +145,8 @@ export class DessinsComponent implements OnInit {
       document.getElementById("title5")!.style.color = DarkGrey.text;
       document.getElementById("settingsButton")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("settingsButton")!.style.color = DarkGrey.text;
+      document.getElementById("albumQuitter")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("albumQuitter")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {       
       document.getElementById("createRoom")!.style.backgroundColor = DeepPurple.main;
@@ -203,6 +205,7 @@ export class DessinsComponent implements OnInit {
       data = JSON.parse(data);
       console.log("UPDATED?");
       this.getAllDrawings();
+      console.log(this.names);
       // console.log("HELLO?????");
       // this.names = [];
       // this.owners = [];
@@ -312,9 +315,10 @@ export class DessinsComponent implements OnInit {
       data.forEach((drawing:any)=>{
         this.imageUrlArray.push("../../../assets/color.png");
         let drawingObj:Drawing = new Drawing(drawing as DrawingInterface);
-        // console.log("obj", drawingObj);
+        console.log("obj", drawingObj);
         this.drawingTempSerivce.drawings.set(drawingObj.getName() as string, drawingObj);
         
+        console.log(drawing.drawingName);
         this.names.push(drawing.drawingName); 
         this.owners.push(drawing.owner);
         this.visibite.push(drawing.visibility);
@@ -517,9 +521,6 @@ export class DessinsComponent implements OnInit {
     }
   }
 
-
-
-
   setVisibilityToPrivate(name: string) :  void {
     let link = this.BASE_URL + "drawing/updateDrawing";
 
@@ -559,6 +560,37 @@ export class DessinsComponent implements OnInit {
 
     }
 
+  }
+
+
+
+  changeRoom(): void {
+    //this.dialog.open(RoomsComponent, { disableClose: true });
+    this.router.navigate(['/', 'rooms']);
+    this.playAudio("ui2.wav");
+    console.log("bing me there");
+    // if(this.router.url == "/sidenav") {
+    //   this.socketService.drawingName = this.socketService.currentRoom;
+    // }
+
+    this.leaveDrawing();
+  }
+
+  leaveDrawing() {
+    console.log("current", this.socketService.currentRoom);
+    // this.socketService.currentRoom = "randomSHIT";
+    let link = this.BASE_URL + "drawing/leaveDrawing";
+
+    if(this.router.url == "/sidenav") {
+      this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {
+        console.log("response", data);
+        if(data.message == "success") {
+          console.log("EXITED DRAWING" + data.useremail);
+          this.playAudio("ui2.wav");
+        }
+      });
+      // this.router.navigate(['/', 'dessins']);
+    }
   }
 
 

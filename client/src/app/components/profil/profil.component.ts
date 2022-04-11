@@ -71,20 +71,24 @@ export class ProfilComponent implements OnInit {
   
     console.log(this.avatar);
     if(this.avatar == "1") {
-      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar1.png)";
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/ava1.png)";
       this.socketService.avatar2 = "1";
     }
     else if(this.avatar == "2") {
-      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar2.png)";
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/ava2.png)";
       this.socketService.avatar2 = "2";
     }
     else if(this.avatar == "3") {
-      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar3.png)";
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/ava3.png)";
       this.socketService.avatar2 = "3";
     }
     else if(this.avatar == "4") {
-      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/avatar4.png)";
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/ava4.png)";
       this.socketService.avatar2 = "4";
+    }
+    else if(this.avatar == "5") {
+      document.getElementById("avatar")!.style.backgroundImage = "url(../../../assets/ava5.png)";
+      this.socketService.avatar2 = "5";
     }
     
   }

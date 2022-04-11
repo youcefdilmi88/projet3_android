@@ -24,6 +24,7 @@ export class SettingsComponent implements OnInit {
   public Deep_Purple: string;
   public Ligh_blue: string;
   public Light_Pink: string;
+  public cancel: string;
 
 
   constructor(
@@ -37,6 +38,7 @@ export class SettingsComponent implements OnInit {
       this.parameter = French.parameter;
       this.theme = French.theme;
       this.confirm = French.confirm2;
+      this.cancel = French.cancel;
 
       this.Light_grey = French.Light_grey;
       this.Dark_grey = French.Dark_grey;
@@ -49,6 +51,7 @@ export class SettingsComponent implements OnInit {
       this.parameter = English.parameter;
       this.theme = English.theme;
       this.confirm = English.confirm2;
+      this.cancel = English.cancel;
 
       this.Light_grey = English.Light_grey;
       this.Dark_grey = English.Dark_grey;
@@ -60,32 +63,42 @@ export class SettingsComponent implements OnInit {
     if(this.socketService.theme == "light grey"){
       document.getElementById("title0")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title0")!.style.color = LightGrey.text;
-      document.getElementById("conf")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("conf")!.style.color = LightGrey.text;
+      document.getElementById("langue")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("langue")!.style.color = LightGrey.text;
+      document.getElementById("langue2")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("langue2")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
       document.getElementById("title0")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("title0")!.style.color = DarkGrey.text;
-      document.getElementById("conf")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("conf")!.style.color = DarkGrey.text;
+      document.getElementById("langue")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("langue")!.style.color = DarkGrey.text;
+      document.getElementById("langue2")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("langue2")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {       
       document.getElementById("title0")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("title0")!.style.color = DeepPurple.text;
-      document.getElementById("conf")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("conf")!.style.color = DeepPurple.text;
+      document.getElementById("langue")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("langue")!.style.color = DeepPurple.text;
+      document.getElementById("langue2")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("langue2")!.style.color = DeepPurple.text;
     }
     else if(this.socketService.theme == "light blue") { 
       document.getElementById("title0")!.style.backgroundColor = LightBlue.main;
       document.getElementById("title0")!.style.color = LightBlue.text;
-      document.getElementById("conf")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("conf")!.style.color = LightBlue.text;
+      document.getElementById("langue")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("langue")!.style.color = LightBlue.text;
+      document.getElementById("langue2")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("langue2")!.style.color = LightBlue.text;
     }
     else if(this.socketService.theme == "light pink") {  
       document.getElementById("title0")!.style.backgroundColor = LightPink.main;
       document.getElementById("title0")!.style.color = LightPink.text;
-      document.getElementById("conf")!.style.backgroundColor = LightPink.main;
-      document.getElementById("conf")!.style.color = LightPink.text;
+      document.getElementById("langue")!.style.backgroundColor = LightPink.main;
+      document.getElementById("langue")!.style.color = LightPink.text;
+      document.getElementById("langue2")!.style.backgroundColor = LightPink.main;
+      document.getElementById("langue2")!.style.color = LightPink.text;
     }
   }
 
@@ -148,32 +161,42 @@ export class SettingsComponent implements OnInit {
     if(this.socketService.theme == "light grey"){
       document.getElementById("title0")!.style.backgroundColor = LightGrey.main;
       document.getElementById("title0")!.style.color = LightGrey.text;
-      document.getElementById("conf")!.style.backgroundColor = LightGrey.main;
-      document.getElementById("conf")!.style.color = LightGrey.text;
+      document.getElementById("langue")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("langue")!.style.color = LightGrey.text;
+      document.getElementById("langue2")!.style.backgroundColor = LightGrey.main;
+      document.getElementById("langue2")!.style.color = LightGrey.text;
     }
     else if(this.socketService.theme == "dark grey"){
       document.getElementById("title0")!.style.backgroundColor = DarkGrey.main;
       document.getElementById("title0")!.style.color = DarkGrey.text;
-      document.getElementById("conf")!.style.backgroundColor = DarkGrey.main;
-      document.getElementById("conf")!.style.color = DarkGrey.text;
+      document.getElementById("langue")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("langue")!.style.color = DarkGrey.text;
+      document.getElementById("langue2")!.style.backgroundColor = DarkGrey.main;
+      document.getElementById("langue2")!.style.color = DarkGrey.text;
     }
     else if(this.socketService.theme == "deep purple") {       
       document.getElementById("title0")!.style.backgroundColor = DeepPurple.main;
       document.getElementById("title0")!.style.color = DeepPurple.text;
-      document.getElementById("conf")!.style.backgroundColor = DeepPurple.main;
-      document.getElementById("conf")!.style.color = DeepPurple.text;
+      document.getElementById("langue")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("langue")!.style.color = DeepPurple.text;
+      document.getElementById("langue2")!.style.backgroundColor = DeepPurple.main;
+      document.getElementById("langue2")!.style.color = DeepPurple.text;
     }
     else if(this.socketService.theme == "light blue") { 
       document.getElementById("title0")!.style.backgroundColor = LightBlue.main;
       document.getElementById("title0")!.style.color = LightBlue.text;
-      document.getElementById("conf")!.style.backgroundColor = LightBlue.main;
-      document.getElementById("conf")!.style.color = LightBlue.text;
+      document.getElementById("langue")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("langue")!.style.color = LightBlue.text;
+      document.getElementById("langue2")!.style.backgroundColor = LightBlue.main;
+      document.getElementById("langue2")!.style.color = LightBlue.text;
     }
     else if(this.socketService.theme == "light pink") {  
       document.getElementById("title0")!.style.backgroundColor = LightPink.main;
       document.getElementById("title0")!.style.color = LightPink.text;
-      document.getElementById("conf")!.style.backgroundColor = LightPink.main;
-      document.getElementById("conf")!.style.color = LightPink.text;
+      document.getElementById("langue")!.style.backgroundColor = LightPink.main;
+      document.getElementById("langue")!.style.color = LightPink.text;
+      document.getElementById("langue2")!.style.backgroundColor = LightPink.main;
+      document.getElementById("langue2")!.style.color = LightPink.text;
     }
     this.playAudio("ui2.wav");
   }

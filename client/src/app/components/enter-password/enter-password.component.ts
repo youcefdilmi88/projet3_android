@@ -34,33 +34,39 @@ export class EnterPasswordComponent implements OnInit {
 
     let link = this.BASE_URL + "drawing/joinDrawing";
 
-    this.http.post<any>(link, {useremail: this.socketService.email, drawingName: this.socketService.clickedDrawing, password: this.password2.trim()}).subscribe((data:any) => {
-      if(data.message == "success") {
-        //console.log("CA MARCHE OPEN");
-        //console.log("join dessins:" + element.textContent.trim().slice(7));
-        this.dialog.open(NewDrawingComponent);
-        this.router.navigate(['/', 'sidenav']);
-        //console.log("CREATED CANVAS");
-
-      let link2 = this.BASE_URL + "room/joinRoom";
-
-        const userObj={
-          useremail:this.socketService.email,
-          nickname:this.socketService.nickname,
-        }
-    
-        this.http.post<any>(link2,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
-          catchError(async (err) => console.log("error catched" + err))
-        ).subscribe((data: any) => {
-      
-          if(data.message == "success") {
-            this.socketService.currentRoom = this.socketService.clickedDrawing;
-            //console.log("current room;" + this.socketService.currentRoom);
+    if(this.password2 == undefined || this.password2 == "" || this.password2) {
+      console.log("nope");
+    }
+    else {
+      this.http.post<any>(link, {useremail: this.socketService.email, drawingName: this.socketService.clickedDrawing, password: this.password2.trim()}).subscribe((data:any) => {
+        if(data.message == "success") {
+          //console.log("CA MARCHE OPEN");
+          //console.log("join dessins:" + element.textContent.trim().slice(7));
+          this.dialog.open(NewDrawingComponent);
+          this.router.navigate(['/', 'sidenav']);
+          //console.log("CREATED CANVAS");
+  
+        let link2 = this.BASE_URL + "room/joinRoom";
+  
+          const userObj={
+            useremail:this.socketService.email,
+            nickname:this.socketService.nickname,
           }
-        });
-      }
-    });
-    this.dialogRef.close();
+      
+          this.http.post<any>(link2,{ newRoomName:this.socketService.currentRoom, user:userObj}).pipe(
+            catchError(async (err) => console.log("error catched" + err))
+          ).subscribe((data: any) => {
+        
+            if(data.message == "success") {
+              this.socketService.currentRoom = this.socketService.clickedDrawing;
+              //console.log("current room;" + this.socketService.currentRoom);
+            }
+          });
+        }
+      });
+      this.dialogRef.close();
+    }
+
   }
 
   cancelPass() {

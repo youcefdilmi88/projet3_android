@@ -141,11 +141,23 @@ a {
 }
 
 
+.message-container {
+	width: 60%;
+	word-wrap: break-word;
+	background-color: #4f5d73c7;
+	padding: 7px 10px;
+	border-radius: 10px 10px 10px 0px;
+	margin: 10px 0px;
+}
 
-
-
-
-
+.my-chat{
+	width: 60%;
+	word-wrap: break-word;
+	background-color: #77b3d4c7;
+	padding: 7px 10px;
+	border-radius: 10px 10px 0px 10px;
+	margin: 5px 0px 5px auto;
+}
 
 
 
@@ -243,14 +255,38 @@ a {
 	//border: 3px solid green;
 }
 
-.right {
-	position: absolute;
-	right: 50px;
-	top: 29px;
-}
-
-.left {
-	position: absolute;
-	left: 90px;
-	top: 30px;
-}
+#avatar1 {
+	background: url(../../../assets/av1.png);
+	width: 100px;
+	height: 100px;
+  }
+  
+  #avatar2 {
+	background: url(../../../assets/av2.png);
+	width: 100px;
+	height: 100px;
+  }
+  
+  #avatar3 {
+	background: url(../../../assets/av3.png);
+	width: 100px;
+	height: 100px;
+  }
+  
+  #avatar4 {
+	background: url(../../../assets/av4.png);
+	width: 100px;
+	height: 100px;
+  }
+  
+  #avatar5 {
+	background: url(../../../assets/av5.png);
+	width: 100px;
+	height: 100px;
+  }
+  
+  #avatar0 {
+	background: url(../../../assets/avatar0.png);
+	width: 100px;
+	height: 100px;
+  }

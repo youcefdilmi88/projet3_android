@@ -21,24 +21,37 @@
       <!-- <div class="test"></div>> -->
       <div class="chat-messages" #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y:auto">
           <div class="message-icon" id ="message-icon"></div>
-          <div class="left">
-            <div class="message-area" id="message-area" *ngFor="let msg of this.message">
-                <!-- <img src={{source}} alt="Italian Trulli"> -->
-                {{ msg }}
-            </div>
-          </div>
-          <div class="right">
-            <div class="message-others" id="message-others" *ngFor="let msg of this.others" style="text-align:right">
-              <!-- <img src={{source2}} alt="Italian Trulli"> -->
-              {{ msg }}
-          </div>
-        </div>
+          <!--<div class="left">-->
+
+
+               <div class="message-area" id="message-area" *ngFor="let msg of this.message" >
+                    <div *ngIf="(msg.nickname!=currentNickname)" class="message-container">
+                      <div>{{ msg.time }}</div>
+                      <br>
+                      <div>{{msg.message}}</div>
+                      <br>
+                      <div>{{msg.nickname}}</div>
+                    </div>
+                    <div *ngIf="(msg.nickname!=currentNickname)" class="message-icon">
+                      <img [src]="avatarCurrentUser" alt="Italian Trulli">
+                    </div>
+                    <div *ngIf="(msg.nickname==currentNickname)" class="my-chat"  style="text-align:right;left:900px;">
+                      <div>{{ msg.time }}</div>
+                      <br>
+                      <div>{{msg.message}}</div>
+                      <br>
+                      <div>{{msg.nickname}}</div>
+                    </div>
+                  
+               </div>
+       
+           
       </div>
     </main>
     
     <div class="chat-form-container"> 
       <textarea #chatinput class="child" maxlength ="500" required></textarea>
-      <!--<button (click)="sendchatinput(chatinput.value)" class="child">Envoyé</button>-->
+      <!--<button (click)="sendchatinput(chatinput.value)" class="child">EnvoyÃ©</button>-->
       <button (click)="sendchatinput(chatinput.value)" id="send" class="btn"><i class="fa fa-send" style="font-size:50px"></i></button>
     </div>
   </div>

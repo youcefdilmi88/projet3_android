@@ -1,7 +1,10 @@
 <h1 mat-dialog-title> {{ logout }} </h1>
 
-<p> {{ leave }} </p>
+<div>
+    <p> {{ leave }} </p>
+</div>
 
-<button mat-raised-button (click)="quit()" routerLink = ""> {{ qui }}</button>
-
-<button mat-raised-button (click)="annuler()"> {{ cancel }} </button>
+<div id="quit">
+    <button mat-raised-button id="quitAnnuler" (click)="annuler()"> {{ cancel }} </button>
+    <button mat-raised-button (click)="quit()" routerLink = ""> {{ qui }}</button>
+</div>

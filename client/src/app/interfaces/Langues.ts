@@ -2,8 +2,8 @@ export const French = {
     //main page 
     email: "Courriel",
     pass: "Mot de passe",
-    createAcc: "Créer un compte",
-    join : "Rejoindre le chat",
+    createAcc: "Créer votre compte",
+    join : "Se connecter",
     connection: "Connexion",
     options: "Paramètres",
     error1: "Vous ne pouvez pas mettre des champs vides", 
@@ -26,7 +26,7 @@ export const French = {
     chooseAlbum: "Choisir un album",
     createAlbum: "Créer un album",
     menuCompte: "Menu compte",
-    goChat: "Accéder au chat",
+    goChat: "Clavardage",
     open: "Ouvrir",
     delete: "Supprimer",
     request: "Demande envoyée!",
@@ -53,6 +53,8 @@ export const French = {
     nameOfNewRoom: "Nom de la nouvelle salle",
     nameOfRoomCreator: "Nom de la salle/créateur",
     join2: "Joindre",
+    leave2: "Vous avez quitté la salle ",
+    alreadyleave: "Vous avez déjà quitté la salle ",
 
     //snackbar
     on: "Son activé",
@@ -60,8 +62,8 @@ export const French = {
 
     //settings
     change: "Changer les paramètres",
-    parameter: "Choisir la langue:",
-    theme: "Choisir le thème",
+    parameter: "Language",
+    theme: "Thème",
     confirm2: "Confirmer",
 
     //theme
@@ -74,7 +76,7 @@ export const French = {
     //logout
     quit: "Quitter",
     leave: "Êtes-vous certain de vouloir quitter l'application?",
-    logout: "Déconnection",
+    logout: "Déconnexion",
 
     //reinit
     reinit: "Réinitialisation",
@@ -87,7 +89,7 @@ export const English = {
     email: "Email",
     pass : "Password",
     createAcc: "Create account",
-    join : "Join chat",
+    join : "Connect",
     connection: "Connection",
     options: "Settings",
     error1: "You can not enter an empty value",
@@ -109,7 +111,7 @@ export const English = {
     chooseAlbum: "Choose album",
     createAlbum: "Create album",
     menuCompte: "Account settings",
-    goChat: "Access chat",
+    goChat: "Chat",
     open: "Open  ",
     delete: "Delete   ",
     request: "Request sent!",
@@ -136,6 +138,8 @@ export const English = {
     nameOfNewRoom: "Name of new room",
     nameOfRoomCreator: "Name of room/creator",
     join2: "Join   ",
+    leave2: "You have left room ",
+    alreadyleave: "You already left the room ",
 
     //snackbar
     on: "Sound on",
@@ -143,8 +147,8 @@ export const English = {
 
     //settings
     change: "Change settings",
-    parameter: "Choose language:",
-    theme: "Choose theme",
+    parameter: "Language",
+    theme: "Theme",
     confirm2: "Confirm",
 
     //theme
@@ -155,12 +159,12 @@ export const English = {
     Light_Pink: "Light pink",
 
     //logout
-    quit: "Quit",
+    quit: "Quit   ",
     leave: "Are you sure you want to leave the application?",
     logout: "Logout",
 
     //reinit
     reinit: "Reinitialisation",
-    certain: "Are yo sure you want to reinitialise the drawing? All changes will be lost",
+    certain: "Are you sure you want to reinitialise the drawing? All changes will be lost",
     init: "Reinitialise"
 }

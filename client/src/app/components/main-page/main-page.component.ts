@@ -56,7 +56,7 @@ export class MainPageComponent implements OnInit{
     if(this.socketService.language == "french") 
     {
       this.rejoindre = French.join;
-      this.creer = French.create;
+      this.creer = French.createAcc; 
       this.emai = French.email;
       this.pass = French.pass;
       this.connection = French.connection;
@@ -68,7 +68,7 @@ export class MainPageComponent implements OnInit{
     }
     else {
       this.rejoindre = English.join;
-      this.creer = English.create;
+      this.creer = English.createAcc;
       this.emai = English.email;
       this.pass = English.pass;
       this.connection = English.connection;

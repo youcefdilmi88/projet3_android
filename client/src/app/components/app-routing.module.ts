@@ -18,6 +18,9 @@ const routes: Routes = [
     path: '', component: MainPageComponent, data: {animation:'isRight'}
   },
   {
+    path: 'main', component: MainPageComponent, data: {animation:'isRight'}
+  },
+  {
     path: 'chat', component: ChatComponent
   },
   {

@@ -13,7 +13,15 @@
                 <div class="inner">
 
                     <h2 id="color">Créer un compte</h2>
-                    <button id="avatar2" (click)="openAvatar()"><span class='special-word'>1</span></button>
+                    <button id="avatarDE" (click)="openAvatar()"><span class='special-word'>1</span></button>
+                    
+                    <div class="email">    
+                        <mat-form-field class="input" floatLabel="always" appearance="outline" style="width: 300px;">
+                            <mat-label>{{emai}}</mat-label>
+                            <input matInput id="mail" type="text" name="email" required required [(ngModel)]="mail">
+                        </mat-form-field> 
+                    </div>
+
                     <div class="pseudo">
                         <mat-form-field class="input" floatLabel="always" appearance="outline" style="width: 300px;">
                             <mat-label>Pseudo</mat-label>
@@ -21,12 +29,6 @@
                         </mat-form-field> 
                     </div>
 
-                    <div class="email">    
-                        <mat-form-field class="input" floatLabel="always" appearance="outline" style="width: 300px;">
-                            <mat-label>{{emai}}</mat-label>
-                            <input matInput id="mail" type="text" name="email" required required [(ngModel)]="mail">
-                        </mat-form-field> 
-                    </div>
 
                     <div class="pass">    
                         <mat-form-field class="input" floatLabel="always" appearance="outline" style="width: 300px;">
@@ -48,7 +50,7 @@
 
                     <!-- <button mat-raised-button id="buttonMain5" (click)="cancelClick()">{{cancel}}</button> -->
                     <button mat-raised-button id="buttonMain6" (click)="closeClick()" style="width: 300px;" >{{confirm}}</button>
-                    <p id="already" (click)="cancelClick()" style="color: aqua;">Vous avez déjà un compte? Connexion</p>
+                    <p id="already" (click)="cancelClick()">Vous avez déjà un compte? Connexion</p>
                     <!-- <button mat-raised-button id="buttonMain7" (click)="openAvatar()" >Avatar</button> -->
 
                 </div>

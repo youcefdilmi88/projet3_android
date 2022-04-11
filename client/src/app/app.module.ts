@@ -47,6 +47,8 @@ import { UsersComponent } from './components/users/users.component';
 import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
 import { EnterPasswordComponent } from './components/enter-password/enter-password.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { CreateCanalComponent } from './components/create-canal/create-canal.component';
+import { FilterCanalComponent } from './components/filter-canal/filter-canal.component';
 
 
 @NgModule({
@@ -91,6 +93,8 @@ import { LogoutComponent } from './components/logout/logout.component';
         CreateDrawingComponent,
         EnterPasswordComponent,
         LogoutComponent,
+        CreateCanalComponent,
+        FilterCanalComponent,
     ],
     imports: [
         BrowserModule,
