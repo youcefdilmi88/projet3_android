@@ -32,6 +32,7 @@ export class ProfilComponent implements OnInit {
   info3: string;
   info4: string;
   info5: string;
+  remove: string;
 
   constructor(
     private socketService: SocketService,
@@ -49,6 +50,7 @@ export class ProfilComponent implements OnInit {
       this.info3 = French.info3;
       this.info4 = French.info4;
       this.info5 = French.info5;
+      this.remove = French.remove;
      }
      else {
       this.profilTitle = English.profilTitle;
@@ -57,6 +59,7 @@ export class ProfilComponent implements OnInit {
        this.info3 = English.info3;
        this.info4 = English.info4;
        this.info5 = English.info5;
+       this.remove = English.remove;
      }
 
     if(this.socketService.theme == "light grey"){

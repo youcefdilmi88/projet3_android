@@ -58,6 +58,7 @@ export const French = {
     info3: "Dernière connexion: ",
     info4: "Dernière déconnexion: ",
     info5: "Liste d'amis :",
+    remove: "Enlever comme ami",
               
     //dessin
     drawingTitle: "Dessins",
@@ -123,6 +124,13 @@ export const French = {
     //snackbar
     on: "Son activé",
     off: "Son désactivé",
+
+    //users
+    addTitle: "Liste de tous les utilisateurs dans ce dessin",
+    snackbar1: "Vous ne pouvez pas ajouter vous même",
+    snackbar2: "Vous êtes déjà amis",
+    add: "Ajouter comme ami",
+    added: "Ajouté comme ami",
 
     //settings
     change: "Changer les paramètres",
@@ -207,6 +215,14 @@ export const English = {
     info3: "Last connection: ",
     info4: "Last deconnection: ",
     info5: "Friends list :",
+    remove: "remove friend    ",
+
+    //users
+    addTitle: " List of all the users in this drawing",
+    snackbar1: "You can't add yourself",
+    snackbar2: "You are already friends",
+    add: "Add as friend    ",
+    added: "Added as friends",
 
     //dessin
     drawingTitle: "Drawings",
