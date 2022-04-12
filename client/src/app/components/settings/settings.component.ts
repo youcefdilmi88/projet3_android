@@ -154,6 +154,10 @@ export class SettingsComponent implements OnInit {
     this.playAudio("ui2.wav");
   }
 
+  annuler(): void {
+    this.playAudio("ui2.wav");
+  }
+
   onChange(value: any) {
     this.socketService.theme = value;
     console.log(this.socketService.theme);

@@ -5,6 +5,7 @@ import { ToolsService } from 'src/app/services/tools/tools.service';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { UsersComponent } from '../users/users.component';
+import { SocketService } from '@app/services/socket/socket.service';
 //import { DrawingService } from '@app/services/drawing/drawing.service';
 //import { RendererProviderService } from '@app/services/renderer-provider/renderer-provider.service';
 //import { SocketService } from '@app/services/socket/socket.service';
@@ -23,6 +24,7 @@ export class SidenavComponent {
 
   constructor(
     //private dialog: MatDialog, 
+    private socketService: SocketService,
     private sideNavService: SidenavService, 
     private toolService: ToolsService,
     public dialog: MatDialog,
@@ -72,8 +74,17 @@ export class SidenavComponent {
 
   openUsers() {
     this.dialog.open(UsersComponent);
+    this.playAudio("ui2.wav");
   }
 
+  playAudio(title: string){
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
+  }
 
   /// Changer la selection avec un toggle button
   selectionChanged(selectedItem: MatButtonToggleChange): void {

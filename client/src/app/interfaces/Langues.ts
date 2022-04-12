@@ -108,6 +108,7 @@ export const French = {
     cancelCreationCanal: "Annuler",
     createConfirmCanal: "Créer",
     roomAlreadyExists: "Ce canal existe déjà",
+    default: "Vous ne pouvez pas supprimer DEFAULT",
 
     //enterPass
     passTit: "Entrer mot de pass",
@@ -153,7 +154,26 @@ export const French = {
     //reinit
     reinit: "Réinitialisation",
     certain: "Êtes-vous certain de vouloir réinitialier le dessin? Toute modification sera perdu",
-    init: "Réinitialiser"
+    init: "Réinitialiser",
+
+    //modifyDrawing
+    modifyDrawingTitle: "Modifier le dessin",
+    labelModifyDrawing: "Nouveau nom",
+    switch: "Modifier la visibilité",
+    choos: "Choisissez la visibilité",
+    priv2: "privé",
+    pub2: "public",
+    vers: "Vers quel album?",
+    annulModifyDraw: "Annuler",
+    modifDraw: "Modifier",
+    newPAS: "Nouveau mot de pass",
+    placeHolderMod: "Modifier le nom du dessin",
+
+    //modifyAlbum
+    newDesc: "Nouvelle description",
+    modifAlbum: "Modifier un album",
+
+    alert: "Vous aviez été accepté",
 }
 
 export const English = {
@@ -273,6 +293,7 @@ export const English = {
     cancelCreationCanal: "Cancel",
     createConfirmCanal: "Create",
     roomAlreadyExists: "This room already exists",
+    default: "You cannot delete DEFAULT",
 
     //enterPass
     passTit: "Enter password",
@@ -311,5 +332,24 @@ export const English = {
     //reinit
     reinit: "Reinitialisation",
     certain: "Are you sure you want to reinitialise the drawing? All changes will be lost",
-    init: "Reinitialise"
+    init: "Reinitialise",
+
+    //modifyDrawing
+    modifyDrawingTitle: "Modify the drawing",
+    labelModifyDrawing: "New name",
+    switch: "Modify the visibility",
+    choos: "Choose the visibility",
+    priv2: "private",
+    pub2: "public",
+    vers: "To which album?",
+    annulModifyDraw: "Cancel",
+    modifDraw: "Modify",
+    newPAS: "New password",
+    placeHolderMod: "Modify the drawing name",
+
+    //modifyAlbum
+    newDesc: "Nouvelle description",
+    modifAlbum: "Modifier un album",
+
+    alert: "You have been accepted",
 }

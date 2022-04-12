@@ -10,9 +10,9 @@
 
                 <div class="subtext-container">   
                     <button mat-raised-button id="createAlbum" (click)="createAlbum()">{{creaAlbum}}</button>
-                    <button mat-raised-button id="menuCompte" routerLink="/profil">{{accoutMenu}}</button>
+                    <button mat-raised-button id="menuCompte" (click)="son()" routerLink="/profil">{{accoutMenu}}</button>
                     <!-- <button mat-raised-button id="chatRoom" routerLink="/clavardage" (click)="defaultRoom()">{{goChat}}</button>  -->
-                    <button mat-raised-button id="chatRoom" routerLink="/rooms">{{goChat}}</button> 
+                    <button mat-raised-button id="chatRoom" (click)="son()" routerLink="/rooms">{{goChat}}</button> 
                     <button mat-raised-button id="sortAlpha" (click)="sortAlpha()"><i class="fa fa-sort-alpha-asc"></i></button>
                     <button mat-raised-button id="sortCreate" (click)="sortCreation()"><i class= "fa fa-sort-numeric-asc"></i></button>
                 </div>

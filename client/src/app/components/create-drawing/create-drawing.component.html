@@ -7,12 +7,22 @@
         </mat-form-field> 
     </div>
     <div id="createDraw2">        
-        <div > <mat-form-field appearance="fill" class="opt2">
+        <div *ngIf="dont != 'PUBLIC'" > 
+            <mat-form-field appearance="fill" class="opt2">
             <mat-label>{{chooseVisi}}</mat-label>
             <mat-select (selectionChange)="chooseVisib($event.value)">
               <mat-option value="public">{{pub}}</mat-option> 
               <mat-option value="protected">{{pro}}</mat-option>
               <mat-option value="private">{{priv}}</mat-option>
+            </mat-select>
+          </mat-form-field> 
+        </div>
+        <div *ngIf="dont == 'PUBLIC'" > 
+            <mat-form-field appearance="fill" class="opt2">
+            <mat-label>{{chooseVisi}}</mat-label>
+            <mat-select (selectionChange)="chooseVisib($event.value)">
+              <mat-option value="public">{{pub}}</mat-option> 
+              <mat-option value="protected">{{pro}}</mat-option>
             </mat-select>
           </mat-form-field> 
         </div>
@@ -29,4 +39,3 @@
         <button mat-raised-button id="créer" class="buto" (click)="createDrawing(drawingname.value)">{{createConfirmDrawing}}</button>
     </div>
 </div>
- 

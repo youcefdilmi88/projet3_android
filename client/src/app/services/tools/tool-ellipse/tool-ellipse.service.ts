@@ -200,22 +200,22 @@ export class ToolEllipseService implements Tools {
     let height = this.ellipse2.getAttribute('height')?.slice(0, -2);
     let width = this.ellipse2.getAttribute('width')?.slice(0, -2);
 
-    this.ellipseAttributes.finalY = +lastY! as number;
-    this.ellipseAttributes.finalX = +lastX! as number;
-    this.ellipseAttributes.height = +height! as number;
-    this.ellipseAttributes.width = +width! as number;
+    this.ellipseAttributes.finalY = Math.round(+lastY!) as number;
+    this.ellipseAttributes.finalX = Math.round(+lastX!) as number;
+    this.ellipseAttributes.height = Math.round(+height!) as number;
+    this.ellipseAttributes.width = Math.round(+width!) as number;
 
     if (this.xnegatif == true) {
-      this.ellipseAttributes.x = (this.ellipseAttributes.x - this.ellipseAttributes.width/2) as number;
+      this.ellipseAttributes.x = Math.round((this.ellipseAttributes.x - this.ellipseAttributes.width/2)) as number;
     }
     else {
-      this.ellipseAttributes.x = (this.ellipseAttributes.x + this.ellipseAttributes.width/2) as number;
+      this.ellipseAttributes.x = Math.round((this.ellipseAttributes.x + this.ellipseAttributes.width/2)) as number;
     }
     if (this.ynegatif == true) {
-      this.ellipseAttributes.y = (this.ellipseAttributes.y - this.ellipseAttributes.height/2) as number;
+      this.ellipseAttributes.y = Math.round((this.ellipseAttributes.y - this.ellipseAttributes.height/2)) as number;
     }
     else {
-      this.ellipseAttributes.y = (this.ellipseAttributes.y + this.ellipseAttributes.height/2) as number;
+      this.ellipseAttributes.y = Math.round((this.ellipseAttributes.y + this.ellipseAttributes.height/2)) as number;
     }
 
     this.ynegatif = false;

@@ -99,17 +99,26 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  playAudio(title: string){
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
+  }
+
   addFriend(element: any) {
     let link = this.BASE_URL + "user/addFriend";
     if(element.textContent.trim().slice(18) == this.socketService.email) {
       console.log("tu ne pas add toi meme");
       this.snackBar.open(this.snackbar1, '', { duration: ONE_SECOND, });
-
+      this.playAudio("error.wav");
     }
     else if (this.socketService.userObj.friends.includes(element.textContent.trim().slice(18))) {
       console.log("deja friends");
       this.snackBar.open(this.snackbar2, '', { duration: ONE_SECOND, });
-
+      this.playAudio("error.wav");
     }
     else {
       console.log("FRIEND", element.textContent.trim().slice(18));
@@ -117,6 +126,7 @@ export class UsersComponent implements OnInit {
         if(data.message == "success") {
           console.log("added friend");
           this.snackBar.open(this.added, '', { duration: ONE_SECOND, });
+          this.playAudio("ui2.wav");
         }
       });
     }

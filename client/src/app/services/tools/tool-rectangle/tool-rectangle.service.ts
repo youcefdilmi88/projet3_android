@@ -196,16 +196,16 @@ export class ToolRectangleService implements Tools {
     let height = this.rectangle2.getAttribute('height')?.slice(0, -2);
     let width = this.rectangle2.getAttribute('width')?.slice(0, -2);
 
-    this.rectangleAttributes.finalY = +lastY!;
-    this.rectangleAttributes.finalX = +lastX!;
-    this.rectangleAttributes.height = +height!;
-    this.rectangleAttributes.width = +width!;
+    this.rectangleAttributes.finalY = Math.round(+lastY!) as number;
+    this.rectangleAttributes.finalX = Math.round(+lastX!) as number;
+    this.rectangleAttributes.height = Math.round(+height!) as number;
+    this.rectangleAttributes.width = Math.round(+width!) as number;
 
     if (this.xnegatif == true) {
-      this.rectangleAttributes.x = this.rectangleAttributes.x - this.rectangleAttributes.width;
+      this.rectangleAttributes.x = Math.round(this.rectangleAttributes.x - this.rectangleAttributes.width) as number;
     }
     if (this.ynegatif == true) {
-      this.rectangleAttributes.y = this.rectangleAttributes.y - this.rectangleAttributes.height;
+      this.rectangleAttributes.y = Math.round(this.rectangleAttributes.y - this.rectangleAttributes.height) as number;
     }
 
     this.ynegatif = false;

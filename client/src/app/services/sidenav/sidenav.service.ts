@@ -48,8 +48,18 @@ export class SidenavService {
     });
   }
 
+  playAudio(title: string){
+    if (this.socketService.mute == false) {
+      let audio = new Audio();
+      audio.src = "../../../assets/" + title;
+      audio.load();
+      audio.play();
+    }
+  }
+
   clickreset(): void {
     this.dialog.open(ReinitComponent);
+    this.playAudio("ui2.wav");
   }
 
   click(): void {

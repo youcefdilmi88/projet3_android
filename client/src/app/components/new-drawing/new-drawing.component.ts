@@ -153,7 +153,7 @@ export class NewDrawingComponent implements OnInit {
   private newDrawing() {
     this.drawingService.isCreated = true;
     // const size: { width: number, height: number } = this.newDrawingService.sizeGroup.value;
-    const size: { width: number, height: number } = {width: 1000, height: 996};
+    const size: { width: number, height: number } = {width: 1280, height: 996};
     this.drawingService.newDrawing(
       size.width,
       size.height,

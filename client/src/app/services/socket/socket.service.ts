@@ -40,6 +40,8 @@ export class SocketService {
   public filtered: boolean;
   public buttons:Array<string> = [];
   public members: Array<string>;
+  public currVisib: string;
+  public drawingNameChange: boolean = false;
   //private userService: UserService;
 
   constructor() { }

@@ -52,6 +52,7 @@ export class RoomsComponent implements OnInit {
   public leave2: string;
   public quit: string;
   public alreadyleave: string;
+  public default: string;
   private members: Array<string> = [];
 
   constructor(
@@ -81,6 +82,7 @@ export class RoomsComponent implements OnInit {
       this.leave2 = French.leave2;
       this.quit = French.quit;
       this.alreadyleave = French.alreadyleave;
+      this.default = French.default;
     }
     else {
       this.creaRoom = English.createRoom;
@@ -93,6 +95,7 @@ export class RoomsComponent implements OnInit {
       this.leave2 = English.leave2;
       this.quit = English.quit;
       this.alreadyleave = English.alreadyleave;
+      this.default = English.default;
     }
     if(this.socketService.theme == "light grey"){
       document.getElementById("CreerCanal")!.style.backgroundColor = LightGrey.main;
@@ -190,6 +193,10 @@ export class RoomsComponent implements OnInit {
         }
       });
     });
+  }
+
+  son(): void {
+    this.playAudio("ui2.wav");
   }
 
   roomListener() {
@@ -328,6 +335,10 @@ export class RoomsComponent implements OnInit {
     let link2 = this.BASE_URL + "drawing/deleteDrawing";
 
     // si c'est un drawing room
+    if (element.textContent.trim().slice(10) == "DEFAULT") {
+      this.snackBar.open(this.default, '', { duration: ONE_SECOND, });
+      this.playAudio("error.wav");
+    }
     if(this.drawingTempSerivce.drawings.has(element.textContent.trim().slice(10))) {
       this.http.post<any>(link2, {drawingName: element.textContent.trim().slice(10)}).subscribe((data:any) => {
         if (data.message == "success") {
@@ -339,6 +350,10 @@ export class RoomsComponent implements OnInit {
       });
     }
     else { // si c'est un PAS drawing room
+      if (element.textContent.trim().slice(10) == "DEFAULT") {
+        this.snackBar.open(this.default, '', { duration: ONE_SECOND, });
+        this.playAudio("error.wav");
+      }
       this.http.post<any>(link,{roomName: element.textContent.trim().slice(10) }).subscribe((data: any) => { 
         console.log(data);
         if (data == 404) {
@@ -474,6 +489,7 @@ export class RoomsComponent implements OnInit {
 
   createCanal() {
     this.dialog.open(CreateCanalComponent, { disableClose: false, height: "350px", width: "450px" } );
+    this.playAudio("ui2.wav");
   }
 
   filterCanal() {

@@ -26,23 +26,24 @@
 
                <div class="message-area" id="message-area" *ngFor="let msg of this.message" >
                     <div *ngIf="(msg.nickname!=currentNickname)" class="message-container">
-                      <div style="display:inline">{{msg.nickname}}</div>
-                      &nbsp;
-                     <div style="display:inline">{{ msg.time }}</div>
-                     <br>
-                     <div>{{msg.message}}</div>
+                    
+                        <div style="display:inline">{{msg.nickname}}</div>
+                        &nbsp;
+                        <div style="display:inline">{{ msg.time }}</div>
+                        <br>
+                        <div>{{msg.message}}</div>
                     </div>
-                    <div *ngIf="(msg.nickname!=currentNickname)" class="message-icon">
-                      <img [src]="avatarCurrentUser" alt="Italian Trulli">
+
+                    <div *ngIf="(msg.nickname==currentNickname)" class="my-chat">
+                      
+                        <div style="display:inline">{{msg.nickname}}</div>
+                        &nbsp;
+                        <div style="display:inline">{{ msg.time }}</div>
+                        <br>
+                        <div>{{msg.message}}</div>
+                    
                     </div>
-                    <div *ngIf="(msg.nickname==currentNickname)" class="my-chat"  style="text-align:right;left:900px;">
-                      <div style="display:inline">{{msg.nickname}}</div>
-                      &nbsp;
-                     <div style="display:inline">{{ msg.time }}</div>
-                     <br>
-                     <div>{{msg.message}}</div>
-                    </div>
-                  
+                    
                </div>
        
            
@@ -51,8 +52,8 @@
     
     <div class="chat-form-container"> 
       <textarea #chatinput class="child" maxlength ="500" required></textarea>
-      <!--<button (click)="sendchatinput(chatinput.value)" class="child">EnvoyÃ©</button>-->
-      <button (click)="sendchatinput(chatinput.value)" id="send" class="btn"><i class="fa fa-send" style="font-size:50px"></i></button>
+      <!--<button (click)="sendchatinput(chatinput.value)" class="child">Envoyé</button>-->
+      <button (click)="sendchatinput(chatinput.value)" id="send" class="btn"><i class="fa fa-send" style="font-size:30px;margin-top:15px;left:900px;"></i></button>
     </div>
   </div>
 

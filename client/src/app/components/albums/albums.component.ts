@@ -52,6 +52,7 @@ export class AlbumsComponent implements OnInit {
   public goChat: string;
   public prop: string;
   public quit: string;
+  public default: string;
   filteredAlphaAsc: string;
   filteredAlphaDes: string;
   filteredDateAsc: string;
@@ -67,7 +68,8 @@ export class AlbumsComponent implements OnInit {
   public toggleSortAlpha = true;
   public toggleSortCreation = true;
   public order:Array<number> = [];
-  public kk = false;;
+  public kk = false;
+  public alert: string
 
   welcomeDialogRef: MatDialogRef<WelcomeDialogComponent>;
   welcomeDialogSub: Subscription;
@@ -117,6 +119,8 @@ export class AlbumsComponent implements OnInit {
      this.filteredDateDesc = French.filteredDateDesc;
      this.leavePublicAlbum = French.leavePublicAlbum;
      this.leftAlbum = French.leftAlbum;
+     this.default = French.default;
+     this.alert = French.alert;
     }
     else {
       this.creaAlbum = English.createAlbum;
@@ -136,6 +140,8 @@ export class AlbumsComponent implements OnInit {
       this.filteredDateDesc = English.filteredDateDesc;
       this.leavePublicAlbum = English.leavePublicAlbum;
       this.leftAlbum = English.leftAlbum;
+      this.default = English.default;
+      this.alert = English.alert;
     }
     if(this.socketService.theme == "light grey"){
       document.getElementById("createAlbum")!.style.backgroundColor = LightGrey.main;
@@ -245,6 +251,18 @@ export class AlbumsComponent implements OnInit {
       }
       this.getAllAlbums();
     });
+
+    this.socketService.getSocket().on("REQUESTACCEPT",(data)=>{
+      data=JSON.parse(data);
+      if(data.member==this.socketService.userObj.useremail) {
+        this.snackBar.open(this.alert, '', { duration: ONE_SECOND, });
+        //alert("request accepted");
+      }
+    });
+  }
+
+  son(): void {
+    this.playAudio("ui2.wav");
   }
 
   getAllAlbums() {
@@ -285,12 +303,14 @@ export class AlbumsComponent implements OnInit {
 
   sortAlpha() {
     if(this.toggleSortAlpha) {
+      this.playAudio("ui2.wav");
       this.AlbumsNames.sort();
       this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
       this.snackBar.open(this.filteredAlphaAsc, '', { duration: ONE_SECOND, });
       this.toggleSortAlpha = false;
     }
     else {
+      this.playAudio("ui2.wav");
       this.AlbumsNames.sort().reverse();
       this.AlbumsNames.sort(function(x,y){ return x == "PUBLIC" ? -1 : y == "PUBLIC" ? 1 : 0; });
       this.snackBar.open(this.filteredAlphaDes, '', { duration: ONE_SECOND, });
@@ -300,6 +320,7 @@ export class AlbumsComponent implements OnInit {
 
   sortCreation() {
     if(this.toggleSortCreation) {
+      this.playAudio("ui2.wav");
       this.order = this.AlbumsCreationDate.sort();
       this.kk = true;
       this.getAllAlbums();
@@ -307,6 +328,7 @@ export class AlbumsComponent implements OnInit {
       this.toggleSortCreation = false;
     }
     else {
+      this.playAudio("ui2.wav");
       this.order = this.AlbumsCreationDate.sort().reverse();
       this.kk = true;
       this.getAllAlbums();
@@ -430,6 +452,7 @@ export class AlbumsComponent implements OnInit {
   modifyAlbum(element: any) { 
     if(this.socketService.email == this.albumTempSerivce.albums.get(element.textContent.trim().slice(11))!.getCreator()) {
       this.dialog.open(ModifyAlbumComponent);
+      this.playAudio("ui1.wav");
       console.log(element.textContent);
       this.socketService.albumName = element.textContent.trim().slice(11);
     }

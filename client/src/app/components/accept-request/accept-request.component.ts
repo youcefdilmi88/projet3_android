@@ -62,6 +62,10 @@ export class AcceptRequestComponent implements OnInit {
     this.http.post<any>(link, {useremail: this.socketService.email, request: this.socketService.memberRequest, albumName: this.socketService.albumName}).subscribe((data:any) => { 
       if(data.message == "success") {
           console.log("ACCEPTED");
+          const msg={ 
+            member:this.socketService.memberRequest
+          }
+          this.socketService.getSocket().emit("REQUESTACCEPT",JSON.stringify(msg));
           this.playAudio("ui2.wav");
         }
     });

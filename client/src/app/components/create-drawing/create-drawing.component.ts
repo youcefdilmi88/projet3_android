@@ -38,6 +38,7 @@ export class CreateDrawingComponent implements OnInit {
   placeHolderPass: string;
   drawingAleadyExists: string;
 
+  dont: string;
 
   error1: string;
 
@@ -52,6 +53,8 @@ export class CreateDrawingComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log("HEL", this.socketService.albumName);
+    this.dont = this.socketService.albumName;
     let link = this.BASE_URL + "album/getDrawings/" + this.socketService.albumName;
     this.http.get<any>(link).subscribe((data: any) => {
       this.drawingTempSerivce.drawings.clear();
@@ -118,8 +121,6 @@ export class CreateDrawingComponent implements OnInit {
       data=JSON.parse(data);
       //console.log(data.message);
     });
-  
-
 
     text.trim();
 
@@ -128,11 +129,21 @@ export class CreateDrawingComponent implements OnInit {
       this.playAudio("error.wav");
       document.getElementById("errorCreateDrawing")!.style.visibility= "visible";
       document.getElementById("errorCreateDrawing")!.innerHTML = this.error1;
+      let erreur= document.getElementById("créer")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
     }
     else if (this.drawingTempSerivce.drawings.has(this.drawing)) {
       this.playAudio("error.wav");
       document.getElementById("errorCreateDrawing")!.style.visibility= "visible";
       document.getElementById("errorCreateDrawing")!.innerHTML = this.drawingAleadyExists;
+      let erreur= document.getElementById("créer")!;
+          erreur.className = "erreuAnimation";
+          erreur.classList.remove("erreuAnimation");
+          void erreur.offsetWidth;
+          erreur.className = "erreuAnimation";
     }
     else {
       //console.log("cant create");
@@ -183,6 +194,11 @@ export class CreateDrawingComponent implements OnInit {
           this.playAudio("error.wav");
           document.getElementById("errorCreateDrawing")!.style.visibility= "visible";
           document.getElementById("errorCreateDrawing")!.innerHTML = this.error1;
+          let erreur= document.getElementById("créer")!;
+            erreur.className = "erreuAnimation";
+            erreur.classList.remove("erreuAnimation");
+            void erreur.offsetWidth;
+            erreur.className = "erreuAnimation";
         }
         else {
           this.http.post<any>(link,{drawingName: this.drawing.trim(), owner: this.socketService.email, visibility: "protected", password: this.password.trim()}).subscribe((data: any) => { 
@@ -238,6 +254,7 @@ export class CreateDrawingComponent implements OnInit {
               if(data.message == "success") {
                 this.router.navigate(['/', 'sidenav']);
                 this.dialog.open(NewDrawingComponent);
+                this.playAudio("ui2.wav");
               }
             });
   
@@ -287,6 +304,7 @@ export class CreateDrawingComponent implements OnInit {
 
   cancelCreate() {
     this.dialogRef.close();
+    this.playAudio("ui2.wav");
   }
 
 }

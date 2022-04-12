@@ -228,6 +228,7 @@ export class ChatComponent implements AfterViewInit {
       this.http.post<any>(link,{ useremail: this.socketService.email}).subscribe((data: any) => {
         console.log("response", data);
         if(data.message == "success") {
+          this.playAudio("ui2.wav");
           console.log("EXITED DRAWING" + data.useremail);
         }
       });

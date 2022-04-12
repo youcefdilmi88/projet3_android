@@ -1,20 +1,20 @@
-<h1>Modifier un album</h1>
+<h1>{{ modifAlbum }}</h1>
 <div id="info">
     <div>
         <mat-form-field class="input" floatLabel="always" appearance="outline">
-            <mat-label>Nouveau nom</mat-label>
+            <mat-label>{{ labelModifyDrawing }}</mat-label>
             <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="albumNAME" placeholder="Entrez un nom du nouvel album">
         </mat-form-field> 
     </div>
     <div>
         <mat-form-field class="input" floatLabel="always" appearance="outline">
-            <mat-label>Nouvelle description</mat-label>
+            <mat-label>{{ newDesc }}</mat-label>
             <input #drawingname matInput id="drawing" type="text" name="drawing" required [(ngModel)]="albumDESCRIPTION" placeholder="Entrez une courte decription">
         </mat-form-field> 
-        <p id="errorAlbum">Vous ne pouvez pas mettre des champs vides</p>
+        <p id="errorAlbum">{{ error1 }}</p>
     </div>
     <div id="buttonModAlbum">
-        <button mat-raised-button id="Cancel" class="buto" (click)="close()" >Annuler</button>
-        <button mat-raised-button id="confirmer" class="buto" (click)="updateAlbum()">Modifier</button>
+        <button mat-raised-button id="Cancel" class="buto" (click)="close()" >{{ cancel }}</button>
+        <button mat-raised-button id="confirmer" class="buto" (click)="updateAlbum()">{{ modifDraw }}</button>
     </div>
 </div>

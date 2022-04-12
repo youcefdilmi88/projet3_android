@@ -212,6 +212,9 @@ export class DessinsComponent implements OnInit {
     this.loadImages();
   }
 
+  son(): void {
+    this.playAudio("ui2.wav");
+  }
 
   roomListerner() {
     // let link3 = this.BASE_URL + "drawing/getAllDrawings";
@@ -269,6 +272,14 @@ export class DessinsComponent implements OnInit {
       data=JSON.parse(data);
       this.getAllDrawings();
     });
+
+    /*this.socketService.getSocket().on("DRAWINGMODIFIED", (data) => {
+      data=JSON.parse(data);
+      if(data.oldName) {
+        this.socketService.drawingNameChange = true;
+      }
+      this.getAllDrawings();
+    });*/
 
     this.socketService.getSocket().on("ROOMMODIFIED", (data) => {
       data=JSON.parse(data);
@@ -386,6 +397,7 @@ export class DessinsComponent implements OnInit {
   }
 
   find(text: string) {
+    this.playAudio("ui2.wav");
     let link = this.BASE_URL + "album/getDrawings/" + this.socketService.albumName;
     this.http.get<any>(link).subscribe((data: any) => {
       this.drawingTempSerivce.drawings.clear();
@@ -446,6 +458,7 @@ export class DessinsComponent implements OnInit {
 
   openCreate() {
     this.dialog.open(CreateDrawingComponent, { disableClose: true, width: '30%' });
+    this.playAudio("ui2.wav");
   }
 
   drawing: string;
@@ -517,6 +530,7 @@ export class DessinsComponent implements OnInit {
 
 
     if(!this.peopleLiked[this.cpt].includes(this.socketService.email)) {
+      this.playAudio("like.wav");
       this.http.post<any>(link,{useremail: this.socketService.email, drawingName: this.names[this.centerImage]}).pipe( 
       //this.http.post<any>(link,{useremail: this.socketService.email, drawingName: element.textContent.trim().slice(2) }).pipe( 
         catchError(async (err) => console.log("error catched" + err))
@@ -556,9 +570,11 @@ export class DessinsComponent implements OnInit {
   //, {height: "350px", width: '350px' }
   openSettings(element: any): void {
     if(this.socketService.email == this.owners[this.centerImage]) {
+      this.playAudio("ui2.wav");
       this.socketService.isProtected = false;
       this.dialog.open(ModifyDrawingComponent, {width: '380px' });
       this.socketService.drawingName = this.names[this.centerImage];
+      this.socketService.currVisib = this.visibite[this.centerImage];
       if(this.visibite[this.centerImage] == "protected") {
         this.socketService.isProtected = true;
       }

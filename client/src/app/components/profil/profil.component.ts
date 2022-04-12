@@ -139,10 +139,10 @@ export class ProfilComponent implements OnInit {
     });
   }
 
-  playAudio(){
+  playAudio(title: string) {
     if (this.socketService.mute == false) {
       let audio = new Audio();
-      audio.src = "../../../assets/ui1.wav";
+      audio.src = "../../../assets/" + title;
       audio.load();
       audio.play();
     }
@@ -160,12 +160,16 @@ export class ProfilComponent implements OnInit {
         this.http.post<any>(link, {useremail: this.socketService.email, friendToRemove: element.textContent.trim().slice(18)}).subscribe((data:any) => { 
           if(data.message == "success") {
             console.log("removed friend", data);
+            this.playAudio("bin.wav");
           }
         });
       }
     });
   }
 
+  son(): void {
+    this.playAudio("ui2.wav");
+  }
   
   logout() {
     // let link = this.BASE_URL + "user/logoutUser";

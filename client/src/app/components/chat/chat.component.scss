@@ -68,15 +68,15 @@ a {
 /* Chat Page */
 
 .chat-container {
-	background: #fff;
+	background: #ffff;
 	overflow: hidden;
 	height: 95%;
 	width: 100%;
 }
 
 .chat-main {
-	// display: grid;
-	// grid-template-columns: 1fr 3fr;
+	//display: grid;
+	//grid-template-columns: 1fr 3fr;
 	border-style: solid;
 	width: 100%;
 	height: 90%
@@ -84,8 +84,10 @@ a {
 
 .child {
 	//display: inline-block;
-	float: left;
-	width: 80%;
+	//loat: left;
+	//position: absolute;
+	//left:460px;
+	width:80%;
 	margin-top: 20px;
 }
 
@@ -103,8 +105,10 @@ a {
 	height: 90%;
 	width: 100%;
 	overflow-y: auto;
+	overflow-x: auto;
 	background-color: #c4bfbf;
 }
+
 
 .chat-messages .message {
 	padding: 10px;
@@ -132,6 +136,7 @@ a {
 
 .chat-form-container form {
 	display: flex;
+
 }
 
 .chat-form-container input[type='text'] {
@@ -143,23 +148,23 @@ a {
 
 
 .message-container {
-    width: 40%;
-    word-wrap: break-word;
-    background-color: #FFFFFF;
-    padding: 7px 10px;
-    border-radius: 10px 10px 10px 0px;
-    margin: 10px 0px;
+	width: 40%;
+	word-wrap: break-word;
+	background-color: #FFFFFF;
+	padding: 7px 10px;
+	border-radius: 10px 10px 10px 0px;
+	margin: 10px 0px;
 }
 
 .my-chat{
-    width: 40%;
-    word-wrap: break-word;
-    background-color: #E9EBF9;
-    padding: 7px 10px;
-    border-radius: 10px 10px 0px 10px;
-    margin: 5px 0px 5px auto;
-    margin-left: 100px;
-    left:-100px;
+	width: 40%;
+	word-wrap: break-word;
+	background-color: #E9EBF9;
+	padding: 7px 10px;
+	border-radius: 10px 10px 0px 10px;
+	margin: 5px 0px 5px auto;
+	margin-left: 100px;
+	left:-100px;
 }
 
 
@@ -214,8 +219,8 @@ a {
 }
 
 .join-main .btn {
-	margin-top: 20px;
-	width: 100%;
+	margin-top: 10px;
+	width: 80%;
 }
 
 @media (max-width: 700px) {
